@@ -37,5 +37,5 @@ List of changes to latex2mathml
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/v1.0.3...HEAD
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/v1.0.3...master
 [1.0.3]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.3
