@@ -18,5 +18,6 @@ setup(
                      'Programming Language :: Python',
                      'Topic :: Scientific/Engineering :: Mathematics',
                      'Topic :: Text Processing :: Markup :: HTML',
-                     'Topic :: Text Processing :: Markup :: LaTeX']
+                     'Topic :: Text Processing :: Markup :: LaTeX'],
+        package_data={'latex2mathml': ['unimathsymbols.txt']}
 )
