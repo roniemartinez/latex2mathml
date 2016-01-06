@@ -33,6 +33,14 @@ class AggregatorTest(unittest.TestCase):
         self.assertListEqual([r'\matrix', [['a', 'b'], ['c', 'd']]],
                              list(latex2mathml.aggregate(r'\begin{matrix}a & b \\ c & d \end{matrix}')))
 
+    def test_matrix_with_alignment(self):
+        self.assertListEqual([r'\matrix*', 'r', [['a', 'b'], ['c', 'd']]],
+                             list(latex2mathml.aggregate(r'\begin{matrix*}[r]a & b \\ c & d \end{matrix*}')))
+
+    def test_matrix_with_negative_sign(self):
+        self.assertListEqual([r'\matrix', [[['-', 'a'],'b'],['c', 'd']]],
+                             list(latex2mathml.aggregate(r'\begin{matrix}-a & b \\ c & d \end{matrix}')))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -8,84 +8,160 @@ __author__ = 'Ronie Martinez'
 
 class CommandTest(unittest.TestCase):
 
+    def setUp(self):
+        self.math = latex2mathml.Element('math')
+        self.row = self.math.append_child('mrow')
+
     def test_subscript(self):
-        self.assertEqual('<{0}><{1}><{2}><{3}>{4}</{3}><{3}>{5}</{3}></{2}></{1}></{0}>'.format(
-                'math', 'mrow', 'msub', 'mi', 'a', 'b'), latex2mathml.convert('a_b'))
+        sub = self.row.append_child('msub')
+        sub.append_child('mi', 'a')
+        sub.append_child('mi', 'b')
+        self.assertEqual(str(self.math), latex2mathml.convert('a_b'))
 
     def test_superscript(self):
-        self.assertEqual('<{0}><{1}><{2}><{3}>{4}</{3}><{3}>{5}</{3}></{2}></{1}></{0}>'.format(
-                'math', 'mrow', 'msup', 'mi', 'a', 'b'), latex2mathml.convert('a^b'))
+        sub = self.row.append_child('msup')
+        sub.append_child('mi', 'a')
+        sub.append_child('mi', 'b')
+        self.assertEqual(str(self.math), latex2mathml.convert('a^b'))
 
     def test_subscript_and_superscript(self):
-        self.assertEqual('<{0}><{1}><{2}><{3}>{4}</{3}><{3}>{5}</{3}><{3}>{6}</{3}></{2}></{1}></{0}>'.format(
-                'math', 'mrow', 'msubsup', 'mi', 'a', 'b', 'c'), latex2mathml.convert('a_b^c'))
+        sup = self.row.append_child('msubsup')
+        sup.append_child('mi', 'a')
+        sup.append_child('mi', 'b')
+        sup.append_child('mi', 'c')
+        self.assertEqual(str(self.math), latex2mathml.convert('a_b^c'))
 
     def test_superscript_and_subscript(self):
-        self.assertEqual('<{0}><{1}><{2}><{3}>{4}</{3}><{3}>{5}</{3}><{3}>{6}</{3}></{2}></{1}></{0}>'.format(
-                'math', 'mrow', 'msubsup', 'mi', 'a', 'c', 'b'), latex2mathml.convert('a^b_c'))
+        subsup = self.row.append_child('msubsup')
+        subsup.append_child('mi', 'a')
+        subsup.append_child('mi', 'c')
+        subsup.append_child('mi', 'b')
+        self.assertEqual(str(self.math), latex2mathml.convert('a^b_c'))
 
     def test_subscript_within_curly_braces(self):
-        self.assertEqual('<{0}><{1}><{1}><{2}><{3}>{4}</{3}><{3}>{5}</{3}></{2}></{1}></{1}></{0}>'.format(
-                'math', 'mrow', 'msub', 'mi', 'a', 'b'), latex2mathml.convert('{a_b}'))
+        row = self.row.append_child('mrow')
+        sub = row.append_child('msub')
+        sub.append_child('mi', 'a')
+        sub.append_child('mi', 'b')
+        self.assertEqual(str(self.math), latex2mathml.convert('{a_b}'))
 
     def test_superscript_within_curly_braces(self):
-        self.assertEqual('<{0}><{1}><{1}><{2}><{3}>{4}</{3}><{3}>{5}</{3}></{2}></{1}></{1}></{0}>'.format(
-                'math', 'mrow', 'msup', 'mi', 'a', 'b'), latex2mathml.convert('{a^b}'))
+        row = self.row.append_child('mrow')
+        sup = row.append_child('msup')
+        sup.append_child('mi', 'a')
+        sup.append_child('mi', 'b')
+        self.assertEqual(str(self.math), latex2mathml.convert('{a^b}'))
 
     def test_superscript_with_curly_braces(self):
-        self.assertEqual('<{0}><{1}><{2}><{3}>{6}</{3}><{4}>{10}</{4}><{1}><{3}>{7}</{3}><{5}>{8}</{5}><{4}>{9}</{4}>'
-                         '</{1}></{2}></{1}></{0}>'.format( 'math', 'mrow', 'msubsup', 'mi', 'mn', 'mo', 'a', 'i',
-                                                            '&#x0002B;', '1', '3'), latex2mathml.convert('a^{i+1}_3'))
+        subsup = self.row.append_child('msubsup')
+        subsup.append_child('mi', 'a')
+        subsup.append_child('mn', 3)
+        row = subsup.append_child('mrow')
+        row.append_child('mi', 'i')
+        row.append_child('mo', '&#x0002B;')
+        row.append_child('mn', 1)
+        self.assertEqual(str(self.math), latex2mathml.convert('a^{i+1}_3'))
 
     def test_simple_fraction(self):
-        self.assertEqual('<{0}><{1}><{2}><{1}><{3}>{4}</{3}></{1}><{1}><{3}>{5}</{3}></{1}></{2}></{1}></{0}>'.format(
-                'math', 'mrow', 'mfrac', 'mn', '1', '2'), latex2mathml.convert(r'\frac{1}{2}'))
+        frac = self.row.append_child('mfrac')
+        frac.append_child('mrow').append_child('mn', 1)
+        frac.append_child('mrow').append_child('mn', 2)
+        self.assertEqual(str(self.math), latex2mathml.convert(r'\frac{1}{2}'))
 
     def test_square_root(self):
-        self.assertEqual('<{0}><{1}><{2}><{1}><{3}>{4}</{3}></{1}></{2}></{1}></{0}>'.format(
-                'math', 'mrow', 'msqrt', 'mn', '2'), latex2mathml.convert(r'\sqrt{2}'))
+        sqrt = self.row.append_child('msqrt')
+        sqrt.append_child('mrow').append_child('mn', 2)
+        self.assertEqual(str(self.math), latex2mathml.convert(r'\sqrt{2}'))
 
     def test_root(self):
-        self.assertEqual('<{0}><{1}><{2}><{1}><{3}>{4}</{3}></{1}><{1}><{3}>{5}</{3}></{1}></{2}></{1}></{0}>'.format(
-                'math', 'mrow', 'mroot', 'mn', '2', '3'), latex2mathml.convert(r'\sqrt[3]{2}'))
+        root = self.row.append_child('mroot')
+        root.append_child('mrow').append_child('mn', 2)
+        root.append_child('mrow').append_child('mn', 3)
+        self.assertEqual(str(self.math), latex2mathml.convert(r'\sqrt[3]{2}'))
 
     def test_binomial(self):
-        self.assertEqual(
-                "<{0}><{1}><{2}>{5}</{2}><{3} {9}='{10}'><{1}><{4}>{6}</{4}></{1}><{1}><{4}>{7}</{4}></{1}></{3}>"
-                "<{2}>{8}</{2}></{1}></{0}>".format(
-                        'math', 'mrow', 'mo', 'mfrac', 'mn', '&#x00028;', 2, 3, '&#x00029;', 'linethickness', 0),
-                latex2mathml.convert(r'\binom{2}{3}'))
+        self.row.append_child('mo', '&#x00028;')
+        frac = self.row.append_child('mfrac', None, linethickness=0)
+        frac.append_child('mrow').append_child('mn', 2)
+        frac.append_child('mrow').append_child('mn', 3)
+        self.row.append_child('mo', '&#x00029;')
+        self.assertEqual(str(self.math), latex2mathml.convert(r'\binom{2}{3}'))
 
     def test_left_and_right(self):
-        self.assertEqual("<{0}><{1}><{2} stretchy='true' form='prefix' fence='true'>{4}</{2}><{3}>{5}</{3}><{2} "
-                         "stretchy='true' form='postfix' fence='true'>{6}</{2}></{1}></{0}>".format(
-                'math', 'mrow', 'mo', 'mi', '&#x00028;', 'x', '&#x00029;'), latex2mathml.convert(r'\left(x\right)'))
+        self.row.append_child('mo', '&#x00028;', stretchy='true', form='prefix', fence='true')
+        self.row.append_child('mi', 'x')
+        self.row.append_child('mo', '&#x00029;', stretchy='true', form='postfix', fence='true')
+        self.assertEqual(str(self.math), latex2mathml.convert(r'\left(x\right)'))
 
     def test_space(self):
-        self.assertEqual("<{0}><{1}><{2} {3}='{4}'/></{1}></{0}>".format('math', 'mrow', 'mspace', 'width', '0.167em'),
-                         latex2mathml.convert('\,'))
+        self.row.append_child('mspace', None, width='0.167em')
+        self.assertEqual(str(self.math), latex2mathml.convert('\,'))
 
     def test_overline(self):
-        self.assertEqual("<{0}><{1}><{2}><{1}><{3}>{5}</{3}></{1}><{4} {7}='{8}'>{6}</{4}></{2}></{1}></{0}>".format(
-                'math', 'mrow', 'mover', 'mi', 'mo', 'a', '&#x000AF;', 'stretchy', 'true'),
-                latex2mathml.convert(r'\overline{a}'))
+        over = self.row.append_child('mover')
+        over.append_child('mrow').append_child('mi', 'a')
+        over.append_child('mo', '&#x000AF;', stretchy='true')
+        self.assertEqual(str(self.math), latex2mathml.convert(r'\overline{a}'))
 
     def test_underline(self):
-        self.assertEqual("<{0}><{1}><{2}><{1}><{3}>{5}</{3}></{1}><{4} {7}='{8}'>{6}</{4}></{2}></{1}></{0}>".format(
-                'math', 'mrow', 'munder', 'mi', 'mo', 'a', '&#x00332;', 'stretchy', 'true'),
-                latex2mathml.convert(r'\underline{a}'))
+        under = self.row.append_child('munder')
+        under.append_child('mrow').append_child('mi', 'a')
+        under.append_child('mo', '&#x00332;', stretchy='true')
+        self.assertEqual(str(self.math), latex2mathml.convert(r'\underline{a}'))
 
     def test_matrix(self):
-        self.assertEqual('<{0}><{1}><{2}><{3}><{4}><{5}>{6}</{5}></{4}><{4}><{5}>{7}</{5}></{4}></{3}>'
-                         '<{3}><{4}><{5}>{8}</{5}></{4}><{4}><{5}>{9}</{5}></{4}></{3}></{2}></{1}></{0}>'.format(
-                'math', 'mrow', 'mtable', 'mtr', 'mtd', 'mi', 'a', 'b', 'c', 'd'),
-                latex2mathml.convert(r'\begin{matrix}a & b \\ c & d \end{matrix}'))
+        table = self.row.append_child('mtable')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd').append_child('mi', 'a')
+        tr.append_child('mtd').append_child('mi', 'b')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd').append_child('mi', 'c')
+        tr.append_child('mtd').append_child('mi', 'd')
+        self.assertEqual(str(self.math), latex2mathml.convert(r'\begin{matrix}a & b \\ c & d \end{matrix}'))
 
     def test_matrix_without_begin_and_end(self):  # taken from MathJax
-        self.assertEqual('<{0}><{1}><{2}><{3}><{4}><{5}>{6}</{5}></{4}><{4}><{5}>{7}</{5}></{4}></{3}>'
-                         '<{3}><{4}><{5}>{8}</{5}></{4}><{4}><{5}>{9}</{5}></{4}></{3}></{2}></{1}></{0}>'.format(
-                'math', 'mrow', 'mtable', 'mtr', 'mtd', 'mi', 'a', 'b', 'c', 'd'),
-                latex2mathml.convert(r'\matrix{a & b \\ c & d}'))
+        table = self.row.append_child('mtable')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd').append_child('mi', 'a')
+        tr.append_child('mtd').append_child('mi', 'b')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd').append_child('mi', 'c')
+        tr.append_child('mtd').append_child('mi', 'd')
+        self.assertEqual(str(self.math), latex2mathml.convert(r'\matrix{a & b \\ c & d}'))
+
+    def test_matrix_with_alignment(self):
+        table = self.row.append_child('mtable')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd', None, columnalign='right').append_child('mi', 'a')
+        tr.append_child('mtd', None, columnalign='right').append_child('mi', 'b')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd', None, columnalign='right').append_child('mi', 'c')
+        tr.append_child('mtd', None, columnalign='right').append_child('mi', 'd')
+        self.assertEqual(str(self.math), latex2mathml.convert(r'\begin{matrix*}[r]a & b \\ c & d \end{matrix*}'))
+
+    def test_matrix_with_negative_sign(self):
+        table = self.row.append_child('mtable')
+        tr = table.append_child('mtr')
+        mtd = tr.append_child('mtd')
+        mtd.append_child('mo', '&#x02212;')
+        mtd.append_child('mi', 'a')
+        tr.append_child('mtd').append_child('mi', 'b')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd').append_child('mi', 'c')
+        tr.append_child('mtd').append_child('mi', 'd')
+        self.assertEqual(str(self.math), latex2mathml.convert(r'\begin{matrix}-a & b \\ c & d \end{matrix}'))
+
+    def test_pmatrix(self):
+        self.row.append_child('mo', '&#x00028;')
+        table = self.row.append_child('mtable')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd').append_child('mi', 'a')
+        tr.append_child('mtd').append_child('mi', 'b')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd').append_child('mi', 'c')
+        tr.append_child('mtd').append_child('mi', 'd')
+        self.row.append_child('mo', '&#x00029;')
+        self.assertEqual(str(self.math), latex2mathml.convert(r'\begin{pmatrix}a & b \\ c & d \end{pmatrix}'))
 
 if __name__ == '__main__':
     unittest.main()

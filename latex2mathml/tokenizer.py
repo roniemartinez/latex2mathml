@@ -5,7 +5,7 @@ __author__ = 'Ronie Martinez'
 
 def tokenize(string):
     _buffer = ''
-    environment = ''
+    environments = []
     iterable = iter(xrange(len(string)))
     for i in iterable:
         char = string[i]
@@ -22,30 +22,44 @@ def tokenize(string):
             _buffer = ''
         else:
             if _buffer.startswith(r'\begin') and char == '{':
-                i = iterable.next()
-                _char = string[i]
-                while _char != '}':
-                    environment += _char
+                environment = _get_environment(iterable, string)
+                _buffer = ''
+                environments.append(environment)
+                yield '\\{}'.format(environment)
+                if environment.endswith('*'):
+                    i = iterable.next()
                     i = iterable.next()
                     _char = string[i]
-                _buffer = ''
-                yield '\\{}'.format(environment)
+                    _buffer = ''
+                    while _char != ']':
+                        _buffer += _char
+                        i = iterable.next()
+                        _char = string[i]
+                    yield _buffer
+                    _buffer = ''
                 yield '{'
             elif _buffer.startswith(r'\end') and char == '{':
-                i = iterable.next()
-                _char = string[i]
-                _environment = ''
-                while _char != '}':
-                    _environment += _char
-                    i = iterable.next()
-                    _char = string[i]
+                environment = _get_environment(iterable, string)
                 _buffer = ''
-                if environment == _environment:
+                if environments[-1] == environment:
                     yield '}'
-                    environment = ''
+                    environments.pop()
+                else:
+                    pass  # TODO should raise error
             else:
                 if len(_buffer):
                     yield _buffer
                 _buffer = '' if char.isspace() else char
     if len(_buffer):
         yield _buffer
+
+
+def _get_environment(iterable, string):
+    i = iterable.next()
+    _char = string[i]
+    environment = ''
+    while _char != '}':
+        environment += _char
+        i = iterable.next()
+        _char = string[i]
+    return environment

@@ -12,5 +12,4 @@ from command_test import CommandTest
 __author__ = 'Ronie Martinez'
 
 
-if __name__ == '__main__':
-    unittest.main()
+unittest.main()

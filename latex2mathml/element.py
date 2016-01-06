@@ -19,7 +19,7 @@ class Element(object):
             else:
                 output = '<{}>'.format(self._tag)
             if self._text:
-                output += self._text
+                output += str(self._text)
             for child in self._children:
                 output += str(child)
             output += '</{}>'.format(self._tag)

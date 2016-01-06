@@ -3,6 +3,16 @@ List of changes to latex2mathml
 
 ## [Unreleased]
 
+## [1.0.4] - 2016-01-06
+### Added
+- additional matrices (pmatrix, bmatrix, bmatrix*, Bmatrix, Bmatrix*, vmatrix, vmatrix*, Vmatrix, Vmatrix*)
+
+### Changed
+- changed test asserts in command_test.py and converter_test.py from string format to Element object
+
+### Fixed
+- negative sign (-) becomes a separate element inside a matrix environment
+
 ## [1.0.3] - 2016-01-04
 ### Added
 - matrix
@@ -37,5 +47,6 @@ List of changes to latex2mathml
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v1.0.3...master
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v1.0.4...master
+[1.0.4]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.4
 [1.0.3]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.3

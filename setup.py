@@ -1,11 +1,13 @@
 from distutils.core import setup
 
+VERSION = open('VERSION').read()
+
 setup(
         name='latex2mathml',
-        version='1.0.3',
+        version=VERSION,
         packages=['latex2mathml'],
         url='https://github.com/Code-ReaQtor/latex2mathml',
-        download_url='https://github.com/Code-ReaQtor/latex2mathml/tarball/1.0.3',
+        download_url='https://github.com/Code-ReaQtor/latex2mathml/tarball/{}'.format(VERSION),
         license='MIT',
         author='Ronie Martinez',
         author_email='ronmarti18@gmail.com',
