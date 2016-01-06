@@ -1,5 +1,6 @@
 setup.cfg
 README
+VERSION
 setup.py
 latex2mathml\unimathsymbols.txt
 latex2mathml\__init__.py
