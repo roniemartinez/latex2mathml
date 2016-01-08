@@ -3,6 +3,10 @@ List of changes to latex2mathml
 
 ## [Unreleased]
 
+## [1.0.6] - 2016-01-08
+### Added
+- Simple viewer using bootstrap and openshift
+
 ## [1.0.5] - 2016-01-06
 ### Fixed
 - VERSION file not added to manifest
@@ -51,7 +55,8 @@ List of changes to latex2mathml
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v1.0.5...master
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v1.0.6...master
+[1.0.6]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.6
 [1.0.5]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.5
 [1.0.4]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.4
 [1.0.3]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.3
