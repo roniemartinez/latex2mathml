@@ -10,6 +10,7 @@ class ConverterTest(unittest.TestCase):
 
     def setUp(self):
         self.math = latex2mathml.Element('math')
+        self.math.pretty = True
         self.row = self.math.append_child('mrow')
 
     def test_single_identifier(self):

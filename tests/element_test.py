@@ -7,7 +7,6 @@ __author__ = 'Ronie Martinez'
 
 
 class ElementTest(unittest.TestCase):
-
     def test_empty_element(self):
         self.assertEqual('<{}/>'.format('empty'), str(latex2mathml.Element('empty')))
 
@@ -42,7 +41,7 @@ class ElementTest(unittest.TestCase):
         self.assertEqual('<{0}><{1}>{1}</{1}></{0}>'.format('root', 'child'), str(root))
 
         root = latex2mathml.Element('root')
-        child = root.append_child('child', 'child')
+        root.append_child('child', 'child')
         self.assertEqual('<{0}><{1}>{1}</{1}></{0}>'.format('root', 'child'), str(root))
 
     def test_empty_element_with_attributes(self):
@@ -57,6 +56,21 @@ class ElementTest(unittest.TestCase):
         root = latex2mathml.Element('root')
         root.append_child('child', width='10')
         self.assertEqual("<{0}><{1} {2}='{3}'/></{0}>".format('root', 'child', 'width', '10'), str(root))
+
+
+class PrettyElementTest(unittest.TestCase):
+    def test_empty_element_with_empty_child(self):
+        root = latex2mathml.Element('root')
+        root.pretty = True
+        root.append_child('child')
+        self.assertEqual('<{0}>\n    <{1}/>\n</{0}>'.format('root', 'child'), str(root))
+
+        root = latex2mathml.Element('root')
+        root.pretty = True
+        child = latex2mathml.Element('child')
+        root.append_child(child)
+        self.assertEqual('<{0}>\n    <{1}/>\n</{0}>'.format('root', 'child'), str(root))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -10,25 +10,28 @@ class Element(object):
         self._text = text
         self._attributes = attributes
         self._children = []
+        self._pretty = False
+        self._level = 0
 
     def __str__(self):
-        if self._text or len(self._children):
-            if len(self._attributes):
-                output = '<{} {}>'.format(self._tag, ' '.join(
-                        ("{}='{}'".format(key, value) for key, value in self._attributes.items())))
-            else:
-                output = '<{}>'.format(self._tag)
-            if self._text:
-                output += str(self._text)
-            for child in self._children:
-                output += str(child)
-            output += '</{}>'.format(self._tag)
-            return output
+        spaces, end, attributes = '', '', ''
+        if self.pretty:
+            spaces = ' ' * (self._level * 4)
+            end = '\n'
         if len(self._attributes):
-            return '<{} {}/>'.format(self._tag, ' '.join(
-                    ("{}='{}'".format(key, value) for key, value in self._attributes.items())))
-        else:
-            return '<{}/>'.format(self._tag)
+            attributes = ' ' + ' '.join(("{}='{}'".format(key, value) for key, value in self._attributes.items()))
+        if self._text or len(self._children):
+            output = '{}<{}{}>{}'.format(spaces, self._tag, attributes, end)
+            if self._text:
+                _spaces = '' if not self.pretty else ' ' * ((self._level + 1) * 4)
+                output += '{}{}{}'.format(_spaces, str(self._text), end)
+            for child in self._children:
+                child.pretty = self.pretty
+                child._level = self._level + 1
+                output += '{}{}'.format(str(child), end)
+            output += '{}</{}>'.format(spaces, self._tag)
+            return output
+        return '{}<{}{}/>'.format(spaces, self._tag, attributes)
 
     @property
     def text(self):
@@ -37,6 +40,14 @@ class Element(object):
     @text.setter
     def text(self, value):
         self._text = value
+
+    @property
+    def pretty(self):
+        return self._pretty
+
+    @pretty.setter
+    def pretty(self, value):
+        self._pretty = value
 
     def append_child(self, *args, **attributes):
         child = args[0] if isinstance(args[0], Element) else Element(*args, **attributes)

@@ -18,14 +18,14 @@ def parse_symbols():
         for line in f:
             if not line.startswith('#'):
                 columns = line.strip().split('^')
-                unicode = columns[0]
+                _unicode = columns[0]
                 latex = columns[2]
                 unicode_math = columns[3]
                 if latex and latex not in symbols:
-                    symbols[latex] = unicode
+                    symbols[latex] = _unicode
                 if unicode_math and unicode_math not in symbols:
-                    symbols[unicode_math] = unicode
+                    symbols[unicode_math] = _unicode
                 for equivalent in re.findall(r'=\s+(\\[^,^ ]+),?', columns[-1]):
                     if equivalent not in symbols:
-                        symbols[equivalent] = unicode
+                        symbols[equivalent] = _unicode
     return symbols

@@ -1,14 +1,8 @@
 #!/usr/bin/python
+from latex2mathml.commands import MATRICES
 from tokenizer import tokenize
 
 __author__ = 'Ronie Martinez'
-
-matrix_commands = (r'\matrix', r'\matrix*',
-                   r'\pmatrix', r'\pmatrix*',
-                   r'\bmatrix', r'\bmatrix*',
-                   r'\Bmatrix', r'\Bmatrix*',
-                   r'\vmatrix', r'\vmatrix*',
-                   r'\Vmatrix', r'\Vmatrix*')
 
 
 def aggregate(latex):
@@ -18,7 +12,7 @@ def aggregate(latex):
     environment = None
     has_negative_sign = False
     for token in tokenize(latex):
-        if token in matrix_commands:
+        if token in MATRICES:
             environment = token
             _insert_before_last_item(insert_before_last_item, token, subgroups)
         elif token in '{([':
@@ -30,7 +24,7 @@ def aggregate(latex):
                 n = []
                 _insert_before_last_item(insert_before_last_item, n, subgroups)
                 subgroups.append(n)
-            if environment and environment in matrix_commands:
+            if environment and environment in MATRICES:
                 _add_new_subgroup(subgroups)
             elif token == '[' and subgroups[-2][-2] == r'\sqrt':
                 subgroups[-2][-2] = r'\root'  # change name from \sqrt to \root - not a latex command!
@@ -61,15 +55,15 @@ def aggregate(latex):
                     subgroups[-1].insert(-1, token)
             except IndexError:
                 subgroups[-1].insert(-1, token)
-        elif token == '-' and environment and environment in matrix_commands:
+        elif token == '-' and environment and environment in MATRICES:
             _add_new_subgroup(subgroups)
             _insert_before_last_item(insert_before_last_item, token, subgroups)
             has_negative_sign = True
-        elif token == '&' and environment and environment in matrix_commands:
+        elif token == '&' and environment and environment in MATRICES:
             if has_negative_sign:
                 subgroups.pop()
                 has_negative_sign = False
-        elif (token == r'\\' or token == r'\cr') and environment and environment in matrix_commands:
+        elif (token == r'\\' or token == r'\cr') and environment and environment in MATRICES:
             if has_negative_sign:
                 subgroups.pop()
                 has_negative_sign = False

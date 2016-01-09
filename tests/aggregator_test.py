@@ -7,7 +7,6 @@ __author__ = 'Ronie Martinez'
 
 
 class AggregatorTest(unittest.TestCase):
-
     def test_single_group(self):
         self.assertListEqual([['a']], latex2mathml.aggregate('{a}'))
 
@@ -23,7 +22,7 @@ class AggregatorTest(unittest.TestCase):
     def test_superscript(self):
         self.assertListEqual(['^', 'a', 'b'], latex2mathml.aggregate('a^b'))
 
-    def test_superscript(self):
+    def test_subscript_and_superscript(self):
         self.assertListEqual(['_^', 'a', 'b', 'c'], latex2mathml.aggregate('a_b^c'))
 
     def test_root(self):
@@ -38,7 +37,7 @@ class AggregatorTest(unittest.TestCase):
                              list(latex2mathml.aggregate(r'\begin{matrix*}[r]a & b \\ c & d \end{matrix*}')))
 
     def test_matrix_with_negative_sign(self):
-        self.assertListEqual([r'\matrix', [[['-', 'a'],'b'],['c', 'd']]],
+        self.assertListEqual([r'\matrix', [[['-', 'a'], 'b'], ['c', 'd']]],
                              list(latex2mathml.aggregate(r'\begin{matrix}-a & b \\ c & d \end{matrix}')))
 
 

@@ -5,6 +5,7 @@ setup.py
 latex2mathml\unimathsymbols.txt
 latex2mathml\__init__.py
 latex2mathml\aggregator.py
+latex2mathml\commands.py
 latex2mathml\converter.py
 latex2mathml\element.py
 latex2mathml\symbols_parser.py

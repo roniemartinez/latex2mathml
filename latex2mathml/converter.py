@@ -1,13 +1,12 @@
 #!/usr/bin/python
 import re
 
-from element import Element
 from aggregator import aggregate
+from element import Element
+from latex2mathml.commands import MATRICES, SPACES
 from symbols_parser import convert_symbol
 
 __author__ = 'Ronie Martinez'
-
-mspace = (0, 'mspace', {'width': '0.167em'})
 
 commands = {
     # command: (params_count, mathml_equivalent, attributes)
@@ -20,38 +19,22 @@ commands = {
     r'\binom': (2, 'mfrac', {'linethickness': 0}),
     r'\left': (1, 'mo', {'stretchy': 'true', 'fence': 'true', 'form': 'prefix'}),
     r'\right': (1, 'mo', {'stretchy': 'true', 'fence': 'true', 'form': 'postfix'}),
-    r'\,': mspace,
-    r'\:': mspace,
-    r'\;': mspace,
-    '\\': mspace,
-    r'\quad': mspace,
-    r'\qquad': mspace,
     r'\overline': (1, 'mover', {}),
     r'\underline': (1, 'munder', {}),
 }
 
-matrix_commands = (
-    r'\matrix',
-    r'\matrix*',
-    r'\pmatrix',
-    r'\pmatrix*',
-    r'\bmatrix',
-    r'\bmatrix*',
-    r'\Bmatrix',
-    r'\Bmatrix*',
-    r'\vmatrix',
-    r'\vmatrix*',
-    r'\Vmatrix',
-    r'\Vmatrix*')
+for space in SPACES:
+    commands[space] = (0, 'mspace', {'width': '0.167em'})
 
-for command in matrix_commands:
-    commands[command] =  (1, 'mtable', {})
+for matrix in MATRICES:
+    commands[matrix] = (1, 'mtable', {})
 
 
 def convert(latex):
     math = Element('math')
-    mrow = math.append_child('mrow')
-    _classify_subgroup(aggregate(latex), mrow)
+    math.pretty = True
+    row = math.append_child('mrow')
+    _classify_subgroup(aggregate(latex), row)
     return str(math)
 
 
@@ -60,12 +43,8 @@ def _convert_matrix_content(param, parent, alignment=None):
         mtr = parent.append_child('mtr')
         for element in row:
             if alignment:
-                if alignment == 'r':
-                    mtd = mtr.append_child('mtd', None, columnalign='right')
-                elif alignment == 'l':
-                    mtd = mtr.append_child('mtd', None, columnalign='left')
-                elif alignment == 'c':
-                    mtd = mtr.append_child('mtd', None, columnalign='center')
+                column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(alignment)
+                mtd = mtr.append_child('mtd', None, columnalign=column_align)
             else:
                 mtd = mtr.append_child('mtd')
             if isinstance(element, list):
@@ -82,25 +61,11 @@ def _classify_subgroup(elements, row):
             _row = row.append_child('mrow')
             _classify_subgroup(element, _row)
         elif element in commands:
-            if element in (r'\binom', r'\pmatrix'):
-                symbol = convert_symbol(r'\lparen')
-                row.append_child(Element('mo', '&#x{};'.format(symbol)))
-            elif element == r'\bmatrix':
-                symbol = convert_symbol(r'\lbrack')
-                row.append_child(Element('mo', '&#x{};'.format(symbol)))
-            elif element == r'\Bmatrix':
-                symbol = convert_symbol(r'\lbrace')
-                row.append_child(Element('mo', '&#x{};'.format(symbol)))
-            elif element == r'\vmatrix':
-                symbol = convert_symbol(r'\vert')
-                row.append_child(Element('mo', '&#x{};'.format(symbol)))
-            elif element == r'\Vmatrix':
-                symbol = convert_symbol(r'\Vert')
-                row.append_child(Element('mo', '&#x{};'.format(symbol)))
+            _get_prefix_element(element, row)
             params, tag, attributes = commands[element]
             parent = row.append_child(tag, None, **attributes)
             alignment = None
-            if element in matrix_commands and element.endswith('*'):
+            if element in MATRICES and element.endswith('*'):
                 i += 1
                 alignment = elements[i]
                 iterable.next()
@@ -110,7 +75,7 @@ def _classify_subgroup(elements, row):
                 if element == r'\left' or element == r'\right':
                     symbol = convert_symbol(param)
                     parent.text = param if symbol is None else '&#x{};'.format(symbol)
-                elif element in matrix_commands:
+                elif element in MATRICES:
                     _convert_matrix_content(param, parent, alignment)
                 else:
                     if isinstance(param, list):
@@ -118,28 +83,45 @@ def _classify_subgroup(elements, row):
                         _classify_subgroup(param, _parent)
                     else:
                         _classify(param, parent)
-            if element in (r'\binom', r'\pmatrix'):
-                symbol = convert_symbol(r'\rparen')
-                row.append_child(Element('mo', '&#x{};'.format(symbol)))
-            elif element == r'\bmatrix':
-                symbol = convert_symbol(r'\rbrack')
-                row.append_child(Element('mo', '&#x{};'.format(symbol)))
-            elif element == r'\Bmatrix':
-                symbol = convert_symbol(r'\rbrace')
-                row.append_child(Element('mo', '&#x{};'.format(symbol)))
-            elif element == r'\vmatrix':
-                symbol = convert_symbol(r'\vert')
-                row.append_child(Element('mo', '&#x{};'.format(symbol)))
-            elif element == r'\Vmatrix':
-                symbol = convert_symbol(r'\Vert')
-                row.append_child(Element('mo', '&#x{};'.format(symbol)))
-            elif element == r'\overline':
+            _get_postfix_element(element, row)
+            if element == r'\overline':
                 parent.append_child(Element('mo', '&#x000AF;', stretchy='true'))
             elif element == r'\underline':
                 parent.append_child(Element('mo', '&#x00332;', stretchy='true'))
-            [iterable.next() for j in xrange(params)]
+            [iterable.next() for _ in xrange(params)]
         else:
             _classify(element, row)
+
+
+def _convert_and_append_operator(symbol, parent):
+    symbol = convert_symbol(symbol)
+    parent.append_child(Element('mo', '&#x{};'.format(symbol)))
+
+
+def _get_postfix_element(element, row):
+    if element in (r'\binom', r'\pmatrix'):
+        _convert_and_append_operator(r'\rparen', row)
+    elif element == r'\bmatrix':
+        _convert_and_append_operator(r'\rbrack', row)
+    elif element == r'\Bmatrix':
+        _convert_and_append_operator(r'\rbrace', row)
+    elif element == r'\vmatrix':
+        _convert_and_append_operator(r'\vert', row)
+    elif element == r'\Vmatrix':
+        _convert_and_append_operator(r'\Vert', row)
+
+
+def _get_prefix_element(element, row):
+    if element in (r'\binom', r'\pmatrix'):
+        _convert_and_append_operator(r'\lparen', row)
+    elif element == r'\bmatrix':
+        _convert_and_append_operator(r'\lbrack', row)
+    elif element == r'\Bmatrix':
+        _convert_and_append_operator(r'\lbrace', row)
+    elif element == r'\vmatrix':
+        _convert_and_append_operator(r'\vert', row)
+    elif element == r'\Vmatrix':
+        _convert_and_append_operator(r'\Vert', row)
 
 
 def _classify(_element, parent):
@@ -148,8 +130,8 @@ def _classify(_element, parent):
         parent.append_child(Element('mn', _element))
     elif _element in '+-*/()=':
         parent.append_child(Element('mo', _element if symbol is None else '&#x{};'.format(symbol)))
-    elif symbol and (int(symbol, 16) in xrange(int('2200', 16), int('22FF', 16)+1) or
-                           int(symbol, 16) in xrange(int('2190', 16), int('21FF', 16)+1)):
+    elif symbol and (int(symbol, 16) in xrange(int('2200', 16), int('22FF', 16) + 1) or
+                             int(symbol, 16) in xrange(int('2190', 16), int('21FF', 16) + 1)):
         parent.append_child(Element('mo', '&#x{};'.format(symbol)))
     elif _element.startswith('\\'):
         if symbol is not None:
@@ -159,4 +141,3 @@ def _classify(_element, parent):
             parent.append_child(Element('mi', e))
     else:
         parent.append_child(Element('mi', _element))
-

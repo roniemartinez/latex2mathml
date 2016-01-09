@@ -22,6 +22,5 @@ def convert():
     return 'LaTeX code not found!'
 
 
-
 if __name__ == '__main__':
     app.run()

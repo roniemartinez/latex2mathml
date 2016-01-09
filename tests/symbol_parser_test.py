@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import re
 import unittest
 
 import latex2mathml
@@ -8,7 +7,6 @@ __author__ = 'Ronie Martinez'
 
 
 class SymbolParserTest(unittest.TestCase):
-
     def test_operator_plus(self):
         self.assertEqual('0002B', latex2mathml.convert_symbol('+'))
 

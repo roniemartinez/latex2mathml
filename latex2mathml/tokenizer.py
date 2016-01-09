@@ -27,8 +27,8 @@ def tokenize(string):
                 environments.append(environment)
                 yield '\\{}'.format(environment)
                 if environment.endswith('*'):
-                    i = iterable.next()
-                    i = iterable.next()
+                    for _ in xrange(2):
+                        i = iterable.next()
                     _char = string[i]
                     _buffer = ''
                     while _char != ']':
