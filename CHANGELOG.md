@@ -3,6 +3,15 @@ List of changes to latex2mathml
 
 ## [Unreleased]
 
+## [1.0.8] - 2016-01-10
+### Added
+- Viewer - Support for other browsers using CSS Fallback for MathML (https://github.com/fred-wang/mathml.css)
+- Conversion of latex commands within matrix environments
+
+### Fixed
+- Incorrect aggregation of latex commands within matrix environment
+- Removed newline and whitespaces when prettyprinting elements with text but without children
+
 ## [1.0.7] - 2016-01-09
 ### Added
 - Pretty feature for Element class
@@ -63,7 +72,8 @@ List of changes to latex2mathml
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v1.0.7...master
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v1.0.8...master
+[1.0.8]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.8
 [1.0.7]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.7
 [1.0.6]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.6
 [1.0.5]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.5

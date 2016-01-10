@@ -4,9 +4,6 @@ Pure Python library for LaTeX to MathML conversion.
 ## Demo
 [latex2mathml Demo](http://latex2mathml-reaqtor.rhcloud.com/)
 
-_\*Tested in Firefox only_
-
-
 ## Examples
 
 ### Identifiers, Numbers and Operators
@@ -20,9 +17,7 @@ x
 ```html
 <math>
     <mrow>
-        <mi>
-            x
-        </mi>
+        <mi>x</mi>
     </mrow>
 </math>
 ```
@@ -36,15 +31,9 @@ xyz
 ```html
 <math>
     <mrow>
-        <mi>
-            x
-        </mi>
-        <mi>
-            y
-        </mi>
-        <mi>
-            z
-        </mi>
+        <mi>x</mi>
+        <mi>y</mi>
+        <mi>z</mi>
     </mrow>
 </math>
 ```
@@ -58,9 +47,7 @@ xyz
 ```html
 <math>
     <mrow>
-        <mn>
-            3
-        </mn>
+        <mn>3</mn>
     </mrow>
 </math>
 ```
@@ -74,9 +61,7 @@ xyz
 ```html
 <math>
     <mrow>
-        <mn>
-            444
-        </mn>
+        <mn>444</mn>
     </mrow>
 </math>
 ```
@@ -90,9 +75,7 @@ xyz
 ```html
 <math>
     <mrow>
-        <mn>
-            12.34
-        </mn>
+        <mn>12.34</mn>
     </mrow>
 </math>
 ```
@@ -106,12 +89,8 @@ xyz
 ```html
 <math>
     <mrow>
-        <mn>
-            12
-        </mn>
-        <mi>
-            x
-        </mi>
+        <mn>12</mn>
+        <mi>x</mi>
     </mrow>
 </math>
 ```
@@ -125,15 +104,9 @@ xyz
 ```html
 <math>
     <mrow>
-        <mn>
-            3
-        </mn>
-        <mo>
-            &#x02212;
-        </mo>
-        <mn>
-            2
-        </mn>
+        <mn>3</mn>
+        <mo>&#x02212;</mo>
+        <mn>2</mn>
     </mrow>
 </math>
 ```
@@ -150,12 +123,8 @@ a_b
 <math>
     <mrow>
         <msub>
-            <mi>
-                a
-            </mi>
-            <mi>
-                b
-            </mi>
+            <mi>a</mi>
+            <mi>b</mi>
         </msub>
     </mrow>
 </math>
@@ -171,12 +140,8 @@ a^b
 <math>
     <mrow>
         <msup>
-            <mi>
-                a
-            </mi>
-            <mi>
-                b
-            </mi>
+            <mi>a</mi>
+            <mi>b</mi>
         </msup>
     </mrow>
 </math>
@@ -192,15 +157,9 @@ a_b^c
 <math>
     <mrow>
         <msubsup>
-            <mi>
-                a
-            </mi>
-            <mi>
-                b
-            </mi>
-            <mi>
-                c
-            </mi>
+            <mi>a</mi>
+            <mi>b</mi>
+            <mi>c</mi>
         </msubsup>
     </mrow>
 </math>
@@ -219,14 +178,10 @@ a_b^c
     <mrow>
         <mfrac>
             <mrow>
-                <mn>
-                    1
-                </mn>
+                <mn>1</mn>
             </mrow>
             <mrow>
-                <mn>
-                    2
-                </mn>
+                <mn>2</mn>
             </mrow>
         </mfrac>
     </mrow>
@@ -246,9 +201,7 @@ a_b^c
     <mrow>
         <msqrt>
             <mrow>
-                <mn>
-                    2
-                </mn>
+                <mn>2</mn>
             </mrow>
         </msqrt>
     </mrow>
@@ -266,14 +219,10 @@ a_b^c
     <mrow>
         <mroot>
             <mrow>
-                <mn>
-                    2
-                </mn>
+                <mn>2</mn>
             </mrow>
             <mrow>
-                <mn>
-                    3
-                </mn>
+                <mn>3</mn>
             </mrow>
         </mroot>
     </mrow>
@@ -294,26 +243,18 @@ a_b^c
         <mtable>
             <mtr>
                 <mtd>
-                    <mi>
-                        a
-                    </mi>
+                    <mi>a</mi>
                 </mtd>
                 <mtd>
-                    <mi>
-                        b
-                    </mi>
+                    <mi>b</mi>
                 </mtd>
             </mtr>
             <mtr>
                 <mtd>
-                    <mi>
-                        c
-                    </mi>
+                    <mi>c</mi>
                 </mtd>
                 <mtd>
-                    <mi>
-                        d
-                    </mi>
+                    <mi>d</mi>
                 </mtd>
             </mtr>
         </mtable>
@@ -333,29 +274,172 @@ a_b^c
         <mtable>
             <mtr>
                 <mtd columnalign='right'>
-                    <mi>
-                        a
-                    </mi>
+                    <mi>a</mi>
                 </mtd>
                 <mtd columnalign='right'>
-                    <mi>
-                        b
-                    </mi>
+                    <mi>b</mi>
                 </mtd>
             </mtr>
             <mtr>
                 <mtd columnalign='right'>
-                    <mi>
-                        c
-                    </mi>
+                    <mi>c</mi>
                 </mtd>
                 <mtd columnalign='right'>
-                    <mi>
-                        d
-                    </mi>
+                    <mi>d</mi>
                 </mtd>
             </mtr>
         </mtable>
+    </mrow>
+</math>
+```
+
+#### LaTeX Input
+```latex
+A_{m,n} = 
+ \begin{bmatrix}
+  a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
+  a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
+  \vdots  & \vdots  & \ddots & \vdots  \\
+  a_{m,1} & a_{m,2} & \cdots & a_{m,n} 
+ \end{bmatrix}
+```
+
+#### MathML Output
+```html
+<math>
+    <mrow>
+        <msub>
+            <mi>A</mi>
+            <mrow>
+                <mi>m</mi>
+                <mi>,</mi>
+                <mi>n</mi>
+            </mrow>
+        </msub>
+        <mo>&#x0003D;</mo>
+        <mo>&#x0005B;</mo>
+        <mtable>
+            <mtr>
+                <mtd>
+                    <msub>
+                        <mi>a</mi>
+                        <mrow>
+                            <mn>1</mn>
+                            <mi>,</mi>
+                            <mn>1</mn>
+                        </mrow>
+                    </msub>
+                </mtd>
+                <mtd>
+                    <msub>
+                        <mi>a</mi>
+                        <mrow>
+                            <mn>1</mn>
+                            <mi>,</mi>
+                            <mn>2</mn>
+                        </mrow>
+                    </msub>
+                </mtd>
+                <mtd>
+                    <mo>&#x022EF;</mo>
+                </mtd>
+                <mtd>
+                    <msub>
+                        <mi>a</mi>
+                        <mrow>
+                            <mn>1</mn>
+                            <mi>,</mi>
+                            <mi>n</mi>
+                        </mrow>
+                    </msub>
+                </mtd>
+            </mtr>
+            <mtr>
+                <mtd>
+                    <msub>
+                        <mi>a</mi>
+                        <mrow>
+                            <mn>2</mn>
+                            <mi>,</mi>
+                            <mn>1</mn>
+                        </mrow>
+                    </msub>
+                </mtd>
+                <mtd>
+                    <msub>
+                        <mi>a</mi>
+                        <mrow>
+                            <mn>2</mn>
+                            <mi>,</mi>
+                            <mn>2</mn>
+                        </mrow>
+                    </msub>
+                </mtd>
+                <mtd>
+                    <mo>&#x022EF;</mo>
+                </mtd>
+                <mtd>
+                    <msub>
+                        <mi>a</mi>
+                        <mrow>
+                            <mn>2</mn>
+                            <mi>,</mi>
+                            <mi>n</mi>
+                        </mrow>
+                    </msub>
+                </mtd>
+            </mtr>
+            <mtr>
+                <mtd>
+                    <mo>&#x022EE;</mo>
+                </mtd>
+                <mtd>
+                    <mo>&#x022EE;</mo>
+                </mtd>
+                <mtd>
+                    <mo>&#x022F1;</mo>
+                </mtd>
+                <mtd>
+                    <mo>&#x022EE;</mo>
+                </mtd>
+            </mtr>
+            <mtr>
+                <mtd>
+                    <msub>
+                        <mi>a</mi>
+                        <mrow>
+                            <mi>m</mi>
+                            <mi>,</mi>
+                            <mn>1</mn>
+                        </mrow>
+                    </msub>
+                </mtd>
+                <mtd>
+                    <msub>
+                        <mi>a</mi>
+                        <mrow>
+                            <mi>m</mi>
+                            <mi>,</mi>
+                            <mn>2</mn>
+                        </mrow>
+                    </msub>
+                </mtd>
+                <mtd>
+                    <mo>&#x022EF;</mo>
+                </mtd>
+                <mtd>
+                    <msub>
+                        <mi>a</mi>
+                        <mrow>
+                            <mi>m</mi>
+                            <mi>,</mi>
+                            <mi>n</mi>
+                        </mrow>
+                    </msub>
+                </mtd>
+            </mtr>
+        </mtable>
+        <mo>&#x0005D;</mo>
     </mrow>
 </math>
 ```
@@ -369,6 +453,9 @@ a_b^c
 
 #### MathML
 * http://www.xmlmind.com/tutorials/MathML/
+
+#### CSS Fallback
+* https://github.com/fred-wang/mathml.css
 
 
 ### Author

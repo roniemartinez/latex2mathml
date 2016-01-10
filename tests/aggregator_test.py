@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import unittest
+from pprint import pprint
 
 import latex2mathml
 
@@ -40,6 +41,9 @@ class AggregatorTest(unittest.TestCase):
         self.assertListEqual([r'\matrix', [[['-', 'a'], 'b'], ['c', 'd']]],
                              list(latex2mathml.aggregate(r'\begin{matrix}-a & b \\ c & d \end{matrix}')))
 
+    def test_complex_matrix(self):
+        self.assertListEqual(['\\matrix', [['_', 'a', ['1'], '_', 'b', ['2']], ['_', 'c', ['3'], '_', 'd', ['4']]]],
+                             list(latex2mathml.aggregate(r'\begin{matrix}a_{1} & b_{2} \\ c_{3} & d_{4} \end{matrix}')))
 
 if __name__ == '__main__':
     unittest.main()

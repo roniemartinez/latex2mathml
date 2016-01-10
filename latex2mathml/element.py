@@ -21,15 +21,17 @@ class Element(object):
         if len(self._attributes):
             attributes = ' ' + ' '.join(("{}='{}'".format(key, value) for key, value in self._attributes.items()))
         if self._text or len(self._children):
+            if not len(self._children):
+                end = ''
             output = '{}<{}{}>{}'.format(spaces, self._tag, attributes, end)
             if self._text:
-                _spaces = '' if not self.pretty else ' ' * ((self._level + 1) * 4)
+                _spaces = '' if not (self.pretty and len(self._children)) else ' ' * ((self._level + 1) * 4)
                 output += '{}{}{}'.format(_spaces, str(self._text), end)
             for child in self._children:
                 child.pretty = self.pretty
                 child._level = self._level + 1
                 output += '{}{}'.format(str(child), end)
-            output += '{}</{}>'.format(spaces, self._tag)
+            output += '{}</{}>'.format(spaces if len(self._children) else '', self._tag)
             return output
         return '{}<{}{}/>'.format(spaces, self._tag, attributes)
 

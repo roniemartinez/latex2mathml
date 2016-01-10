@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>latex2mathml Demo</title>
+    <script type="text/javascript" src="static/mathml.js"></script>
     <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -32,6 +33,7 @@
             code = $('#comment').val();
             $.post( "convert", {latex: code}, function( data ) {
                 $('#preview').html(data);
+                mathml_fallback();
             });
         }
     </script>

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from __future__ import print_function
 from latex2mathml.commands import MATRICES
 from tokenizer import tokenize
 
@@ -25,7 +26,15 @@ def aggregate(latex):
                 _insert_before_last_item(insert_before_last_item, n, subgroups)
                 subgroups.append(n)
             if environment and environment in MATRICES:
-                _add_new_subgroup(subgroups)
+                if a and a in MATRICES:
+                    _add_new_subgroup(subgroups)
+                else:
+                    try:
+                        b = subgroups[-2][-3]
+                        if b in MATRICES:
+                            _add_new_subgroup(subgroups)
+                    except IndexError:
+                        pass
             elif token == '[' and subgroups[-2][-2] == r'\sqrt':
                 subgroups[-2][-2] = r'\root'  # change name from \sqrt to \root - not a latex command!
             elif token != '{':

@@ -41,7 +41,9 @@ def convert(latex):
 def _convert_matrix_content(param, parent, alignment=None):
     for row in param:
         mtr = parent.append_child('mtr')
-        for element in row:
+        iterable = iter(xrange(len(row)))
+        for i in iterable:
+            element = row[i]
             if alignment:
                 column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(alignment)
                 mtd = mtr.append_child('mtd', None, columnalign=column_align)
@@ -49,6 +51,8 @@ def _convert_matrix_content(param, parent, alignment=None):
                 mtd = mtr.append_child('mtd')
             if isinstance(element, list):
                 _classify_subgroup(element, mtd)
+            elif element in commands:
+                _convert_command(element, row, i, iterable, mtd)
             else:
                 _classify(element, mtd)
 
@@ -61,36 +65,40 @@ def _classify_subgroup(elements, row):
             _row = row.append_child('mrow')
             _classify_subgroup(element, _row)
         elif element in commands:
-            _get_prefix_element(element, row)
-            params, tag, attributes = commands[element]
-            parent = row.append_child(tag, None, **attributes)
-            alignment = None
-            if element in MATRICES and element.endswith('*'):
-                i += 1
-                alignment = elements[i]
-                iterable.next()
-            for j in range(params):
-                i += 1
-                param = elements[i]
-                if element == r'\left' or element == r'\right':
-                    symbol = convert_symbol(param)
-                    parent.text = param if symbol is None else '&#x{};'.format(symbol)
-                elif element in MATRICES:
-                    _convert_matrix_content(param, parent, alignment)
-                else:
-                    if isinstance(param, list):
-                        _parent = parent.append_child('mrow')
-                        _classify_subgroup(param, _parent)
-                    else:
-                        _classify(param, parent)
-            _get_postfix_element(element, row)
-            if element == r'\overline':
-                parent.append_child(Element('mo', '&#x000AF;', stretchy='true'))
-            elif element == r'\underline':
-                parent.append_child(Element('mo', '&#x00332;', stretchy='true'))
-            [iterable.next() for _ in xrange(params)]
+            _convert_command(element, elements, i, iterable, row)
         else:
             _classify(element, row)
+
+
+def _convert_command(element, elements, index, iterable, parent):
+    _get_prefix_element(element, parent)
+    params, tag, attributes = commands[element]
+    new_parent = parent.append_child(tag, None, **attributes)
+    alignment = None
+    if element in MATRICES and element.endswith('*'):
+        index += 1
+        alignment = elements[index]
+        iterable.next()
+    for j in range(params):
+        index += 1
+        param = elements[index]
+        if element == r'\left' or element == r'\right':
+            symbol = convert_symbol(param)
+            new_parent.text = param if symbol is None else '&#x{};'.format(symbol)
+        elif element in MATRICES:
+            _convert_matrix_content(param, new_parent, alignment)
+        else:
+            if isinstance(param, list):
+                _parent = new_parent.append_child('mrow')
+                _classify_subgroup(param, _parent)
+            else:
+                _classify(param, new_parent)
+    _get_postfix_element(element, parent)
+    if element == r'\overline':
+        new_parent.append_child(Element('mo', '&#x000AF;', stretchy='true'))
+    elif element == r'\underline':
+        new_parent.append_child(Element('mo', '&#x00332;', stretchy='true'))
+    [iterable.next() for _ in xrange(params)]
 
 
 def _convert_and_append_operator(symbol, parent):
