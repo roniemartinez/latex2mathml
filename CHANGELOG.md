@@ -3,6 +3,13 @@ List of changes to latex2mathml
 
 ## [Unreleased]
 
+## [1.0.9] - 2016-01-16
+### Removed
+- Flask viewer
+
+### Changed
+- Updated README.md
+
 ## [1.0.8] - 2016-01-10
 ### Added
 - Viewer - Support for other browsers using CSS Fallback for MathML (https://github.com/fred-wang/mathml.css)
@@ -72,7 +79,8 @@ List of changes to latex2mathml
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v1.0.8...master
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v1.0.9...master
+[1.0.9]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.9
 [1.0.8]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.8
 [1.0.7]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.7
 [1.0.6]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.6

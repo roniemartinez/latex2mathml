@@ -1,8 +1,19 @@
+![version](https://img.shields.io/pypi/v/latex2mathml.svg)![license](https://img.shields.io/pypi/l/latex2mathml.svg)![status](https://img.shields.io/pypi/status/latex2mathml.svg)
+
 # latex2mathml
 Pure Python library for LaTeX to MathML conversion.
 
 ## Demo
-[latex2mathml Demo](http://latex2mathml-reaqtor.rhcloud.com/)
+[latex2mathml Demo](http://www.zenitram.xyz/latex2mathml)
+
+## Usage
+
+```python
+import latex2mathml
+
+latex_input = "<your_latex_string>"
+mathml_output = latex2mathml.convert(latex_input)
+```
 
 ## Examples
 
@@ -453,8 +464,6 @@ A_{m,n} =
 
 #### MathML
 * http://www.xmlmind.com/tutorials/MathML/
-
-#### CSS Fallback
 * https://github.com/fred-wang/mathml.css
 
 
