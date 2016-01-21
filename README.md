@@ -4,7 +4,7 @@
 Pure Python library for LaTeX to MathML conversion.
 
 ## Demo
-[latex2mathml Demo](http://www.zenitram.xyz/latex2mathml)
+[latex2mathml Demo](http://www.roniemartinez.space/latex2mathml)
 
 ## Usage
 
@@ -464,7 +464,6 @@ A_{m,n} =
 
 #### MathML
 * http://www.xmlmind.com/tutorials/MathML/
-* https://github.com/fred-wang/mathml.css
 
 
 ### Author
