@@ -45,5 +45,10 @@ class AggregatorTest(unittest.TestCase):
         self.assertListEqual(['\\matrix', [['_', 'a', ['1'], '_', 'b', ['2']], ['_', 'c', ['3'], '_', 'd', ['4']]]],
                              list(latex2mathml.aggregate(r'\begin{matrix}a_{1} & b_{2} \\ c_{3} & d_{4} \end{matrix}')))
 
+    def test_simple_array(self):
+        self.assertListEqual([r'\array', 'cc', [['1', '2'], ['3', '4']]],
+                             list(latex2mathml.aggregate(r'\begin{array}{cc} 1 & 2 \\ 3 & 4 \end{array}''')))
+
+
 if __name__ == '__main__':
     unittest.main()

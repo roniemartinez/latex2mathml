@@ -3,6 +3,10 @@ List of changes to latex2mathml
 
 ## [Unreleased]
 
+## [1.0.10] - 2016-02-14
+### Added
+- Support for arrays including arrays with vertical bars and horizontal lines (borders not supported)
+
 ## [1.0.9] - 2016-01-16
 ### Removed
 - Flask viewer
@@ -79,7 +83,8 @@ List of changes to latex2mathml
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v1.0.9...master
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v1.0.10...master
+[1.0.10]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.10
 [1.0.9]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.9
 [1.0.8]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.8
 [1.0.7]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.7

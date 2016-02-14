@@ -37,6 +37,17 @@ def tokenize(string):
                         _char = string[i]
                     yield _buffer
                     _buffer = ''
+                elif environment == 'array':
+                    for _ in xrange(2):
+                        i = iterable.next()
+                    _char = string[i]
+                    _buffer = ''
+                    while _char != '}':
+                        _buffer += _char
+                        i = iterable.next()
+                        _char = string[i]
+                    yield _buffer
+                    _buffer = ''
                 yield '{'
             elif _buffer.startswith(r'\end') and char == '{':
                 environment = _get_environment(iterable, string)

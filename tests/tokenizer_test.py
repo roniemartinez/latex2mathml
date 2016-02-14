@@ -61,5 +61,9 @@ class TokenizerTest(unittest.TestCase):
         self.assertListEqual([r'\matrix', '{', '-', 'a', '&', 'b', r'\\', 'c', '&', 'd', '}'],
                              list(latex2mathml.tokenize(r'\begin{matrix}-a & b \\ c & d \end{matrix}')))
 
+    def test_simple_array(self):
+        self.assertListEqual([r'\array', 'cc', '{', '1', '&', '2', r'\\', '3', '&', '4', '}'],
+                             list(latex2mathml.tokenize(r'\begin{array}{cc} 1 & 2 \\ 3 & 4 \end{array}''')))
+
 if __name__ == '__main__':
     unittest.main()

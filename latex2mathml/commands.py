@@ -7,6 +7,7 @@ MATRICES = (r'\matrix', r'\matrix*',
             r'\bmatrix', r'\bmatrix*',
             r'\Bmatrix', r'\Bmatrix*',
             r'\vmatrix', r'\vmatrix*',
-            r'\Vmatrix', r'\Vmatrix*')
+            r'\Vmatrix', r'\Vmatrix*',
+            r'\array')
 
 SPACES = (r'\,', r'\:', r'\;', '\\', r'\quad', r'\qquad')

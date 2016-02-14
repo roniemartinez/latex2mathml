@@ -57,6 +57,52 @@ def _convert_matrix_content(param, parent, alignment=None):
                 _classify(element, mtd)
 
 
+def _convert_array_content(param, parent, alignment=None):
+    if '|' in alignment:
+        _alignment, columnlines = [], []
+        for i in alignment:
+            if i == '|':
+                columnlines.append('solid')
+            else:
+                _alignment.append(i)
+            if len(_alignment) - len(columnlines) == 2:
+                columnlines.append('none')
+        parent._attributes['columnlines'] = ' '.join(columnlines)
+    else:
+        _alignment = list(alignment)
+    rowlines = []
+    row_count = 0
+    for row in param:
+        row_count += 1
+        mtr = parent.append_child('mtr')
+        iterable = iter(xrange(len(row)))
+        index = 0
+        has_rowline = False
+        for i in iterable:
+            element = row[i]
+            if element == r'\hline' and row_count > 1:
+                rowlines.append('solid')
+                has_rowline = True
+                continue
+            __alignment = _alignment[index]
+            if __alignment:
+                column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(__alignment)
+                mtd = mtr.append_child('mtd', None, columnalign=column_align)
+            else:
+                mtd = mtr.append_child('mtd')
+            if isinstance(element, list):
+                _classify_subgroup(element, mtd)
+            elif element in commands:
+                _convert_command(element, row, i, iterable, mtd)
+            else:
+                _classify(element, mtd)
+            index += 1
+        if not has_rowline and row_count > 1:
+            rowlines.append('none')
+    if 'solid' in rowlines:
+        parent._attributes['rowlines'] = ' '.join(rowlines)
+
+
 def _classify_subgroup(elements, row):
     iterable = iter(xrange(len(elements)))
     for i in iterable:
@@ -75,7 +121,7 @@ def _convert_command(element, elements, index, iterable, parent):
     params, tag, attributes = commands[element]
     new_parent = parent.append_child(tag, None, **attributes)
     alignment = None
-    if element in MATRICES and element.endswith('*'):
+    if element in MATRICES and (element.endswith('*') or element == r'\array'):
         index += 1
         alignment = elements[index]
         iterable.next()
@@ -85,6 +131,8 @@ def _convert_command(element, elements, index, iterable, parent):
         if element == r'\left' or element == r'\right':
             symbol = convert_symbol(param)
             new_parent.text = param if symbol is None else '&#x{};'.format(symbol)
+        elif element == r'\array':
+            _convert_array_content(param, new_parent, alignment)
         elif element in MATRICES:
             _convert_matrix_content(param, new_parent, alignment)
         else:

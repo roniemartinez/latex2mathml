@@ -162,7 +162,45 @@ class CommandTest(unittest.TestCase):
         tr.append_child('mtd').append_child('mi', 'c')
         tr.append_child('mtd').append_child('mi', 'd')
         self.row.append_child('mo', '&#x00029;')
-        self.assertEqual(str(self.math), latex2mathml.convert(r'\begin{pmatrix}a & b \\ c & d \end{pmatrix}'))
+        self.assertEqual(str(self.math),
+                         latex2mathml.convert(r'\begin{pmatrix}a & b \\ c & d \end{pmatrix}'))
+
+    def test_simple_array(self):
+        table = self.row.append_child('mtable')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd', None, columnalign='center').append_child('mn', '1')
+        tr.append_child('mtd', None, columnalign='right').append_child('mn', '2')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd', None, columnalign='center').append_child('mn', '3')
+        tr.append_child('mtd', None, columnalign='right').append_child('mn', '4')
+        self.assertEqual(str(self.math), latex2mathml.convert(r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \end{array}'''))
+
+    def test_array_with_vertical_bars(self):
+        table = self.row.append_child('mtable', None, columnlines='solid none')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd', None, columnalign='center').append_child('mn', '1')
+        tr.append_child('mtd', None, columnalign='right').append_child('mn', '2')
+        tr.append_child('mtd', None, columnalign='left').append_child('mn', '3')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd', None, columnalign='center').append_child('mn', '4')
+        tr.append_child('mtd', None, columnalign='right').append_child('mn', '5')
+        tr.append_child('mtd', None, columnalign='left').append_child('mn', '6')
+        self.assertEqual(str(self.math),
+                         latex2mathml.convert(r'\begin{array}{c|rl} 1 & 2 & 3 \\ 4 & 5 & 6 \end{array}'''))
+
+    def test_array_with_horizontal_lines(self):
+        table = self.row.append_child('mtable', None, rowlines="none solid")
+        tr = table.append_child('mtr')
+        tr.append_child('mtd', None, columnalign='center').append_child('mn', '1')
+        tr.append_child('mtd', None, columnalign='right').append_child('mn', '2')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd', None, columnalign='center').append_child('mn', '3')
+        tr.append_child('mtd', None, columnalign='right').append_child('mn', '4')
+        tr = table.append_child('mtr')
+        tr.append_child('mtd', None, columnalign='center').append_child('mn', '5')
+        tr.append_child('mtd', None, columnalign='right').append_child('mn', '6')
+        self.assertEqual(str(self.math),
+                         latex2mathml.convert(r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}'''))
 
 if __name__ == '__main__':
     unittest.main()
