@@ -1,7 +1,6 @@
 #!/usr/bin/python
-from __future__ import print_function
-from latex2mathml.commands import MATRICES
-from tokenizer import tokenize
+from .commands import MATRICES
+from .tokenizer import tokenize
 
 __author__ = 'Ronie Martinez'
 

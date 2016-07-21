@@ -1,10 +1,9 @@
 #!/usr/bin/python
 import re
-
-from aggregator import aggregate
-from element import Element
-from latex2mathml.commands import MATRICES, SPACES
-from symbols_parser import convert_symbol
+from .aggregator import aggregate
+from .element import Element
+from .commands import MATRICES, SPACES
+from .symbols_parser import convert_symbol
 
 __author__ = 'Ronie Martinez'
 
@@ -41,7 +40,7 @@ def convert(latex):
 def _convert_matrix_content(param, parent, alignment=None):
     for row in param:
         mtr = parent.append_child('mtr')
-        iterable = iter(xrange(len(row)))
+        iterable = iter(range(len(row)))
         for i in iterable:
             element = row[i]
             if alignment:
@@ -75,7 +74,7 @@ def _convert_array_content(param, parent, alignment=None):
     for row in param:
         row_count += 1
         mtr = parent.append_child('mtr')
-        iterable = iter(xrange(len(row)))
+        iterable = iter(range(len(row)))
         index = 0
         has_rowline = False
         for i in iterable:
@@ -104,7 +103,7 @@ def _convert_array_content(param, parent, alignment=None):
 
 
 def _classify_subgroup(elements, row):
-    iterable = iter(xrange(len(elements)))
+    iterable = iter(range(len(elements)))
     for i in iterable:
         element = elements[i]
         if isinstance(element, list):
@@ -124,7 +123,7 @@ def _convert_command(element, elements, index, iterable, parent):
     if element in MATRICES and (element.endswith('*') or element == r'\array'):
         index += 1
         alignment = elements[index]
-        iterable.next()
+        next(iterable)
     for j in range(params):
         index += 1
         param = elements[index]
@@ -146,7 +145,7 @@ def _convert_command(element, elements, index, iterable, parent):
         new_parent.append_child(Element('mo', '&#x000AF;', stretchy='true'))
     elif element == r'\underline':
         new_parent.append_child(Element('mo', '&#x00332;', stretchy='true'))
-    [iterable.next() for _ in xrange(params)]
+    [next(iterable) for _ in range(params)]
 
 
 def _convert_and_append_operator(symbol, parent):
@@ -186,8 +185,8 @@ def _classify(_element, parent):
         parent.append_child(Element('mn', _element))
     elif _element in '+-*/()=':
         parent.append_child(Element('mo', _element if symbol is None else '&#x{};'.format(symbol)))
-    elif symbol and (int(symbol, 16) in xrange(int('2200', 16), int('22FF', 16) + 1) or
-                             int(symbol, 16) in xrange(int('2190', 16), int('21FF', 16) + 1)):
+    elif symbol and (int(symbol, 16) in range(int('2200', 16), int('22FF', 16) + 1) or
+                             int(symbol, 16) in range(int('2190', 16), int('21FF', 16) + 1)):
         parent.append_child(Element('mo', '&#x{};'.format(symbol)))
     elif _element.startswith('\\'):
         if symbol is not None:
