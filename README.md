@@ -9,10 +9,10 @@ Pure Python library for LaTeX to MathML conversion.
 ## Usage
 
 ```python
-import latex2mathml
+import latex2mathml.converter
 
 latex_input = "<your_latex_string>"
-mathml_output = latex2mathml.convert(latex_input)
+mathml_output = latex2mathml.converter.convert(latex_input)
 ```
 
 ## Examples
