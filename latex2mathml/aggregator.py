@@ -1,8 +1,14 @@
-#!/usr/bin/python
-from .commands import MATRICES
-from .tokenizer import tokenize
+#!/usr/bin/env python
+from latex2mathml.commands import MATRICES
+from latex2mathml.tokenizer import tokenize
 
-__author__ = 'Ronie Martinez'
+__author__ = "Ronie Martinez"
+__copyright__ = "Copyright 2016-2017, Ronie Martinez"
+__credits__ = ["Ronie Martinez"]
+__license__ = "MIT"
+__maintainer__ = "Ronie Martinez"
+__email__ = "ronmarti18@gmail.com"
+__status__ = "Development"
 
 
 def aggregate(latex):

@@ -1,11 +1,17 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 import re
-from .aggregator import aggregate
-from .element import Element
-from .commands import MATRICES, SPACES
-from .symbols_parser import convert_symbol
+from latex2mathml.aggregator import aggregate
+from latex2mathml.element import Element
+from latex2mathml.commands import MATRICES, SPACES
+from latex2mathml.symbols_parser import convert_symbol
 
-__author__ = 'Ronie Martinez'
+__author__ = "Ronie Martinez"
+__copyright__ = "Copyright 2016-2017, Ronie Martinez"
+__credits__ = ["Ronie Martinez"]
+__license__ = "MIT"
+__maintainer__ = "Ronie Martinez"
+__email__ = "ronmarti18@gmail.com"
+__status__ = "Development"
 
 commands = {
     # command: (params_count, mathml_equivalent, attributes)

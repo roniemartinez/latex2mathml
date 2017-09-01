@@ -1,8 +1,14 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 import unittest
 from latex2mathml import tokenizer
 
-__author__ = 'Ronie Martinez'
+__author__ = "Ronie Martinez"
+__copyright__ = "Copyright 2016-2017, Ronie Martinez"
+__credits__ = ["Ronie Martinez"]
+__license__ = "MIT"
+__maintainer__ = "Ronie Martinez"
+__email__ = "ronmarti18@gmail.com"
+__status__ = "Development"
 
 
 class TokenizerTest(unittest.TestCase):
@@ -65,4 +71,4 @@ class TokenizerTest(unittest.TestCase):
                              list(tokenizer.tokenize(r'\begin{array}{cc} 1 & 2 \\ 3 & 4 \end{array}''')))
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)

@@ -1,8 +1,14 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 import unittest
 from latex2mathml import element, converter
 
-__author__ = 'Ronie Martinez'
+__author__ = "Ronie Martinez"
+__copyright__ = "Copyright 2016-2017, Ronie Martinez"
+__credits__ = ["Ronie Martinez"]
+__license__ = "MIT"
+__maintainer__ = "Ronie Martinez"
+__email__ = "ronmarti18@gmail.com"
+__status__ = "Development"
 
 
 class CommandTest(unittest.TestCase):
@@ -202,4 +208,4 @@ class CommandTest(unittest.TestCase):
                          converter.convert(r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}'''))
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(verbosity=2)
