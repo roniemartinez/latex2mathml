@@ -21,9 +21,8 @@ mathml_output = latex2mathml.converter.convert(latex_input)
 
 <table>
     <tr>
-        <th width="33%">LaTeX Input</th>
-        <th width="33%">MathML Output</th>
-        <th width="33%">Preview</th>
+        <th>LaTeX Input</th>
+        <th>MathML Output</th>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">x</pre></td>
@@ -34,13 +33,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <mi>x</mi>
-                </mrow>
-            </math>
-        </td>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">xyz</pre></td>
@@ -53,15 +45,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <mi>x</mi>
-                    <mi>y</mi>
-                    <mi>z</mi>
-                </mrow>
-            </math>
-        </td>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">3</pre></td>
@@ -72,13 +55,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <mn>3</mn>
-                </mrow>
-            </math>
-        </td>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">444</pre></td>
@@ -89,13 +65,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <mn>444</mn>
-                </mrow>
-            </math>
-        </td>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">12.34</pre></td>
@@ -106,13 +75,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <mn>12.34</mn>
-                </mrow>
-            </math>
-        </td>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">12x</pre></td>
@@ -124,14 +86,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <mn>12</mn>
-                    <mi>x</mi>
-                </mrow>
-            </math>
-        </td>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">3-2</pre></td>
@@ -144,15 +98,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <mn>3</mn>
-                    <mo>−</mo>
-                    <mn>2</mn>
-                </mrow>
-            </math>
-        </td>
     </tr>
 </table>
 
@@ -160,9 +105,8 @@ mathml_output = latex2mathml.converter.convert(latex_input)
 
 <table>
     <tr>
-        <th width="33%">LaTeX Input</th>
-        <th width="33%">MathML Output</th>
-        <th width="33%">Preview</th>
+        <th>LaTeX Input</th>
+        <th>MathML Output</th>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">a_b</pre></td>
@@ -176,16 +120,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <msub>
-                        <mi>a</mi>
-                        <mi>b</mi>
-                    </msub>
-                </mrow>
-            </math>
-        </td>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">a^b</pre></td>
@@ -199,16 +133,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <msup>
-                        <mi>a</mi>
-                        <mi>b</mi>
-                    </msup>
-                </mrow>
-            </math>
-        </td>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">a_b^c</pre></td>
@@ -223,17 +147,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <msubsup>
-                        <mi>a</mi>
-                        <mi>b</mi>
-                        <mi>c</mi>
-                    </msubsup>
-                </mrow>
-            </math>
-        </td>
     </tr>
 </table>
 
@@ -241,9 +154,8 @@ mathml_output = latex2mathml.converter.convert(latex_input)
 
 <table>
     <tr>
-        <th width="33%">LaTeX Input</th>
-        <th width="33%">MathML Output</th>
-        <th width="33%">Preview</th>
+        <th>LaTeX Input</th>
+        <th>MathML Output</th>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">\frac{1}{2}</pre></td>
@@ -261,20 +173,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <mfrac>
-                        <mrow>
-                            <mn>1</mn>
-                        </mrow>
-                        <mrow>
-                            <mn>2</mn>
-                        </mrow>
-                    </mfrac>
-                </mrow>
-            </math>
-        </td>
     </tr>
 </table>
 
@@ -282,9 +180,8 @@ mathml_output = latex2mathml.converter.convert(latex_input)
 
 <table>
     <tr>
-        <th width="33%">LaTeX Input</th>
-        <th width="33%">MathML Output</th>
-        <th width="33%">Preview</th>
+        <th>LaTeX Input</th>
+        <th>MathML Output</th>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">\sqrt{2}</pre></td>
@@ -299,17 +196,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <msqrt>
-                        <mrow>
-                            <mn>2</mn>
-                        </mrow>
-                    </msqrt>
-                </mrow>
-            </math>
-        </td>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">\sqrt[3]{2}</pre></td>
@@ -327,20 +213,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <mroot>
-                        <mrow>
-                            <mn>2</mn>
-                        </mrow>
-                        <mrow>
-                            <mn>3</mn>
-                        </mrow>
-                    </mroot>
-                </mrow>
-            </math>
-        </td>
     </tr>
 </table>
 
@@ -348,9 +220,8 @@ mathml_output = latex2mathml.converter.convert(latex_input)
 
 <table>
     <tr>
-        <th width="20%">LaTeX Input</th>
-        <th width="30%">MathML Output</th>
-        <th width="50%">Preview</th>
+        <th>LaTeX Input</th>
+        <th>MathML Output</th>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">\begin{matrix}a & b \\ c & d \end{matrix}</pre></td>
@@ -378,30 +249,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <mtable>
-                        <mtr>
-                            <mtd>
-                                <mi>a</mi>
-                            </mtd>
-                            <mtd>
-                                <mi>b</mi>
-                            </mtd>
-                        </mtr>
-                        <mtr>
-                            <mtd>
-                                <mi>c</mi>
-                            </mtd>
-                            <mtd>
-                                <mi>d</mi>
-                            </mtd>
-                        </mtr>
-                    </mtable>
-                </mrow>
-            </math>
-        </td>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">\begin{matrix*}[r]a & b \\ c & d \end{matrix*}</pre></td>
@@ -429,30 +276,6 @@ mathml_output = latex2mathml.converter.convert(latex_input)
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top">
-            <math>
-                <mrow>
-                    <mtable>
-                        <mtr>
-                            <mtd columnalign='right'>
-                                <mi>a</mi>
-                            </mtd>
-                            <mtd columnalign='right'>
-                                <mi>b</mi>
-                            </mtd>
-                        </mtr>
-                        <mtr>
-                            <mtd columnalign='right'>
-                                <mi>c</mi>
-                            </mtd>
-                            <mtd columnalign='right'>
-                                <mi>d</mi>
-                            </mtd>
-                        </mtr>
-                    </mtable>
-                </mrow>
-            </math>
-        </td>
     </tr>
     <tr>
         <td valign="top"><pre lang="latex">
@@ -602,143 +425,6 @@ A_{m,n} =
     &lt;/mrow&gt;
 &lt;/math&gt;
         </pre></td>
-        <td valign="top"><math>
-                <mrow>
-                    <msub>
-                        <mi>A</mi>
-                        <mrow>
-                            <mi>m</mi>
-                            <mi>,</mi>
-                            <mi>n</mi>
-                        </mrow>
-                    </msub>
-                    <mo>=</mo>
-                    <mo>[</mo>
-                    <mtable>
-                        <mtr>
-                            <mtd>
-                                <msub>
-                                    <mi>a</mi>
-                                    <mrow>
-                                        <mn>1</mn>
-                                        <mi>,</mi>
-                                        <mn>1</mn>
-                                    </mrow>
-                                </msub>
-                            </mtd>
-                            <mtd>
-                                <msub>
-                                    <mi>a</mi>
-                                    <mrow>
-                                        <mn>1</mn>
-                                        <mi>,</mi>
-                                        <mn>2</mn>
-                                    </mrow>
-                                </msub>
-                            </mtd>
-                            <mtd>
-                                <mo>⋯</mo>
-                            </mtd>
-                            <mtd>
-                                <msub>
-                                    <mi>a</mi>
-                                    <mrow>
-                                        <mn>1</mn>
-                                        <mi>,</mi>
-                                        <mi>n</mi>
-                                    </mrow>
-                                </msub>
-                            </mtd>
-                        </mtr>
-                        <mtr>
-                            <mtd>
-                                <msub>
-                                    <mi>a</mi>
-                                    <mrow>
-                                        <mn>2</mn>
-                                        <mi>,</mi>
-                                        <mn>1</mn>
-                                    </mrow>
-                                </msub>
-                            </mtd>
-                            <mtd>
-                                <msub>
-                                    <mi>a</mi>
-                                    <mrow>
-                                        <mn>2</mn>
-                                        <mi>,</mi>
-                                        <mn>2</mn>
-                                    </mrow>
-                                </msub>
-                            </mtd>
-                            <mtd>
-                                <mo>⋯</mo>
-                            </mtd>
-                            <mtd>
-                                <msub>
-                                    <mi>a</mi>
-                                    <mrow>
-                                        <mn>2</mn>
-                                        <mi>,</mi>
-                                        <mi>n</mi>
-                                    </mrow>
-                                </msub>
-                            </mtd>
-                        </mtr>
-                        <mtr>
-                            <mtd>
-                                <mo>⋮</mo>
-                            </mtd>
-                            <mtd>
-                                <mo>⋮</mo>
-                            </mtd>
-                            <mtd>
-                                <mo>⋱</mo>
-                            </mtd>
-                            <mtd>
-                                <mo>⋮</mo>
-                            </mtd>
-                        </mtr>
-                        <mtr>
-                            <mtd>
-                                <msub>
-                                    <mi>a</mi>
-                                    <mrow>
-                                        <mi>m</mi>
-                                        <mi>,</mi>
-                                        <mn>1</mn>
-                                    </mrow>
-                                </msub>
-                            </mtd>
-                            <mtd>
-                                <msub>
-                                    <mi>a</mi>
-                                    <mrow>
-                                        <mi>m</mi>
-                                        <mi>,</mi>
-                                        <mn>2</mn>
-                                    </mrow>
-                                </msub>
-                            </mtd>
-                            <mtd>
-                                <mo>⋯</mo>
-                            </mtd>
-                            <mtd>
-                                <msub>
-                                    <mi>a</mi>
-                                    <mrow>
-                                        <mi>m</mi>
-                                        <mi>,</mi>
-                                        <mi>n</mi>
-                                    </mrow>
-                                </msub>
-                            </mtd>
-                        </mtr>
-                    </mtable>
-                    <mo>]</mo>
-                </mrow>
-            </math>
-        </td>
     </tr>
 </table>
 
