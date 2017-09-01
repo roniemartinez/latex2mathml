@@ -2,6 +2,10 @@
 List of changes to latex2mathml
 
 ## [Unreleased]
+## [2.0.2] - 2017-09-02
+### Fixed
+- latex2mathml folder not included in package.
+
 ## [2.0.1] - 2017-09-02
 ### Changed
 - LaTeX inputs and MathML outputs are shown in table in README.
@@ -95,7 +99,8 @@ List of changes to latex2mathml
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.0.1...master
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.0.2...master
+[2.0.2]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.0.2
 [2.0.1]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.0.1
 [1.1.1]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.1.1
 [1.0.10]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.10
