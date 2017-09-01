@@ -2,6 +2,14 @@
 List of changes to latex2mathml
 
 ## [Unreleased]
+## [2.0.1] - 2017-09-02
+### Changed
+- LaTeX inputs and MathML outputs are shown in table in README.
+- unimathsymbols.txt will be read once.
+- Element class remove in exchange of xml.etree.xElementTree.
+
+### Added
+- File headers are included to source.
 
 ## [1.1.1] - 2016-07-21
 ### Fixed
@@ -87,7 +95,8 @@ List of changes to latex2mathml
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v1.1.1...master
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.0.1...master
+[2.0.1]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.0.1
 [1.1.1]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.1.1
 [1.0.10]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.10
 [1.0.9]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.0.9

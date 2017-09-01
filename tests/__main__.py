@@ -2,7 +2,6 @@
 import unittest
 
 from tests.tokenizer_test import TokenizerTest
-from tests.element_test import ElementTest
 from tests.aggregator_test import AggregatorTest
 from tests.converter_test import ConverterTest
 from tests.symbol_parser_test import SymbolParserTest
