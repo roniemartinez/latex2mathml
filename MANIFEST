@@ -1,5 +1,5 @@
 setup.cfg
-README.rst
+README.md
 VERSION
 setup.py
 latex2mathml/unimathsymbols.txt

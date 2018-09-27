@@ -1,14 +1,13 @@
 #!/usr/bin/env python
+# __author__ = "Ronie Martinez"
+# __copyright__ = "Copyright 2016-2018, Ronie Martinez"
+# __credits__ = ["Ronie Martinez"]
+# __license__ = "MIT"
+# __maintainer__ = "Ronie Martinez"
+# __email__ = "ronmarti18@gmail.com"
+# __status__ = "Development"
 from latex2mathml.commands import MATRICES
 from latex2mathml.tokenizer import tokenize
-
-__author__ = "Ronie Martinez"
-__copyright__ = "Copyright 2016-2017, Ronie Martinez"
-__credits__ = ["Ronie Martinez"]
-__license__ = "MIT"
-__maintainer__ = "Ronie Martinez"
-__email__ = "ronmarti18@gmail.com"
-__status__ = "Development"
 
 
 def aggregate(latex):
@@ -17,6 +16,7 @@ def aggregate(latex):
     insert_before_last_item = False
     environment = None
     has_negative_sign = False
+    a = None
     for token in tokenize(latex):
         if token in MATRICES:
             environment = token
@@ -91,6 +91,7 @@ def aggregate(latex):
 def _insert_before_last_item(insert_before_last_item, n, subgroups):
     if insert_before_last_item:
         subgroups[-1].insert(-1, n)
+        # noinspection PyUnusedLocal
         insert_before_last_item = False
     else:
         subgroups[-1].append(n)

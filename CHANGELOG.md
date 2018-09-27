@@ -2,6 +2,9 @@
 List of changes to latex2mathml
 
 ## [Unreleased]
+### Fixed
+- Unescape texts (#5)
+
 ## [2.0.2] - 2017-09-02
 ### Fixed
 - latex2mathml folder not included in package.
