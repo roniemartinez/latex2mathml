@@ -14,7 +14,7 @@ setup(
     description='Pure Python library for LaTeX to MathML conversion.',
     long_description=open('README.rst').read(),
     keywords=[],
-    classifiers=['Development Status :: 4 - Beta',
+    classifiers=['Development Status :: 5 - Production/Stable',
                  'License :: OSI Approved :: MIT License',
                  'Topic :: Software Development :: Libraries :: Python Modules',
                  'Programming Language :: Python',
