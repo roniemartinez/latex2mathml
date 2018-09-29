@@ -2,6 +2,8 @@
 List of changes to latex2mathml
 
 ## [Unreleased]
+
+## [2.0.3] - 2018-09-29
 ### Fixed
 - Unescape texts (#5)
 
@@ -74,7 +76,7 @@ List of changes to latex2mathml
     - \begin{matrix}..\end{matrix}
     - \matrix{...} -> taken from MathJax
 
-## [1.0.2] - 2016-01-03
+## 1.0.2 - 2016-01-03
 ### Added
 - added support for binomial
 - added support for \left and \right commands
@@ -84,7 +86,7 @@ List of changes to latex2mathml
 ### Fixed
 - aggregator bug on superscripts and subscipts
 
-## [1.0.1] - 2016-01-02
+## 1.0.1 - 2016-01-02
 ### Added
 - aggregator for grouping latex code with curly braces({})
 - simple mathml viewer using flask
@@ -96,13 +98,14 @@ List of changes to latex2mathml
 ### Changed
 - updated Element class, added attributes
 
-## [1.0.0] - 2015-12-31
+## 1.0.0 - 2015-12-31
 ### Added
 - latex string tokenizer
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.0.2...master
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.0.3...master
+[2.0.3]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.0.3
 [2.0.2]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.0.2
 [2.0.1]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.0.1
 [1.1.1]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/1.1.1

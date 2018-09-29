@@ -19,7 +19,11 @@ def convert(latex):
     math = eTree.Element('math')
     row = eTree.SubElement(math, 'mrow')
     _classify_subgroup(aggregate(latex), row)
-    xml_string = eTree.tostring(math)
+    return _convert(math)
+
+
+def _convert(tree):
+    xml_string = eTree.tostring(tree)
     try:
         return unescape(xml_string)
     except TypeError:
@@ -172,7 +176,7 @@ def _get_prefix_element(element, row):
 
 def _classify(_element, parent):
     symbol = convert_symbol(_element)
-    if re.match('\d+(.\d+)?', _element):
+    if re.match(r'\d+(.\d+)?', _element):
         mn = eTree.SubElement(parent, 'mn')
         mn.text = _element
     elif _element in '+-*/()=':

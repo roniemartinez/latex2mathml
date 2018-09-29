@@ -434,7 +434,7 @@ A_{m,n} =
 ### Unit Testing
 
 ```bash
-pytest --show-capture=no --cov="." --cov-report=html --html=result/report.html --self-contained-html tests
+pytest -v --show-capture=no --cov="." --cov-report=html --html=result/report.html --self-contained-html tests
 ```
 
 ### References

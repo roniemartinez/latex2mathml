@@ -7,12 +7,12 @@
 # __email__ = "ronmarti18@gmail.com"
 # __status__ = "Development"
 import xml.etree.cElementTree as eTree
-from xml.sax.saxutils import unescape
 
 # noinspection PyPackageRequirements
 import pytest
 
-from latex2mathml.converter import convert
+# noinspection PyProtectedMember
+from latex2mathml.converter import convert, _convert
 
 
 @pytest.fixture
@@ -29,12 +29,7 @@ def test_subscript(math_and_row):
     mi.text = 'a'
     mi = eTree.SubElement(sub, 'mi')
     mi.text = 'b'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert('a_b')
+    assert _convert(math) == convert('a_b')
 
 
 def test_superscript(math_and_row):
@@ -44,12 +39,7 @@ def test_superscript(math_and_row):
     mi.text = 'a'
     mi = eTree.SubElement(sup, 'mi')
     mi.text = 'b'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert('a^b')
+    assert _convert(math) == convert('a^b')
 
 
 def test_subscript_and_superscript(math_and_row):
@@ -61,12 +51,7 @@ def test_subscript_and_superscript(math_and_row):
     mi.text = 'b'
     mi = eTree.SubElement(subsup, 'mi')
     mi.text = 'c'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert('a_b^c')
+    assert _convert(math) == convert('a_b^c')
 
 
 def test_superscript_and_subscript(math_and_row):
@@ -78,12 +63,7 @@ def test_superscript_and_subscript(math_and_row):
     mi.text = 'c'
     mi = eTree.SubElement(subsup, 'mi')
     mi.text = 'b'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert('a^b_c')
+    assert _convert(math) == convert('a^b_c')
 
 
 def test_subscript_within_curly_braces(math_and_row):
@@ -94,12 +74,7 @@ def test_subscript_within_curly_braces(math_and_row):
     mi.text = 'a'
     mi = eTree.SubElement(sub, 'mi')
     mi.text = 'b'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert('{a_b}')
+    assert _convert(math) == convert('{a_b}')
 
 
 def test_superscript_within_curly_braces(math_and_row):
@@ -110,12 +85,7 @@ def test_superscript_within_curly_braces(math_and_row):
     mi.text = 'a'
     mi = eTree.SubElement(sup, 'mi')
     mi.text = 'b'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert('{a^b}')
+    assert _convert(math) == convert('{a^b}')
 
 
 def test_superscript_with_curly_braces(math_and_row):
@@ -132,12 +102,7 @@ def test_superscript_with_curly_braces(math_and_row):
     mo.text = '&#x0002B;'
     mn = eTree.SubElement(row, 'mn')
     mn.text = '1'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert('a^{i+1}_3')
+    assert _convert(math) == convert('a^{i+1}_3')
 
 
 def test_simple_fraction(math_and_row):
@@ -149,12 +114,7 @@ def test_simple_fraction(math_and_row):
     row = eTree.SubElement(frac, 'mrow')
     mn = eTree.SubElement(row, 'mn')
     mn.text = '2'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\frac{1}{2}')
+    assert _convert(math) == convert(r'\frac{1}{2}')
 
 
 def test_square_root(math_and_row):
@@ -163,12 +123,7 @@ def test_square_root(math_and_row):
     row = eTree.SubElement(sqrt, 'mrow')
     mn = eTree.SubElement(row, 'mn')
     mn.text = '2'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\sqrt{2}')
+    assert _convert(math) == convert(r'\sqrt{2}')
 
 
 def test_root(math_and_row):
@@ -180,12 +135,7 @@ def test_root(math_and_row):
     row = eTree.SubElement(root, 'mrow')
     mn = eTree.SubElement(row, 'mn')
     mn.text = '3'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\sqrt[3]{2}')
+    assert _convert(math) == convert(r'\sqrt[3]{2}')
 
 
 def test_binomial(math_and_row):
@@ -201,12 +151,7 @@ def test_binomial(math_and_row):
     mn.text = '3'
     mo = eTree.SubElement(row, 'mo')
     mo.text = '&#x00029;'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\binom{2}{3}')
+    assert _convert(math) == convert(r'\binom{2}{3}')
 
 
 def test_left_and_right(math_and_row):
@@ -217,23 +162,13 @@ def test_left_and_right(math_and_row):
     mi.text = 'x'
     mo = eTree.SubElement(row, 'mo', stretchy='true', form='postfix', fence='true')
     mo.text = '&#x00029;'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\left(x\right)')
+    assert _convert(math) == convert(r'\left(x\right)')
 
 
 def test_space(math_and_row):
     math, row = math_and_row
     eTree.SubElement(row, 'mspace', width='0.167em')
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert('\,')
+    assert _convert(math) == convert('\,')
 
 
 def test_overline(math_and_row):
@@ -244,12 +179,7 @@ def test_overline(math_and_row):
     mi.text = 'a'
     mo = eTree.SubElement(over, 'mo', stretchy='true')
     mo.text = '&#x000AF;'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\overline{a}')
+    assert _convert(math) == convert(r'\overline{a}')
 
 
 def test_underline(math_and_row):
@@ -260,12 +190,7 @@ def test_underline(math_and_row):
     mi.text = 'a'
     mo = eTree.SubElement(under, 'mo', stretchy='true')
     mo.text = '&#x00332;'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\underline{a}')
+    assert _convert(math) == convert(r'\underline{a}')
 
 
 def test_matrix(math_and_row):
@@ -287,12 +212,8 @@ def test_matrix(math_and_row):
     td = eTree.SubElement(tr, 'mtd')
     mi = eTree.SubElement(td, 'mi')
     mi.text = 'd'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\begin{matrix}a & b \\ c & d \end{matrix}')
+
+    assert _convert(math) == convert(r'\begin{matrix}a & b \\ c & d \end{matrix}')
 
 
 def test_matrix_without_begin_and_end(math_and_row):  # taken from MathJax
@@ -315,12 +236,7 @@ def test_matrix_without_begin_and_end(math_and_row):  # taken from MathJax
     mi = eTree.SubElement(td, 'mi')
     mi.text = 'd'
 
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\matrix{a & b \\ c & d}')
+    assert _convert(math) == convert(r'\matrix{a & b \\ c & d}')
 
 
 def test_matrix_with_alignment(math_and_row):
@@ -343,12 +259,7 @@ def test_matrix_with_alignment(math_and_row):
     mi = eTree.SubElement(td, 'mi')
     mi.text = 'd'
 
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\begin{matrix*}[r]a & b \\ c & d \end{matrix*}')
+    assert _convert(math) == convert(r'\begin{matrix*}[r]a & b \\ c & d \end{matrix*}')
 
 
 def test_matrix_with_negative_sign(math_and_row):
@@ -373,12 +284,7 @@ def test_matrix_with_negative_sign(math_and_row):
     mi = eTree.SubElement(td, 'mi')
     mi.text = 'd'
 
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\begin{matrix}-a & b \\ c & d \end{matrix}')
+    assert _convert(math) == convert(r'\begin{matrix}-a & b \\ c & d \end{matrix}')
 
 
 def test_pmatrix(math_and_row):
@@ -405,12 +311,8 @@ def test_pmatrix(math_and_row):
 
     mo = eTree.SubElement(row, 'mo')
     mo.text = '&#x00029;'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\begin{pmatrix}a & b \\ c & d \end{pmatrix}')
+
+    assert _convert(math) == convert(r'\begin{pmatrix}a & b \\ c & d \end{pmatrix}')
 
 
 def test_simple_array(math_and_row):
@@ -433,12 +335,7 @@ def test_simple_array(math_and_row):
     mn = eTree.SubElement(td, 'mn')
     mn.text = '4'
 
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \end{array}''')
+    assert _convert(math) == convert(r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \end{array}''')
 
 
 def test_array_with_vertical_bars(math_and_row):
@@ -466,12 +363,7 @@ def test_array_with_vertical_bars(math_and_row):
     mn = eTree.SubElement(td, 'mn')
     mn.text = '6'
 
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\begin{array}{c|rl} 1 & 2 & 3 \\ 4 & 5 & 6 \end{array}''')
+    assert _convert(math) == convert(r'\begin{array}{c|rl} 1 & 2 & 3 \\ 4 & 5 & 6 \end{array}''')
 
 
 def test_array_with_horizontal_lines(math_and_row):
@@ -504,9 +396,5 @@ def test_array_with_horizontal_lines(math_and_row):
     td = eTree.SubElement(tr, 'mtd', columnalign='right')
     mn = eTree.SubElement(td, 'mn')
     mn.text = '6'
-    xml_string = eTree.tostring(math)
-    try:
-        expected = unescape(xml_string)
-    except TypeError:  # pragma: nocover_py2
-        expected = unescape(xml_string.decode('utf-8'))
-    assert expected == convert(r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}''')
+
+    assert _convert(math) == convert(r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}''')
