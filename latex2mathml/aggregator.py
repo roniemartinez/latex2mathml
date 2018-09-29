@@ -21,6 +21,15 @@ def aggregate(latex):
         if token in MATRICES:
             environment = token
             _insert_before_last_item(insert_before_last_item, token, subgroups)
+        elif token == r'\over':
+            subgroups.pop()
+            try:
+                _insert_before_last_item(True, r'\frac', subgroups)
+            except IndexError:
+                aggregation = [aggregation]
+                subgroups = [aggregation]
+                _insert_before_last_item(True, r'\frac', subgroups)
+            _add_new_subgroup(subgroups)
         elif token in '{([':
             try:
                 a = subgroups[-1][-1]
@@ -91,8 +100,6 @@ def aggregate(latex):
 def _insert_before_last_item(insert_before_last_item, n, subgroups):
     if insert_before_last_item:
         subgroups[-1].insert(-1, n)
-        # noinspection PyUnusedLocal
-        insert_before_last_item = False
     else:
         subgroups[-1].append(n)
 

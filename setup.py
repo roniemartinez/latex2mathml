@@ -13,6 +13,7 @@ setup(
     author_email='ronmarti18@gmail.com',
     description='Pure Python library for LaTeX to MathML conversion.',
     long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     keywords=[],
     classifiers=['Development Status :: 5 - Production/Stable',
                  'License :: OSI Approved :: MIT License',
