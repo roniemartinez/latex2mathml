@@ -59,3 +59,11 @@ def test_complex_matrix():
 def test_simple_array():
     assert [r'\array', 'cc', [['1', '2'], ['3', '4']]] == \
            list(aggregate(r'\begin{array}{cc} 1 & 2 \\ 3 & 4 \end{array}'''))
+
+
+def test_frac():
+    assert ['\\frac', ['1'], ['2']] == list(aggregate(r'\frac{1}{2}'))
+
+
+def test_over():
+    assert ['\\frac', ['1'], ['2']] == list(aggregate(r'1 \over 2'))
