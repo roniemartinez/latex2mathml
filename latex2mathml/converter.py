@@ -1,24 +1,33 @@
 #!/usr/bin/env python
+# __author__ = "Ronie Martinez"
+# __copyright__ = "Copyright 2016-2018, Ronie Martinez"
+# __credits__ = ["Ronie Martinez"]
+# __license__ = "MIT"
+# __maintainer__ = "Ronie Martinez"
+# __email__ = "ronmarti18@gmail.com"
+# __status__ = "Development"
 import re
 import xml.etree.cElementTree as eTree
+from xml.sax.saxutils import unescape
+
 from latex2mathml.aggregator import aggregate
 from latex2mathml.commands import MATRICES, COMMANDS
 from latex2mathml.symbols_parser import convert_symbol
-
-__author__ = "Ronie Martinez"
-__copyright__ = "Copyright 2016-2017, Ronie Martinez"
-__credits__ = ["Ronie Martinez"]
-__license__ = "MIT"
-__maintainer__ = "Ronie Martinez"
-__email__ = "ronmarti18@gmail.com"
-__status__ = "Development"
 
 
 def convert(latex):
     math = eTree.Element('math')
     row = eTree.SubElement(math, 'mrow')
     _classify_subgroup(aggregate(latex), row)
-    return eTree.tostring(math)
+    return _convert(math)
+
+
+def _convert(tree):
+    xml_string = eTree.tostring(tree)
+    try:
+        return unescape(xml_string)
+    except TypeError:
+        return unescape(xml_string.decode('utf-8'))
 
 
 def _convert_matrix_content(param, parent, alignment=None):
@@ -67,9 +76,8 @@ def _convert_array_content(param, parent, alignment=None):
                 rowlines.append('solid')
                 has_rowline = True
                 continue
-            __alignment = _alignment[index]
-            if __alignment:
-                column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(__alignment)
+            if _alignment[index]:
+                column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(_alignment[index])
                 mtd = eTree.SubElement(mtr, 'mtd', columnalign=column_align)
             else:
                 mtd = eTree.SubElement(mtr, 'mtd')
@@ -168,7 +176,7 @@ def _get_prefix_element(element, row):
 
 def _classify(_element, parent):
     symbol = convert_symbol(_element)
-    if re.match('\d+(.\d+)?', _element):
+    if re.match(r'\d+(.\d+)?', _element):
         mn = eTree.SubElement(parent, 'mn')
         mn.text = _element
     elif _element in '+-*/()=':
