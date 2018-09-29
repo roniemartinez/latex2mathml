@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+# __author__ = "Ronie Martinez"
+# __copyright__ = "Copyright 2016-2018, Ronie Martinez"
+# __credits__ = ["Ronie Martinez"]
+# __license__ = "MIT"
+# __maintainer__ = "Ronie Martinez"
+# __email__ = "ronmarti18@gmail.com"
+# __status__ = "Development"
 import xml.etree.cElementTree as eTree
 
 # noinspection PyPackageRequirements
@@ -6,14 +13,6 @@ import pytest
 
 # noinspection PyProtectedMember
 from latex2mathml.converter import convert, _convert
-
-__author__ = "Ronie Martinez"
-__copyright__ = "Copyright 2016-2018, Ronie Martinez"
-__credits__ = ["Ronie Martinez"]
-__license__ = "MIT"
-__maintainer__ = "Ronie Martinez"
-__email__ = "ronmarti18@gmail.com"
-__status__ = "Development"
 
 
 @pytest.fixture
