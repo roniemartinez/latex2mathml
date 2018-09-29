@@ -12,7 +12,7 @@ setup(
     author='Ronie Martinez',
     author_email='ronmarti18@gmail.com',
     description='Pure Python library for LaTeX to MathML conversion.',
-    long_description=open('README.rst').read(),
+    long_description=open('README.md').read(),
     keywords=[],
     classifiers=['Development Status :: 5 - Production/Stable',
                  'License :: OSI Approved :: MIT License',
