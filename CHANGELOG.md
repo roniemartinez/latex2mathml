@@ -2,6 +2,9 @@
 List of changes to latex2mathml
 
 ## [Unreleased]
+## [2.1.0] - 2018-09-29
+### Added
+- Support \over (#8)
 
 ## [2.0.3] - 2018-09-29
 ### Fixed
@@ -104,7 +107,8 @@ List of changes to latex2mathml
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.0.3...master
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.1.0...master
+[2.1.0]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.1.0
 [2.0.3]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.0.3
 [2.0.2]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.0.2
 [2.0.1]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.0.1

@@ -131,3 +131,17 @@ def test_inner_group(math_and_row):
     mi = eTree.SubElement(mrow, 'mi')
     mi.text = 'b'
     assert _convert(math) == convert('{a+{b}}')
+
+
+def test_over(math_and_row):
+    math, row = math_and_row
+    frac = eTree.SubElement(row, 'mfrac')
+    row = eTree.SubElement(frac, 'mrow')
+    mn = eTree.SubElement(row, 'mn')
+    mn.text = '1'
+    row = eTree.SubElement(frac, 'mrow')
+    mn = eTree.SubElement(row, 'mn')
+    mn.text = '2'
+    assert _convert(math) == convert(r'1 \over 2')
+    assert convert(r'1 \over 2') == convert(r'{1 \over 2}')
+
