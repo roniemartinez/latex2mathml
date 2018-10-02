@@ -113,7 +113,7 @@ List of changes to latex2mathml
 - simple converter implementation
 
 [Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.1.1...master
-[2.1.1]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.1.0
+[2.1.1]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.1.1
 [2.1.0]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.1.0
 [2.0.3]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.0.3
 [2.0.2]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.0.2
