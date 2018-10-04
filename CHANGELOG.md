@@ -2,6 +2,8 @@
 List of changes to latex2mathml
 
 ## [Unreleased]
+### Changed
+- Use TexSoup parser
 
 ## [2.1.1.2] - 2018-10-02
 ### Fixed

@@ -425,6 +425,10 @@ A_{m,n} =
     </tr>
 </table>
 
+### Dependencies
+
+- [TexSoup](https://github.com/alvinwan/TexSoup)
+
 ### Unit Test
 
 - [pytest](https://github.com/pytest-dev/pytest)

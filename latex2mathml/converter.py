@@ -10,6 +10,8 @@ import re
 import xml.etree.cElementTree as eTree
 from xml.sax.saxutils import unescape
 
+import TexSoup
+
 from latex2mathml.aggregator import aggregate
 from latex2mathml.commands import MATRICES, COMMANDS
 from latex2mathml.symbols_parser import convert_symbol
@@ -18,7 +20,7 @@ from latex2mathml.symbols_parser import convert_symbol
 def convert(latex):
     math = eTree.Element('math')
     row = eTree.SubElement(math, 'mrow')
-    _classify_subgroup(aggregate(latex), row)
+    _classify_subgroup(aggregate(TexSoup.TexSoup(latex)), row)
     return _convert(math)
 
 
@@ -65,31 +67,31 @@ def _convert_array_content(param, parent, alignment=None):
     rowlines = []
     row_count = 0
     for row in param:
+        if len(alignment) == 1:
+            align = _alignment[0]
+        else:
+            align = None
+        if align:
+            column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(align)
+            mtr = eTree.SubElement(parent, 'mtr', columnalign=column_align)
+        else:
+            mtr = eTree.SubElement(parent, 'mtr')
+        try:
+            align = _alignment[row_count]
+        except IndexError:
+            align = None
         row_count += 1
-        mtr = eTree.SubElement(parent, 'mtr')
-        iterable = iter(range(len(row)))
-        index = 0
-        has_rowline = False
-        for i in iterable:
-            element = row[i]
-            if element == r'\hline' and row_count > 1:
-                rowlines.append('solid')
-                has_rowline = True
-                continue
-            if _alignment[index]:
-                column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(_alignment[index])
-                mtd = eTree.SubElement(mtr, 'mtd', columnalign=column_align)
-            else:
-                mtd = eTree.SubElement(mtr, 'mtd')
+        if align:
+            column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(align)
+            mtd = eTree.SubElement(mtr, 'mtd', columnalign=column_align)
+        else:
+            mtd = eTree.SubElement(mtr, 'mtd')
+        mrow = eTree.SubElement(mtd, 'mrow')
+        for element in row:
             if isinstance(element, list):
-                _classify_subgroup(element, mtd)
-            elif element in COMMANDS:
-                _convert_command(element, row, i, iterable, mtd)
+                _classify_subgroup(element, mrow)
             else:
-                _classify(element, mtd)
-            index += 1
-        if not has_rowline and row_count > 1:
-            rowlines.append('none')
+                _classify(element, mrow)
     if 'solid' in rowlines:
         parent.set('rowlines', ' '.join(rowlines))
 
@@ -187,10 +189,26 @@ def _classify(_element, parent):
         mo = eTree.SubElement(parent, 'mo')
         mo.text = '&#x{};'.format(symbol)
     elif _element.startswith('\\'):
-        if symbol is not None:
+        if symbol:
             mi = eTree.SubElement(parent, 'mi')
             mi.text = '&#x{};'.format(symbol)
         else:
+            if _element.startswith(r'\left'):
+                symbol = convert_symbol(_element[5:])
+                if symbol:
+                    mo = eTree.SubElement(parent, 'mo')
+                    mo.text = '&#x{};'.format(symbol)
+                    return
+            elif _element.startswith(r'\right'):
+                element_ = _element[6:]
+                if element_ == '.':
+                    eTree.SubElement(parent, 'mo')
+                    return
+                else:
+                    symbol = convert_symbol(element_)
+                    mo = eTree.SubElement(parent, 'mo')
+                    mo.text = '&#x{};'.format(symbol)
+                    return
             e = _element.lstrip('\\')
             mi = eTree.SubElement(parent, 'mi')
             mi.text = e
