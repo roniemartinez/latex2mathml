@@ -1,6 +1,6 @@
 from setuptools import setup
 
-VERSION = '2.1.1.2'
+VERSION = '2.2.0'
 
 setup(
     name='latex2mathml',
@@ -15,11 +15,11 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     keywords=[],
+    install_requires=['TexSoup==0.1'],
     classifiers=['Development Status :: 5 - Production/Stable',
                  'License :: OSI Approved :: MIT License',
                  'Topic :: Software Development :: Libraries :: Python Modules',
                  'Programming Language :: Python',
-                 'Programming Language :: Python :: 2.7',
                  'Programming Language :: Python :: 3.4',
                  'Programming Language :: Python :: 3.5',
                  'Programming Language :: Python :: 3.6',
