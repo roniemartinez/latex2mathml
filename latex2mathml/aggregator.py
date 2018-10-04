@@ -11,6 +11,10 @@ import string
 import TexSoup
 
 
+class Latex2MathMLError(Exception):
+    pass
+
+
 def group(iterable):
     g = []
     for i in iterable:
@@ -107,10 +111,6 @@ def tokenize(text):
                 yield char
 
 
-class Latex2MathMLError(Exception):
-    pass
-
-
 def aggregate(tex_tree):
     tree = []
     iterable = iter(tex_tree)
@@ -152,8 +152,8 @@ def aggregate(tex_tree):
                     tree.append([i.extra])
                 elif i.name == 'frac' and len(i.extra):
                     tree.append(r'\frac')
-                    for x in tokenize(i.extra):
-                        tree.append(x)
+                    for token in tokenize(i.extra):
+                        tree.append(token)
                 elif (i.name != 'left' and i.name.startswith('left')) or \
                         (i.name != 'right' and i.name.startswith('right')):
                     tokens = list(tokenize(f'\\{i.name}'))
@@ -161,6 +161,7 @@ def aggregate(tex_tree):
                         tree.append(token)
                 else:
                     if any([x in i.name for x in string.digits]):
+                        # noinspection PyTypeChecker
                         soup = TexSoup.TexSoup(' '.join(tokenize(f'\\{i.name}')))
                         tree = aggregate(soup)
                     else:
@@ -177,7 +178,6 @@ def aggregate(tex_tree):
                     content = []
                     row = []
                     for item in i.contents:
-                        print(item, type(item))
                         if isinstance(item, str):
                             item = item.strip()
                             if item == '\\':
@@ -196,13 +196,25 @@ def aggregate(tex_tree):
                             elif item.endswith('_'):
                                 row += ['_', item[:-1]]
                             else:
-                                row.append(item)
+                                for token in tokenize(item):
+                                    if isinstance(token, list) and len(token) == 0:
+                                        continue
+                                    content.append(token)
                         elif isinstance(item, TexSoup.RArg):
                             row_ = aggregate(item)
                             if all([x in 'lcr' for x in row_]):
                                 tree.append(row_)
                             else:
                                 row.append(aggregate(item.exprs))
+                        elif isinstance(item, TexSoup.TexNode):
+                            item = item.expr
+                            row = []
+                            if isinstance(item, TexSoup.TexCmd):
+                                row.append('\\' + item.name)
+                                for token in tokenize(item.extra):
+                                    row.append(token)
+                            else:
+                                raise Latex2MathMLError
                         else:
                             row.append(aggregate(item))
                     content.append(row)
@@ -210,7 +222,7 @@ def aggregate(tex_tree):
                     content = aggregate(i.contents)
                 tree.append(content)
         else:
-            raise Latex2MathMLError()
+            raise Latex2MathMLError
     # fix superscripts and subscripts arrangements
     length = len(tree)
     if (length == 3 or length == 5) and ('_' in tree[1::2] or '^' in tree[1::2]):

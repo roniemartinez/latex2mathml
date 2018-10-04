@@ -2,8 +2,13 @@
 List of changes to latex2mathml
 
 ## [Unreleased]
+
+## [2.2.0] - 2018-10-02
 ### Changed
 - Use TexSoup parser
+
+### Removed
+- Drop Python 2.7.x support
 
 ## [2.1.1.2] - 2018-10-02
 ### Fixed
@@ -114,7 +119,8 @@ List of changes to latex2mathml
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.1.1.2...master
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.2.0...master
+[2.2.0]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.2.0
 [2.1.1.2]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.1.1.2
 [2.1.0]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.1.0
 [2.0.3]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.0.3

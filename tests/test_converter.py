@@ -158,7 +158,6 @@ def test_over_inside_braces(math_and_row):
     assert _convert(math) == convert(r'{1 \over 2}')
 
 
-
 def test_complex_matrix(math_and_row):
     math, row = math_and_row
     mtable = eTree.SubElement(row, 'mtable')
@@ -207,72 +206,69 @@ def test_null_delimiter(math_and_row):
     left = eTree.SubElement(row, 'mo')
     left.text = '&#x0007B;'
     table = eTree.SubElement(row, 'mtable')
-    right = eTree.SubElement(row, 'mo')
+    eTree.SubElement(row, 'mo')
 
-    mtr = eTree.SubElement(table, 'mtr', columnalign='left')
-    mtd = eTree.SubElement(mtr, 'mtd')
-    row = eTree.SubElement(mtd, 'mrow')
-    mn = eTree.SubElement(row, 'mn')
+    mtr = eTree.SubElement(table, 'mtr')
+    mtd = eTree.SubElement(mtr, 'mtd', columnalign='left')
+    mn = eTree.SubElement(mtd, 'mn')
     mn.text = '3'
-    mi = eTree.SubElement(row, 'mi')
+    mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'x'
-    mo = eTree.SubElement(row, 'mo')
+    mo = eTree.SubElement(mtd, 'mo')
     mo.text = '&#x02212;'
-    mn = eTree.SubElement(row, 'mn')
+    mn = eTree.SubElement(mtd, 'mn')
     mn.text = '5'
-    mi = eTree.SubElement(row, 'mi')
+    mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'y'
-    mo = eTree.SubElement(row, 'mo')
+    mo = eTree.SubElement(mtd, 'mo')
     mo.text = '&#x0002B;'
-    mn = eTree.SubElement(row, 'mn')
+    mn = eTree.SubElement(mtd, 'mn')
     mn.text = '4'
-    mi = eTree.SubElement(row, 'mi')
+    mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'z'
-    mo = eTree.SubElement(row, 'mo')
+    mo = eTree.SubElement(mtd, 'mo')
     mo.text = '&#x0003D;'
-    mn = eTree.SubElement(row, 'mn')
+    mn = eTree.SubElement(mtd, 'mn')
     mn.text = '0'
 
-    mtr = eTree.SubElement(table, 'mtr', columnalign='left')
-    mtd = eTree.SubElement(mtr, 'mtd')
-    row = eTree.SubElement(mtd, 'mrow')
-    mi = eTree.SubElement(row, 'mi')
+    mtr = eTree.SubElement(table, 'mtr')
+    mtd = eTree.SubElement(mtr, 'mtd', columnalign='left')
+    mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'x'
-    mo = eTree.SubElement(row, 'mo')
+    mo = eTree.SubElement(mtd, 'mo')
     mo.text = '&#x02212;'
-    mi = eTree.SubElement(row, 'mi')
+    mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'y'
-    mo = eTree.SubElement(row, 'mo')
+    mo = eTree.SubElement(mtd, 'mo')
     mo.text = '&#x0002B;'
-    mn = eTree.SubElement(row, 'mn')
+    mn = eTree.SubElement(mtd, 'mn')
     mn.text = '8'
-    mi = eTree.SubElement(row, 'mi')
+    mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'z'
-    mo = eTree.SubElement(row, 'mo')
+    mo = eTree.SubElement(mtd, 'mo')
     mo.text = '&#x0003D;'
-    mn = eTree.SubElement(row, 'mn')
+    mn = eTree.SubElement(mtd, 'mn')
     mn.text = '0'
 
-    mtr = eTree.SubElement(table, 'mtr', columnalign='left')
-    mtd = eTree.SubElement(mtr, 'mtd')
-    row = eTree.SubElement(mtd, 'mrow')
-    mn = eTree.SubElement(row, 'mn')
+    mtr = eTree.SubElement(table, 'mtr')
+    mtd = eTree.SubElement(mtr, 'mtd', columnalign='left')
+    mn = eTree.SubElement(mtd, 'mn')
     mn.text = '2'
-    mi = eTree.SubElement(row, 'mi')
+    mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'x'
-    mo = eTree.SubElement(row, 'mo')
+    mo = eTree.SubElement(mtd, 'mo')
     mo.text = '&#x02212;'
-    mn = eTree.SubElement(row, 'mn')
+    mn = eTree.SubElement(mtd, 'mn')
     mn.text = '6'
-    mi = eTree.SubElement(row, 'mi')
+    mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'y'
-    mo = eTree.SubElement(row, 'mo')
+    mo = eTree.SubElement(mtd, 'mo')
     mo.text = '&#x0002B;'
-    mi = eTree.SubElement(row, 'mi')
+    mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'z'
-    mo = eTree.SubElement(row, 'mo')
+    mo = eTree.SubElement(mtd, 'mo')
     mo.text = '&#x0003D;'
-    mn = eTree.SubElement(row, 'mn')
+    mn = eTree.SubElement(mtd, 'mn')
     mn.text = '0'
 
     latex = r'\left\{ \begin{array} { l } { 3x - 5y + 4z = 0} \\ { x - y + 8z = 0} \\ { 2x - 6y + z = 0} \end{array} ' \

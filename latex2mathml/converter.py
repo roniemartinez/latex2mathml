@@ -67,31 +67,36 @@ def _convert_array_content(param, parent, alignment=None):
     rowlines = []
     row_count = 0
     for row in param:
-        if len(alignment) == 1:
-            align = _alignment[0]
-        else:
-            align = None
-        if align:
-            column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(align)
-            mtr = eTree.SubElement(parent, 'mtr', columnalign=column_align)
-        else:
-            mtr = eTree.SubElement(parent, 'mtr')
-        try:
-            align = _alignment[row_count]
-        except IndexError:
-            align = None
         row_count += 1
-        if align:
-            column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(align)
-            mtd = eTree.SubElement(mtr, 'mtd', columnalign=column_align)
-        else:
-            mtd = eTree.SubElement(mtr, 'mtd')
-        mrow = eTree.SubElement(mtd, 'mrow')
-        for element in row:
-            if isinstance(element, list):
-                _classify_subgroup(element, mrow)
+        mtr = eTree.SubElement(parent, 'mtr')
+        iterable = iter(range(len(row)))
+        index = 0
+        has_rowline = False
+        for i in iterable:
+            element = row[i]
+            if element == r'\hline' and row_count > 1:
+                rowlines.append('solid')
+                has_rowline = True
+                continue
+            try:
+                align = _alignment[index]
+            except IndexError:
+                align = None
+            if align:
+                # noinspection PyTypeChecker
+                column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(align)
+                mtd = eTree.SubElement(mtr, 'mtd', columnalign=column_align)
             else:
-                _classify(element, mrow)
+                mtd = eTree.SubElement(mtr, 'mtd')
+            if isinstance(element, list):
+                _classify_subgroup(element, mtd)
+            elif element in COMMANDS:
+                _convert_command(element, row, i, iterable, mtd)
+            else:
+                _classify(element, mtd)
+            index += 1
+        if not has_rowline and row_count > 1:
+            rowlines.append('none')
     if 'solid' in rowlines:
         parent.set('rowlines', ' '.join(rowlines))
 
