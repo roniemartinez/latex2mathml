@@ -10,6 +10,8 @@ import re
 import xml.etree.cElementTree as eTree
 from xml.sax.saxutils import unescape
 
+import TexSoup
+
 from latex2mathml.aggregator import aggregate
 from latex2mathml.commands import MATRICES, COMMANDS
 from latex2mathml.symbols_parser import convert_symbol
@@ -18,7 +20,7 @@ from latex2mathml.symbols_parser import convert_symbol
 def convert(latex):
     math = eTree.Element('math')
     row = eTree.SubElement(math, 'mrow')
-    _classify_subgroup(aggregate(latex), row)
+    _classify_subgroup(aggregate(TexSoup.TexSoup(latex)), row)
     return _convert(math)
 
 
@@ -76,8 +78,13 @@ def _convert_array_content(param, parent, alignment=None):
                 rowlines.append('solid')
                 has_rowline = True
                 continue
-            if _alignment[index]:
-                column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(_alignment[index])
+            try:
+                align = _alignment[index]
+            except IndexError:
+                align = None
+            if align:
+                # noinspection PyTypeChecker
+                column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(align)
                 mtd = eTree.SubElement(mtr, 'mtd', columnalign=column_align)
             else:
                 mtd = eTree.SubElement(mtr, 'mtd')
@@ -187,10 +194,26 @@ def _classify(_element, parent):
         mo = eTree.SubElement(parent, 'mo')
         mo.text = '&#x{};'.format(symbol)
     elif _element.startswith('\\'):
-        if symbol is not None:
+        if symbol:
             mi = eTree.SubElement(parent, 'mi')
             mi.text = '&#x{};'.format(symbol)
         else:
+            if _element.startswith(r'\left'):
+                symbol = convert_symbol(_element[5:])
+                if symbol:
+                    mo = eTree.SubElement(parent, 'mo')
+                    mo.text = '&#x{};'.format(symbol)
+                    return
+            elif _element.startswith(r'\right'):
+                element_ = _element[6:]
+                if element_ == '.':
+                    eTree.SubElement(parent, 'mo')
+                    return
+                else:
+                    symbol = convert_symbol(element_)
+                    mo = eTree.SubElement(parent, 'mo')
+                    mo.text = '&#x{};'.format(symbol)
+                    return
             e = _element.lstrip('\\')
             mi = eTree.SubElement(parent, 'mi')
             mi.text = e

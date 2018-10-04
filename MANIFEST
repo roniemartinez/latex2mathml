@@ -7,5 +7,4 @@ latex2mathml/aggregator.py
 latex2mathml/commands.py
 latex2mathml/converter.py
 latex2mathml/symbols_parser.py
-latex2mathml/tokenizer.py
 CHANGELOG.md

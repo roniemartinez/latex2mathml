@@ -156,11 +156,11 @@ def test_binomial(math_and_row):
 
 def test_left_and_right(math_and_row):
     math, row = math_and_row
-    mo = eTree.SubElement(row, 'mo', stretchy='true', form='prefix', fence='true')
+    mo = eTree.SubElement(row, 'mo')
     mo.text = '&#x00028;'
     mi = eTree.SubElement(row, 'mi')
     mi.text = 'x'
-    mo = eTree.SubElement(row, 'mo', stretchy='true', form='postfix', fence='true')
+    mo = eTree.SubElement(row, 'mo')
     mo.text = '&#x00029;'
     assert _convert(math) == convert(r'\left(x\right)')
 
@@ -334,8 +334,7 @@ def test_simple_array(math_and_row):
     td = eTree.SubElement(tr, 'mtd', columnalign='right')
     mn = eTree.SubElement(td, 'mn')
     mn.text = '4'
-
-    assert _convert(math) == convert(r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \end{array}''')
+    assert _convert(math) == convert(r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \end{array}')
 
 
 def test_array_with_vertical_bars(math_and_row):
@@ -363,7 +362,7 @@ def test_array_with_vertical_bars(math_and_row):
     mn = eTree.SubElement(td, 'mn')
     mn.text = '6'
 
-    assert _convert(math) == convert(r'\begin{array}{c|rl} 1 & 2 & 3 \\ 4 & 5 & 6 \end{array}''')
+    assert _convert(math) == convert(r'\begin{array}{c|rl} 1 & 2 & 3 \\ 4 & 5 & 6 \end{array}')
 
 
 def test_array_with_horizontal_lines(math_and_row):
@@ -397,4 +396,6 @@ def test_array_with_horizontal_lines(math_and_row):
     mn = eTree.SubElement(td, 'mn')
     mn.text = '6'
 
-    assert _convert(math) == convert(r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}''')
+    s = r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}'
+
+    assert _convert(math) == convert(s)
