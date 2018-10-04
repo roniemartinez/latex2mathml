@@ -156,20 +156,20 @@ def aggregate(tex_tree):
                         tree.append(token)
                 elif (i.name != 'left' and i.name.startswith('left')) or \
                         (i.name != 'right' and i.name.startswith('right')):
-                    tokens = list(tokenize(f'\\{i.name}'))
+                    tokens = list(tokenize('\\' + i.name))
                     for token in tokens:
                         tree.append(token)
                 else:
                     if any([x in i.name for x in string.digits]):
                         # noinspection PyTypeChecker
-                        soup = TexSoup.TexSoup(' '.join(tokenize(f'\\{i.name}')))
+                        soup = TexSoup.TexSoup(' '.join(tokenize('\\' + i.name)))
                         tree = aggregate(soup)
                     else:
-                        tree.append(f'\\{i.name}')
+                        tree.append('\\' + i.name)
                         for arg in i.args:
                             tree.append(aggregate(arg))
             elif isinstance(i.expr, TexSoup.TexEnv):
-                tree.append(f'\\{i.name}')
+                tree.append('\\' + i.name)
                 try:
                     tree.append(i.args[0])
                 except IndexError:

@@ -15,7 +15,7 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     keywords=[],
-    install_requires=['TexSoup>=0.1'],
+    install_requires=['TexSoup==0.1'],
     classifiers=['Development Status :: 5 - Production/Stable',
                  'License :: OSI Approved :: MIT License',
                  'Topic :: Software Development :: Libraries :: Python Modules',
