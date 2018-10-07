@@ -1,6 +1,6 @@
 from setuptools import setup
 
-VERSION = '2.2.0'
+VERSION = '2.3.0'
 
 setup(
     name='latex2mathml',
@@ -11,7 +11,7 @@ setup(
     license='MIT',
     author='Ronie Martinez',
     author_email='ronmarti18@gmail.com',
-    description='Pure Python library for LaTeX to MathML conversion.',
+    description='Pure Python library for LaTeX to MathML conversion',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     keywords=[],
@@ -19,7 +19,7 @@ setup(
     classifiers=['Development Status :: 5 - Production/Stable',
                  'License :: OSI Approved :: MIT License',
                  'Topic :: Software Development :: Libraries :: Python Modules',
-                 'Programming Language :: Python',
+                 'Programming Language :: Python :: 3.3',
                  'Programming Language :: Python :: 3.4',
                  'Programming Language :: Python :: 3.5',
                  'Programming Language :: Python :: 3.6',
