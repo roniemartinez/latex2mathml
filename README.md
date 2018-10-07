@@ -1,7 +1,12 @@
-![version](https://img.shields.io/pypi/v/latex2mathml.svg)![license](https://img.shields.io/pypi/l/latex2mathml.svg)![status](https://img.shields.io/pypi/status/latex2mathml.svg)![pyversions](https://img.shields.io/pypi/pyversions/latex2mathml.svg)[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/Code-ReaQtor)
+![version](https://img.shields.io/pypi/v/latex2mathml.svg)
+![license](https://img.shields.io/pypi/l/latex2mathml.svg)
+![build](https://img.shields.io/travis/Code-ReaQtor/latex2mathml/develop.svg)
+![status](https://img.shields.io/pypi/status/latex2mathml.svg)
+![pyversions](https://img.shields.io/pypi/pyversions/latex2mathml.svg)
+[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/Code-ReaQtor)
 
 # latex2mathml
-Pure Python library for LaTeX to MathML conversion.
+Pure Python library for LaTeX to MathML conversion
 
 ## Usage
 
@@ -429,28 +434,19 @@ A_{m,n} =
 
 - [TexSoup](https://github.com/alvinwan/TexSoup)
 
-### Unit Test
-
-- [pytest](https://github.com/pytest-dev/pytest)
-- [pytest-cov](https://github.com/pytest-dev/pytest-cov)
-- [pytest-html](https://github.com/pytest-dev/pytest-html)
-
-### Unit Testing
-
-```bash
-pytest -v --show-capture=no --cov="." --cov-report=html --html=result/report.html --self-contained-html tests
-```
-
 ### References
 #### LaTeX
-* https://en.wikibooks.org/wiki/LaTeX/Mathematics
-* http://artofproblemsolving.com/wiki/index.php?title=Main_Page
-* http://milde.users.sourceforge.net/LUCR/Math/
-* http://www.forkosh.com/mimetextutorial.html
+- https://en.wikibooks.org/wiki/LaTeX/Mathematics
+- http://artofproblemsolving.com/wiki/index.php?title=Main_Page
+- http://milde.users.sourceforge.net/LUCR/Math/
+- http://www.forkosh.com/mimetextutorial.html
 
 #### MathML
 * http://www.xmlmind.com/tutorials/MathML/
 
+#### Travis CI
+- [Continuous Integration](https://katyhuff.github.io/python-testing/08-ci/)
+
 
 ### Author
-* [Ronie Martinez](mailto:ronmarti18@gmail.com)
+- [Ronie Martinez](mailto:ronmarti18@gmail.com)
