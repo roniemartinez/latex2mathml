@@ -1,8 +1,9 @@
-![version](https://img.shields.io/pypi/v/latex2mathml.svg)
-![license](https://img.shields.io/pypi/l/latex2mathml.svg)
-![build](https://img.shields.io/travis/Code-ReaQtor/latex2mathml/develop.svg)
-![status](https://img.shields.io/pypi/status/latex2mathml.svg)
-![pyversions](https://img.shields.io/pypi/pyversions/latex2mathml.svg)
+![Version](https://img.shields.io/pypi/v/latex2mathml.svg)
+![License](https://img.shields.io/pypi/l/latex2mathml.svg)
+![Travis-CI](https://img.shields.io/travis/Code-ReaQtor/latex2mathml/develop.svg)
+![Code Coverage](https://img.shields.io/codecov/c/github/Code-ReaQtor/latex2mathml/develop.svg)
+![Status](https://img.shields.io/pypi/status/latex2mathml.svg)
+![Python Versions](https://img.shields.io/pypi/pyversions/latex2mathml.svg)
 [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/Code-ReaQtor)
 
 # latex2mathml
