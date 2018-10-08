@@ -1,7 +1,5 @@
 environment:
   matrix:
-    - PYTHON: "C:\\Python33"
-    - PYTHON: "C:\\Python33-x64"
     - PYTHON: "C:\\Python34"
     - PYTHON: "C:\\Python34-x64"
     - PYTHON: "C:\\Python35"
@@ -12,11 +10,13 @@ environment:
     - PYTHON: "C:\\Python37-x64"
 
 install:
-  - "%PYTHON%/Scripts/pip.exe install -r requirements.txt"
-  - "%PYTHON%/Scripts/pip.exe install -r test-requirements.txt"
+  - "%PYTHON%\\Scripts\\pip.exe install -r requirements.txt"
+  - "%PYTHON%\\Scripts\\pip.exe install -r test-requirements.txt"
+
+build: off
 
 test_script:
-  - "%PYTHON%/Scripts/pytest --cov=latex2mathml -v"
+  - "%PYTHON%\\Scripts\\pytest.exe --cov=latex2mathml -v"
 
 on_success:
-  - "%PYTHON%/Scripts/codecov"
+  - "%PYTHON%\\Scripts\\codecov.exe"
