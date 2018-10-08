@@ -13,6 +13,6 @@ install:
   - pip install -r requirements.txt
   - pip install -r test-requirements.txt
 script:
-  pytest --cov=latex2mathml -v
+  pytest --cov=latex2mathml --cov-report=xml -v
 after_success:
   codecov
