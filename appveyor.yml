@@ -19,4 +19,4 @@ test_script:
   - "%PYTHON%\\Scripts\\pytest.exe --cov=latex2mathml --cov-report=xml -v"
 
 on_success:
-  - "%PYTHON%\\Scripts\\codecov.exe"
+  - "%PYTHON%\\Scripts\\codecov.exe -f coverage.xml"
