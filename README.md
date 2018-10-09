@@ -438,16 +438,21 @@ A_{m,n} =
 
 ### References
 #### LaTeX
+
 - https://en.wikibooks.org/wiki/LaTeX/Mathematics
 - http://artofproblemsolving.com/wiki/index.php?title=Main_Page
 - http://milde.users.sourceforge.net/LUCR/Math/
 - http://www.forkosh.com/mimetextutorial.html
 
 #### MathML
-* http://www.xmlmind.com/tutorials/MathML/
 
-#### Travis CI
-- [Continuous Integration](https://katyhuff.github.io/python-testing/08-ci/)
+- http://www.xmlmind.com/tutorials/MathML/
+
+#### Continuous Integration
+
+- https://katyhuff.github.io/python-testing/08-ci/
+- https://docs.travis-ci.com/user/caching/
+- https://github.com/pypa/pip/blob/master/appveyor.yml
 
 
 ### Author
