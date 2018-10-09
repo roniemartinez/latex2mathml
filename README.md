@@ -1,6 +1,7 @@
 ![Version](https://img.shields.io/pypi/v/latex2mathml.svg)
 ![License](https://img.shields.io/pypi/l/latex2mathml.svg)
 ![Travis-CI](https://img.shields.io/travis/Code-ReaQtor/latex2mathml/master.svg)
+![AppVeyor](https://img.shields.io/appveyor/ci/Code-ReaQtor/latex2mathml/master.svg)
 ![Code Coverage](https://img.shields.io/codecov/c/github/Code-ReaQtor/latex2mathml/master.svg)
 ![Status](https://img.shields.io/pypi/status/latex2mathml.svg)
 ![Python Versions](https://img.shields.io/pypi/pyversions/latex2mathml.svg)
@@ -437,16 +438,21 @@ A_{m,n} =
 
 ### References
 #### LaTeX
+
 - https://en.wikibooks.org/wiki/LaTeX/Mathematics
 - http://artofproblemsolving.com/wiki/index.php?title=Main_Page
 - http://milde.users.sourceforge.net/LUCR/Math/
 - http://www.forkosh.com/mimetextutorial.html
 
 #### MathML
-* http://www.xmlmind.com/tutorials/MathML/
 
-#### Travis CI
-- [Continuous Integration](https://katyhuff.github.io/python-testing/08-ci/)
+- http://www.xmlmind.com/tutorials/MathML/
+
+#### Continuous Integration
+
+- https://katyhuff.github.io/python-testing/08-ci/
+- https://docs.travis-ci.com/user/caching/
+- https://github.com/pypa/pip/blob/master/appveyor.yml
 
 
 ### Author
