@@ -3,9 +3,10 @@ List of changes to latex2mathml
 
 ## [Unreleased]
 
-## [2.5.0] - 2018-10-08
+## [2.5.0] - 2018-10-09
 ### Added
 - AppVeyor Integration (#26)
+- Implement Caching in Travis-CI and AppVeyor (#28)
 
 ## [2.4.0] - 2018-10-07
 ### Added
