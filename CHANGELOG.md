@@ -3,7 +3,12 @@ List of changes to latex2mathml
 
 ## [Unreleased]
 
-## [2.3.0] - 2018-10-07
+## [2.5.0] - 2018-10-09
+### Added
+- AppVeyor Integration (#26)
+- Implement Caching in Travis-CI and AppVeyor (#28)
+
+## [2.4.0] - 2018-10-07
 ### Added
 - Codecov Integration (#22)
 
@@ -127,7 +132,8 @@ List of changes to latex2mathml
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.4.0...master
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.5.0...master
+[2.5.0]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.5.0
 [2.4.0]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.4.0
 [2.3.0]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.3.0
 [2.2.0]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.2.0
