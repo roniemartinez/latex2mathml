@@ -3,6 +3,10 @@ List of changes to latex2mathml
 
 ## [Unreleased]
 
+## [2.5.1] - 2018-10-10
+### Changed
+- Show README badges in table
+
 ## [2.5.0] - 2018-10-09
 ### Added
 - AppVeyor Integration (#26)
@@ -132,7 +136,8 @@ List of changes to latex2mathml
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.5.0...master
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.5.1...master
+[2.5.1]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.5.1
 [2.5.0]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.5.0
 [2.4.0]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.4.0
 [2.3.0]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.3.0

@@ -1,14 +1,42 @@
-![Version](https://img.shields.io/pypi/v/latex2mathml.svg)
-![License](https://img.shields.io/pypi/l/latex2mathml.svg)
-![Travis-CI](https://img.shields.io/travis/Code-ReaQtor/latex2mathml/master.svg)
-![AppVeyor](https://img.shields.io/appveyor/ci/Code-ReaQtor/latex2mathml/master.svg)
-![Code Coverage](https://img.shields.io/codecov/c/github/Code-ReaQtor/latex2mathml/master.svg)
-![Status](https://img.shields.io/pypi/status/latex2mathml.svg)
-![Python Versions](https://img.shields.io/pypi/pyversions/latex2mathml.svg)
-[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/Code-ReaQtor)
-
 # latex2mathml
+
 Pure Python library for LaTeX to MathML conversion
+
+<table>
+    <tr>
+        <td>Version</td>
+        <td><img src='https://img.shields.io/pypi/v/latex2mathml.svg'></td>
+    </tr>
+    <tr>
+        <td>License</td>
+        <td><img src='https://img.shields.io/pypi/l/latex2mathml.svg'></td>
+    </tr>
+    <tr>
+        <td>Travis CI</td>
+        <td><img src='https://img.shields.io/travis/Code-ReaQtor/latex2mathml/master.svg'></td>
+    </tr>
+    <tr>
+        <td>AppVeyor</td>
+        <td><img src='https://img.shields.io/appveyor/ci/Code-ReaQtor/latex2mathml/master.svg'></td>
+    </tr>
+    <tr>
+        <td>CodeCov</td>
+        <td><img src='https://img.shields.io/codecov/c/github/Code-ReaQtor/latex2mathml/master.svg'></td>
+    </tr>
+    <tr>
+        <td>Status</td>
+        <td><img src='https://img.shields.io/pypi/status/latex2mathml.svg'></td>
+    </tr>
+    <tr>
+        <td>Supported versions</td>
+        <td><img src='https://img.shields.io/pypi/pyversions/latex2mathml.svg'></td>
+    </tr>
+    <tr>
+        <td>Show your support</td>
+        <td><a href='https://saythanks.io/to/Code-ReaQtor'><img src='https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg'></a></td>
+    </tr>
+</table>
+
 
 ## Usage
 
