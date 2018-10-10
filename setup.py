@@ -1,6 +1,6 @@
 from setuptools import setup
 
-VERSION = '2.5.2'
+VERSION = '2.5.2-1'
 
 setup(
     name='latex2mathml',

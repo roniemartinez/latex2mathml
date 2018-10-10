@@ -32,3 +32,4 @@ deploy:
   distributions: "sdist bdist_wheel"
   on:
     branch: develop
+    condition: $TRAVIS_PYTHON_VERSION = "3.6"
