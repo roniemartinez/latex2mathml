@@ -23,3 +23,11 @@ script:
 
 after_success:
   codecov
+
+deploy:
+  provider: pypi
+  user: $TEST_PYPI_USER
+  password: $TEST_PYPI_PASS
+  server: https://test.pypi.org/legacy/
+  on:
+    branch: develop

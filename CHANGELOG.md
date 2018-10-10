@@ -3,6 +3,10 @@ List of changes to latex2mathml
 
 ## [Unreleased]
 
+## [2.5.2] - 2018-10-10
+### Added
+- Deploy to PyPI from Travis CI (#25)
+
 ## [2.5.1] - 2018-10-10
 ### Changed
 - Show README badges in table
@@ -136,7 +140,8 @@ List of changes to latex2mathml
 - Element class for xml elements
 - simple converter implementation
 
-[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/v2.5.1...master
+[Unreleased]: https://github.com/Code-ReaQtor/latex2mathml/compare/2.5.2...master
+[2.5.2]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.5.2
 [2.5.1]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.5.1
 [2.5.0]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.5.0
 [2.4.0]: https://github.com/Code-ReaQtor/latex2mathml/releases/tag/2.4.0
