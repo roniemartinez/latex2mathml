@@ -29,5 +29,6 @@ deploy:
   user: $TEST_PYPI_USER
   password: $TEST_PYPI_PASS
   server: https://test.pypi.org/legacy/
+  distributions: "sdist bdist_wheel"
   on:
     branch: develop
