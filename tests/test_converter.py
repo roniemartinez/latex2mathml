@@ -203,10 +203,10 @@ def test_complex_matrix(math_and_row):
 
 def test_null_delimiter(math_and_row):
     math, row = math_and_row
-    left = eTree.SubElement(row, 'mo')
+    left = eTree.SubElement(row, 'mo', fence='true', form='prefix', stretchy='true')
     left.text = '&#x0007B;'
     table = eTree.SubElement(row, 'mtable')
-    eTree.SubElement(row, 'mo')
+    eTree.SubElement(row, 'mo', fence='true', form='postfix', stretchy='true')
 
     mtr = eTree.SubElement(table, 'mtr')
     mtd = eTree.SubElement(mtr, 'mtd', columnalign='left')
