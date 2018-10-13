@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2016-2018, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __license__ = "MIT"
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
-# __status__ = "Development"
+# __author__ = 'Ronie Martinez'
+# __copyright__ = 'Copyright 2016-2018, Ronie Martinez'
+# __credits__ = ['Ronie Martinez']
+# __license__ = 'MIT'
+# __maintainer__ = 'Ronie Martinez'
+# __email__ = 'ronmarti18@gmail.com'
+# __status__ = 'Development'
 import xml.etree.cElementTree as eTree
 
 # noinspection PyPackageRequirements
@@ -142,7 +142,7 @@ def test_binomial(math_and_row):
     math, row = math_and_row
     mo = eTree.SubElement(row, 'mo')
     mo.text = '&#x00028;'
-    frac = eTree.SubElement(row, 'mfrac', linethickness="0")
+    frac = eTree.SubElement(row, 'mfrac', linethickness='0')
     _row = eTree.SubElement(frac, 'mrow')
     mn = eTree.SubElement(_row, 'mn')
     mn.text = '2'
@@ -156,11 +156,11 @@ def test_binomial(math_and_row):
 
 def test_left_and_right(math_and_row):
     math, row = math_and_row
-    mo = eTree.SubElement(row, 'mo')
+    mo = eTree.SubElement(row, 'mo', fence='true', form='prefix', stretchy='true')
     mo.text = '&#x00028;'
     mi = eTree.SubElement(row, 'mi')
     mi.text = 'x'
-    mo = eTree.SubElement(row, 'mo')
+    mo = eTree.SubElement(row, 'mo', fence='true', form='postfix', stretchy='true')
     mo.text = '&#x00029;'
     assert _convert(math) == convert(r'\left(x\right)')
 
@@ -367,7 +367,7 @@ def test_array_with_vertical_bars(math_and_row):
 
 def test_array_with_horizontal_lines(math_and_row):
     math, row = math_and_row
-    table = eTree.SubElement(row, 'mtable', rowlines="none solid")
+    table = eTree.SubElement(row, 'mtable', rowlines='none solid')
 
     tr = eTree.SubElement(table, 'mtr')
     td = eTree.SubElement(tr, 'mtd', columnalign='center')

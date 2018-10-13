@@ -6,231 +6,187 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 # __status__ = "Development"
-import string
-
-import TexSoup
-
-
-class Latex2MathMLError(Exception):
-    pass
+from latex2mathml.commands import MATRICES
+from latex2mathml.exceptions import EmptyGroupError, NumeratorNotFoundError, DenominatorNotFoundError
+from latex2mathml.tokenizer import tokenize
 
 
-def group(iterable):
+def group(tokens, opening='{', closing='}'):
     g = []
-    for i in iterable:
-        if i == '{':
-            g.append(group(iterable))
-        elif i == '}':
-            return g
-        else:
+    while True:
+        token = next(tokens)
+        if token == closing:
+            if len(g):
+                break
+            else:
+                raise EmptyGroupError
+        elif token == opening:
             try:
-                g[-1] += i
-            except IndexError:
-                g.append(i)
-    if len(g):
-        return aggregate(g)
-
-
-def tokenize(text):
-    if '\\\\' in text:
-        for item in text.split('\\\\'):
-            row = list(tokenize(item))
-            yield row
-    elif '&' in text:
-        for item in text.split('&'):
-            yield from tokenize(item)
-    elif text.startswith('-'):
-        yield ['-'] + list(tokenize(text[1:]))
-    elif '_' in text:
-        items = iter(text.split('_'))
-        try:
-            yield from tokenize(next(items))
-            while True:
-                i = next(items)
-                yield '_'
-                yield from tokenize(i)
-        except StopIteration:
-            return
-    elif '^' in text:
-        items = iter(text.split('^'))
-        try:
-            yield from tokenize(next(items))
-            while True:
-                i = next(items)
-                yield '^'
-                yield from tokenize(i)
-        except StopIteration:
-            return
-    else:
-        buffer = ''
-        iterable = iter(text.strip())
-        for char in iterable:
-            if char.isdigit():
-                if len(buffer) and not buffer[-1].isdigit():
-                    yield buffer
-                    buffer = ''
-                buffer += char
-                try:
-                    while True:
-                        char = next(iterable)
-                        if char.isdigit() or char == '.':
-                            buffer += char
-                        else:
-                            if len(buffer):
-                                yield buffer
-                                buffer = ''
-                            if char != ' ':
-                                yield char
-                            break
-                except StopIteration:
-                    if len(buffer):
-                        yield buffer
-                        buffer = ''
-            elif char == ' ':
-                if len(buffer):
-                    yield buffer
-                    buffer = ''
-            elif buffer.startswith('\\'):
-                if char == '\\' or char.isalpha():
-                    buffer += char
-                elif char in '(){}.':
-                    buffer += char
-                    yield buffer
-                    buffer = ''
-                else:
-                    if len(buffer):
-                        yield buffer
-                        buffer = ''
-                    yield char
-            elif char == '\\':
-                buffer += char
-            else:
-                if len(buffer):
-                    yield buffer
-                    buffer = ''
-                yield char
-
-
-def aggregate(tex_tree):
-    tree = []
-    iterable = iter(tex_tree)
-    for i in iterable:
-        if isinstance(i, list):
-            tree.append(i)
-        elif isinstance(i, str):
-            text = i.strip()
-            if text in '{':
-                g = group(iterable)
-                tree.append(g)
-            elif len(text):
-                tokens = list(tokenize(text))
-                for token in tokens:
-                    tree.append(token)
-        elif isinstance(i, TexSoup.RArg):
-            if not len(i.exprs):
-                tree += ['{', '}']
-            else:
-                tree.append(aggregate(TexSoup.TexSoup(i.value)))
-        elif isinstance(i, TexSoup.OArg):
-            if not len(i.exprs):
-                tree += ['[', ']']
-            else:
-                raise Latex2MathMLError()
-        elif isinstance(i, TexSoup.TexNode):
-            if isinstance(i.expr, TexSoup.TexCmd):
-                try:
-                    first = i.args(0)
-                except IndexError:
-                    first = None
-                if i.name == 'sqrt' and isinstance(first, TexSoup.OArg):
-                    tree.append(r'\root')
-                    tree.append(aggregate(i.args[1:]))
-                    tree.append(aggregate(first))
-                elif i.name == 'over':
-                    tree.insert(-1, r'\frac')
-                    tree[-1] = [tree[-1]]
-                    tree.append([i.extra])
-                elif i.name == 'frac' and len(i.extra):
-                    tree.append(r'\frac')
-                    for token in tokenize(i.extra):
-                        tree.append(token)
-                elif (i.name != 'left' and i.name.startswith('left')) or \
-                        (i.name != 'right' and i.name.startswith('right')):
-                    tokens = list(tokenize('\\' + i.name))
-                    for token in tokens:
-                        tree.append(token)
-                else:
-                    if any([x in i.name for x in string.digits]):
-                        # noinspection PyTypeChecker
-                        soup = TexSoup.TexSoup(' '.join(tokenize('\\' + i.name)))
-                        tree = aggregate(soup)
-                    else:
-                        tree.append('\\' + i.name)
-                        for arg in i.args:
-                            tree.append(aggregate(arg))
-            elif isinstance(i.expr, TexSoup.TexEnv):
-                tree.append('\\' + i.name)
-                try:
-                    tree.append(i.args[0])
-                except IndexError:
-                    pass
-                if len(list(i.contents)) > 1:
-                    content = []
-                    row = []
-                    for item in i.contents:
-                        if isinstance(item, str):
-                            item = item.strip()
-                            if item == '\\':
-                                content.append(row)
-                                row = []
-                                continue
-                            elif item.startswith('\\\\'):
-                                content.append(row)
-                                item = item[2:].strip()
-                                row = []
-                            elif item.startswith('&'):
-                                item = item[1:].strip()
-
-                            if not len(item):
-                                continue
-                            elif item.endswith('_'):
-                                row += ['_', item[:-1]]
-                            else:
-                                for token in tokenize(item):
-                                    if isinstance(token, list) and len(token) == 0:
-                                        continue
-                                    content.append(token)
-                        elif isinstance(item, TexSoup.RArg):
-                            row_ = aggregate(item)
-                            if all([x in 'lcr' for x in row_]):
-                                tree.append(row_)
-                            else:
-                                row.append(aggregate(item.exprs))
-                        elif isinstance(item, TexSoup.TexNode):
-                            item = item.expr
-                            row = []
-                            if isinstance(item, TexSoup.TexCmd):
-                                row.append('\\' + item.name)
-                                for token in tokenize(item.extra):
-                                    row.append(token)
-                            else:
-                                raise Latex2MathMLError
-                        else:
-                            row.append(aggregate(item))
-                    content.append(row)
-                else:
-                    content = aggregate(i.contents)
-                tree.append(content)
+                g.append(group(tokens))
+            except EmptyGroupError:
+                g += [opening, closing]
         else:
-            raise Latex2MathMLError
-    # fix superscripts and subscripts arrangements
-    length = len(tree)
-    if (length == 3 or length == 5) and ('_' in tree[1::2] or '^' in tree[1::2]):
-        operators = ''.join(tree[1::2])
-        operands = tree[::2]
-        if operators == '^_':
-            operators = '_^'
-            a, b, c = operands
-            operands = [a, c, b]
-        return [operators] + operands
-    return tree
+            g.append(token)
+    return _aggregate(iter(g))
+
+
+def process_row(tokens):
+    row = []
+    content = []
+    for token in tokens:
+        if token == '&':
+            pass
+        elif token == '\\\\':
+            if len(row):
+                content.append(row)
+            row = []
+        else:
+            row.append(token)
+    if len(row):
+        content.append(row)
+    while len(content) == 1 and isinstance(content[0], list):
+        content = content.pop()
+    return content
+
+
+def environment(begin, tokens):
+    if begin.startswith(r'\begin'):
+        env = begin[7:-1]
+    else:
+        env = begin[1:]
+    alignment = None
+    content = []
+    row = []
+    while True:
+        try:
+            token = next_item_or_group(tokens)
+            if isinstance(token, list):
+                if env == 'array' and all(x in 'lcr|' for x in token):
+                    alignment = token
+                else:
+                    row.append(process_row(token))
+            elif token == r'\end{{{}}}'.format(env):
+                break
+            elif token == '&':
+                pass
+            elif token == '\\\\':
+                content.append(row)
+                row = []
+            elif token == '[' and not len(content):
+                try:
+                    alignment = group(tokens, '[', ']')
+                except EmptyGroupError:
+                    pass
+            elif token == '-':
+                try:
+                    next_token = next(tokens)
+                    row.append([token, next_token])
+                except StopIteration:
+                    row.append(token)
+            elif token in '_^':
+                process_sub_sup(row, token, tokens)
+            else:
+                row.append(token)
+        except EmptyGroupError:
+            row += ['{', '}']
+            continue
+        except StopIteration:
+            break
+    if len(row):
+        content.append(row)
+    while len(content) == 1 and isinstance(content[0], list):
+        content = content.pop()
+    if alignment:
+        return r'\{}'.format(env), ''.join(alignment), content
+    else:
+        return r'\{}'.format(env), content
+
+
+def next_item_or_group(tokens):
+    token = next(tokens)
+    if token == '{':
+        return group(tokens)
+    return token
+
+
+def _aggregate(tokens):
+    aggregated = []
+    while True:
+        try:
+            token = next_item_or_group(tokens)
+            if isinstance(token, list):
+                aggregated.append(token)
+            elif token == '[':
+                try:
+                    g = group(tokens, '[', ']')
+                    if len(aggregated):
+                        previous = aggregated[-1]
+                        if previous == r'\sqrt':
+                            root = next(tokens)
+                            if root == '{':
+                                try:
+                                    root = group(tokens)
+                                except EmptyGroupError:
+                                    root = ''
+                            aggregated[-1] = r'\root'
+                            aggregated.append(root)
+                        else:
+                            pass  # FIXME: possible issues
+                    aggregated.append(g)
+                except EmptyGroupError:
+                    aggregated += ['[', ']']
+            elif token in '_^':
+                process_sub_sup(aggregated, token, tokens)
+            elif token.startswith(r'\begin') or token in MATRICES:
+                aggregated += environment(token, tokens)
+            elif token == r'\over':
+                try:
+                    numerator = aggregated.pop()
+                    aggregated.append(r'\frac')
+                    aggregated.append([numerator])
+                    denominator = next_item_or_group(tokens)
+                    aggregated.append([denominator])
+                except IndexError:
+                    raise NumeratorNotFoundError
+                except (StopIteration, EmptyGroupError):
+                    raise DenominatorNotFoundError
+            else:
+                aggregated.append(token)
+        except EmptyGroupError:
+            aggregated += ['{', '}']
+            continue
+        except StopIteration:
+            break
+    return aggregated
+
+
+def aggregate(data):
+    tokens = tokenize(data)
+    return _aggregate(tokens)
+
+
+def process_sub_sup(aggregated, token, tokens):
+    try:
+        previous = aggregated.pop()
+        if isinstance(previous, str) and previous in '+-*/=()[]_^{}':
+            aggregated += [previous, token]
+            return
+        try:
+            next_token = next_item_or_group(tokens)
+            if len(aggregated) >= 2:
+                if aggregated[-2] == '_' and token == '^':
+                    aggregated[-2] = '_^'
+                    aggregated += [previous, next_token]
+                elif aggregated[-2] == '^' and token == '_':
+                    aggregated[-2] = '_^'
+                    aggregated += [next_token, previous]
+                else:
+                    aggregated += [token, previous, next_token]
+            else:
+                aggregated += [token, previous, next_token]
+        except EmptyGroupError:
+            aggregated += [previous, token, '{', '}']
+        except StopIteration:
+            return
+    except IndexError:
+        aggregated.append(token)
