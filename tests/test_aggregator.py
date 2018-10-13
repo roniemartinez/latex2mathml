@@ -6,7 +6,6 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 # __status__ = "Production"
-from latex2mathml.aggregator import aggregate
 import string
 
 from latex2mathml.aggregator import aggregate
