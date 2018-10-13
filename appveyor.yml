@@ -1,5 +1,7 @@
 environment:
   matrix:
+    - PYTHON: "C:\\Python27"
+    - PYTHON: "C:\\Python27-x64"
     - PYTHON: "C:\\Python34"
     - PYTHON: "C:\\Python34-x64"
     - PYTHON: "C:\\Python35"
@@ -10,7 +12,6 @@ environment:
     - PYTHON: "C:\\Python37-x64"
 
 install:
-  - "%PYTHON%\\Scripts\\pip.exe install -r requirements.txt"
   - "%PYTHON%\\Scripts\\pip.exe install -r test-requirements.txt"
 
 build: off
