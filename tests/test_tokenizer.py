@@ -87,3 +87,18 @@ def test_subscript():
 
 def test_superscript_with_curly_braces():
     assert ['a', '^', '{', 'i', '+', '1', '}', '_', '3'] == list(tokenize('a^{i+1}_3'))
+
+
+def test_issue_33():
+    latex = r"""\begin{bmatrix}
+     a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
+     a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
+     \vdots  & \vdots  & \ddots & \vdots  \\
+     a_{m,1} & a_{m,2} & \cdots & a_{m,n} 
+    \end{bmatrix}"""
+    expected = ['\\begin{bmatrix}', 'a', '_', '{', '1', ',', '1', '}', '&', 'a', '_', '{', '1', ',', '2', '}', '&',
+                '\\cdots', '&', 'a', '_', '{', '1', ',', 'n', '}', '\\\\', 'a', '_', '{', '2', ',', '1', '}', '&', 'a',
+                '_', '{', '2', ',', '2', '}', '&', '\\cdots', '&', 'a', '_', '{', '2', ',', 'n', '}', '\\\\', '\\vdots',
+                '&', '\\vdots', '&', '\\ddots', '&', '\\vdots', '\\\\', 'a', '_', '{', 'm', ',', '1', '}', '&', 'a',
+                '_', '{', 'm', ',', '2', '}', '&', '\\cdots', '&', 'a', '_', '{', 'm', ',', 'n', '}', '\\end{bmatrix}']
+    assert expected == list(tokenize(latex))

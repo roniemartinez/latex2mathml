@@ -142,3 +142,19 @@ def test_null_delimiter():
 
 def test_superscript_with_curly_braces():
     assert ['_^', 'a', '3', ['i', '+', '1']] == list(aggregate('a^{i+1}_3'))
+
+
+def test_issue_33():
+    latex = r"""\begin{bmatrix}
+     a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
+     a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
+     \vdots  & \vdots  & \ddots & \vdots  \\
+     a_{m,1} & a_{m,2} & \cdots & a_{m,n} 
+    \end{bmatrix}"""
+    expected = ['\\bmatrix',
+                [['_', 'a', ['1', ',', '1'], '_', 'a', ['1', ',', '2'], '\\cdots', '_', 'a', ['1', ',', 'n']],
+                 ['_', 'a', ['2', ',', '1'], '_', 'a', ['2', ',', '2'], '\\cdots', '_', 'a', ['2', ',', 'n']],
+                 ['\\vdots', '\\vdots', '\\ddots', '\\vdots'],
+                 ['_', 'a', ['m', ',', '1'], '_', 'a', ['m', ',', '2'], '\\cdots', '_', 'a', ['m', ',', 'n']]]]
+    assert expected == list(aggregate(latex))
+
