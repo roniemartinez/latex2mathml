@@ -1,6 +1,6 @@
 from setuptools import setup
 
-VERSION = '2.6.1'
+VERSION = '2.6.2'
 
 setup(
     name='latex2mathml',
@@ -18,12 +18,14 @@ setup(
     classifiers=['Development Status :: 5 - Production/Stable',
                  'License :: OSI Approved :: MIT License',
                  'Topic :: Software Development :: Libraries :: Python Modules',
+                 'Programming Language :: Python :: 2',
                  'Programming Language :: Python :: 2.7',
+                 'Programming Language :: Python :: 3',
                  'Programming Language :: Python :: 3.4',
                  'Programming Language :: Python :: 3.5',
                  'Programming Language :: Python :: 3.6',
                  'Programming Language :: Python :: 3.7',
-                 'Programming Language :: Python :: Implementation :: PyPy',
+                 'Programming Language :: Python :: Implementation :: CPython',
                  'Topic :: Scientific/Engineering :: Mathematics',
                  'Topic :: Text Processing :: Markup :: HTML',
                  'Topic :: Text Processing :: Markup :: LaTeX'],
