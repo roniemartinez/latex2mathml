@@ -4,42 +4,39 @@ Pure Python library for LaTeX to MathML conversion
 
 <table>
     <tr>
-        <td>License</td>
-        <td><img src='https://img.shields.io/pypi/l/latex2mathml.svg'></td>
         <td>Version</td>
         <td><img src='https://img.shields.io/pypi/v/latex2mathml.svg'></td>
     </tr>
     <tr>
+        <td>License</td>
+        <td><img src='https://img.shields.io/pypi/l/latex2mathml.svg'></td>
+    </tr>
+    <tr>
         <td>Travis CI</td>
-        <td><img src='https://travis-ci.org/Code-ReaQtor/latex2mathml.svg?branch=master'></td>
-        <td>Coverage</td>
-        <td><img src='https://codecov.io/gh/Code-ReaQtor/latex2mathml/branch/master/graph/badge.svg'></td>
+        <td><img src='https://img.shields.io/travis/Code-ReaQtor/latex2mathml/master.svg'></td>
     </tr>
     <tr>
         <td>AppVeyor</td>
-        <td><img src='https://ci.appveyor.com/api/projects/status/9f4qhc3ko880dr59/branch/master?svg=true'></td>
-        <td>Supported versions</td>
-        <td><img src='https://img.shields.io/pypi/pyversions/latex2mathml.svg'></td>
+        <td><img src='https://img.shields.io/appveyor/ci/Code-ReaQtor/latex2mathml/master.svg'></td>
     </tr>
     <tr>
-        <td>Wheel</td>
-        <td><img src='https://img.shields.io/pypi/wheel/latex2mathml.svg'></td>
-        <td>Implementation</td>
-        <td><img src='https://img.shields.io/pypi/implementation/latex2mathml.svg'></td>
+        <td>CodeCov</td>
+        <td><img src='https://img.shields.io/codecov/c/github/Code-ReaQtor/latex2mathml/master.svg'></td>
     </tr>
     <tr>
         <td>Status</td>
         <td><img src='https://img.shields.io/pypi/status/latex2mathml.svg'></td>
+    </tr>
+    <tr>
+        <td>Supported versions</td>
+        <td><img src='https://img.shields.io/pypi/pyversions/latex2mathml.svg'></td>
+    </tr>
+    <tr>
         <td>Show your support</td>
         <td><a href='https://saythanks.io/to/Code-ReaQtor'><img src='https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg'></a></td>
     </tr>
 </table>
 
-## Installation
-
-```bash
-pip install latex2mathml
-```
 
 ## Usage
 
