@@ -11,9 +11,9 @@ Pure Python library for LaTeX to MathML conversion
     </tr>
     <tr>
         <td>Travis CI</td>
-        <td><img src='https://travis-ci.org/Code-ReaQtor/latex2mathml.svg?branch=develop'></td>
+        <td><img src='https://travis-ci.org/roniemartinez/latex2mathml.svg?branch=develop'></td>
         <td>Coverage</td>
-        <td><img src='https://codecov.io/gh/Code-ReaQtor/latex2mathml/branch/develop/graph/badge.svg'></td>
+        <td><img src='https://codecov.io/gh/roniemartinez/latex2mathml/branch/develop/graph/badge.svg'></td>
     </tr>
     <tr>
         <td>AppVeyor</td>
@@ -30,8 +30,12 @@ Pure Python library for LaTeX to MathML conversion
     <tr>
         <td>Status</td>
         <td><img src='https://img.shields.io/pypi/status/latex2mathml.svg'></td>
+        <td>Downloads</td>
+        <td><img src='https://img.shields.io/pypi/dm/latex2mathml.svg'></td>
+    </tr>
+    <tr>
         <td>Show your support</td>
-        <td><a href='https://saythanks.io/to/Code-ReaQtor'><img src='https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg'></a></td>
+        <td><a href='https://saythanks.io/to/roniemartinez'><img src='https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg'></a></td>
     </tr>
 </table>
 

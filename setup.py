@@ -1,13 +1,13 @@
 from setuptools import setup
 
-VERSION = '2.6.2'
+VERSION = '2.6.3'
 
 setup(
     name='latex2mathml',
     version=VERSION,
     packages=['latex2mathml'],
-    url='https://github.com/Code-ReaQtor/latex2mathml',
-    download_url='https://github.com/Code-ReaQtor/latex2mathml/tarball/{}'.format(VERSION),
+    url='https://github.com/roniemartinez/latex2mathml',
+    download_url='https://github.com/roniemartinez/latex2mathml/tarball/{}'.format(VERSION),
     license='MIT',
     author='Ronie Martinez',
     author_email='ronmarti18@gmail.com',

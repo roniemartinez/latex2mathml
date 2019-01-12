@@ -11,13 +11,17 @@ environment:
     - PYTHON: "C:\\Python37"
     - PYTHON: "C:\\Python37-x64"
 
+branches:
+  except:
+    - /^[0-9]+\.[0-9]+\.[0-9]+$/
+
 install:
   - "%PYTHON%\\Scripts\\pip.exe install -r test-requirements.txt"
 
 build: off
 
 cache:
-- '%LOCALAPPDATA%\pip\Cache'
+  - '%LOCALAPPDATA%\pip\Cache'
 
 test_script:
   - "%PYTHON%\\Scripts\\pytest.exe --cov=latex2mathml --cov-report=xml -v"
