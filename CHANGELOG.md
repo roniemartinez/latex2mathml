@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2.6.4 - 2019-02-10
+### Fixed
+- IndexError on r'\sqrt { ( - 25 ) ^ { 2 } } = \pm 25' (#42)
+
 ## 2.6.3 - 2019-01-13
 ### Changed
 - Update copyright

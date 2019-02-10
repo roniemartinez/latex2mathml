@@ -434,7 +434,5 @@ def test_issue_33(math_and_row):
 
     mo = eTree.SubElement(row, 'mo')
     mo.text = '&#x0005D;'
-    print(_convert(math))
-    print(convert(latex))
     assert _convert(math) == convert(latex)
 

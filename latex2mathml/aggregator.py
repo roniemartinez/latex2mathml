@@ -167,7 +167,7 @@ def aggregate(data):
 def process_sub_sup(aggregated, token, tokens):
     try:
         previous = aggregated.pop()
-        if isinstance(previous, str) and previous in '+-*/=()[]_^{}':
+        if isinstance(previous, str) and previous in '+-*/=[]_^{}':
             aggregated += [previous, token]
             return
         try:
