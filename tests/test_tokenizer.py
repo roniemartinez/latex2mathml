@@ -9,6 +9,10 @@ import string
 from latex2mathml.tokenizer import tokenize
 
 
+def test_single_backslash():
+    assert ['\\'] == list(tokenize('\\'))
+
+
 def test_alphabets():
     alphabets = string.ascii_letters
     assert list(alphabets) == list(tokenize(alphabets))
@@ -19,9 +23,22 @@ def test_numbers():
     assert [numbers] == list(tokenize(numbers))
 
 
+def test_backslash_after_number():
+    assert ['123', '\\'] == list(tokenize('123\\'))
+
+
+def test_double_backslash_after_number():
+    assert ['123', '\\\\'] == list(tokenize('123\\\\'))
+
+
 def test_numbers_with_decimals():
     decimal = '12.56'
     assert [decimal] == list(tokenize(decimal))
+
+
+def test_incomplete_decimal():
+    decimal = '12.\\\\'
+    assert ['12', '.', '\\\\'] == list(tokenize(decimal))
 
 
 def test_numbers_and_alphabets():

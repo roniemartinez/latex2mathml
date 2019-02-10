@@ -15,6 +15,10 @@ def test_alphabets():
     assert list(alphabets) == aggregate(alphabets)
 
 
+def test_empty_group():
+    assert [['{', '}']] == aggregate('{{}}')
+
+
 def test_numbers():
     numbers = string.digits
     assert [numbers] == aggregate(numbers)
