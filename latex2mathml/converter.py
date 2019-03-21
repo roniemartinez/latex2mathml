@@ -14,19 +14,25 @@ from latex2mathml.commands import MATRICES, COMMANDS
 from latex2mathml.symbols_parser import convert_symbol
 
 
-def convert(latex):
+def convert(latex, unescaping = True):
     math = eTree.Element('math')
     row = eTree.SubElement(math, 'mrow')
     _classify_subgroup(aggregate(latex), row)
-    return _convert(math)
+    return _convert(math, unescaping)
 
 
-def _convert(tree):
+def _convert(tree, unescaping):
     xml_string = eTree.tostring(tree)
-    try:
-        return unescape(xml_string)
-    except TypeError:
-        return unescape(xml_string.decode('utf-8'))
+    if unescaping:
+        try:
+            return unescape(xml_string)
+        except TypeError:
+            return unescape(xml_string.decode('utf-8'))
+    else:
+        try:
+            return xml_string.decode('utf-8')
+        except AttributeError:
+            return xml_string
 
 
 def _convert_matrix_content(param, parent, alignment=None):
