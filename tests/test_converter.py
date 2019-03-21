@@ -436,3 +436,7 @@ def test_issue_33(math_and_row):
     mo.text = '&#x0005D;'
     assert _convert(math) == convert(latex)
 
+def test_escaping_for_XML():
+    assert convert('2 < 5') == '<math><mrow><mn>2</mn><mi>&lt;</mi><mn>5</mn></mrow></math>'
+    assert convert('2 > 5') == '<math><mrow><mn>2</mn><mi>&gt;</mi><mn>5</mn></mrow></math>'
+    assert convert('\\&') == '<math><mrow><mi>&amp;</mi></mrow></math>'
