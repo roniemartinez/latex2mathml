@@ -10,8 +10,11 @@ from latex2mathml.exceptions import EmptyGroupError, NumeratorNotFoundError, Den
 from latex2mathml.tokenizer import tokenize
 
 
-def group(tokens, opening='{', closing='}'):
+def group(tokens, opening='{', closing='}', delimiter=None):
     g = []
+    if delimiter:
+        g.append(delimiter)
+        g.append(next(tokens))
     while True:
         token = next(tokens)
         if token == closing:
@@ -24,8 +27,17 @@ def group(tokens, opening='{', closing='}'):
                 g.append(group(tokens))
             except EmptyGroupError:
                 g += [opening, closing]
+        elif token == r'\right':
+            g.append(token)
+            g.append(next(tokens))
+            break
         else:
             g.append(token)
+    if delimiter:
+        content = g[2:-2]
+        if len(content):
+            return [g[0], g[1], _aggregate(iter(content)), g[-2], g[-1]]
+        return g
     return _aggregate(iter(g))
 
 
@@ -105,6 +117,8 @@ def next_item_or_group(tokens):
     token = next(tokens)
     if token == '{':
         return group(tokens)
+    elif token == r'\left':
+        return group(tokens, delimiter=token)
     return token
 
 

@@ -133,14 +133,14 @@ def test_over():
 
 
 def test_null_delimiter():
-    assert [r'\left', r'\{', r'\right', '.'] == list(aggregate(r'\left\{\right.'))
+    assert [[r'\left', r'\{', r'\right', '.']] == list(aggregate(r'\left\{\right.'))
     latex = r'\left\{ \begin{array} { l } { 3x - 5y + 4z = 0} \\ { x - y + 8z = 0} \\ { 2x - 6y + z = 0} \end{array}' \
             r' \right.'
-    assert [r'\left', r'\{', r'\array', 'l',
-            [[['3', 'x', '-', '5', 'y', '+', '4', 'z', '=', '0']],
-             [['x', '-', 'y', '+', '8', 'z', '=', '0']],
-             [['2', 'x', '-', '6', 'y', '+', 'z', '=', '0']]],
-            r'\right', '.'] == list(aggregate(latex))
+    assert [[r'\left', r'\{', [r'\array', 'l',
+                               [[['3', 'x', '-', '5', 'y', '+', '4', 'z', '=', '0']],
+                                [['x', '-', 'y', '+', '8', 'z', '=', '0']],
+                                [['2', 'x', '-', '6', 'y', '+', 'z', '=', '0']]]],
+             r'\right', '.']] == list(aggregate(latex))
 
 
 def test_superscript_with_curly_braces():
@@ -160,4 +160,3 @@ def test_issue_33():
                  ['\\vdots', '\\vdots', '\\ddots', '\\vdots'],
                  ['_', 'a', ['m', ',', '1'], '_', 'a', ['m', ',', '2'], '\\cdots', '_', 'a', ['m', ',', 'n']]]]
     assert expected == list(aggregate(latex))
-
