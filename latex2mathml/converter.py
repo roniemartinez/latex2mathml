@@ -7,6 +7,7 @@
 # __email__ = "ronmarti18@gmail.com"
 import re
 import xml.etree.cElementTree as eTree
+from xml.sax.saxutils import unescape
 
 from latex2mathml.aggregator import aggregate
 from latex2mathml.commands import MATRICES, COMMANDS
@@ -23,9 +24,9 @@ def convert(latex):
 def _convert(tree):
     xml_string = eTree.tostring(tree)
     try:
-        return xml_string.decode('utf-8')
-    except AttributeError:
-        return xml_string
+        return unescape(xml_string)
+    except TypeError:
+        return unescape(xml_string.decode('utf-8'))
 
 
 def _convert_matrix_content(param, parent, alignment=None):
@@ -127,7 +128,7 @@ def _convert_command(element, elements, index, iterable, parent):
                 pass
             else:
                 symbol = convert_symbol(param)
-                new_parent.text = param if symbol is None else chr(int(symbol, base=16))
+                new_parent.text = param if symbol is None else '&#x{};'.format(symbol)
         elif element == r'\array':
             _convert_array_content(param, new_parent, alignment)
         elif element in MATRICES:
@@ -141,17 +142,17 @@ def _convert_command(element, elements, index, iterable, parent):
     _get_postfix_element(element, parent)
     if element == r'\overline':
         mo = eTree.SubElement(new_parent, 'mo', stretchy='true')
-        mo.text = chr(0x000AF)
+        mo.text = '&#x000AF;'
     elif element == r'\underline':
         mo = eTree.SubElement(new_parent, 'mo', stretchy='true')
-        mo.text = chr(0x00332)
+        mo.text = '&#x00332;'
     [next(iterable) for _ in range(params)]
 
 
 def _convert_and_append_operator(symbol, parent):
     symbol = convert_symbol(symbol)
     mo = eTree.SubElement(parent, 'mo')
-    mo.text = chr(int(symbol, base=16))
+    mo.text = '&#x{};'.format(symbol)
 
 
 def _get_postfix_element(element, row):
@@ -187,15 +188,15 @@ def _classify(_element, parent):
         mn.text = _element
     elif _element in '+-*/()=':
         mo = eTree.SubElement(parent, 'mo')
-        mo.text = _element if symbol is None else chr(int(symbol, base=16))
+        mo.text = _element if symbol is None else '&#x{};'.format(symbol)
     elif symbol and (int(symbol, 16) in range(int('2200', 16), int('22FF', 16) + 1) or
                      int(symbol, 16) in range(int('2190', 16), int('21FF', 16) + 1)):
         mo = eTree.SubElement(parent, 'mo')
-        mo.text = chr(int(symbol, base=16))
+        mo.text = '&#x{};'.format(symbol)
     elif _element.startswith('\\'):
         if symbol:
             mi = eTree.SubElement(parent, 'mi')
-            mi.text = chr(int(symbol, base=16))
+            mi.text = '&#x{};'.format(symbol)
         else:
             e = _element.lstrip('\\')
             mi = eTree.SubElement(parent, 'mi')
