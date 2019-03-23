@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 2.6.6 - 2019-03-23
+### Fixed
+- Incorrect conversion when parentheses next to exponent (#44)
+- Escaping of "<", ">" kept in XML (#46)
+
 ## 2.6.5 - 2019-03-23
 ### Fixed
 - Escaping of "<", ">" kept in XML (#46)

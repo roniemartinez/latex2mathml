@@ -202,10 +202,13 @@ def test_complex_matrix(math_and_row):
 
 def test_null_delimiter(math_and_row):
     math, row = math_and_row
-    left = eTree.SubElement(row, 'mo', fence='true', form='prefix', stretchy='true')
+    mrow = eTree.SubElement(row, 'mrow')
+    left = eTree.SubElement(mrow, 'mo', fence='true', form='prefix', stretchy='true')
     left.text = '&#x0007B;'
-    table = eTree.SubElement(row, 'mtable')
-    eTree.SubElement(row, 'mo', fence='true', form='postfix', stretchy='true')
+
+    mrow2 = eTree.SubElement(mrow, 'mrow')
+    table = eTree.SubElement(mrow2, 'mtable')
+    eTree.SubElement(mrow, 'mo', fence='true', form='postfix', stretchy='true')
 
     mtr = eTree.SubElement(table, 'mtr')
     mtd = eTree.SubElement(mtr, 'mtd', columnalign='left')
@@ -435,32 +438,3 @@ def test_issue_33(math_and_row):
     mo = eTree.SubElement(row, 'mo')
     mo.text = '&#x0005D;'
     assert _convert(math) == convert(latex)
-
-
-def test_escaping_for_xml_lt(math_and_row):
-    math, row = math_and_row
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '2'
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = '<'
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '5'
-    assert _convert(math) == convert('2 < 5')
-
-
-def test_escaping_for_xml_gt(math_and_row):
-    math, row = math_and_row
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '2'
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = '>'
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '5'
-    assert _convert(math) == convert('2 > 5')
-
-
-def test_escaping_for_xml_amp(math_and_row):
-    math, row = math_and_row
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = '&'
-    assert _convert(math) == convert('&')

@@ -155,11 +155,13 @@ def test_binomial(math_and_row):
 
 def test_left_and_right(math_and_row):
     math, row = math_and_row
-    mo = eTree.SubElement(row, 'mo', fence='true', form='prefix', stretchy='true')
+    mrow = eTree.SubElement(row, 'mrow')
+    mo = eTree.SubElement(mrow, 'mo', fence='true', form='prefix', stretchy='true')
     mo.text = '&#x00028;'
-    mi = eTree.SubElement(row, 'mi')
+    mrow2 = eTree.SubElement(mrow, 'mrow')
+    mi = eTree.SubElement(mrow2, 'mi')
     mi.text = 'x'
-    mo = eTree.SubElement(row, 'mo', fence='true', form='postfix', stretchy='true')
+    mo = eTree.SubElement(mrow, 'mo', fence='true', form='postfix', stretchy='true')
     mo.text = '&#x00029;'
     assert _convert(math) == convert(r'\left(x\right)')
 

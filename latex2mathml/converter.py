@@ -7,6 +7,7 @@
 # __email__ = "ronmarti18@gmail.com"
 import re
 import xml.etree.cElementTree as eTree
+from xml.sax.saxutils import unescape
 
 from latex2mathml.aggregator import aggregate
 from latex2mathml.commands import MATRICES, COMMANDS
@@ -23,9 +24,9 @@ def convert(latex):
 def _convert(tree):
     xml_string = eTree.tostring(tree)
     try:
-        return xml_string
+        return unescape(xml_string)
     except TypeError:
-        return xml_string.decode('utf-8')
+        return unescape(xml_string.decode('utf-8'))
 
 
 def _convert_matrix_content(param, parent, alignment=None):
@@ -185,6 +186,9 @@ def _classify(_element, parent):
     if re.match(r'\d+(.\d+)?', _element):
         mn = eTree.SubElement(parent, 'mn')
         mn.text = _element
+    elif _element in '<>&':
+        mo = eTree.SubElement(parent, 'mo')
+        mo.text = {'<': '&lt;', '>': '&gt;', '&': '&amp;'}[_element]
     elif _element in '+-*/()=':
         mo = eTree.SubElement(parent, 'mo')
         mo.text = _element if symbol is None else '&#x{};'.format(symbol)
