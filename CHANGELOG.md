@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2.6.5 - 2019-03-23
+### Fixed
+- Escaping of "<", ">" kept in XML (#46)
+
 ## 2.6.4 - 2019-02-10
 ### Fixed
 - IndexError on r'\sqrt { ( - 25 ) ^ { 2 } } = \pm 25' (#42)

@@ -7,7 +7,6 @@
 # __email__ = "ronmarti18@gmail.com"
 import re
 import xml.etree.cElementTree as eTree
-from xml.sax.saxutils import unescape
 
 from latex2mathml.aggregator import aggregate
 from latex2mathml.commands import MATRICES, COMMANDS
@@ -24,9 +23,9 @@ def convert(latex):
 def _convert(tree):
     xml_string = eTree.tostring(tree)
     try:
-        return unescape(xml_string)
+        return xml_string
     except TypeError:
-        return unescape(xml_string.decode('utf-8'))
+        return xml_string.decode('utf-8')
 
 
 def _convert_matrix_content(param, parent, alignment=None):
@@ -50,30 +49,30 @@ def _convert_matrix_content(param, parent, alignment=None):
 
 def _convert_array_content(param, parent, alignment=None):
     if '|' in alignment:
-        _alignment, columnlines = [], []
+        _alignment, column_lines = [], []
         for i in alignment:
             if i == '|':
-                columnlines.append('solid')
+                column_lines.append('solid')
             else:
                 _alignment.append(i)
-            if len(_alignment) - len(columnlines) == 2:
-                columnlines.append('none')
-        parent.attrib['columnlines'] = ' '.join(columnlines)
+            if len(_alignment) - len(column_lines) == 2:
+                column_lines.append('none')
+        parent.attrib['columnlines'] = ' '.join(column_lines)
     else:
         _alignment = list(alignment)
-    rowlines = []
+    row_lines = []
     row_count = 0
     for row in param:
         row_count += 1
         mtr = eTree.SubElement(parent, 'mtr')
         iterable = iter(range(len(row)))
         index = 0
-        has_rowline = False
+        has_row_line = False
         for i in iterable:
             element = row[i]
             if element == r'\hline' and row_count > 1:
-                rowlines.append('solid')
-                has_rowline = True
+                row_lines.append('solid')
+                has_row_line = True
                 continue
             try:
                 align = _alignment[index]
@@ -92,10 +91,10 @@ def _convert_array_content(param, parent, alignment=None):
             else:
                 _classify(element, mtd)
             index += 1
-        if not has_rowline and row_count > 1:
-            rowlines.append('none')
-    if 'solid' in rowlines:
-        parent.set('rowlines', ' '.join(rowlines))
+        if not has_row_line and row_count > 1:
+            row_lines.append('none')
+    if 'solid' in row_lines:
+        parent.set('rowlines', ' '.join(row_lines))
 
 
 def _classify_subgroup(elements, row):
