@@ -72,7 +72,7 @@ def test_numbers_and_identifiers(math_and_row):
 def test_single_operator(math_and_row):
     math, row = math_and_row
     mo = eTree.SubElement(row, 'mo')
-    mo.text = chr(0x0002B)
+    mo.text = '&#x0002B;'
     assert _convert(math) == convert('+')
 
 
@@ -81,7 +81,7 @@ def test_numbers_and_operators(math_and_row):
     mn = eTree.SubElement(row, 'mn')
     mn.text = '3'
     mo = eTree.SubElement(row, 'mo')
-    mo.text = chr(0x02212)
+    mo.text = '&#x02212;'
     mn = eTree.SubElement(row, 'mn')
     mn.text = '2'
     assert _convert(math) == convert('3-2')
@@ -94,7 +94,7 @@ def test_numbers_and_identifiers_and_operators(math_and_row):
     mi = eTree.SubElement(row, 'mi')
     mi.text = 'x'
     mo = eTree.SubElement(row, 'mo')
-    mo.text = chr(0x0002A)
+    mo.text = '&#x0002A;'
     mn = eTree.SubElement(row, 'mn')
     mn.text = '2'
     assert _convert(math) == convert('3x*2')
@@ -125,7 +125,7 @@ def test_inner_group(math_and_row):
     mi = eTree.SubElement(mrow, 'mi')
     mi.text = 'a'
     mo = eTree.SubElement(mrow, 'mo')
-    mo.text = chr(0x0002B)
+    mo.text = '&#x0002B;'
     mrow = eTree.SubElement(mrow, 'mrow')
     mi = eTree.SubElement(mrow, 'mi')
     mi.text = 'b'
@@ -203,7 +203,7 @@ def test_complex_matrix(math_and_row):
 def test_null_delimiter(math_and_row):
     math, row = math_and_row
     left = eTree.SubElement(row, 'mo', fence='true', form='prefix', stretchy='true')
-    left.text = chr(0x0007B)
+    left.text = '&#x0007B;'
     table = eTree.SubElement(row, 'mtable')
     eTree.SubElement(row, 'mo', fence='true', form='postfix', stretchy='true')
 
@@ -214,19 +214,19 @@ def test_null_delimiter(math_and_row):
     mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'x'
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x02212)
+    mo.text = '&#x02212;'
     mn = eTree.SubElement(mtd, 'mn')
     mn.text = '5'
     mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'y'
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x0002B)
+    mo.text = '&#x0002B;'
     mn = eTree.SubElement(mtd, 'mn')
     mn.text = '4'
     mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'z'
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x0003D)
+    mo.text = '&#x0003D;'
     mn = eTree.SubElement(mtd, 'mn')
     mn.text = '0'
 
@@ -235,17 +235,17 @@ def test_null_delimiter(math_and_row):
     mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'x'
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x02212)
+    mo.text = '&#x02212;'
     mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'y'
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x0002B)
+    mo.text = '&#x0002B;'
     mn = eTree.SubElement(mtd, 'mn')
     mn.text = '8'
     mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'z'
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x0003D)
+    mo.text = '&#x0003D;'
     mn = eTree.SubElement(mtd, 'mn')
     mn.text = '0'
 
@@ -256,17 +256,17 @@ def test_null_delimiter(math_and_row):
     mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'x'
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x02212)
+    mo.text = '&#x02212;'
     mn = eTree.SubElement(mtd, 'mn')
     mn.text = '6'
     mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'y'
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x0002B)
+    mo.text = '&#x0002B;'
     mi = eTree.SubElement(mtd, 'mi')
     mi.text = 'z'
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x0003D)
+    mo.text = '&#x0003D;'
     mn = eTree.SubElement(mtd, 'mn')
     mn.text = '0'
 
@@ -284,7 +284,7 @@ def test_issue_33(math_and_row):
     \end{bmatrix}"""
     math, row = math_and_row
     mo = eTree.SubElement(row, 'mo')
-    mo.text = chr(0x0005B)
+    mo.text = '&#x0005B;'
 
     mtable = eTree.SubElement(row, 'mtable')
 
@@ -317,7 +317,7 @@ def test_issue_33(math_and_row):
 
     mtd = eTree.SubElement(mtr, 'mtd')
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x022EF)
+    mo.text = '&#x022EF;'
 
     mtd = eTree.SubElement(mtr, 'mtd')
     msub = eTree.SubElement(mtd, 'msub')
@@ -360,7 +360,7 @@ def test_issue_33(math_and_row):
 
     mtd = eTree.SubElement(mtr, 'mtd')
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x022EF)
+    mo.text = '&#x022EF;'
 
     mtd = eTree.SubElement(mtr, 'mtd')
     msub = eTree.SubElement(mtd, 'msub')
@@ -378,16 +378,16 @@ def test_issue_33(math_and_row):
     mtr = eTree.SubElement(mtable, 'mtr')
     mtd = eTree.SubElement(mtr, 'mtd')
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x022EE)
+    mo.text = '&#x022EE;'
     mtd = eTree.SubElement(mtr, 'mtd')
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x022EE)
+    mo.text = '&#x022EE;'
     mtd = eTree.SubElement(mtr, 'mtd')
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x022F1)
+    mo.text = '&#x022F1;'
     mtd = eTree.SubElement(mtr, 'mtd')
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x022EE)
+    mo.text = '&#x022EE;'
 
     # 4th row
     mtr = eTree.SubElement(mtable, 'mtr')
@@ -418,7 +418,7 @@ def test_issue_33(math_and_row):
 
     mtd = eTree.SubElement(mtr, 'mtd')
     mo = eTree.SubElement(mtd, 'mo')
-    mo.text = chr(0x022EF)
+    mo.text = '&#x022EF;'
 
     mtd = eTree.SubElement(mtr, 'mtd')
     msub = eTree.SubElement(mtd, 'msub')
@@ -433,10 +433,6 @@ def test_issue_33(math_and_row):
     mi.text = 'n'
 
     mo = eTree.SubElement(row, 'mo')
-    mo.text = chr(0x0005D)
+    mo.text = '&#x0005D;'
     assert _convert(math) == convert(latex)
 
-def test_escaping_for_XML():
-    assert convert('2 < 5') == '<math><mrow><mn>2</mn><mi>&lt;</mi><mn>5</mn></mrow></math>'
-    assert convert('2 > 5') == '<math><mrow><mn>2</mn><mi>&gt;</mi><mn>5</mn></mrow></math>'
-    assert convert('\\&') == '<math><mrow><mi>&amp;</mi></mrow></math>'
