@@ -436,3 +436,31 @@ def test_issue_33(math_and_row):
     mo.text = '&#x0005D;'
     assert _convert(math) == convert(latex)
 
+
+def test_escaping_for_xml_lt(math_and_row):
+    math, row = math_and_row
+    mn = eTree.SubElement(row, 'mn')
+    mn.text = '2'
+    mi = eTree.SubElement(row, 'mi')
+    mi.text = '<'
+    mn = eTree.SubElement(row, 'mn')
+    mn.text = '5'
+    assert _convert(math) == convert('2 < 5')
+
+
+def test_escaping_for_xml_gt(math_and_row):
+    math, row = math_and_row
+    mn = eTree.SubElement(row, 'mn')
+    mn.text = '2'
+    mi = eTree.SubElement(row, 'mi')
+    mi.text = '>'
+    mn = eTree.SubElement(row, 'mn')
+    mn.text = '5'
+    assert _convert(math) == convert('2 > 5')
+
+
+def test_escaping_for_xml_amp(math_and_row):
+    math, row = math_and_row
+    mi = eTree.SubElement(row, 'mi')
+    mi.text = '&'
+    assert _convert(math) == convert('&')
