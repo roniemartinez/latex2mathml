@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 2.6.7 - 2019-04-03
+### Removed
+- Drop Python 3.4 support
+
+### Changed
+- Update CI to use pipenv
+
 ## 2.6.6 - 2019-03-23
 ### Fixed
 - Incorrect conversion when parentheses next to exponent (#44)
