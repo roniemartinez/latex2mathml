@@ -4,7 +4,6 @@ cache: pip
 
 python:
   - 2.7
-  - 3.4
   - 3.5
   - 3.6
   - pypy3.5
@@ -20,13 +19,14 @@ branches:
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 
 install:
-  - pip install -r test-requirements.txt
+  - pip install pipenv
+  - pipenv install --dev --skip-lock
 
 script:
-  pytest --cov=latex2mathml --cov-report=xml -v
+  pipenv run pytest --cov=latex2mathml --cov-report=xml -v
 
 after_success:
-  codecov
+  pipenv run codecov
 
 deploy:
   provider: pypi
