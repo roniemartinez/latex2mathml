@@ -54,6 +54,10 @@ latex_input = "<your_latex_string>"
 mathml_output = latex2mathml.converter.convert(latex_input)
 ```
 
+## Demo
+
+- [Demo for latex2mathml](https://apps.easyaspy.org/latex2mathml-demo)
+
 ## Examples
 
 ### Identifiers, Numbers and Operators
