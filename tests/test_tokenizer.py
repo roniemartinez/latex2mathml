@@ -117,3 +117,7 @@ def test_issue_33():
                 '&', '\\vdots', '&', '\\ddots', '&', '\\vdots', '\\\\', 'a', '_', '{', 'm', ',', '1', '}', '&', 'a',
                 '_', '{', 'm', ',', '2', '}', '&', '\\cdots', '&', 'a', '_', '{', 'm', ',', 'n', '}', '\\end{bmatrix}']
     assert expected == list(tokenize(latex))
+
+
+def test_issue_51():
+    assert [r'\mathbb{R}'] == list(tokenize(r'\mathbb{R}'))

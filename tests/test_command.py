@@ -400,3 +400,26 @@ def test_array_with_horizontal_lines(math_and_row):
     s = r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}'
 
     assert _convert(math) == convert(s)
+
+
+def test_issue_52(math_and_row):
+    math, row = math_and_row
+    over = eTree.SubElement(row, 'mover')
+    equal = eTree.SubElement(row, 'mo')
+    equal.text = '&#x0003D;'
+    sub_right = eTree.SubElement(row, 'msub')
+
+    row = eTree.SubElement(over, 'mrow')
+    sub_left = eTree.SubElement(row, 'msub')
+    mi = eTree.SubElement(sub_left, 'mi')
+    mi.text = 'z'
+    mn = eTree.SubElement(sub_left, 'mn')
+    mn.text = '1'
+    mo = eTree.SubElement(over, 'mo', stretchy='true')
+    mo.text = '&#x000AF;'
+
+    mi = eTree.SubElement(sub_right, 'mi')
+    mi.text = 'z'
+    mn = eTree.SubElement(sub_right, 'mn')
+    mn.text = '2'
+    assert _convert(math) == convert(r'\bar{z_1} = z_2')

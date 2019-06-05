@@ -140,7 +140,7 @@ def _convert_command(element, elements, index, iterable, parent):
             else:
                 _classify(param, new_parent)
     _get_postfix_element(element, parent)
-    if element == r'\overline':
+    if element in (r'\overline', r'\bar'):
         mo = eTree.SubElement(new_parent, 'mo', stretchy='true')
         mo.text = '&#x000AF;'
     elif element == r'\underline':

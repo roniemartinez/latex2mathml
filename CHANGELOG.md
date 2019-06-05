@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 2.7.0 - 2019-06-05
+### Added
+- Support Math alphabets (#51)
+
+### Fixed
+- Correctly show \bar (#52)
+
 ## 2.6.7 - 2019-04-03
 ### Removed
 - Drop Python 3.4 support

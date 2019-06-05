@@ -438,3 +438,10 @@ def test_issue_33(math_and_row):
     mo = eTree.SubElement(row, 'mo')
     mo.text = '&#x0005D;'
     assert _convert(math) == convert(latex)
+
+
+def test_issue_51(math_and_row):
+    math, row = math_and_row
+    mi = eTree.SubElement(row, 'mi')
+    mi.text = '&#x0211D;'
+    assert _convert(math) == convert(r'\mathbb{R}')
