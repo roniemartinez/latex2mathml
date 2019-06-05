@@ -31,6 +31,7 @@ COMMANDS = {
     r'\left': (1, 'mo', {'stretchy': 'true', 'fence': 'true', 'form': 'prefix'}),
     r'\right': (1, 'mo', {'stretchy': 'true', 'fence': 'true', 'form': 'postfix'}),
     r'\overline': (1, 'mover', {}),
+    r'\bar': (1, 'mover', {}),
     r'\underline': (1, 'munder', {}),
 }
 

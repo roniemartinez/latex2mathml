@@ -66,7 +66,9 @@ def tokenize(data):
                     yield buffer
                     buffer = ''
             elif char in '{}*':
-                if buffer.startswith(r'\begin') or buffer.startswith(r'\end'):
+                # FIXME: Anything that starts with '\math' passes. There is a huge list of math symbols in
+                #  unimathsymbols.txt and hard-coding all of them is inefficient.
+                if buffer.startswith(r'\begin') or buffer.startswith(r'\end') or buffer.startswith(r'\math'):
                     if buffer.endswith('}'):
                         yield buffer
                         yield char
