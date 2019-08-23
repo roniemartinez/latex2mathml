@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 2.7.1 - 2019-08-23
+- Add xmlns in <math> (#56)
+
 ## 2.7.0 - 2019-06-05
 ### Added
 - Support Math alphabets (#51)

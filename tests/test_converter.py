@@ -17,6 +17,7 @@ from latex2mathml.converter import convert, _convert
 @pytest.fixture
 def math_and_row():
     math = eTree.Element('math')
+    math.set('xmlns', 'http://www.w3.org/1998/Math/MathML')
     row = eTree.SubElement(math, 'mrow')
     yield math, row
 
