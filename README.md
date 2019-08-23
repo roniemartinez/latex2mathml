@@ -11,13 +11,13 @@ Pure Python library for LaTeX to MathML conversion
     </tr>
     <tr>
         <td>Travis CI</td>
-        <td><img src='https://travis-ci.org/roniemartinez/latex2mathml.svg?branch=master'></td>
+        <td><img src='https://travis-ci.org/roniemartinez/latex2mathml.svg?branch=develop'></td>
         <td>Coverage</td>
-        <td><img src='https://codecov.io/gh/roniemartinez/latex2mathml/branch/master/graph/badge.svg'></td>
+        <td><img src='https://codecov.io/gh/roniemartinez/latex2mathml/branch/develop/graph/badge.svg'></td>
     </tr>
     <tr>
         <td>AppVeyor</td>
-        <td><img src='https://ci.appveyor.com/api/projects/status/9f4qhc3ko880dr59/branch/master?svg=true'></td>
+        <td><img src='https://ci.appveyor.com/api/projects/status/9f4qhc3ko880dr59/branch/develop?svg=true'></td>
         <td>Supported versions</td>
         <td><img src='https://img.shields.io/pypi/pyversions/latex2mathml.svg'></td>
     </tr>
