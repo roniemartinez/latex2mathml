@@ -16,7 +16,7 @@ from latex2mathml.symbols_parser import convert_symbol
 
 def convert(latex, xmlns="http://www.w3.org/1998/Math/MathML"):
     math = eTree.Element('math')
-    math.attrib["xmlns"]=xmlns
+    math.attrib["xmlns"] = xmlns
     row = eTree.SubElement(math, 'mrow')
     _classify_subgroup(aggregate(latex), row)
     return _convert(math)
