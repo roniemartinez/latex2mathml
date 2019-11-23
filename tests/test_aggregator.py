@@ -2,7 +2,6 @@
 # __author__ = "Ronie Martinez"
 # __copyright__ = "Copyright 2016-2019, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
-# __license__ = "MIT"
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import string
@@ -113,8 +112,7 @@ def test_matrix_with_negative_sign():
 
 
 def test_complex_matrix():
-    # assert ['\\matrix', [['_', 'a', ['1']], ['_', 'b', ['2']], ['_', 'c', ['3']], ['_', 'd', ['4']]]]
-    assert [r'\matrix', [['_', 'a', ['1'], '_', 'b', ['2']], ['_', 'c', ['3'], '_', 'd', ['4']]]] == \
+    assert [r'\matrix', [[['_', 'a', ['1']], ['_', 'b', ['2']]], [['_', 'c', ['3']], ['_', 'd', ['4']]]]] == \
            list(aggregate(r'\begin{matrix}a_{1} & b_{2} \\ c_{3} & d_{4} \end{matrix}'))
 
 
@@ -148,15 +146,27 @@ def test_superscript_with_curly_braces():
 
 
 def test_issue_33():
-    latex = r"""\begin{bmatrix}
+    latex = r'''\begin{bmatrix}
      a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
      a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
      \vdots  & \vdots  & \ddots & \vdots  \\
-     a_{m,1} & a_{m,2} & \cdots & a_{m,n} 
-    \end{bmatrix}"""
-    expected = ['\\bmatrix',
-                [['_', 'a', ['1', ',', '1'], '_', 'a', ['1', ',', '2'], '\\cdots', '_', 'a', ['1', ',', 'n']],
-                 ['_', 'a', ['2', ',', '1'], '_', 'a', ['2', ',', '2'], '\\cdots', '_', 'a', ['2', ',', 'n']],
-                 ['\\vdots', '\\vdots', '\\ddots', '\\vdots'],
-                 ['_', 'a', ['m', ',', '1'], '_', 'a', ['m', ',', '2'], '\\cdots', '_', 'a', ['m', ',', 'n']]]]
+     a_{m,1} & a_{m,2} & \cdots & a_{m,n}
+    \end{bmatrix}'''
+    expected = [r'\bmatrix',
+                [[['_', 'a', ['1', ',', '1']], ['_', 'a', ['1', ',', '2']], r'\cdots', ['_', 'a', ['1', ',', 'n']]],
+                 [['_', 'a', ['2', ',', '1']], ['_', 'a', ['2', ',', '2']], r'\cdots', ['_', 'a', ['2', ',', 'n']]],
+                 [r'\vdots', r'\vdots', r'\ddots', r'\vdots'],
+                 [['_', 'a', ['m', ',', '1']], ['_', 'a', ['m', ',', '2']], r'\cdots', ['_', 'a', ['m', ',', 'n']]]]]
+    assert expected == list(aggregate(latex))
+
+
+def test_issue_55():
+    latex = r"\begin{array}{rcl}ABC&=&a\\A&=&abc\end{array}"
+    expected = [r'\array', 'rcl', [[['A', 'B', 'C'], '=', 'a'], ['A', '=', ['a', 'b', 'c']]]]
+    assert expected == list(aggregate(latex))
+
+
+def test_array_with_horizontal_lines():
+    latex = r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}'
+    expected = [r'\array', 'cr', [['1', '2'], ['3', '4'], [r'\hline', '5', '6']]]
     assert expected == list(aggregate(latex))

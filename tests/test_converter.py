@@ -2,12 +2,13 @@
 # __author__ = "Ronie Martinez"
 # __copyright__ = "Copyright 2016-2019, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
-# __license__ = "MIT"
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import xml.etree.cElementTree as eTree
 
 # noinspection PyPackageRequirements
+from collections import OrderedDict
+
 import pytest
 
 # noinspection PyProtectedMember
@@ -204,12 +205,12 @@ def test_complex_matrix(math_and_row):
 def test_null_delimiter(math_and_row):
     math, row = math_and_row
     mrow = eTree.SubElement(row, 'mrow')
-    left = eTree.SubElement(mrow, 'mo', fence='true', form='prefix', stretchy='true')
+    left = eTree.SubElement(mrow, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'prefix')]))
     left.text = '&#x0007B;'
 
     mrow2 = eTree.SubElement(mrow, 'mrow')
     table = eTree.SubElement(mrow2, 'mtable')
-    eTree.SubElement(mrow, 'mo', fence='true', form='postfix', stretchy='true')
+    eTree.SubElement(mrow, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'postfix')]))
 
     mtr = eTree.SubElement(table, 'mtr')
     mtd = eTree.SubElement(mtr, 'mtd', columnalign='left')
@@ -280,12 +281,12 @@ def test_null_delimiter(math_and_row):
 
 
 def test_issue_33(math_and_row):
-    latex = r"""\begin{bmatrix}
+    latex = r'''\begin{bmatrix}
      a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
      a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
      \vdots  & \vdots  & \ddots & \vdots  \\
-     a_{m,1} & a_{m,2} & \cdots & a_{m,n} 
-    \end{bmatrix}"""
+     a_{m,1} & a_{m,2} & \cdots & a_{m,n}
+    \end{bmatrix}'''
     math, row = math_and_row
     mo = eTree.SubElement(row, 'mo')
     mo.text = '&#x0005B;'

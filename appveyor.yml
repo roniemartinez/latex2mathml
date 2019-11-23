@@ -1,13 +1,13 @@
 environment:
   matrix:
-    - PYTHON: "C:\\Python27"
-    - PYTHON: "C:\\Python27-x64"
     - PYTHON: "C:\\Python35"
     - PYTHON: "C:\\Python35-x64"
     - PYTHON: "C:\\Python36"
     - PYTHON: "C:\\Python36-x64"
     - PYTHON: "C:\\Python37"
     - PYTHON: "C:\\Python37-x64"
+    - PYTHON: "C:\\Python38"
+    - PYTHON: "C:\\Python38-x64"
 
 branches:
   except:
@@ -24,6 +24,7 @@ cache:
 
 test_script:
   - "%PYTHON%\\Scripts\\pipenv.exe run pytest --cov=latex2mathml --cov-report=xml -v"
+  - "%PYTHON%\\Scripts\\pipenv.exe run pycodestyle --verbose"
 
 on_success:
   - "%PYTHON%\\Scripts\\pipenv.exe run codecov -f coverage.xml"

@@ -2,12 +2,13 @@
 # __author__ = "Ronie Martinez"
 # __copyright__ = "Copyright 2016-2019, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
-# __license__ = "MIT"
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import xml.etree.cElementTree as eTree
 
 # noinspection PyPackageRequirements
+from collections import OrderedDict
+
 import pytest
 
 # noinspection PyProtectedMember
@@ -157,12 +158,12 @@ def test_binomial(math_and_row):
 def test_left_and_right(math_and_row):
     math, row = math_and_row
     mrow = eTree.SubElement(row, 'mrow')
-    mo = eTree.SubElement(mrow, 'mo', fence='true', form='prefix', stretchy='true')
+    mo = eTree.SubElement(mrow, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'prefix')]))
     mo.text = '&#x00028;'
     mrow2 = eTree.SubElement(mrow, 'mrow')
     mi = eTree.SubElement(mrow2, 'mi')
     mi.text = 'x'
-    mo = eTree.SubElement(mrow, 'mo', fence='true', form='postfix', stretchy='true')
+    mo = eTree.SubElement(mrow, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'postfix')]))
     mo.text = '&#x00029;'
     assert _convert(math) == convert(r'\left(x\right)')
 
@@ -170,7 +171,7 @@ def test_left_and_right(math_and_row):
 def test_space(math_and_row):
     math, row = math_and_row
     eTree.SubElement(row, 'mspace', width='0.167em')
-    assert _convert(math) == convert('\,')
+    assert _convert(math) == convert(r'\,')
 
 
 def test_overline(math_and_row):

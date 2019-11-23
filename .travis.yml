@@ -3,30 +3,49 @@ language: python
 cache: pip
 
 python:
-  - 2.7
   - 3.5
   - 3.6
-  - pypy3.5
+  - 3.7
+  - 3.8
+  - pypy3
 
 matrix:
   include:
-  - python: 3.7
-    dist: xenial
-    sudo: true
+    - name: "Python: 3.5"
+      os: osx
+      language: shell
+      python: 3.5
+    - name: "Python: 3.6"
+      os: osx
+      language: shell
+      python: 3.6
+    - name: "Python: 3.7"
+      os: osx
+      language: shell
+      python: 3.7
+    - name: "Python: 3.8"
+      os: osx
+      language: shell
+      python: 3.8
+    - name: "Python: pypy3"
+      os: osx
+      language: shell
+      python: pypy3
 
 branches:
   except:
     - /^[0-9]+\.[0-9]+\.[0-9]+/
 
 install:
-  - pip install pipenv
+  - pip3 install pipenv
   - pipenv install --dev --skip-lock
 
 script:
-  pipenv run pytest --cov=latex2mathml --cov-report=xml -v
+  - pipenv run pytest --cov=latex2mathml --cov-report=xml -v
+  - pipenv run pycodestyle --verbose
 
 after_success:
-  pipenv run codecov
+  - pipenv run codecov
 
 deploy:
   provider: pypi
@@ -35,4 +54,4 @@ deploy:
   distributions: "sdist bdist_wheel"
   on:
     branch: master
-    condition: $TRAVIS_PYTHON_VERSION = "3.6"
+    condition: $TRAVIS_PYTHON_VERSION = "3.6" && $TRAVIS_OS_NAME == "linux"
