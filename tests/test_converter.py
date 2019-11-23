@@ -7,6 +7,8 @@
 import xml.etree.cElementTree as eTree
 
 # noinspection PyPackageRequirements
+from collections import OrderedDict
+
 import pytest
 
 # noinspection PyProtectedMember
@@ -203,12 +205,12 @@ def test_complex_matrix(math_and_row):
 def test_null_delimiter(math_and_row):
     math, row = math_and_row
     mrow = eTree.SubElement(row, 'mrow')
-    left = eTree.SubElement(mrow, 'mo', fence='true', form='prefix', stretchy='true')
+    left = eTree.SubElement(mrow, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'prefix')]))
     left.text = '&#x0007B;'
 
     mrow2 = eTree.SubElement(mrow, 'mrow')
     table = eTree.SubElement(mrow2, 'mtable')
-    eTree.SubElement(mrow, 'mo', fence='true', form='postfix', stretchy='true')
+    eTree.SubElement(mrow, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'postfix')]))
 
     mtr = eTree.SubElement(table, 'mtr')
     mtd = eTree.SubElement(mtr, 'mtd', columnalign='left')
