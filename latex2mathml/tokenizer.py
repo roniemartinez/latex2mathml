@@ -22,6 +22,9 @@ def tokenize(data):
                 buffer = char
                 try:
                     buffer += next(iterable)
+                    if buffer == r'\\':
+                        yield buffer
+                        buffer = ''
                 except StopIteration:
                     break
             elif char.isalpha():

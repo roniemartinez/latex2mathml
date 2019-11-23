@@ -5,37 +5,33 @@ Pure Python library for LaTeX to MathML conversion
 <table>
     <tr>
         <td>License</td>
-        <td><img src='https://img.shields.io/pypi/l/latex2mathml.svg'></td>
+        <td><img src='https://img.shields.io/pypi/l/latex2mathml.svg' alt="License"></td>
         <td>Version</td>
-        <td><img src='https://img.shields.io/pypi/v/latex2mathml.svg'></td>
+        <td><img src='https://img.shields.io/pypi/v/latex2mathml.svg' alt="Version"></td>
     </tr>
     <tr>
         <td>Travis CI</td>
-        <td><img src='https://travis-ci.org/roniemartinez/latex2mathml.svg?branch=develop'></td>
+        <td><img src='https://travis-ci.org/roniemartinez/latex2mathml.svg?branch=develop' alt="Travis CI"></td>
         <td>Coverage</td>
-        <td><img src='https://codecov.io/gh/roniemartinez/latex2mathml/branch/develop/graph/badge.svg'></td>
+        <td><img src='https://codecov.io/gh/roniemartinez/latex2mathml/branch/develop/graph/badge.svg' alt="CodeCov"></td>
     </tr>
     <tr>
         <td>AppVeyor</td>
-        <td><img src='https://ci.appveyor.com/api/projects/status/9f4qhc3ko880dr59/branch/develop?svg=true'></td>
+        <td><img src='https://ci.appveyor.com/api/projects/status/9f4qhc3ko880dr59/branch/develop?svg=true' alt="AppVeyor"></td>
         <td>Supported versions</td>
-        <td><img src='https://img.shields.io/pypi/pyversions/latex2mathml.svg'></td>
+        <td><img src='https://img.shields.io/pypi/pyversions/latex2mathml.svg' alt="Python Versions"></td>
     </tr>
     <tr>
         <td>Wheel</td>
-        <td><img src='https://img.shields.io/pypi/wheel/latex2mathml.svg'></td>
+        <td><img src='https://img.shields.io/pypi/wheel/latex2mathml.svg' alt="Wheel"></td>
         <td>Implementation</td>
-        <td><img src='https://img.shields.io/pypi/implementation/latex2mathml.svg'></td>
+        <td><img src='https://img.shields.io/pypi/implementation/latex2mathml.svg' alt="Implementation"></td>
     </tr>
     <tr>
         <td>Status</td>
-        <td><img src='https://img.shields.io/pypi/status/latex2mathml.svg'></td>
+        <td><img src='https://img.shields.io/pypi/status/latex2mathml.svg' alt="Status"></td>
         <td>Downloads</td>
-        <td><img src='https://img.shields.io/pypi/dm/latex2mathml.svg'></td>
-    </tr>
-    <tr>
-        <td>Show your support</td>
-        <td><a href='https://saythanks.io/to/roniemartinez'><img src='https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg'></a></td>
+        <td><img src='https://img.shields.io/pypi/dm/latex2mathml.svg' alt="Downloads"></td>
     </tr>
 </table>
 

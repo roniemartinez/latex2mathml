@@ -2,7 +2,6 @@
 # __author__ = "Ronie Martinez"
 # __copyright__ = "Copyright 2016-2019, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
-# __license__ = "MIT"
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 from latex2mathml.commands import MATRICES
@@ -20,8 +19,7 @@ def group(tokens, opening='{', closing='}', delimiter=None):
         if token == closing:
             if len(g):
                 break
-            else:
-                raise EmptyGroupError
+            raise EmptyGroupError
         elif token == opening:
             try:
                 g.append(group(tokens))
@@ -47,7 +45,7 @@ def process_row(tokens):
     for token in tokens:
         if token == '&':
             pass
-        elif token == '\\\\':
+        elif token == r'\\':
             if len(row):
                 content.append(row)
             row = []
@@ -68,6 +66,7 @@ def environment(begin, tokens):
     alignment = None
     content = []
     row = []
+    has_rowline = False
     while True:
         try:
             token = next_item_or_group(tokens)
@@ -79,10 +78,17 @@ def environment(begin, tokens):
             elif token == r'\end{{{}}}'.format(env):
                 break
             elif token == '&':
-                pass
-            elif token == '\\\\':
+                row.append(token)
+            elif token == r'\\':
+                if '&' in row:
+                    row = group_columns(row)
+                if has_rowline:
+                    row.insert(0, r'\hline')
                 content.append(row)
                 row = []
+                has_rowline = False
+            elif token == r'\hline':
+                has_rowline = True
             elif token == '[' and not len(content):
                 try:
                     alignment = group(tokens, '[', ']')
@@ -104,13 +110,26 @@ def environment(begin, tokens):
         except StopIteration:
             break
     if len(row):
+        if '&' in row:
+            row = group_columns(row)
+        if has_rowline:
+            row.insert(0, r'\hline')
         content.append(row)
     while len(content) == 1 and isinstance(content[0], list):
         content = content.pop()
     if alignment:
         return r'\{}'.format(env), ''.join(alignment), content
-    else:
-        return r'\{}'.format(env), content
+    return r'\{}'.format(env), content
+
+
+def group_columns(row):
+    grouped = [[]]
+    for item in row:
+        if item == '&':
+            grouped.append([])
+        else:
+            grouped[-1].append(item)
+    return [item if len(item) > 1 else item.pop() for item in grouped]
 
 
 def next_item_or_group(tokens):

@@ -2,7 +2,6 @@
 # __author__ = "Ronie Martinez"
 # __copyright__ = "Copyright 2016-2019, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
-# __license__ = "MIT"
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import xml.etree.cElementTree as eTree
@@ -170,7 +169,7 @@ def test_left_and_right(math_and_row):
 def test_space(math_and_row):
     math, row = math_and_row
     eTree.SubElement(row, 'mspace', width='0.167em')
-    assert _convert(math) == convert('\,')
+    assert _convert(math) == convert(r'\,')
 
 
 def test_overline(math_and_row):

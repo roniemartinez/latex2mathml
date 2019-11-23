@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## 2.8.0 - 2019-11-23
+### Added
+- OSX tests
+- pycodestyle linter
+
+### Changed
+- Move package metadata to setup.cfg
+
+### Fixed
+- Group items in array rows correctly (#55)
+
+### Removed
+- Drop Python 2 support
+
 ## 2.7.1 - 2019-08-23
 - Add xmlns in <math> (#56)
 

@@ -2,7 +2,6 @@
 # __author__ = "Ronie Martinez"
 # __copyright__ = "Copyright 2016-2019, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
-# __license__ = "MIT"
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import re
@@ -14,9 +13,9 @@ from latex2mathml.commands import MATRICES, COMMANDS
 from latex2mathml.symbols_parser import convert_symbol
 
 
-def convert(latex, xmlns="http://www.w3.org/1998/Math/MathML"):
+def convert(latex, xmlns='http://www.w3.org/1998/Math/MathML'):
     math = eTree.Element('math')
-    math.attrib["xmlns"] = xmlns
+    math.attrib['xmlns'] = xmlns
     row = eTree.SubElement(math, 'mrow')
     _classify_subgroup(aggregate(latex), row)
     return _convert(math)
@@ -81,7 +80,6 @@ def _convert_array_content(param, parent, alignment=None):
             except IndexError:
                 align = None
             if align:
-                # noinspection PyTypeChecker
                 column_align = {'r': 'right', 'l': 'left', 'c': 'center'}.get(align)
                 mtd = eTree.SubElement(mtr, 'mtd', columnalign=column_align)
             else:

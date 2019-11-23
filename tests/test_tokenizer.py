@@ -28,7 +28,7 @@ def test_backslash_after_number():
 
 
 def test_double_backslash_after_number():
-    assert ['123', '\\\\'] == list(tokenize('123\\\\'))
+    assert ['123', r'\\'] == list(tokenize(r'123\\'))
 
 
 def test_numbers_with_decimals():
@@ -37,8 +37,8 @@ def test_numbers_with_decimals():
 
 
 def test_incomplete_decimal():
-    decimal = '12.\\\\'
-    assert ['12', '.', '\\\\'] == list(tokenize(decimal))
+    decimal = r'12.\\'
+    assert ['12', '.', r'\\'] == list(tokenize(decimal))
 
 
 def test_numbers_and_alphabets():
@@ -105,19 +105,26 @@ def test_superscript_with_curly_braces():
 
 
 def test_issue_33():
-    latex = r"""\begin{bmatrix}
+    latex = r'''\begin{bmatrix}
      a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
      a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
      \vdots  & \vdots  & \ddots & \vdots  \\
-     a_{m,1} & a_{m,2} & \cdots & a_{m,n} 
-    \end{bmatrix}"""
-    expected = ['\\begin{bmatrix}', 'a', '_', '{', '1', ',', '1', '}', '&', 'a', '_', '{', '1', ',', '2', '}', '&',
-                '\\cdots', '&', 'a', '_', '{', '1', ',', 'n', '}', '\\\\', 'a', '_', '{', '2', ',', '1', '}', '&', 'a',
-                '_', '{', '2', ',', '2', '}', '&', '\\cdots', '&', 'a', '_', '{', '2', ',', 'n', '}', '\\\\', '\\vdots',
-                '&', '\\vdots', '&', '\\ddots', '&', '\\vdots', '\\\\', 'a', '_', '{', 'm', ',', '1', '}', '&', 'a',
-                '_', '{', 'm', ',', '2', '}', '&', '\\cdots', '&', 'a', '_', '{', 'm', ',', 'n', '}', '\\end{bmatrix}']
+     a_{m,1} & a_{m,2} & \cdots & a_{m,n}
+    \end{bmatrix}'''
+    expected = [r'\begin{bmatrix}', 'a', '_', '{', '1', ',', '1', '}', '&', 'a', '_', '{', '1', ',', '2', '}', '&',
+                r'\cdots', '&', 'a', '_', '{', '1', ',', 'n', '}', r'\\', 'a', '_', '{', '2', ',', '1', '}', '&', 'a',
+                '_', '{', '2', ',', '2', '}', '&', r'\cdots', '&', 'a', '_', '{', '2', ',', 'n', '}', r'\\', r'\vdots',
+                '&', r'\vdots', '&', r'\ddots', '&', r'\vdots', r'\\', 'a', '_', '{', 'm', ',', '1', '}', '&', 'a',
+                '_', '{', 'm', ',', '2', '}', '&', r'\cdots', '&', 'a', '_', '{', 'm', ',', 'n', '}', r'\end{bmatrix}']
     assert expected == list(tokenize(latex))
 
 
 def test_issue_51():
     assert [r'\mathbb{R}'] == list(tokenize(r'\mathbb{R}'))
+
+
+def test_issue_55():
+    latex = r'\begin{array}{rcl}ABC&=&a\\A&=&abc\end{array}'
+    expected = [r'\begin{array}', '{', 'r', 'c', 'l', '}', 'A', 'B', 'C', '&', '=', '&', 'a', r'\\', 'A', '&', '=', '&',
+                'a', 'b', 'c', r'\end{array}']
+    assert expected == list(tokenize(latex))

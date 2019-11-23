@@ -2,7 +2,6 @@
 # __author__ = "Ronie Martinez"
 # __copyright__ = "Copyright 2016-2019, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
-# __license__ = "MIT"
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import xml.etree.cElementTree as eTree
@@ -280,12 +279,12 @@ def test_null_delimiter(math_and_row):
 
 
 def test_issue_33(math_and_row):
-    latex = r"""\begin{bmatrix}
+    latex = r'''\begin{bmatrix}
      a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
      a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
      \vdots  & \vdots  & \ddots & \vdots  \\
-     a_{m,1} & a_{m,2} & \cdots & a_{m,n} 
-    \end{bmatrix}"""
+     a_{m,1} & a_{m,2} & \cdots & a_{m,n}
+    \end{bmatrix}'''
     math, row = math_and_row
     mo = eTree.SubElement(row, 'mo')
     mo.text = '&#x0005B;'
