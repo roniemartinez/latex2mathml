@@ -113,7 +113,7 @@ def _classify_subgroup(elements, row):
 def _convert_command(element, elements, index, iterable, parent):
     _get_prefix_element(element, parent)
     params, tag, attributes = COMMANDS[element]
-    new_parent = eTree.SubElement(parent, tag, **attributes)
+    new_parent = eTree.SubElement(parent, tag, attributes)
     alignment = None
     if element in MATRICES and (element.endswith('*') or element == r'\array'):
         index += 1

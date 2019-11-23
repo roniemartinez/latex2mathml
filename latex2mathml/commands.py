@@ -4,7 +4,7 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
-
+from collections import OrderedDict
 
 MATRICES = (
     r'\matrix', r'\matrix*',
@@ -27,8 +27,8 @@ COMMANDS = {
     r'\sqrt': (1, 'msqrt', {}),
     r'\root': (2, 'mroot', {}),
     r'\binom': (2, 'mfrac', {'linethickness': '0'}),
-    r'\left': (1, 'mo', {'stretchy': 'true', 'fence': 'true', 'form': 'prefix'}),
-    r'\right': (1, 'mo', {'stretchy': 'true', 'fence': 'true', 'form': 'postfix'}),
+    r'\left': (1, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'prefix')])),
+    r'\right': (1, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'postfix')])),
     r'\overline': (1, 'mover', {}),
     r'\bar': (1, 'mover', {}),
     r'\underline': (1, 'munder', {}),
