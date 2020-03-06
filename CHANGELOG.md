@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2.8.2 - 2020-03-06
+### Fixed
+- IndexError: list index out of range (#61)
+
 ## 2.8.1 - 2020-03-06
 ### Fixed
 - Add support for \math* (#60)

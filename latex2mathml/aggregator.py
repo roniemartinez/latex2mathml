@@ -4,6 +4,8 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
+from itertools import tee
+
 from latex2mathml.commands import MATRICES
 from latex2mathml.exceptions import EmptyGroupError, NumeratorNotFoundError, DenominatorNotFoundError
 from latex2mathml.tokenizer import tokenize
@@ -28,6 +30,12 @@ def group(tokens, opening='{', closing='}', delimiter=None):
         elif token == r'\right':
             g.append(token)
             g.append(next(tokens))
+            try:
+                t, _ = tee(tokens)
+                if next(t) == '{':
+                    g.append(group(t))
+            except StopIteration:
+                pass
             break
         else:
             g.append(token)
