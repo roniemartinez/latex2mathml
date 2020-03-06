@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2016-2019, Ronie Martinez"
+# __copyright__ = "Copyright 2016-2020, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
@@ -169,4 +169,10 @@ def test_issue_55():
 def test_array_with_horizontal_lines():
     latex = r'\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}'
     expected = [r'\array', 'cr', [['1', '2'], ['3', '4'], [r'\hline', '5', '6']]]
+    assert expected == list(aggregate(latex))
+
+
+def test_issue_60():
+    latex = r'\mathrm{...}'
+    expected = [r'\mathrm', ['.', '.', '.']]
     assert expected == list(aggregate(latex))

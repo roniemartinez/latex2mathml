@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## 2.8.1 - 2020-03-06
+### Fixed
+- Add support for \math* (#60)
+
+### Added
+- Add .gitignore
+
+### Changed
+- Update copyright year
+- Update dev packages
+
 ## 2.8.0 - 2019-11-23
 ### Added
 - OSX tests
