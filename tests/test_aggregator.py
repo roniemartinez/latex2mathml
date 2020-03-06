@@ -182,6 +182,6 @@ def test_issue_61():
     latex = r'\frac{x + 4}{x + \frac{123 \left(\sqrt{x} + 5\right)}{x + 4} - 8}'
     expected = [r'\frac', ['x', '+', '4'],
                 ['x', '+',
-                 r'\frac', ['123', [r'\left', '(', [r'\sqrt', ['x'], '+', '5'], r'\right', ')']], ['x', '+', '4']
-                    , '-', '8']]
+                 r'\frac', ['123', [r'\left', '(', [r'\sqrt', ['x'], '+', '5'], r'\right', ')']], ['x', '+', '4'],
+                 '-', '8']]
     assert expected == list(aggregate(latex))
