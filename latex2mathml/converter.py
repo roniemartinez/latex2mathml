@@ -113,10 +113,6 @@ def _classify_subgroup(elements, row, is_math_mode=False):
             _classify(element, row, is_math_mode)
 
 
-def _convert_math(elements, i, iterable, parent):
-    print(elements[i + 1])
-
-
 def _convert_command(element, elements, index, iterable, parent):
     _get_prefix_element(element, parent)
     params, tag, attributes = COMMANDS[element]

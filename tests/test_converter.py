@@ -482,3 +482,56 @@ def test_issue_60_2(math_and_row):
     mo = eTree.SubElement(mrow, 'mo')
     mo.text = '.'
     assert _convert(math) == convert(r'\mathrm{...}+\mathrm{...}')
+
+
+def test_issue_61(math_and_row):
+    math, row = math_and_row
+    frac = eTree.SubElement(row, 'mfrac')
+    row = eTree.SubElement(frac, 'mrow')
+    mi = eTree.SubElement(row, 'mi')
+    mi.text = 'x'
+    mo = eTree.SubElement(row, 'mo')
+    mo.text = '&#x0002B;'
+    mn = eTree.SubElement(row, 'mn')
+    mn.text = '4'
+
+    row = eTree.SubElement(frac, 'mrow')
+    mi = eTree.SubElement(row, 'mi')
+    mi.text = 'x'
+    mo = eTree.SubElement(row, 'mo')
+    mo.text = '&#x0002B;'
+
+    frac = eTree.SubElement(row, 'mfrac')
+    row_ = eTree.SubElement(frac, 'mrow')
+    mn = eTree.SubElement(row_, 'mn')
+    mn.text = '123'
+    row__ = eTree.SubElement(row_, 'mrow')
+    left = eTree.SubElement(row__, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'prefix')]))
+    left.text = '&#x00028;'
+
+    row___ = eTree.SubElement(row__, 'mrow')
+    msqrt = eTree.SubElement(row___, 'msqrt')
+    row____ = eTree.SubElement(msqrt, 'mrow')
+    mi = eTree.SubElement(row____, 'mi')
+    mi.text = 'x'
+    mo = eTree.SubElement(row___, 'mo')
+    mo.text = '&#x0002B;'
+    mn = eTree.SubElement(row___, 'mn')
+    mn.text = '5'
+
+    right = eTree.SubElement(row__, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'postfix')]))
+    right.text = '&#x00029;'
+
+    row_ = eTree.SubElement(frac, 'mrow')
+    mi = eTree.SubElement(row_, 'mi')
+    mi.text = 'x'
+    mo = eTree.SubElement(row_, 'mo')
+    mo.text = '&#x0002B;'
+    mn = eTree.SubElement(row_, 'mn')
+    mn.text = '4'
+
+    mo = eTree.SubElement(row, 'mo')
+    mo.text = '&#x02212;'
+    mn = eTree.SubElement(row, 'mn')
+    mn.text = '8'
+    assert _convert(math) == convert(r'\frac{x + 4}{x + \frac{123 \left(\sqrt{x} + 5\right)}{x + 4} - 8}')
