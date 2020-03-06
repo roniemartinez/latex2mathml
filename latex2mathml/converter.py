@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2016-2019, Ronie Martinez"
+# __copyright__ = "Copyright 2016-2020, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
@@ -97,17 +97,24 @@ def _convert_array_content(param, parent, alignment=None):
         parent.set('rowlines', ' '.join(row_lines))
 
 
-def _classify_subgroup(elements, row):
+def _classify_subgroup(elements, row, is_math_mode=False):
     iterable = iter(range(len(elements)))
     for i in iterable:
         element = elements[i]
         if isinstance(element, list):
             _row = eTree.SubElement(row, 'mrow')
-            _classify_subgroup(element, _row)
+            _classify_subgroup(element, _row, is_math_mode)
+            is_math_mode = False
         elif element in COMMANDS:
             _convert_command(element, elements, i, iterable, row)
+        elif element.startswith(r'\math'):
+            is_math_mode = True
         else:
-            _classify(element, row)
+            _classify(element, row, is_math_mode)
+
+
+def _convert_math(elements, i, iterable, parent):
+    print(elements[i + 1])
 
 
 def _convert_command(element, elements, index, iterable, parent):
@@ -180,7 +187,7 @@ def _get_prefix_element(element, row):
         _convert_and_append_operator(r'\Vert', row)
 
 
-def _classify(_element, parent):
+def _classify(_element, parent, is_math_mode=False):
     symbol = convert_symbol(_element)
     if re.match(r'\d+(.\d+)?', _element):
         mn = eTree.SubElement(parent, 'mn')
@@ -192,17 +199,16 @@ def _classify(_element, parent):
         mo = eTree.SubElement(parent, 'mo')
         mo.text = _element if symbol is None else '&#x{};'.format(symbol)
     elif symbol and (int(symbol, 16) in range(int('2200', 16), int('22FF', 16) + 1) or
-                     int(symbol, 16) in range(int('2190', 16), int('21FF', 16) + 1)):
+                     int(symbol, 16) in range(int('2190', 16), int('21FF', 16) + 1)) or symbol == '.':
         mo = eTree.SubElement(parent, 'mo')
         mo.text = '&#x{};'.format(symbol)
     elif _element.startswith('\\'):
+        tag = eTree.SubElement(parent, 'mo' if is_math_mode else 'mi')
         if symbol:
-            mi = eTree.SubElement(parent, 'mi')
-            mi.text = '&#x{};'.format(symbol)
+            tag.text = '&#x{};'.format(symbol)
         else:
             e = _element.lstrip('\\')
-            mi = eTree.SubElement(parent, 'mi')
-            mi.text = e
+            tag.text = e
     else:
-        mi = eTree.SubElement(parent, 'mi')
-        mi.text = _element
+        tag = eTree.SubElement(parent, 'mo' if is_math_mode else 'mi')
+        tag.text = _element

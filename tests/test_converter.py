@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2016-2019, Ronie Martinez"
+# __copyright__ = "Copyright 2016-2020, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
@@ -447,3 +447,38 @@ def test_issue_51(math_and_row):
     mi = eTree.SubElement(row, 'mi')
     mi.text = '&#x0211D;'
     assert _convert(math) == convert(r'\mathbb{R}')
+
+
+def test_issue_60_1(math_and_row):
+    math, row = math_and_row
+    mrow = eTree.SubElement(row, 'mrow')
+    mo = eTree.SubElement(mrow, 'mo')
+    mo.text = '.'
+    mo = eTree.SubElement(mrow, 'mo')
+    mo.text = '.'
+    mo = eTree.SubElement(mrow, 'mo')
+    mo.text = '.'
+    assert _convert(math) == convert(r'\mathrm{...}')
+
+
+def test_issue_60_2(math_and_row):
+    math, row = math_and_row
+    mrow = eTree.SubElement(row, 'mrow')
+    mo = eTree.SubElement(mrow, 'mo')
+    mo.text = '.'
+    mo = eTree.SubElement(mrow, 'mo')
+    mo.text = '.'
+    mo = eTree.SubElement(mrow, 'mo')
+    mo.text = '.'
+
+    mo = eTree.SubElement(row, 'mo')
+    mo.text = '&#x0002B;'
+
+    mrow = eTree.SubElement(row, 'mrow')
+    mo = eTree.SubElement(mrow, 'mo')
+    mo.text = '.'
+    mo = eTree.SubElement(mrow, 'mo')
+    mo.text = '.'
+    mo = eTree.SubElement(mrow, 'mo')
+    mo.text = '.'
+    assert _convert(math) == convert(r'\mathrm{...}+\mathrm{...}')

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2019, Ronie Martinez"
+# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
@@ -120,11 +120,17 @@ def test_issue_33():
 
 
 def test_issue_51():
-    assert [r'\mathbb{R}'] == list(tokenize(r'\mathbb{R}'))
+    assert ['&#x0211D;'] == list(tokenize(r'\mathbb{R}'))
 
 
 def test_issue_55():
     latex = r'\begin{array}{rcl}ABC&=&a\\A&=&abc\end{array}'
     expected = [r'\begin{array}', '{', 'r', 'c', 'l', '}', 'A', 'B', 'C', '&', '=', '&', 'a', r'\\', 'A', '&', '=', '&',
                 'a', 'b', 'c', r'\end{array}']
+    assert expected == list(tokenize(latex))
+
+
+def test_issue_60():
+    latex = r'\mathrm{...}'
+    expected = [r'\mathrm', '{', '.', '.', '.', '}']
     assert expected == list(tokenize(latex))
