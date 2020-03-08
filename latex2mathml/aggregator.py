@@ -7,7 +7,8 @@
 from itertools import tee
 
 from latex2mathml.commands import MATRICES
-from latex2mathml.exceptions import EmptyGroupError, NumeratorNotFoundError, DenominatorNotFoundError
+from latex2mathml.exceptions import EmptyGroupError, NumeratorNotFoundError, DenominatorNotFoundError, \
+    ExtraLeftOrMissingRight
 from latex2mathml.tokenizer import tokenize
 
 
@@ -17,43 +18,46 @@ def group(tokens, opening='{', closing='}', delimiter=None):
         g.append(delimiter)
         g.append(next(tokens))
     while True:
-        token = next(tokens)
-        if token == closing and not delimiter:
-            if len(g):
+        try:
+            token = next(tokens)
+            if token == closing and not delimiter:
+                if len(g):
+                    break
+                raise EmptyGroupError
+            elif token == opening:
+                try:
+                    g.append(group(tokens))
+                except EmptyGroupError:
+                    g += [opening, closing]
+            elif token == r'\right':
+                g.append(token)
+                g.append(next(tokens))
+                try:
+                    t, _ = tee(tokens)
+                    while True:
+                        token = next(t)
+                        if token == opening:
+                            g.append(group(t))
+                        elif token != closing:
+                            g.append(token)
+                        else:
+                            break
+                except StopIteration:
+                    pass
                 break
-            raise EmptyGroupError
-        elif token == opening:
-            try:
-                g.append(group(tokens))
-            except EmptyGroupError:
-                g += [opening, closing]
-        elif token == r'\right':
-            g.append(token)
-            g.append(next(tokens))
-            try:
-                t, _ = tee(tokens)
-                while True:
-                    token = next(t)
-                    if token == opening:
-                        g.append(group(t))
-                    elif token != closing:
-                        g.append(token)
-                    else:
-                        break
-            except StopIteration:
-                pass
+            else:
+                g.append(token)
+        except StopIteration:
             break
-        else:
-            g.append(token)
     if delimiter:
         try:
             right = g.index(r'\right')
+            content = g[2:right]
+            if len(content):
+                return g[0:2] + [_aggregate(iter(content))] + g[right:]
+            return g
         except ValueError:
-            right = -2
-        content = g[2:right]
-        if len(content):
-            return g[0:2] + [_aggregate(iter(content))] + g[right:]
-        return g
+            raise ExtraLeftOrMissingRight
     return _aggregate(iter(g))
 
 

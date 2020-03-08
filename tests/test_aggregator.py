@@ -6,7 +6,10 @@
 # __email__ = "ronmarti18@gmail.com"
 import string
 
+import pytest
+
 from latex2mathml.aggregator import aggregate
+from latex2mathml.exceptions import ExtraLeftOrMissingRight
 
 
 def test_alphabets():
@@ -191,3 +194,15 @@ def test_issue_63():
     latex = r'\sqrt {\sqrt {\left( x^{3}\right) + v}}'
     expected = [r'\sqrt', [r'\sqrt', [[r'\left', '(', ['^', 'x', ['3']], r'\right', ')', '+', 'v', ]]]]
     assert expected == list(aggregate(latex))
+
+
+def test_group_after_right():
+    latex = r'\left(x\right){5}'
+    expected = [[r'\left', '(', ['x'], r'\right', ')', ['5']]]
+    assert expected == list(aggregate(latex))
+
+
+def test_missing_right():
+    latex = r'\left(x'
+    with pytest.raises(ExtraLeftOrMissingRight):
+        aggregate(latex)
