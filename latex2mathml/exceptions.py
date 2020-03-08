@@ -16,3 +16,7 @@ class NumeratorNotFoundError(Exception):
 
 class DenominatorNotFoundError(Exception):
     pass
+
+
+class ExtraLeftOrMissingRight(Exception):
+    pass
