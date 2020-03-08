@@ -535,3 +535,30 @@ def test_issue_61(math_and_row):
     mn = eTree.SubElement(row, 'mn')
     mn.text = '8'
     assert _convert(math) == convert(r'\frac{x + 4}{x + \frac{123 \left(\sqrt{x} + 5\right)}{x + 4} - 8}')
+
+
+def test_issue_63(math_and_row):
+    math, row = math_and_row
+    msqrt = eTree.SubElement(row, 'msqrt')
+    row = eTree.SubElement(msqrt, 'mrow')
+    msqrt = eTree.SubElement(row, 'msqrt')
+    row = eTree.SubElement(msqrt, 'mrow')
+    row = eTree.SubElement(row, 'mrow')
+    left = eTree.SubElement(row, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'prefix')]))
+    left.text = '&#x00028;'
+
+    row_ = eTree.SubElement(row, 'mrow')
+    msup = eTree.SubElement(row_, 'msup')
+    mi = eTree.SubElement(msup, 'mi')
+    mi.text = 'x'
+    row__ = eTree.SubElement(msup, 'mrow')
+    mn = eTree.SubElement(row__, 'mn')
+    mn.text = '3'
+
+    right = eTree.SubElement(row, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'postfix')]))
+    right.text = '&#x00029;'
+    mo = eTree.SubElement(row, 'mo')
+    mo.text = '&#x0002B;'
+    mi = eTree.SubElement(row, 'mi')
+    mi.text = 'v'
+    assert _convert(math) == convert(r'\sqrt {\sqrt {\left( x^{3}\right) + v}}')

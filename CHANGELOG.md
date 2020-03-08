@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 2.8.3 - 2020-03-08
+### Fixed
+- Discontinues parsing when \right is reached (#63)
+
 ## 2.8.2 - 2020-03-06
 ### Fixed
 - IndexError: list index out of range (#61)

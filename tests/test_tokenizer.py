@@ -141,3 +141,10 @@ def test_issue_61():
     expected = [r'\frac', '{', 'x', '+', '4', '}', '{', 'x', '+', r'\frac', '{', '123', r'\left', '(', r'\sqrt', '{',
                 'x', '}', '+', '5', r'\right', ')', '}', '{', 'x', '+', '4', '}', '-', '8', '}']
     assert expected == list(tokenize(latex))
+
+
+def test_issue_63():
+    latex = r'\sqrt {\sqrt {\left( x^{3}\right) + v}}'
+    expected = [r'\sqrt', '{', r'\sqrt', '{', r'\left', '(', 'x', '^', '{', '3', '}', r'\right', ')', '+', 'v', '}',
+                '}']
+    assert expected == list(tokenize(latex))

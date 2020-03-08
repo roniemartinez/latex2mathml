@@ -18,7 +18,7 @@ def group(tokens, opening='{', closing='}', delimiter=None):
         g.append(next(tokens))
     while True:
         token = next(tokens)
-        if token == closing:
+        if token == closing and not delimiter:
             if len(g):
                 break
             raise EmptyGroupError
@@ -32,17 +32,27 @@ def group(tokens, opening='{', closing='}', delimiter=None):
             g.append(next(tokens))
             try:
                 t, _ = tee(tokens)
-                if next(t) == '{':
-                    g.append(group(t))
+                while True:
+                    token = next(t)
+                    if token == opening:
+                        g.append(group(t))
+                    elif token != closing:
+                        g.append(token)
+                    else:
+                        break
             except StopIteration:
                 pass
             break
         else:
             g.append(token)
     if delimiter:
-        content = g[2:-2]
+        try:
+            right = g.index(r'\right')
+        except ValueError:
+            right = -2
+        content = g[2:right]
         if len(content):
-            return [g[0], g[1], _aggregate(iter(content)), g[-2], g[-1]]
+            return g[0:2] + [_aggregate(iter(content))] + g[right:]
         return g
     return _aggregate(iter(g))
 
