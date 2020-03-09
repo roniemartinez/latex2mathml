@@ -37,22 +37,25 @@ branches:
     - /^[0-9]+\.[0-9]+\.[0-9]+/
 
 install:
-  - pip3 install pipenv
-  - pipenv install --dev --skip-lock
+  - pip3 install poetry
+  - poetry install
 
 script:
-  - pipenv run pytest --cov=latex2mathml --cov-report=xml -v
-  - pipenv run pycodestyle --verbose
+  - poetry run pytest --cov=latex2mathml --cov-report=xml -v
+  - poetry run pycodestyle --verbose
 
 after_success:
-  - pipenv run codecov
+  - poetry run codecov
+
+before_deploy:
+  - poetry config repositories.testpypi https://test.pypi.org/legacy/
+  - poetry config http-basic.testpypi $TEST_PYPI_USER $TEST_PYPI_PASS
+  - poetry build
 
 deploy:
-  provider: pypi
-  user: $TEST_PYPI_USER
-  password: $TEST_PYPI_PASS
-  server: https://test.pypi.org/legacy/
-  distributions: "sdist bdist_wheel"
+  provider: script
+  script: poetry publish -r testpypi
+  skip_cleanup: true
   on:
     branch: develop
     condition: $TRAVIS_PYTHON_VERSION = "3.6" && $TRAVIS_OS_NAME == "linux"
