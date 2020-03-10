@@ -48,7 +48,7 @@ after_success:
   - poetry run codecov
 
 before_deploy:
-  - poetry config http-basic.testpypi $PYPI_USER $PYPI_PASS
+  - poetry config http-basic.pypi $PYPI_USER $PYPI_PASS
   - poetry build
 
 deploy:
