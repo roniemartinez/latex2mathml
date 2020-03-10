@@ -479,12 +479,6 @@ A_{m,n} =
 
 - http://www.xmlmind.com/tutorials/MathML/
 
-### Continuous Integration
-
-- https://katyhuff.github.io/python-testing/08-ci/
-- https://docs.travis-ci.com/user/caching/
-- https://github.com/pypa/pip/blob/master/appveyor.yml
-
 
 ## Author
 - [Ronie Martinez](mailto:ronmarti18@gmail.com)

@@ -14,8 +14,8 @@ branches:
     - /^[0-9]+\.[0-9]+\.[0-9]+/
 
 install:
-  - "%PYTHON%\\Scripts\\pip.exe install pipenv"
-  - "%PYTHON%\\Scripts\\pipenv.exe install --dev --skip-lock"
+  - "%PYTHON%\\Scripts\\pip.exe install poetry"
+  - "%PYTHON%\\Scripts\\poetry.exe install"
 
 build: off
 
@@ -23,8 +23,8 @@ cache:
   - '%LOCALAPPDATA%\pip\Cache'
 
 test_script:
-  - "%PYTHON%\\Scripts\\pipenv.exe run pytest --cov=latex2mathml --cov-report=xml -v"
-  - "%PYTHON%\\Scripts\\pipenv.exe run pycodestyle --verbose"
+  - "%PYTHON%\\Scripts\\poetry.exe run pytest --cov=latex2mathml --cov-report=xml -v"
+  - "%PYTHON%\\Scripts\\poetry.exe run pycodestyle --verbose"
 
 on_success:
-  - "%PYTHON%\\Scripts\\pipenv.exe run codecov -f coverage.xml"
+  - "%PYTHON%\\Scripts\\poetry.exe run codecov -f coverage.xml"
