@@ -6,8 +6,9 @@
 # __email__ = "ronmarti18@gmail.com"
 import xml.etree.cElementTree as eTree
 
-# noinspection PyPackageRequirements
 import pytest
+from multidict import MultiDict
+from xmljson import BadgerFish
 
 # noinspection PyProtectedMember
 from latex2mathml.converter import convert, _convert
@@ -21,87 +22,78 @@ def math_and_row():
     yield math, row
 
 
-def test_issue_42(math_and_row):
-    math, row = math_and_row
-    msqrt = eTree.SubElement(row, 'msqrt')
-    mrow = eTree.SubElement(msqrt, 'mrow')
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '&#x00028;'
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '&#x02212;'
-    mn = eTree.SubElement(mrow, 'mn')
-    mn.text = '25'
+@pytest.mark.parametrize(
+    'latex,json',
+    ids=[
+        'issue #42',
+        'issue #45 lt',
+        'issue #45 gt',
+        'issue #45 amp',
+        'issue #44',
+    ],
+    argvalues=[
+        (
+                r'\sqrt { ( - 25 ) ^ { 2 } } = \pm 25',
+                MultiDict([
+                    ('msqrt', {
+                        'mrow':
+                            MultiDict([
+                                ('mo', {'$': '&#x00028;'}),
+                                ('mo', {'$': '&#x02212;'}),
+                                ('mn', {'$': '25'}),
+                                ('msup', {
+                                    'mo': {'$': '&#x00029;'},
+                                    'mrow': {'mn': {'$': '2'}}
+                                })
+                            ])
+                    }),
+                    ('mo', {'$': '&#x0003D;'}),
+                    ('mi', {'$': '&#x000B1;'}),
+                    ('mn', {'$': '25'}),
+                ])
+        ),
+        (
+                '2 < 5',
+                MultiDict([
+                    ('mn', {'$': '2'}),
+                    ('mo', {'$': '&lt;'}),
+                    ('mn', {'$': '5'}),
+                ])
+        ),
+        (
+                '2 > 5',
+                MultiDict([
+                    ('mn', {'$': '2'}),
+                    ('mo', {'$': '&gt;'}),
+                    ('mn', {'$': '5'}),
+                ])
+        ),
+        (
+                '&',
+                {
+                    'mo': '&amp;'
+                }
+        ),
+        (
+                r'\left(- x^{3} + 5\right)^{5}',
+                {
+                    'msup': MultiDict([
+                        ('mrow', MultiDict([
+                        ])),
+                        ('mrow', {'mn': {'$': '5'}})
+                    ])
+                }
+        ),
+    ]
 
-    msup = eTree.SubElement(mrow, 'msup')
-    mo = eTree.SubElement(msup, 'mo')
-    mo.text = '&#x00029;'
-    mrow2 = eTree.SubElement(msup, 'mrow')
-    mn = eTree.SubElement(mrow2, 'mn')
-    mn.text = '2'
-
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&#x0003D;'
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = '&#x000B1;'
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '25'
-
-    assert _convert(math) == convert(r'\sqrt { ( - 25 ) ^ { 2 } } = \pm 25')
-
-
-def test_issue_45_lt(math_and_row):
-    math, row = math_and_row
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '2'
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&lt;'
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '5'
-    assert _convert(math) == convert('2 < 5')
-
-
-def test_issue_45_gt(math_and_row):
-    math, row = math_and_row
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '2'
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&gt;'
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '5'
-    assert _convert(math) == convert('2 > 5')
-
-
-def test_issue_45_amp(math_and_row):
-    math, row = math_and_row
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&amp;'
-    assert _convert(math) == convert('&')
-
-
-def test_issue_44(math_and_row):
-    math, row = math_and_row
-    msup = eTree.SubElement(row, 'msup')
-    mrow = eTree.SubElement(msup, 'mrow')
-    mo = eTree.SubElement(mrow, 'mo', fence='true', form='prefix', stretchy='true')
-    mo.text = '&#x00028;'
-    mrow = eTree.SubElement(msup, 'mrow')
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '&#x02212;'
-    msup2 = eTree.SubElement(row, 'msup')
-    mi = eTree.SubElement(msup2, 'mi')
-    mi.text = 'x'
-    mrow = eTree.SubElement(msup2, 'mrow')
-    mn = eTree.SubElement(mrow, 'mn')
-    mn.text = '3'
-
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '&#x0002B;'
-    mn = eTree.SubElement(mrow, 'mn')
-    mn.text = '5'
-
-    mo = eTree.SubElement(mrow, 'mo', fence='true', form='postfix', stretchy='true')
-    mo.text = '&#x00029;'
-
-    mrow = eTree.SubElement(msup, 'mrow')
-    mn = eTree.SubElement(mrow, 'mn')
-    mn.text = '5'
+)
+def test_converter(latex, json):
+    parent = {
+        'math': {
+            '@xmlns': 'http://www.w3.org/1998/Math/MathML',
+            'mrow': json
+        }
+    }
+    badgerfish = BadgerFish(dict_type=MultiDict)
+    math = badgerfish.etree(parent)
+    assert _convert(math[0]) == convert(latex)

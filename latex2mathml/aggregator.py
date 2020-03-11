@@ -14,6 +14,7 @@ from latex2mathml.tokenizer import tokenize
 
 def group(tokens, opening='{', closing='}', delimiter=None):
     g = []
+    has_sub_sup = None
     if delimiter:
         g.append(delimiter)
         g.append(next(tokens))
@@ -33,11 +34,14 @@ def group(tokens, opening='{', closing='}', delimiter=None):
                 g.append(token)
                 g.append(next(tokens))
                 try:
-                    t, _ = tee(tokens)
+                    t, u = tee(tokens)
                     while True:
                         token = next(t)
                         if token == opening:
                             g.append(group(t))
+                        elif token in '_^':
+                            has_sub_sup = token
+                            break
                         elif token != closing:
                             g.append(token)
                         else:
@@ -45,6 +49,8 @@ def group(tokens, opening='{', closing='}', delimiter=None):
                 except StopIteration:
                     pass
                 break
+            elif isinstance(token, str) and token in '_^':
+                process_sub_sup(g, token, tokens)
             else:
                 g.append(token)
         except StopIteration:
@@ -53,9 +59,13 @@ def group(tokens, opening='{', closing='}', delimiter=None):
         try:
             right = g.index(r'\right')
             content = g[2:right]
+            g_ = g
             if len(content):
-                return g[0:2] + [_aggregate(iter(content))] + g[right:]
-            return g
+                g_ = g[0:2] + [_aggregate(iter(content))] + g[right:]
+            if has_sub_sup:
+                g_ = [g_]
+                process_sub_sup(g_, has_sub_sup, tokens)
+            return g_
         except ValueError:
             raise ExtraLeftOrMissingRight
     return _aggregate(iter(g))
@@ -222,7 +232,7 @@ def aggregate(data):
 def process_sub_sup(aggregated, token, tokens):
     try:
         previous = aggregated.pop()
-        if isinstance(previous, str) and previous in '+-*/=[]_^{}':
+        if isinstance(previous, str) and previous in '+-*/=[]_^{}()':
             aggregated += [previous, token]
             return
         try:
