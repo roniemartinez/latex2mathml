@@ -61,8 +61,8 @@ PARAMS = [
                         "mtr",
                         MultiDict(
                             [
-                                ("mtd", {"msub": {"mi": "a", "mrow": {"mn": "1"}}}),
-                                ("mtd", {"msub": {"mi": "b", "mrow": {"mn": "2"}}}),
+                                ("mtd", {"msub": MultiDict([("mi", "a"), ("mrow", {"mn": "1"})])}),
+                                ("mtd", {"msub": MultiDict([("mi", "b"), ("mrow", {"mn": "2"})])}),
                             ]
                         ),
                     ),
@@ -70,8 +70,8 @@ PARAMS = [
                         "mtr",
                         MultiDict(
                             [
-                                ("mtd", {"msub": {"mi": "c", "mrow": {"mn": "3"}}}),
-                                ("mtd", {"msub": {"mi": "d", "mrow": {"mn": "4"}}}),
+                                ("mtd", {"msub": MultiDict([("mi", "c"), ("mrow", {"mn": "3"})])}),
+                                ("mtd", {"msub": MultiDict([("mi", "d"), ("mrow", {"mn": "4"})])}),
                             ]
                         ),
                     ),
