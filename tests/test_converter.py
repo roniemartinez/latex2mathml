@@ -90,9 +90,9 @@ PARAMS = [
                         "mo",
                         MultiDict(
                             [
+                                ("@stretchy", "true"),
                                 ("@fence", "true"),
                                 ("@form", "prefix"),
-                                ("@stretchy", "true"),
                                 ("$", "&#x0007B;"),
                             ]
                         ),
@@ -182,9 +182,9 @@ PARAMS = [
                         "mo",
                         MultiDict(
                             [
+                                ("@stretchy", "true"),
                                 ("@fence", "true"),
                                 ("@form", "postfix"),
-                                ("@stretchy", "true"),
                             ]
                         ),
                     ),
@@ -443,9 +443,9 @@ PARAMS = [
                                                 "mo",
                                                 MultiDict(
                                                     [
+                                                        ("@stretchy", "true"),
                                                         ("@fence", "true"),
                                                         ("@form", "prefix"),
-                                                        ("@stretchy", "true"),
                                                         ("$", "&#x00028;"),
                                                     ]
                                                 ),
@@ -471,9 +471,9 @@ PARAMS = [
                                                 "mo",
                                                 MultiDict(
                                                     [
+                                                        ("@stretchy", "true"),
                                                         ("@fence", "true"),
                                                         ("@form", "postfix"),
-                                                        ("@stretchy", "true"),
                                                         ("$", "&#x00029;"),
                                                     ]
                                                 ),
@@ -534,16 +534,16 @@ PARAMS = [
                                                                 MultiDict(
                                                                     [
                                                                         (
+                                                                            "@stretchy",
+                                                                            "true",
+                                                                        ),
+                                                                        (
                                                                             "@fence",
                                                                             "true",
                                                                         ),
                                                                         (
                                                                             "@form",
                                                                             "prefix",
-                                                                        ),
-                                                                        (
-                                                                            "@stretchy",
-                                                                            "true",
                                                                         ),
                                                                         (
                                                                             "$",
@@ -569,16 +569,16 @@ PARAMS = [
                                                                 MultiDict(
                                                                     [
                                                                         (
+                                                                            "@stretchy",
+                                                                            "true",
+                                                                        ),
+                                                                        (
                                                                             "@fence",
                                                                             "true",
                                                                         ),
                                                                         (
                                                                             "@form",
                                                                             "postfix",
-                                                                        ),
-                                                                        (
-                                                                            "@stretchy",
-                                                                            "true",
                                                                         ),
                                                                         (
                                                                             "$",
@@ -625,9 +625,9 @@ PARAMS = [
                                         "mo",
                                         MultiDict(
                                             [
+                                                ("@stretchy", "true"),
                                                 ("@fence", "true"),
                                                 ("@form", "prefix"),
-                                                ("@stretchy", "true"),
                                                 ("$", "&#x00028;"),
                                             ]
                                         ),
@@ -637,9 +637,9 @@ PARAMS = [
                                         "mo",
                                         MultiDict(
                                             [
+                                                ("@stretchy", "true"),
                                                 ("@fence", "true"),
                                                 ("@form", "postfix"),
-                                                ("@stretchy", "true"),
                                                 ("$", "&#x00029;"),
                                             ]
                                         ),
@@ -660,7 +660,7 @@ PARAMS = [
 @pytest.mark.parametrize(
     "name, latex, json", ids=[x[0] for x in PARAMS], argvalues=PARAMS,
 )
-def test_converter(name: str, latex: str, json: dict):
+def test_converter(name: str, latex: str, json: MultiDict):
     parent = {"math": {"@xmlns": "http://www.w3.org/1998/Math/MathML", "mrow": json}}
     bf = BadgerFish(dict_type=MultiDict)
     math = bf.etree(parent)
