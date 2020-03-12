@@ -10,15 +10,8 @@ from latex2mathml.symbols_parser import convert_symbol
 
 
 @pytest.mark.parametrize(
-    'latex, expected',
-    ids=[
-        'operator plus',
-        'alias command',
-    ],
-    argvalues=[
-        ('+', '0002B'),
-        (r'\to', '02192'),
-    ]
+    "name, latex, expected",
+    [("Operator plus", "+", "0002B"), ("Alias command", r"\to", "02192")],
 )
-def test_convert_symbol(latex, expected):
-    assert convert_symbol(latex) == expected
+def test_convert_symbol(name, latex, expected):
+    assert convert_symbol(latex) == expected, name

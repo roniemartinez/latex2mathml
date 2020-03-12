@@ -8,7 +8,9 @@ import codecs
 import os
 import re
 
-symbols_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'unimathsymbols.txt')
+symbols_file = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), "unimathsymbols.txt"
+)
 symbols = None
 
 
@@ -21,10 +23,10 @@ def convert_symbol(symbol):
 
 def parse_symbols():
     _symbols = {}
-    with codecs.open(symbols_file, encoding='utf-8') as f:
+    with codecs.open(symbols_file, encoding="utf-8") as f:
         for line in f:
-            if not line.startswith('#'):
-                columns = line.strip().split('^')
+            if not line.startswith("#"):
+                columns = line.strip().split("^")
                 _unicode = columns[0]
                 latex = columns[2]
                 unicode_math = columns[3]
@@ -32,7 +34,7 @@ def parse_symbols():
                     _symbols[latex] = _unicode
                 if unicode_math and unicode_math not in _symbols:
                     _symbols[unicode_math] = _unicode
-                for equivalent in re.findall(r'=\s+(\\[^,^ ]+),?', columns[-1]):
+                for equivalent in re.findall(r"=\s+(\\[^,^ ]+),?", columns[-1]):
                     if equivalent not in _symbols:
                         _symbols[equivalent] = _unicode
     return _symbols

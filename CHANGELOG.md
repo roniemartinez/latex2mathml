@@ -1,6 +1,17 @@
 #  List of changes to latex2mathml
 
 ## Unreleased
+### Changed
+- Refactor tests
+- Update formatters and linters
+
+## 2.8.5 - 2020-03-10
+### Changed
+- Migrate from pipenv to poetry
+
+## 2.8.4 - 2020-03-08
+### Fixed
+- Missing right should raise an exception
 
 ## 2.8.3 - 2020-03-08
 ### Fixed
