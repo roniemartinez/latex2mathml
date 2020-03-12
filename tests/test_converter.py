@@ -88,12 +88,14 @@ PARAMS = [
                 [
                     (
                         "mo",
-                        {
-                            "@fence": "true",
-                            "@form": "prefix",
-                            "@stretchy": "true",
-                            "$": "&#x0007B;",
-                        },
+                        MultiDict(
+                            [
+                                ("@fence", "true"),
+                                ("@form", "prefix"),
+                                ("@stretchy", "true"),
+                                ("$", "&#x0007B;"),
+                            ]
+                        ),
                     ),
                     (
                         "mrow",
@@ -178,7 +180,13 @@ PARAMS = [
                     ),
                     (
                         "mo",
-                        {"@fence": "true", "@form": "postfix", "@stretchy": "true"},
+                        MultiDict(
+                            [
+                                ("@fence", "true"),
+                                ("@form", "postfix"),
+                                ("@stretchy", "true"),
+                            ]
+                        ),
                     ),
                 ]
             )
@@ -433,12 +441,14 @@ PARAMS = [
                                         [
                                             (
                                                 "mo",
-                                                {
-                                                    "@fence": "true",
-                                                    "@form": "prefix",
-                                                    "@stretchy": "true",
-                                                    "$": "&#x00028;",
-                                                },
+                                                MultiDict(
+                                                    [
+                                                        ("@fence", "true"),
+                                                        ("@form", "prefix"),
+                                                        ("@stretchy", "true"),
+                                                        ("$", "&#x00028;"),
+                                                    ]
+                                                ),
                                             ),
                                             (
                                                 "mrow",
@@ -459,12 +469,14 @@ PARAMS = [
                                             ),
                                             (
                                                 "mo",
-                                                {
-                                                    "@fence": "true",
-                                                    "@form": "postfix",
-                                                    "@stretchy": "true",
-                                                    "$": "&#x00029;",
-                                                },
+                                                MultiDict(
+                                                    [
+                                                        ("@fence", "true"),
+                                                        ("@form", "postfix"),
+                                                        ("@stretchy", "true"),
+                                                        ("$", "&#x00029;"),
+                                                    ]
+                                                ),
                                             ),
                                         ]
                                     ),
@@ -519,12 +531,26 @@ PARAMS = [
                                                         [
                                                             (
                                                                 "mo",
-                                                                {
-                                                                    "@fence": "true",
-                                                                    "@form": "prefix",
-                                                                    "@stretchy": "true",
-                                                                    "$": "&#x00028;",
-                                                                },
+                                                                MultiDict(
+                                                                    [
+                                                                        (
+                                                                            "@fence",
+                                                                            "true",
+                                                                        ),
+                                                                        (
+                                                                            "@form",
+                                                                            "prefix",
+                                                                        ),
+                                                                        (
+                                                                            "@stretchy",
+                                                                            "true",
+                                                                        ),
+                                                                        (
+                                                                            "$",
+                                                                            "&#x00028;",
+                                                                        ),
+                                                                    ]
+                                                                ),
                                                             ),
                                                             (
                                                                 "mrow",
@@ -540,12 +566,26 @@ PARAMS = [
                                                             ),
                                                             (
                                                                 "mo",
-                                                                {
-                                                                    "@fence": "true",
-                                                                    "@form": "postfix",
-                                                                    "@stretchy": "true",
-                                                                    "$": "&#x00029;",
-                                                                },
+                                                                MultiDict(
+                                                                    [
+                                                                        (
+                                                                            "@fence",
+                                                                            "true",
+                                                                        ),
+                                                                        (
+                                                                            "@form",
+                                                                            "postfix",
+                                                                        ),
+                                                                        (
+                                                                            "@stretchy",
+                                                                            "true",
+                                                                        ),
+                                                                        (
+                                                                            "$",
+                                                                            "&#x00029;",
+                                                                        ),
+                                                                    ]
+                                                                ),
                                                             ),
                                                         ]
                                                     ),
@@ -583,22 +623,26 @@ PARAMS = [
                                 [
                                     (
                                         "mo",
-                                        {
-                                            "@fence": "true",
-                                            "@form": "prefix",
-                                            "@stretchy": "true",
-                                            "$": "&#x00028;",
-                                        },
+                                        MultiDict(
+                                            [
+                                                ("@fence", "true"),
+                                                ("@form", "prefix"),
+                                                ("@stretchy", "true"),
+                                                ("$", "&#x00028;"),
+                                            ]
+                                        ),
                                     ),
                                     ("mrow", {"msup": {"mi": "x", "mrow": {"mn": 3}}}),
                                     (
                                         "mo",
-                                        {
-                                            "@fence": "true",
-                                            "@form": "postfix",
-                                            "@stretchy": "true",
-                                            "$": "&#x00029;",
-                                        },
+                                        MultiDict(
+                                            [
+                                                ("@fence", "true"),
+                                                ("@form", "postfix"),
+                                                ("@stretchy", "true"),
+                                                ("$", "&#x00029;"),
+                                            ]
+                                        ),
                                     ),
                                     ("mo", "&#x0002B;"),
                                     ("mi", "v"),
