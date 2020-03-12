@@ -39,7 +39,7 @@ PARAMS = [
     (
         "inner group",
         "{a+{b}}",
-        {"mrow": {"mi": "a", "mo": "&#x0002B;", "mrow": {"mi": "b"}}},
+        {"mrow": MultiDict([("mi", "a"), ("mo", "&#x0002B;"), ("mrow", {"mi": "b"})])},
     ),
     (
         "over",

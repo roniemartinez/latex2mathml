@@ -11,4 +11,4 @@ style:
 	poetry run flake8
 
 test:
-	poetry run pytest --cov=latex2mathml --cov-report=xml -vv -x
+	poetry run pytest --cov=latex2mathml --cov-report=xml -vv
