@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+## 2.8.6 - 2020-03-13
+### Fixed
+- Fix #44
+
+### Changed
+- Refactor tests
+- Update formatters and linters
+
+## 2.8.5 - 2020-03-10
+### Changed
+- Migrate from pipenv to poetry
+
+## 2.8.4 - 2020-03-08
+### Fixed
+- Missing right should raise an exception
+
 ## 2.8.3 - 2020-03-08
 ### Fixed
 - Discontinues parsing when \right is reached (#63)

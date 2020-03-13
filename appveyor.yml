@@ -14,8 +14,9 @@ branches:
     - /^[0-9]+\.[0-9]+\.[0-9]+/
 
 install:
-  - "%PYTHON%\\Scripts\\pip.exe install poetry"
-  - "%PYTHON%\\Scripts\\poetry.exe install"
+  - "choco install make -y"
+  - "set PATH=%PYTHON%\\Scripts;%PATH%"
+  - "make install"
 
 build: off
 
@@ -23,8 +24,7 @@ cache:
   - '%LOCALAPPDATA%\pip\Cache'
 
 test_script:
-  - "%PYTHON%\\Scripts\\poetry.exe run pytest --cov=latex2mathml --cov-report=xml -v"
-  - "%PYTHON%\\Scripts\\poetry.exe run pycodestyle --verbose"
+  - "make test"
 
 on_success:
-  - "%PYTHON%\\Scripts\\poetry.exe run codecov -f coverage.xml"
+  - "poetry run codecov -f coverage.xml"

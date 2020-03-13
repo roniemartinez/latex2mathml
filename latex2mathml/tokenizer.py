@@ -9,32 +9,32 @@ from latex2mathml.symbols_parser import convert_symbol
 
 def tokenize(data):
     iterable = iter(data)
-    buffer = ''
+    buffer = ""
     while True:
         try:
             char = next(iterable)
-            if char == '\\':
-                if buffer == '\\':
+            if char == "\\":
+                if buffer == "\\":
                     yield buffer + char
-                    buffer = ''
+                    buffer = ""
                     continue
                 elif len(buffer):
                     yield buffer
                 buffer = char
                 try:
                     buffer += next(iterable)
-                    if buffer == r'\\':
+                    if buffer == r"\\":
                         yield buffer
-                        buffer = ''
+                        buffer = ""
                 except StopIteration:
                     break
             elif char.isalpha():
                 if len(buffer):
-                    if buffer.endswith('}'):
+                    if buffer.endswith("}"):
                         yield buffer
                         yield char
-                        buffer = ''
-                    elif buffer.startswith('\\'):
+                        buffer = ""
+                    elif buffer.startswith("\\"):
                         buffer += char
                 else:
                     yield char
@@ -49,18 +49,18 @@ def tokenize(data):
                         break
                     if char.isspace():
                         yield buffer
-                        buffer = ''
+                        buffer = ""
                         break
-                    elif char.isdigit() or char == '.':
+                    elif char.isdigit() or char == ".":
                         buffer += char
                     else:
-                        if buffer.endswith('.'):
+                        if buffer.endswith("."):
                             yield buffer[:-1]
                             yield buffer[-1]
                         else:
                             yield buffer
-                        buffer = ''
-                        if char == '\\':
+                        buffer = ""
+                        if char == "\\":
                             buffer = char
                         else:
                             yield char
@@ -68,36 +68,40 @@ def tokenize(data):
             elif char.isspace():
                 if len(buffer):
                     yield buffer
-                    buffer = ''
-            elif char in '{}*':
+                    buffer = ""
+            elif char in "{}*":
                 # FIXME: Anything that starts with '\math' passes. There is a huge list of math symbols in
                 #  unimathsymbols.txt and hard-coding all of them is inefficient.
-                if buffer.startswith(r'\begin') or buffer.startswith(r'\end') or buffer.startswith(r'\math'):
-                    if buffer.endswith('}'):
+                if (
+                    buffer.startswith(r"\begin")
+                    or buffer.startswith(r"\end")
+                    or buffer.startswith(r"\math")
+                ):
+                    if buffer.endswith("}"):
                         yield buffer
                         yield char
-                        buffer = ''
+                        buffer = ""
                         continue
-                    elif buffer.startswith(r'\math') and char == '}':
+                    elif buffer.startswith(r"\math") and char == "}":
                         symbol = convert_symbol(buffer + char)
                         if symbol:
-                            yield '&#x{};'.format(symbol)
-                            buffer = ''
+                            yield "&#x{};".format(symbol)
+                            buffer = ""
                             continue
                     buffer += char
                 else:
                     if len(buffer):
                         yield buffer
-                        buffer = ''
+                        buffer = ""
                     yield char
             else:
                 if len(buffer):
-                    if buffer.startswith(r'\math'):
+                    if buffer.startswith(r"\math"):
                         yield buffer[:-1]
                         yield buffer[-1]
                     else:
                         yield buffer
-                    buffer = ''
+                    buffer = ""
                 if len(char):
                     yield char
         except StopIteration:

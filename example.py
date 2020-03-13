@@ -12,5 +12,5 @@ def convert_to_mathml(latex_input):
     print(mathml_output)
 
 
-if __name__ == '__main__':
-    convert_to_mathml(r'x = {-b \pm \sqrt{b^2-4ac} \over 2a}')
+if __name__ == "__main__":
+    convert_to_mathml(r"x = {-b \pm \sqrt{b^2-4ac} \over 2a}")

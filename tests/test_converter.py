@@ -4,561 +4,1118 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
-import xml.etree.cElementTree as eTree
-
-# noinspection PyPackageRequirements
-from collections import OrderedDict
 
 import pytest
+from multidict import MultiDict
+from xmljson import BadgerFish
 
 # noinspection PyProtectedMember
-from latex2mathml.converter import convert, _convert
+from latex2mathml.converter import _convert, convert
 
-
-@pytest.fixture
-def math_and_row():
-    math = eTree.Element('math')
-    math.set('xmlns', 'http://www.w3.org/1998/Math/MathML')
-    row = eTree.SubElement(math, 'mrow')
-    yield math, row
-
-
-def test_single_identifier(math_and_row):
-    math, row = math_and_row
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = 'x'
-    assert _convert(math) == convert('x')
-
-
-def test_multiple_identifiers(math_and_row):
-    math, row = math_and_row
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = 'x'
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = 'y'
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = 'z'
-    assert _convert(math) == convert('xyz')
-
-
-def test_single_number(math_and_row):
-    math, row = math_and_row
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '3'
-    assert _convert(math) == convert('3')
-
-
-def test_multiple_numbers(math_and_row):
-    math, row = math_and_row
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '333'
-    assert _convert(math) == convert('333')
-
-
-def test_decimal_numbers(math_and_row):
-    math, row = math_and_row
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '12.34'
-    assert _convert(math) == convert('12.34')
-
-
-def test_numbers_and_identifiers(math_and_row):
-    math, row = math_and_row
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '12'
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = 'x'
-    assert _convert(math) == convert('12x')
-
-
-def test_single_operator(math_and_row):
-    math, row = math_and_row
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&#x0002B;'
-    assert _convert(math) == convert('+')
-
-
-def test_numbers_and_operators(math_and_row):
-    math, row = math_and_row
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '3'
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&#x02212;'
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '2'
-    assert _convert(math) == convert('3-2')
-
-
-def test_numbers_and_identifiers_and_operators(math_and_row):
-    math, row = math_and_row
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '3'
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = 'x'
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&#x0002A;'
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '2'
-    assert _convert(math) == convert('3x*2')
-
-
-def test_single_group(math_and_row):
-    math, row = math_and_row
-    mrow = eTree.SubElement(row, 'mrow')
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = 'a'
-    assert _convert(math) == convert('{a}')
-
-
-def test_multiple_groups(math_and_row):
-    math, row = math_and_row
-    mrow = eTree.SubElement(row, 'mrow')
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = 'a'
-    mrow = eTree.SubElement(row, 'mrow')
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = 'b'
-    assert _convert(math) == convert('{a}{b}')
-
-
-def test_inner_group(math_and_row):
-    math, row = math_and_row
-    mrow = eTree.SubElement(row, 'mrow')
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = 'a'
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '&#x0002B;'
-    mrow = eTree.SubElement(mrow, 'mrow')
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = 'b'
-    assert _convert(math) == convert('{a+{b}}')
-
-
-def test_over(math_and_row):
-    math, row = math_and_row
-    frac = eTree.SubElement(row, 'mfrac')
-    row = eTree.SubElement(frac, 'mrow')
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '1'
-    row = eTree.SubElement(frac, 'mrow')
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '2'
-    assert _convert(math) == convert(r'1 \over 2')
-
-
-def test_over_inside_braces(math_and_row):
-    math, row = math_and_row
-    row = eTree.SubElement(row, 'mrow')
-    frac = eTree.SubElement(row, 'mfrac')
-    row = eTree.SubElement(frac, 'mrow')
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '1'
-    row = eTree.SubElement(frac, 'mrow')
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '2'
-    assert _convert(math) == convert(r'{1 \over 2}')
-
-
-def test_complex_matrix(math_and_row):
-    math, row = math_and_row
-    mtable = eTree.SubElement(row, 'mtable')
-
-    mtr = eTree.SubElement(mtable, 'mtr')
-    mtd = eTree.SubElement(mtr, 'mtd')
-    msub = eTree.SubElement(mtd, 'msub')
-    mi = eTree.SubElement(msub, 'mi')
-    mi.text = 'a'
-    mrow = eTree.SubElement(msub, 'mrow')
-    mn = eTree.SubElement(mrow, 'mn')
-    mn.text = '1'
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    msub = eTree.SubElement(mtd, 'msub')
-    mi = eTree.SubElement(msub, 'mi')
-    mi.text = 'b'
-    mrow = eTree.SubElement(msub, 'mrow')
-    mn = eTree.SubElement(mrow, 'mn')
-    mn.text = '2'
-
-    mtr = eTree.SubElement(mtable, 'mtr')
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    msub = eTree.SubElement(mtd, 'msub')
-    mi = eTree.SubElement(msub, 'mi')
-    mi.text = 'c'
-    mrow = eTree.SubElement(msub, 'mrow')
-    mn = eTree.SubElement(mrow, 'mn')
-    mn.text = '3'
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    msub = eTree.SubElement(mtd, 'msub')
-    mi = eTree.SubElement(msub, 'mi')
-    mi.text = 'd'
-    mrow = eTree.SubElement(msub, 'mrow')
-    mn = eTree.SubElement(mrow, 'mn')
-    mn.text = '4'
-
-    latex = r'\begin{matrix}a_{1} & b_{2} \\ c_{3} & d_{4} \end{matrix}'
-    assert _convert(math) == convert(latex)
-
-
-def test_null_delimiter(math_and_row):
-    math, row = math_and_row
-    mrow = eTree.SubElement(row, 'mrow')
-    left = eTree.SubElement(mrow, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'prefix')]))
-    left.text = '&#x0007B;'
-
-    mrow2 = eTree.SubElement(mrow, 'mrow')
-    table = eTree.SubElement(mrow2, 'mtable')
-    eTree.SubElement(mrow, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'postfix')]))
-
-    mtr = eTree.SubElement(table, 'mtr')
-    mtd = eTree.SubElement(mtr, 'mtd', columnalign='left')
-    mn = eTree.SubElement(mtd, 'mn')
-    mn.text = '3'
-    mi = eTree.SubElement(mtd, 'mi')
-    mi.text = 'x'
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x02212;'
-    mn = eTree.SubElement(mtd, 'mn')
-    mn.text = '5'
-    mi = eTree.SubElement(mtd, 'mi')
-    mi.text = 'y'
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x0002B;'
-    mn = eTree.SubElement(mtd, 'mn')
-    mn.text = '4'
-    mi = eTree.SubElement(mtd, 'mi')
-    mi.text = 'z'
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x0003D;'
-    mn = eTree.SubElement(mtd, 'mn')
-    mn.text = '0'
-
-    mtr = eTree.SubElement(table, 'mtr')
-    mtd = eTree.SubElement(mtr, 'mtd', columnalign='left')
-    mi = eTree.SubElement(mtd, 'mi')
-    mi.text = 'x'
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x02212;'
-    mi = eTree.SubElement(mtd, 'mi')
-    mi.text = 'y'
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x0002B;'
-    mn = eTree.SubElement(mtd, 'mn')
-    mn.text = '8'
-    mi = eTree.SubElement(mtd, 'mi')
-    mi.text = 'z'
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x0003D;'
-    mn = eTree.SubElement(mtd, 'mn')
-    mn.text = '0'
-
-    mtr = eTree.SubElement(table, 'mtr')
-    mtd = eTree.SubElement(mtr, 'mtd', columnalign='left')
-    mn = eTree.SubElement(mtd, 'mn')
-    mn.text = '2'
-    mi = eTree.SubElement(mtd, 'mi')
-    mi.text = 'x'
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x02212;'
-    mn = eTree.SubElement(mtd, 'mn')
-    mn.text = '6'
-    mi = eTree.SubElement(mtd, 'mi')
-    mi.text = 'y'
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x0002B;'
-    mi = eTree.SubElement(mtd, 'mi')
-    mi.text = 'z'
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x0003D;'
-    mn = eTree.SubElement(mtd, 'mn')
-    mn.text = '0'
-
-    latex = r'\left\{ \begin{array} { l } { 3x - 5y + 4z = 0} \\ { x - y + 8z = 0} \\ { 2x - 6y + z = 0} \end{array} ' \
-            r'\right.'
-    assert _convert(math) == convert(latex)
-
-
-def test_issue_33(math_and_row):
-    latex = r'''\begin{bmatrix}
+PARAMS = [
+    ("single identifier", "x", {"mi": "x"}),
+    ("multiple identifier", "xyz", MultiDict([("mi", "x"), ("mi", "y"), ("mi", "z")])),
+    ("single number", "3", {"mn": "3"}),
+    ("multiple numbers", "333", {"mn": "333"}),
+    ("decimal numbers", "12.34", {"mn": "12.34"}),
+    ("numbers and identifiers", "12x", MultiDict([("mn", "12"), ("mi", "x")])),
+    ("single operator", "+", {"mo": "&#x0002B;"}),
+    (
+        "numbers and operators",
+        "3-2",
+        MultiDict([("mn", "3"), ("mo", "&#x02212;"), ("mn", "2")]),
+    ),
+    (
+        "numbers, identifiers and operators",
+        "3x*2",
+        MultiDict([("mn", "3"), ("mi", "x"), ("mo", "&#x0002A;"), ("mn", "2")]),
+    ),
+    ("single group", "{a}", {"mrow": {"mi": "a"}}),
+    (
+        "multiple groups",
+        "{a}{b}",
+        MultiDict([("mrow", {"mi": "a"}), ("mrow", {"mi": "b"})]),
+    ),
+    (
+        "inner group",
+        "{a+{b}}",
+        {"mrow": MultiDict([("mi", "a"), ("mo", "&#x0002B;"), ("mrow", {"mi": "b"})])},
+    ),
+    (
+        "over",
+        r"1 \over 2",
+        {"mfrac": MultiDict([("mrow", {"mn": "1"}), ("mrow", {"mn": "2"})])},
+    ),
+    (
+        "over inside braces",
+        r"{1 \over 2}",
+        {"mrow": {"mfrac": MultiDict([("mrow", {"mn": "1"}), ("mrow", {"mn": "2"})])}},
+    ),
+    (
+        "complex matrix",
+        r"\begin{matrix}a_{1} & b_{2} \\ c_{3} & d_{4} \end{matrix}",
+        {
+            "mtable": MultiDict(
+                [
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                (
+                                    "mtd",
+                                    {
+                                        "msub": MultiDict(
+                                            [("mi", "a"), ("mrow", {"mn": "1"})]
+                                        )
+                                    },
+                                ),
+                                (
+                                    "mtd",
+                                    {
+                                        "msub": MultiDict(
+                                            [("mi", "b"), ("mrow", {"mn": "2"})]
+                                        )
+                                    },
+                                ),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                (
+                                    "mtd",
+                                    {
+                                        "msub": MultiDict(
+                                            [("mi", "c"), ("mrow", {"mn": "3"})]
+                                        )
+                                    },
+                                ),
+                                (
+                                    "mtd",
+                                    {
+                                        "msub": MultiDict(
+                                            [("mi", "d"), ("mrow", {"mn": "4"})]
+                                        )
+                                    },
+                                ),
+                            ]
+                        ),
+                    ),
+                ]
+            )
+        },
+    ),
+    (
+        "null delimiter",
+        r"\left\{ \begin{array} { l } { 3x - 5y + 4z = 0} \\ { x - y + 8z = 0} \\ { 2x - 6y + z = 0} \end{array} "
+        r"\right.",
+        {
+            "mrow": MultiDict(
+                [
+                    (
+                        "mo",
+                        MultiDict(
+                            [
+                                ("@stretchy", "true"),
+                                ("@fence", "true"),
+                                ("@form", "prefix"),
+                                ("$", "&#x0007B;"),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mrow",
+                        {
+                            "mtable": MultiDict(
+                                [
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                (
+                                                    "mtd",
+                                                    MultiDict(
+                                                        [
+                                                            ("@columnalign", "left"),
+                                                            ("mn", "3"),
+                                                            ("mi", "x"),
+                                                            ("mo", "&#x02212;"),
+                                                            ("mn", "5"),
+                                                            ("mi", "y"),
+                                                            ("mo", "&#x0002B;"),
+                                                            ("mn", "4"),
+                                                            ("mi", "z"),
+                                                            ("mo", "&#x0003D;"),
+                                                            ("mn", "0"),
+                                                        ]
+                                                    ),
+                                                ),
+                                            ]
+                                        ),
+                                    ),
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                (
+                                                    "mtd",
+                                                    MultiDict(
+                                                        [
+                                                            ("@columnalign", "left"),
+                                                            ("mi", "x"),
+                                                            ("mo", "&#x02212;"),
+                                                            ("mi", "y"),
+                                                            ("mo", "&#x0002B;"),
+                                                            ("mn", "8"),
+                                                            ("mi", "z"),
+                                                            ("mo", "&#x0003D;"),
+                                                            ("mn", "0"),
+                                                        ]
+                                                    ),
+                                                ),
+                                            ]
+                                        ),
+                                    ),
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                (
+                                                    "mtd",
+                                                    MultiDict(
+                                                        [
+                                                            ("@columnalign", "left"),
+                                                            ("mn", "2"),
+                                                            ("mi", "x"),
+                                                            ("mo", "&#x02212;"),
+                                                            ("mn", "6"),
+                                                            ("mi", "y"),
+                                                            ("mo", "&#x0002B;"),
+                                                            ("mi", "z"),
+                                                            ("mo", "&#x0003D;"),
+                                                            ("mn", "0"),
+                                                        ]
+                                                    ),
+                                                ),
+                                            ]
+                                        ),
+                                    ),
+                                ]
+                            )
+                        },
+                    ),
+                    (
+                        "mo",
+                        MultiDict(
+                            [
+                                ("@stretchy", "true"),
+                                ("@fence", "true"),
+                                ("@form", "postfix"),
+                            ]
+                        ),
+                    ),
+                ]
+            )
+        },
+    ),
+    ("subscript", "a_b", {"msub": MultiDict([("mi", "a"), ("mi", "b")])}),
+    ("superscript", "a^b", {"msup": MultiDict([("mi", "a"), ("mi", "b")])}),
+    (
+        "subscript and superscript",
+        "a_b^c",
+        {"msubsup": MultiDict([("mi", "a"), ("mi", "b"), ("mi", "c")])},
+    ),
+    (
+        "superscript and subscript",
+        "a^b_c",
+        {"msubsup": MultiDict([("mi", "a"), ("mi", "c"), ("mi", "b")])},
+    ),
+    (
+        "subscript within curly braces",
+        "{a_b}",
+        {"mrow": {"msub": MultiDict([("mi", "a"), ("mi", "b")])}},
+    ),
+    (
+        "superscript within curly braces",
+        "{a^b}",
+        {"mrow": {"msup": MultiDict([("mi", "a"), ("mi", "b")])}},
+    ),
+    (
+        "superscript, subscript and curly braces",
+        "a^{i+1}_3",
+        {
+            "msubsup": MultiDict(
+                [
+                    ("mi", "a"),
+                    ("mn", "3"),
+                    (
+                        "mrow",
+                        MultiDict([("mi", "i"), ("mo", "&#x0002B;"), ("mn", "1")]),
+                    ),
+                ]
+            )
+        },
+    ),
+    (
+        "simple fraction",
+        r"\frac{1}{2}",
+        {"mfrac": MultiDict([("mrow", {"mn": "1"}), ("mrow", {"mn": "2"})])},
+    ),
+    ("square root", r"\sqrt{2}", {"msqrt": {"mrow": {"mn": "2"}}}),
+    (
+        "root",
+        r"\sqrt[3]{2}",
+        {"mroot": MultiDict([("mrow", {"mn": "2"}), ("mrow", {"mn": "3"})])},
+    ),
+    (
+        "binomial",
+        r"\binom{2}{3}",
+        MultiDict(
+            [
+                ("mo", "&#x00028;"),
+                (
+                    "mfrac",
+                    MultiDict(
+                        [
+                            ("@linethickness", "0"),
+                            ("mrow", {"mn": "2"}),
+                            ("mrow", {"mn": "3"}),
+                        ]
+                    ),
+                ),
+                ("mo", "&#x00029;"),
+            ]
+        ),
+    ),
+    (
+        "left and right",
+        r"\left(x\right)",
+        MultiDict(
+            [
+                (
+                    "mrow",
+                    MultiDict(
+                        [
+                            (
+                                "mo",
+                                MultiDict(
+                                    [
+                                        ("@stretchy", "true"),
+                                        ("@fence", "true"),
+                                        ("@form", "prefix"),
+                                        ("$", "&#x00028;"),
+                                    ]
+                                ),
+                            ),
+                            ("mrow", {"mi": "x"}),
+                            (
+                                "mo",
+                                MultiDict(
+                                    [
+                                        ("@stretchy", "true"),
+                                        ("@fence", "true"),
+                                        ("@form", "postfix"),
+                                        ("$", "&#x00029;"),
+                                    ]
+                                ),
+                            ),
+                        ]
+                    ),
+                ),
+            ]
+        ),
+    ),
+    ("space", r"\,", {"mspace": {"@width": "0.167em"}}),
+    (
+        "overline",
+        r"\overline{a}",
+        {
+            "mover": MultiDict(
+                [("mrow", {"mi": "a"}), ("mo", {"@stretchy": "true", "$": "&#x000AF;"})]
+            )
+        },
+    ),
+    (
+        "underline",
+        r"\underline{a}",
+        {
+            "munder": MultiDict(
+                [("mrow", {"mi": "a"}), ("mo", {"@stretchy": "true", "$": "&#x00332;"})]
+            )
+        },
+    ),
+    (
+        "matrix",
+        r"\begin{matrix}a & b \\ c & d \end{matrix}",
+        {
+            "mtable": MultiDict(
+                [
+                    ("mtr", MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),),
+                    ("mtr", MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),),
+                ]
+            ),
+        },
+    ),
+    (
+        "matrix without begin and end",
+        r"\matrix{a & b \\ c & d}",
+        {
+            "mtable": MultiDict(
+                [
+                    ("mtr", MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),),
+                    ("mtr", MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),),
+                ]
+            ),
+        },
+    ),
+    (
+        "matrix with alignment",
+        r"\begin{matrix*}[r]a & b \\ c & d \end{matrix*}",
+        {
+            "mtable": MultiDict(
+                [
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "right", "mi": "a"}),
+                                ("mtd", {"@columnalign": "right", "mi": "b"}),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "right", "mi": "c"}),
+                                ("mtd", {"@columnalign": "right", "mi": "d"}),
+                            ]
+                        ),
+                    ),
+                ]
+            )
+        },
+    ),
+    (
+        "matrix with negative sign",
+        r"\begin{matrix}-a & b \\ c & d \end{matrix}",
+        {
+            "mtable": MultiDict(
+                [
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", MultiDict([("mo", "&#x02212;"), ("mi", "a")])),
+                                ("mtd", {"mi": "b"}),
+                            ]
+                        ),
+                    ),
+                    ("mtr", MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),),
+                ]
+            ),
+        },
+    ),
+    (
+        "pmatrix",
+        r"\begin{pmatrix}a & b \\ c & d \end{pmatrix}",
+        MultiDict(
+            [
+                ("mo", "&#x00028;"),
+                (
+                    "mtable",
+                    MultiDict(
+                        [
+                            (
+                                "mtr",
+                                MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),
+                            ),
+                            (
+                                "mtr",
+                                MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),
+                            ),
+                        ]
+                    ),
+                ),
+                ("mo", "&#x00029;"),
+            ]
+        ),
+    ),
+    (
+        "simple array",
+        r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \end{array}",
+        {
+            "mtable": MultiDict(
+                [
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "1"}),
+                                ("mtd", {"@columnalign": "right", "mn": "2"}),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "3"}),
+                                ("mtd", {"@columnalign": "right", "mn": "4"}),
+                            ]
+                        ),
+                    ),
+                ]
+            )
+        },
+    ),
+    (
+        "array with vertical bar",
+        r"\begin{array}{c|rl} 1 & 2 & 3 \\ 4 & 5 & 6 \end{array}",
+        {
+            "mtable": MultiDict(
+                [
+                    ("@columnlines", "solid none"),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "1"}),
+                                ("mtd", {"@columnalign": "right", "mn": "2"}),
+                                ("mtd", {"@columnalign": "left", "mn": "3"}),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "4"}),
+                                ("mtd", {"@columnalign": "right", "mn": "5"}),
+                                ("mtd", {"@columnalign": "left", "mn": "6"}),
+                            ]
+                        ),
+                    ),
+                ]
+            )
+        },
+    ),
+    (
+        "array with horizontal lines",
+        r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}",
+        {
+            "mtable": MultiDict(
+                [
+                    ("@rowlines", "none solid"),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "1"}),
+                                ("mtd", {"@columnalign": "right", "mn": "2"}),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "3"}),
+                                ("mtd", {"@columnalign": "right", "mn": "4"}),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "5"}),
+                                ("mtd", {"@columnalign": "right", "mn": "6"}),
+                            ]
+                        ),
+                    ),
+                ]
+            )
+        },
+    ),
+    (
+        "issue #33",
+        r"""\begin{bmatrix}
      a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
      a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
      \vdots  & \vdots  & \ddots & \vdots  \\
      a_{m,1} & a_{m,2} & \cdots & a_{m,n}
-    \end{bmatrix}'''
-    math, row = math_and_row
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&#x0005B;'
+    \end{bmatrix}""",
+        MultiDict(
+            [
+                ("mo", "&#x0005B;"),
+                (
+                    "mtable",
+                    MultiDict(
+                        [
+                            (
+                                "mtr",
+                                MultiDict(
+                                    [
+                                        (
+                                            "mtd",
+                                            {
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mn", "1"),
+                                                                    ("mi", ","),
+                                                                    ("mn", "1"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
+                                            },
+                                        ),
+                                        (
+                                            "mtd",
+                                            {
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mn", "1"),
+                                                                    ("mi", ","),
+                                                                    ("mn", "2"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
+                                            },
+                                        ),
+                                        ("mtd", {"mo": "&#x022EF;"}),
+                                        (
+                                            "mtd",
+                                            {
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mn", "1"),
+                                                                    ("mi", ","),
+                                                                    ("mi", "n"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
+                                            },
+                                        ),
+                                    ]
+                                ),
+                            ),
+                            (
+                                "mtr",
+                                MultiDict(
+                                    [
+                                        (
+                                            "mtd",
+                                            {
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mn", "2"),
+                                                                    ("mi", ","),
+                                                                    ("mn", "1"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
+                                            },
+                                        ),
+                                        (
+                                            "mtd",
+                                            {
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mn", "2"),
+                                                                    ("mi", ","),
+                                                                    ("mn", "2"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
+                                            },
+                                        ),
+                                        ("mtd", {"mo": "&#x022EF;"}),
+                                        (
+                                            "mtd",
+                                            {
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mn", "2"),
+                                                                    ("mi", ","),
+                                                                    ("mi", "n"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
+                                            },
+                                        ),
+                                    ]
+                                ),
+                            ),
+                            (
+                                "mtr",
+                                MultiDict(
+                                    [
+                                        ("mtd", {"mo": "&#x022EE;"}),
+                                        ("mtd", {"mo": "&#x022EE;"}),
+                                        ("mtd", {"mo": "&#x022F1;"}),
+                                        ("mtd", {"mo": "&#x022EE;"}),
+                                    ]
+                                ),
+                            ),
+                            (
+                                "mtr",
+                                MultiDict(
+                                    [
+                                        (
+                                            "mtd",
+                                            {
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mi", "m"),
+                                                                    ("mi", ","),
+                                                                    ("mn", "1"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
+                                            },
+                                        ),
+                                        (
+                                            "mtd",
+                                            {
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mi", "m"),
+                                                                    ("mi", ","),
+                                                                    ("mn", "2"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
+                                            },
+                                        ),
+                                        ("mtd", {"mo": "&#x022EF;"}),
+                                        (
+                                            "mtd",
+                                            {
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mi", "m"),
+                                                                    ("mi", ","),
+                                                                    ("mi", "n"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
+                                            },
+                                        ),
+                                    ]
+                                ),
+                            ),
+                        ]
+                    ),
+                ),
+                ("mo", "&#x0005D;"),
+            ]
+        ),
+    ),
+    (
+        "issue #42",
+        r"\sqrt { ( - 25 ) ^ { 2 } } = \pm 25",
+        MultiDict(
+            [
+                (
+                    "msqrt",
+                    {
+                        "mrow": MultiDict(
+                            [
+                                (
+                                    "msup",
+                                    MultiDict(
+                                        [
+                                            (
+                                                "mrow",
+                                                MultiDict(
+                                                    [
+                                                        ("mo", {"$": "&#x00028;"}),
+                                                        ("mo", {"$": "&#x02212;"}),
+                                                        ("mn", {"$": "25"}),
+                                                        ("mo", {"$": "&#x00029;"}),
+                                                    ]
+                                                ),
+                                            ),
+                                            ("mrow", {"mn": {"$": "2"}}),
+                                        ]
+                                    ),
+                                ),
+                            ]
+                        )
+                    },
+                ),
+                ("mo", {"$": "&#x0003D;"}),
+                ("mi", {"$": "&#x000B1;"}),
+                ("mn", {"$": "25"}),
+            ]
+        ),
+    ),
+    (
+        "issue #45 lt",
+        "2 < 5",
+        MultiDict([("mn", {"$": "2"}), ("mo", {"$": "&lt;"}), ("mn", {"$": "5"})]),
+    ),
+    (
+        "issue #45 gt",
+        "2 > 5",
+        MultiDict([("mn", {"$": "2"}), ("mo", {"$": "&gt;"}), ("mn", {"$": "5"})]),
+    ),
+    ("issue #45 amp", "&", {"mo": "&amp;"}),
+    (
+        "issue #44",
+        r"\left(- x^{3} + 5\right)^{5}",
+        {
+            "mrow": MultiDict(
+                [
+                    (
+                        "msup",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            (
+                                                "mo",
+                                                MultiDict(
+                                                    [
+                                                        ("@stretchy", "true"),
+                                                        ("@fence", "true"),
+                                                        ("@form", "prefix"),
+                                                        ("$", "&#x00028;"),
+                                                    ]
+                                                ),
+                                            ),
+                                            (
+                                                "mrow",
+                                                MultiDict(
+                                                    [
+                                                        ("mo", "&#x02212;"),
+                                                        (
+                                                            "msup",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mi", "x"),
+                                                                    (
+                                                                        "mrow",
+                                                                        {"mn": "3"},
+                                                                    ),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                        ("mo", "&#x0002B;"),
+                                                        ("mn", "5"),
+                                                    ]
+                                                ),
+                                            ),
+                                            (
+                                                "mo",
+                                                MultiDict(
+                                                    [
+                                                        ("@stretchy", "true"),
+                                                        ("@fence", "true"),
+                                                        ("@form", "postfix"),
+                                                        ("$", "&#x00029;"),
+                                                    ]
+                                                ),
+                                            ),
+                                        ]
+                                    ),
+                                ),
+                                ("mrow", {"mn": "5"}),
+                            ]
+                        ),
+                    )
+                ]
+            )
+        },
+    ),
+    ("issue #51", r"\mathbb{R}", {"mi": "&#x0211D;"}),
+    (
+        "issue #60-1",
+        r"\mathrm{...}",
+        {"mrow": MultiDict([("mo", "."), ("mo", "."), ("mo", ".")])},
+    ),
+    (
+        "issue #52",
+        r"\bar{z_1} = z_2",
+        MultiDict(
+            [
+                (
+                    "mover",
+                    MultiDict(
+                        [
+                            ("mrow", {"msub": MultiDict([("mi", "z"), ("mn", "1")])}),
+                            ("mo", {"@stretchy": "true", "$": "&#x000AF;"}),
+                        ]
+                    ),
+                ),
+                ("mo", "&#x0003D;"),
+                ("msub", MultiDict([("mi", "z"), ("mn", "2")])),
+            ]
+        ),
+    ),
+    (
+        "issue #60-2",
+        r"\mathrm{...}+\mathrm{...}",
+        MultiDict(
+            [
+                ("mrow", MultiDict([("mo", "."), ("mo", "."), ("mo", ".")])),
+                ("mo", "&#x0002B;"),
+                ("mrow", MultiDict([("mo", "."), ("mo", "."), ("mo", ".")])),
+            ]
+        ),
+    ),
+    (
+        "issue #61",
+        r"\frac{x + 4}{x + \frac{123 \left(\sqrt{x} + 5\right)}{x + 4} - 8}",
+        {
+            "mfrac": MultiDict(
+                [
+                    (
+                        "mrow",
+                        MultiDict([("mi", "x"), ("mo", "&#x0002B;"), ("mn", "4")]),
+                    ),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mi", "x"),
+                                ("mo", "&#x0002B;"),
+                                (
+                                    "mfrac",
+                                    MultiDict(
+                                        [
+                                            (
+                                                "mrow",
+                                                MultiDict(
+                                                    [
+                                                        ("mn", "123"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    (
+                                                                        "mo",
+                                                                        MultiDict(
+                                                                            [
+                                                                                (
+                                                                                    "@stretchy",
+                                                                                    "true",
+                                                                                ),
+                                                                                (
+                                                                                    "@fence",
+                                                                                    "true",
+                                                                                ),
+                                                                                (
+                                                                                    "@form",
+                                                                                    "prefix",
+                                                                                ),
+                                                                                (
+                                                                                    "$",
+                                                                                    "&#x00028;",
+                                                                                ),
+                                                                            ]
+                                                                        ),
+                                                                    ),
+                                                                    (
+                                                                        "mrow",
+                                                                        MultiDict(
+                                                                            [
+                                                                                (
+                                                                                    "msqrt",
+                                                                                    {
+                                                                                        "mrow": {
+                                                                                            "mi": "x"
+                                                                                        }
+                                                                                    },
+                                                                                ),
+                                                                                (
+                                                                                    "mo",
+                                                                                    "&#x0002B;",
+                                                                                ),
+                                                                                (
+                                                                                    "mn",
+                                                                                    "5",
+                                                                                ),
+                                                                            ]
+                                                                        ),
+                                                                    ),
+                                                                    (
+                                                                        "mo",
+                                                                        MultiDict(
+                                                                            [
+                                                                                (
+                                                                                    "@stretchy",
+                                                                                    "true",
+                                                                                ),
+                                                                                (
+                                                                                    "@fence",
+                                                                                    "true",
+                                                                                ),
+                                                                                (
+                                                                                    "@form",
+                                                                                    "postfix",
+                                                                                ),
+                                                                                (
+                                                                                    "$",
+                                                                                    "&#x00029;",
+                                                                                ),
+                                                                            ]
+                                                                        ),
+                                                                    ),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                ),
+                                            ),
+                                            (
+                                                "mrow",
+                                                MultiDict(
+                                                    [
+                                                        ("mi", "x"),
+                                                        ("mo", "&#x0002B;"),
+                                                        ("mn", "4"),
+                                                    ]
+                                                ),
+                                            ),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x02212;"),
+                                ("mn", "8"),
+                            ]
+                        ),
+                    ),
+                ]
+            )
+        },
+    ),
+    (
+        "issue #63",
+        r"\sqrt {\sqrt {\left( x^{3}\right) + v}}",
+        {
+            "msqrt": {
+                "mrow": {
+                    "msqrt": {
+                        "mrow": {
+                            "mrow": MultiDict(
+                                [
+                                    (
+                                        "mo",
+                                        MultiDict(
+                                            [
+                                                ("@stretchy", "true"),
+                                                ("@fence", "true"),
+                                                ("@form", "prefix"),
+                                                ("$", "&#x00028;"),
+                                            ]
+                                        ),
+                                    ),
+                                    (
+                                        "mrow",
+                                        {
+                                            "msup": MultiDict(
+                                                [("mi", "x"), ("mrow", {"mn": 3})]
+                                            )
+                                        },
+                                    ),
+                                    (
+                                        "mo",
+                                        MultiDict(
+                                            [
+                                                ("@stretchy", "true"),
+                                                ("@fence", "true"),
+                                                ("@form", "postfix"),
+                                                ("$", "&#x00029;"),
+                                            ]
+                                        ),
+                                    ),
+                                    ("mo", "&#x0002B;"),
+                                    ("mi", "v"),
+                                ]
+                            )
+                        }
+                    }
+                }
+            }
+        },
+    ),
+]
 
-    mtable = eTree.SubElement(row, 'mtable')
 
-    # 1st row
-    mtr = eTree.SubElement(mtable, 'mtr')
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    msub = eTree.SubElement(mtd, 'msub')
-    mi = eTree.SubElement(msub, 'mi')
-    mi.text = 'a'
-    mrow = eTree.SubElement(msub, 'mrow')
-    mi = eTree.SubElement(mrow, 'mn')
-    mi.text = '1'
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = ','
-    mi = eTree.SubElement(mrow, 'mn')
-    mi.text = '1'
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    msub = eTree.SubElement(mtd, 'msub')
-    mi = eTree.SubElement(msub, 'mi')
-    mi.text = 'a'
-    mrow = eTree.SubElement(msub, 'mrow')
-    mi = eTree.SubElement(mrow, 'mn')
-    mi.text = '1'
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = ','
-    mi = eTree.SubElement(mrow, 'mn')
-    mi.text = '2'
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x022EF;'
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    msub = eTree.SubElement(mtd, 'msub')
-    mi = eTree.SubElement(msub, 'mi')
-    mi.text = 'a'
-    mrow = eTree.SubElement(msub, 'mrow')
-    mi = eTree.SubElement(mrow, 'mn')
-    mi.text = '1'
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = ','
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = 'n'
-
-    # 2nd row
-    mtr = eTree.SubElement(mtable, 'mtr')
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    msub = eTree.SubElement(mtd, 'msub')
-    mi = eTree.SubElement(msub, 'mi')
-    mi.text = 'a'
-    mrow = eTree.SubElement(msub, 'mrow')
-    mi = eTree.SubElement(mrow, 'mn')
-    mi.text = '2'
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = ','
-    mi = eTree.SubElement(mrow, 'mn')
-    mi.text = '1'
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    msub = eTree.SubElement(mtd, 'msub')
-    mi = eTree.SubElement(msub, 'mi')
-    mi.text = 'a'
-    mrow = eTree.SubElement(msub, 'mrow')
-    mi = eTree.SubElement(mrow, 'mn')
-    mi.text = '2'
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = ','
-    mi = eTree.SubElement(mrow, 'mn')
-    mi.text = '2'
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x022EF;'
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    msub = eTree.SubElement(mtd, 'msub')
-    mi = eTree.SubElement(msub, 'mi')
-    mi.text = 'a'
-    mrow = eTree.SubElement(msub, 'mrow')
-    mn = eTree.SubElement(mrow, 'mn')
-    mn.text = '2'
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = ','
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = 'n'
-
-    # 3rd row
-    mtr = eTree.SubElement(mtable, 'mtr')
-    mtd = eTree.SubElement(mtr, 'mtd')
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x022EE;'
-    mtd = eTree.SubElement(mtr, 'mtd')
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x022EE;'
-    mtd = eTree.SubElement(mtr, 'mtd')
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x022F1;'
-    mtd = eTree.SubElement(mtr, 'mtd')
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x022EE;'
-
-    # 4th row
-    mtr = eTree.SubElement(mtable, 'mtr')
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    msub = eTree.SubElement(mtd, 'msub')
-    mi = eTree.SubElement(msub, 'mi')
-    mi.text = 'a'
-    mrow = eTree.SubElement(msub, 'mrow')
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = 'm'
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = ','
-    mn = eTree.SubElement(mrow, 'mn')
-    mn.text = '1'
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    msub = eTree.SubElement(mtd, 'msub')
-    mi = eTree.SubElement(msub, 'mi')
-    mi.text = 'a'
-    mrow = eTree.SubElement(msub, 'mrow')
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = 'm'
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = ','
-    mn = eTree.SubElement(mrow, 'mn')
-    mn.text = '2'
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    mo = eTree.SubElement(mtd, 'mo')
-    mo.text = '&#x022EF;'
-
-    mtd = eTree.SubElement(mtr, 'mtd')
-    msub = eTree.SubElement(mtd, 'msub')
-    mi = eTree.SubElement(msub, 'mi')
-    mi.text = 'a'
-    mrow = eTree.SubElement(msub, 'mrow')
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = 'm'
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = ','
-    mi = eTree.SubElement(mrow, 'mi')
-    mi.text = 'n'
-
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&#x0005D;'
-    assert _convert(math) == convert(latex)
-
-
-def test_issue_51(math_and_row):
-    math, row = math_and_row
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = '&#x0211D;'
-    assert _convert(math) == convert(r'\mathbb{R}')
-
-
-def test_issue_60_1(math_and_row):
-    math, row = math_and_row
-    mrow = eTree.SubElement(row, 'mrow')
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '.'
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '.'
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '.'
-    assert _convert(math) == convert(r'\mathrm{...}')
-
-
-def test_issue_60_2(math_and_row):
-    math, row = math_and_row
-    mrow = eTree.SubElement(row, 'mrow')
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '.'
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '.'
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '.'
-
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&#x0002B;'
-
-    mrow = eTree.SubElement(row, 'mrow')
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '.'
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '.'
-    mo = eTree.SubElement(mrow, 'mo')
-    mo.text = '.'
-    assert _convert(math) == convert(r'\mathrm{...}+\mathrm{...}')
-
-
-def test_issue_61(math_and_row):
-    math, row = math_and_row
-    frac = eTree.SubElement(row, 'mfrac')
-    row = eTree.SubElement(frac, 'mrow')
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = 'x'
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&#x0002B;'
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '4'
-
-    row = eTree.SubElement(frac, 'mrow')
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = 'x'
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&#x0002B;'
-
-    frac = eTree.SubElement(row, 'mfrac')
-    row_ = eTree.SubElement(frac, 'mrow')
-    mn = eTree.SubElement(row_, 'mn')
-    mn.text = '123'
-    row__ = eTree.SubElement(row_, 'mrow')
-    left = eTree.SubElement(row__, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'prefix')]))
-    left.text = '&#x00028;'
-
-    row___ = eTree.SubElement(row__, 'mrow')
-    msqrt = eTree.SubElement(row___, 'msqrt')
-    row____ = eTree.SubElement(msqrt, 'mrow')
-    mi = eTree.SubElement(row____, 'mi')
-    mi.text = 'x'
-    mo = eTree.SubElement(row___, 'mo')
-    mo.text = '&#x0002B;'
-    mn = eTree.SubElement(row___, 'mn')
-    mn.text = '5'
-
-    right = eTree.SubElement(row__, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'postfix')]))
-    right.text = '&#x00029;'
-
-    row_ = eTree.SubElement(frac, 'mrow')
-    mi = eTree.SubElement(row_, 'mi')
-    mi.text = 'x'
-    mo = eTree.SubElement(row_, 'mo')
-    mo.text = '&#x0002B;'
-    mn = eTree.SubElement(row_, 'mn')
-    mn.text = '4'
-
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&#x02212;'
-    mn = eTree.SubElement(row, 'mn')
-    mn.text = '8'
-    assert _convert(math) == convert(r'\frac{x + 4}{x + \frac{123 \left(\sqrt{x} + 5\right)}{x + 4} - 8}')
-
-
-def test_issue_63(math_and_row):
-    math, row = math_and_row
-    msqrt = eTree.SubElement(row, 'msqrt')
-    row = eTree.SubElement(msqrt, 'mrow')
-    msqrt = eTree.SubElement(row, 'msqrt')
-    row = eTree.SubElement(msqrt, 'mrow')
-    row = eTree.SubElement(row, 'mrow')
-    left = eTree.SubElement(row, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'prefix')]))
-    left.text = '&#x00028;'
-
-    row_ = eTree.SubElement(row, 'mrow')
-    msup = eTree.SubElement(row_, 'msup')
-    mi = eTree.SubElement(msup, 'mi')
-    mi.text = 'x'
-    row__ = eTree.SubElement(msup, 'mrow')
-    mn = eTree.SubElement(row__, 'mn')
-    mn.text = '3'
-
-    right = eTree.SubElement(row, 'mo', OrderedDict([('stretchy', 'true'), ('fence', 'true'), ('form', 'postfix')]))
-    right.text = '&#x00029;'
-    mo = eTree.SubElement(row, 'mo')
-    mo.text = '&#x0002B;'
-    mi = eTree.SubElement(row, 'mi')
-    mi.text = 'v'
-    assert _convert(math) == convert(r'\sqrt {\sqrt {\left( x^{3}\right) + v}}')
+@pytest.mark.parametrize(
+    "name, latex, json", ids=[x[0] for x in PARAMS], argvalues=PARAMS,
+)
+def test_converter(name: str, latex: str, json: MultiDict):
+    parent = {"math": {"@xmlns": "http://www.w3.org/1998/Math/MathML", "mrow": json}}
+    bf = BadgerFish(dict_type=MultiDict)
+    math = bf.etree(parent)
+    assert convert(latex) == _convert(math[0]), name
