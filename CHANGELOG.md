@@ -1,6 +1,11 @@
 #  List of changes to latex2mathml
 
 ## Unreleased
+
+## 2.8.6 - 2020-03-13
+### Fixed
+- Fix #44
+
 ### Changed
 - Refactor tests
 - Update formatters and linters

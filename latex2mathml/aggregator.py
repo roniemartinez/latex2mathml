@@ -21,6 +21,8 @@ OPENING_BRACES = "{"
 CLOSING_BRACES = "}"
 OPENING_BRACKET = "["
 CLOSING_BRACKET = "]"
+OPENING_PARENTHESIS = "("
+CLOSING_PARENTHESIS = ")"
 
 BACKSLASH = r"\\"
 AMPERSAND = "&"
@@ -78,7 +80,7 @@ def group(tokens, opening=OPENING_BRACES, closing=CLOSING_BRACES, delimiter=None
                     pass
                 break
             elif isinstance(token, str) and token in SUB_SUP:
-                process_sub_sup(g, token, tokens)
+                g = process_sub_sup(g, token, tokens)
             else:
                 g.append(token)
         except StopIteration:
@@ -92,7 +94,7 @@ def group(tokens, opening=OPENING_BRACES, closing=CLOSING_BRACES, delimiter=None
                 g_ = g[0:2] + [_aggregate(iter(content))] + g[right:]
             if has_sub_sup:
                 g_ = [g_]
-                process_sub_sup(g_, has_sub_sup, tokens)
+                g_ = process_sub_sup(g_, has_sub_sup, tokens)
             return g_
         except ValueError:
             raise ExtraLeftOrMissingRight
@@ -161,7 +163,7 @@ def environment(begin, tokens):
                 except StopIteration:
                     row.append(token)
             elif token in SUB_SUP:
-                process_sub_sup(row, token, tokens)
+                row = process_sub_sup(row, token, tokens)
             else:
                 row.append(token)
         except EmptyGroupError:
@@ -228,7 +230,7 @@ def _aggregate(tokens):
                 except EmptyGroupError:
                     aggregated += [OPENING_BRACKET, CLOSING_BRACKET]
             elif token in SUB_SUP:
-                process_sub_sup(aggregated, token, tokens)
+                aggregated = process_sub_sup(aggregated, token, tokens)
             elif token.startswith(BEGIN) or token in MATRICES:
                 aggregated += environment(token, tokens)
             elif token == OVER:
@@ -261,8 +263,15 @@ def process_sub_sup(aggregated, token, tokens):
     try:
         previous = aggregated.pop()
         if isinstance(previous, str) and previous in OPERATORS:
-            aggregated += [previous, token]
-            return
+            if previous == CLOSING_PARENTHESIS and OPENING_PARENTHESIS in aggregated:
+                aggregated = (
+                    aggregated[: aggregated.index(OPENING_PARENTHESIS)]
+                    + [token]
+                    + [aggregated[aggregated.index(OPENING_PARENTHESIS) :] + [previous]]
+                )
+            else:
+                aggregated += [previous, token]
+            return aggregated
         try:
             next_token = next_item_or_group(tokens)
             if len(aggregated) >= 2:
@@ -279,6 +288,7 @@ def process_sub_sup(aggregated, token, tokens):
         except EmptyGroupError:
             aggregated += [previous, token, OPENING_BRACES, CLOSING_BRACES]
         except StopIteration:
-            return
+            return aggregated
     except IndexError:
         aggregated.append(token)
+    return aggregated
