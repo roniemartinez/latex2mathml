@@ -15,8 +15,32 @@ from latex2mathml.exceptions import (
 )
 from latex2mathml.tokenizer import tokenize
 
+OPERATORS = "+-*/=[]_^{}()"
 
-def group(tokens, opening="{", closing="}", delimiter=None):
+OPENING_BRACES = "{"
+CLOSING_BRACES = "}"
+OPENING_BRACKET = "["
+CLOSING_BRACKET = "]"
+
+BACKSLASH = r"\\"
+AMPERSAND = "&"
+DASH = "-"
+
+SUB_SUP = "_^"
+SUBSCRIPT = "_"
+SUPERSCRIPT = "^"
+
+LEFT = r"\left"
+RIGHT = r"\right"
+OVER = r"\over"
+HLINE = r"\hline"
+BEGIN = r"\begin"
+FRAC = r"\frac"
+ROOT = r"\root"
+SQRT = r"\sqrt"
+
+
+def group(tokens, opening=OPENING_BRACES, closing=CLOSING_BRACES, delimiter=None):
     g = []
     has_sub_sup = None
     if delimiter:
@@ -34,7 +58,7 @@ def group(tokens, opening="{", closing="}", delimiter=None):
                     g.append(group(tokens))
                 except EmptyGroupError:
                     g += [opening, closing]
-            elif token == r"\right":
+            elif token == RIGHT:
                 g.append(token)
                 g.append(next(tokens))
                 try:
@@ -43,7 +67,7 @@ def group(tokens, opening="{", closing="}", delimiter=None):
                         token = next(t)
                         if token == opening:
                             g.append(group(t))
-                        elif token in "_^":
+                        elif token in SUB_SUP:
                             has_sub_sup = token
                             break
                         elif token != closing:
@@ -53,7 +77,7 @@ def group(tokens, opening="{", closing="}", delimiter=None):
                 except StopIteration:
                     pass
                 break
-            elif isinstance(token, str) and token in "_^":
+            elif isinstance(token, str) and token in SUB_SUP:
                 process_sub_sup(g, token, tokens)
             else:
                 g.append(token)
@@ -61,7 +85,7 @@ def group(tokens, opening="{", closing="}", delimiter=None):
             break
     if delimiter:
         try:
-            right = g.index(r"\right")
+            right = g.index(RIGHT)
             content = g[2:right]
             g_ = g
             if len(content):
@@ -79,9 +103,9 @@ def process_row(tokens):
     row = []
     content = []
     for token in tokens:
-        if token == "&":
+        if token == AMPERSAND:
             pass
-        elif token == r"\\":
+        elif token == BACKSLASH:
             if len(row):
                 content.append(row)
             row = []
@@ -95,7 +119,7 @@ def process_row(tokens):
 
 
 def environment(begin, tokens):
-    if begin.startswith(r"\begin"):
+    if begin.startswith(BEGIN):
         env = begin[7:-1]
     else:
         env = begin[1:]
@@ -111,57 +135,57 @@ def environment(begin, tokens):
                     alignment = token
                 else:
                     row.append(process_row(token))
-            elif token == r"\end{{{}}}".format(env):
+            elif token == f"\\end{{{env}}}":
                 break
-            elif token == "&":
+            elif token == AMPERSAND:
                 row.append(token)
-            elif token == r"\\":
-                if "&" in row:
+            elif token == BACKSLASH:
+                if AMPERSAND in row:
                     row = group_columns(row)
                 if has_rowline:
-                    row.insert(0, r"\hline")
+                    row.insert(0, HLINE)
                 content.append(row)
                 row = []
                 has_rowline = False
-            elif token == r"\hline":
+            elif token == HLINE:
                 has_rowline = True
-            elif token == "[" and not len(content):
+            elif token == OPENING_BRACKET and not len(content):
                 try:
-                    alignment = group(tokens, "[", "]")
+                    alignment = group(tokens, OPENING_BRACKET, CLOSING_BRACKET)
                 except EmptyGroupError:
                     pass
-            elif token == "-":
+            elif token == DASH:
                 try:
                     next_token = next(tokens)
                     row.append([token, next_token])
                 except StopIteration:
                     row.append(token)
-            elif token in "_^":
+            elif token in SUB_SUP:
                 process_sub_sup(row, token, tokens)
             else:
                 row.append(token)
         except EmptyGroupError:
-            row += ["{", "}"]
+            row += [OPENING_BRACES, CLOSING_BRACES]
             continue
         except StopIteration:
             break
     if len(row):
-        if "&" in row:
+        if AMPERSAND in row:
             row = group_columns(row)
         if has_rowline:
-            row.insert(0, r"\hline")
+            row.insert(0, HLINE)
         content.append(row)
     while len(content) == 1 and isinstance(content[0], list):
         content = content.pop()
     if alignment:
-        return r"\{}".format(env), "".join(alignment), content
-    return r"\{}".format(env), content
+        return f"\\{env}", "".join(alignment), content
+    return f"\\{env}", content
 
 
 def group_columns(row):
     grouped = [[]]
     for item in row:
-        if item == "&":
+        if item == AMPERSAND:
             grouped.append([])
         else:
             grouped[-1].append(item)
@@ -170,9 +194,9 @@ def group_columns(row):
 
 def next_item_or_group(tokens):
     token = next(tokens)
-    if token == "{":
+    if token == OPENING_BRACES:
         return group(tokens)
-    elif token == r"\left":
+    elif token == LEFT:
         return group(tokens, delimiter=token)
     return token
 
@@ -184,33 +208,33 @@ def _aggregate(tokens):
             token = next_item_or_group(tokens)
             if isinstance(token, list):
                 aggregated.append(token)
-            elif token == "[":
+            elif token == OPENING_BRACKET:
                 try:
-                    g = group(tokens, "[", "]")
+                    g = group(tokens, OPENING_BRACKET, CLOSING_BRACKET)
                     if len(aggregated):
                         previous = aggregated[-1]
-                        if previous == r"\sqrt":
+                        if previous == SQRT:
                             root = next(tokens)
-                            if root == "{":
+                            if root == OPENING_BRACES:
                                 try:
                                     root = group(tokens)
                                 except EmptyGroupError:
                                     root = ""
-                            aggregated[-1] = r"\root"
+                            aggregated[-1] = ROOT
                             aggregated.append(root)
                         else:
                             pass  # FIXME: possible issues
                     aggregated.append(g)
                 except EmptyGroupError:
-                    aggregated += ["[", "]"]
-            elif token in "_^":
+                    aggregated += [OPENING_BRACKET, CLOSING_BRACKET]
+            elif token in SUB_SUP:
                 process_sub_sup(aggregated, token, tokens)
-            elif token.startswith(r"\begin") or token in MATRICES:
+            elif token.startswith(BEGIN) or token in MATRICES:
                 aggregated += environment(token, tokens)
-            elif token == r"\over":
+            elif token == OVER:
                 try:
                     numerator = aggregated.pop()
-                    aggregated.append(r"\frac")
+                    aggregated.append(FRAC)
                     aggregated.append([numerator])
                     denominator = next_item_or_group(tokens)
                     aggregated.append([denominator])
@@ -221,7 +245,7 @@ def _aggregate(tokens):
             else:
                 aggregated.append(token)
         except EmptyGroupError:
-            aggregated += ["{", "}"]
+            aggregated += [OPENING_BRACES, CLOSING_BRACES]
             continue
         except StopIteration:
             break
@@ -236,24 +260,24 @@ def aggregate(data):
 def process_sub_sup(aggregated, token, tokens):
     try:
         previous = aggregated.pop()
-        if isinstance(previous, str) and previous in "+-*/=[]_^{}()":
+        if isinstance(previous, str) and previous in OPERATORS:
             aggregated += [previous, token]
             return
         try:
             next_token = next_item_or_group(tokens)
             if len(aggregated) >= 2:
-                if aggregated[-2] == "_" and token == "^":
-                    aggregated[-2] = "_^"
+                if aggregated[-2] == SUBSCRIPT and token == SUPERSCRIPT:
+                    aggregated[-2] = SUB_SUP
                     aggregated += [previous, next_token]
-                elif aggregated[-2] == "^" and token == "_":
-                    aggregated[-2] = "_^"
+                elif aggregated[-2] == SUPERSCRIPT and token == SUBSCRIPT:
+                    aggregated[-2] = SUB_SUP
                     aggregated += [next_token, previous]
                 else:
                     aggregated += [token, previous, next_token]
             else:
                 aggregated += [token, previous, next_token]
         except EmptyGroupError:
-            aggregated += [previous, token, "{", "}"]
+            aggregated += [previous, token, OPENING_BRACES, CLOSING_BRACES]
         except StopIteration:
             return
     except IndexError:

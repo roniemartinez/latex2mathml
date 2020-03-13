@@ -220,6 +220,326 @@ PARAMS = [
             )
         },
     ),
+    ("subscript", "a_b", {"msub": MultiDict([("mi", "a"), ("mi", "b")])}),
+    ("superscript", "a^b", {"msup": MultiDict([("mi", "a"), ("mi", "b")])}),
+    (
+        "subscript and superscript",
+        "a_b^c",
+        {"msubsup": MultiDict([("mi", "a"), ("mi", "b"), ("mi", "c")])},
+    ),
+    (
+        "superscript and subscript",
+        "a^b_c",
+        {"msubsup": MultiDict([("mi", "a"), ("mi", "c"), ("mi", "b")])},
+    ),
+    (
+        "subscript within curly braces",
+        "{a_b}",
+        {"mrow": {"msub": MultiDict([("mi", "a"), ("mi", "b")])}},
+    ),
+    (
+        "superscript within curly braces",
+        "{a^b}",
+        {"mrow": {"msup": MultiDict([("mi", "a"), ("mi", "b")])}},
+    ),
+    (
+        "superscript, subscript and curly braces",
+        "a^{i+1}_3",
+        {
+            "msubsup": MultiDict(
+                [
+                    ("mi", "a"),
+                    ("mn", "3"),
+                    (
+                        "mrow",
+                        MultiDict([("mi", "i"), ("mo", "&#x0002B;"), ("mn", "1")]),
+                    ),
+                ]
+            )
+        },
+    ),
+    (
+        "simple fraction",
+        r"\frac{1}{2}",
+        {"mfrac": MultiDict([("mrow", {"mn": "1"}), ("mrow", {"mn": "2"})])},
+    ),
+    ("square root", r"\sqrt{2}", {"msqrt": {"mrow": {"mn": "2"}}}),
+    (
+        "root",
+        r"\sqrt[3]{2}",
+        {"mroot": MultiDict([("mrow", {"mn": "2"}), ("mrow", {"mn": "3"})])},
+    ),
+    (
+        "binomial",
+        r"\binom{2}{3}",
+        MultiDict(
+            [
+                ("mo", "&#x00028;"),
+                (
+                    "mfrac",
+                    MultiDict(
+                        [
+                            ("@linethickness", "0"),
+                            ("mrow", {"mn": "2"}),
+                            ("mrow", {"mn": "3"}),
+                        ]
+                    ),
+                ),
+                ("mo", "&#x00029;"),
+            ]
+        ),
+    ),
+    (
+        "left and right",
+        r"\left(x\right)",
+        MultiDict(
+            [
+                (
+                    "mrow",
+                    MultiDict(
+                        [
+                            (
+                                "mo",
+                                MultiDict(
+                                    [
+                                        ("@fence", "true"),
+                                        ("@form", "prefix"),
+                                        ("@stretchy", "true"),
+                                        ("$", "&#x00028;"),
+                                    ]
+                                ),
+                            ),
+                            ("mrow", {"mi": "x"}),
+                            (
+                                "mo",
+                                MultiDict(
+                                    [
+                                        ("@fence", "true"),
+                                        ("@form", "postfix"),
+                                        ("@stretchy", "true"),
+                                        ("$", "&#x00029;"),
+                                    ]
+                                ),
+                            ),
+                        ]
+                    ),
+                ),
+            ]
+        ),
+    ),
+    ("space", r"\,", {"mspace": {"@width": "0.167em"}}),
+    (
+        "overline",
+        r"\overline{a}",
+        {
+            "mover": MultiDict(
+                [("mrow", {"mi": "a"}), ("mo", {"@stretchy": "true", "$": "&#x000AF;"})]
+            )
+        },
+    ),
+    (
+        "underline",
+        r"\underline{a}",
+        {
+            "munder": MultiDict(
+                [("mrow", {"mi": "a"}), ("mo", {"@stretchy": "true", "$": "&#x00332;"})]
+            )
+        },
+    ),
+    (
+        "matrix",
+        r"\begin{matrix}a & b \\ c & d \end{matrix}",
+        {
+            "mtable": MultiDict(
+                [
+                    ("mtr", MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),),
+                    ("mtr", MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),),
+                ]
+            ),
+        },
+    ),
+    (
+        "matrix without begin and end",
+        r"\matrix{a & b \\ c & d}",
+        {
+            "mtable": MultiDict(
+                [
+                    ("mtr", MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),),
+                    ("mtr", MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),),
+                ]
+            ),
+        },
+    ),
+    (
+        "matrix with alignment",
+        r"\begin{matrix*}[r]a & b \\ c & d \end{matrix*}",
+        {
+            "mtable": MultiDict(
+                [
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "right", "mi": "a"}),
+                                ("mtd", {"@columnalign": "right", "mi": "b"}),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "right", "mi": "c"}),
+                                ("mtd", {"@columnalign": "right", "mi": "d"}),
+                            ]
+                        ),
+                    ),
+                ]
+            )
+        },
+    ),
+    (
+        "matrix with negative sign",
+        r"\begin{matrix}-a & b \\ c & d \end{matrix}",
+        {
+            "mtable": MultiDict(
+                [
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", MultiDict([("mo", "&#x02212;"), ("mi", "a")])),
+                                ("mtd", {"mi": "b"}),
+                            ]
+                        ),
+                    ),
+                    ("mtr", MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),),
+                ]
+            ),
+        },
+    ),
+    (
+        "pmatrix",
+        r"\begin{pmatrix}a & b \\ c & d \end{pmatrix}",
+        MultiDict(
+            [
+                ("mo", "&#x00028;"),
+                (
+                    "mtable",
+                    MultiDict(
+                        [
+                            (
+                                "mtr",
+                                MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),
+                            ),
+                            (
+                                "mtr",
+                                MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),
+                            ),
+                        ]
+                    ),
+                ),
+                ("mo", "&#x00029;"),
+            ]
+        ),
+    ),
+    (
+        "simple array",
+        r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \end{array}",
+        {
+            "mtable": MultiDict(
+                [
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "1"}),
+                                ("mtd", {"@columnalign": "right", "mn": "2"}),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "3"}),
+                                ("mtd", {"@columnalign": "right", "mn": "4"}),
+                            ]
+                        ),
+                    ),
+                ]
+            )
+        },
+    ),
+    (
+        "array with vertical bar",
+        r"\begin{array}{c|rl} 1 & 2 & 3 \\ 4 & 5 & 6 \end{array}",
+        {
+            "mtable": MultiDict(
+                [
+                    ("@columnlines", "solid none"),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "1"}),
+                                ("mtd", {"@columnalign": "right", "mn": "2"}),
+                                ("mtd", {"@columnalign": "left", "mn": "3"}),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "4"}),
+                                ("mtd", {"@columnalign": "right", "mn": "5"}),
+                                ("mtd", {"@columnalign": "left", "mn": "6"}),
+                            ]
+                        ),
+                    ),
+                ]
+            )
+        },
+    ),
+    (
+        "array with horizontal lines",
+        r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}",
+        {
+            "mtable": MultiDict(
+                [
+                    ("@rowlines", "none solid"),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "1"}),
+                                ("mtd", {"@columnalign": "right", "mn": "2"}),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "3"}),
+                                ("mtd", {"@columnalign": "right", "mn": "4"}),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mtr",
+                        MultiDict(
+                            [
+                                ("mtd", {"@columnalign": "center", "mn": "5"}),
+                                ("mtd", {"@columnalign": "right", "mn": "6"}),
+                            ]
+                        ),
+                    ),
+                ]
+            )
+        },
+    ),
     (
         "issue #33",
         r"""\begin{bmatrix}
@@ -574,6 +894,25 @@ PARAMS = [
         {"mrow": MultiDict([("mo", "."), ("mo", "."), ("mo", ".")])},
     ),
     (
+        "issue #52",
+        r"\bar{z_1} = z_2",
+        MultiDict(
+            [
+                (
+                    "mover",
+                    MultiDict(
+                        [
+                            ("mrow", {"msub": MultiDict([("mi", "z"), ("mn", "1")])}),
+                            ("mo", {"@stretchy": "true", "$": "&#x000AF;"}),
+                        ]
+                    ),
+                ),
+                ("mo", "&#x0003D;"),
+                ("msub", MultiDict([("mi", "z"), ("mn", "2")])),
+            ]
+        ),
+    ),
+    (
         "issue #60-2",
         r"\mathrm{...}+\mathrm{...}",
         MultiDict(
@@ -770,4 +1109,4 @@ def test_converter(name: str, latex: str, json: MultiDict):
     parent = {"math": {"@xmlns": "http://www.w3.org/1998/Math/MathML", "mrow": json}}
     bf = BadgerFish(dict_type=MultiDict)
     math = bf.etree(parent)
-    assert _convert(math[0]) == convert(latex), name
+    assert convert(latex) == _convert(math[0]), name

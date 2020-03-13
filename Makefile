@@ -10,5 +10,9 @@ style:
 	poetry run black .
 	poetry run flake8
 
+check:
+	poetry run safety check
+	poetry run bandit -r latex2mathml
+
 test:
 	poetry run pytest --cov=latex2mathml --cov-report=xml -vv
