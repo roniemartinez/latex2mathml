@@ -135,7 +135,7 @@ def environment(begin, tokens):
                     alignment = token
                 else:
                     row.append(process_row(token))
-            elif token == f"\\end{{{env}}}":
+            elif token == r"\end{{{}}}".format(env):
                 break
             elif token == AMPERSAND:
                 row.append(token)
@@ -178,8 +178,8 @@ def environment(begin, tokens):
     while len(content) == 1 and isinstance(content[0], list):
         content = content.pop()
     if alignment:
-        return f"\\{env}", "".join(alignment), content
-    return f"\\{env}", content
+        return r"\{}".format(env), "".join(alignment), content
+    return r"\{}".format(env), content
 
 
 def group_columns(row):

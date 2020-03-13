@@ -302,9 +302,9 @@ PARAMS = [
                                 "mo",
                                 MultiDict(
                                     [
+                                        ("@stretchy", "true"),
                                         ("@fence", "true"),
                                         ("@form", "prefix"),
-                                        ("@stretchy", "true"),
                                         ("$", "&#x00028;"),
                                     ]
                                 ),
@@ -314,9 +314,9 @@ PARAMS = [
                                 "mo",
                                 MultiDict(
                                     [
+                                        ("@stretchy", "true"),
                                         ("@fence", "true"),
                                         ("@form", "postfix"),
-                                        ("@stretchy", "true"),
                                         ("$", "&#x00029;"),
                                     ]
                                 ),
