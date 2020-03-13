@@ -242,47 +242,62 @@ PARAMS = [
                                         (
                                             "mtd",
                                             {
-                                                "msub": {
-                                                    "mi": "a",
-                                                    "mrow": MultiDict(
-                                                        [
-                                                            ("mn", "1"),
-                                                            ("mi", ","),
-                                                            ("mn", "1"),
-                                                        ]
-                                                    ),
-                                                }
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mn", "1"),
+                                                                    ("mi", ","),
+                                                                    ("mn", "1"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
                                             },
                                         ),
                                         (
                                             "mtd",
                                             {
-                                                "msub": {
-                                                    "mi": "a",
-                                                    "mrow": MultiDict(
-                                                        [
-                                                            ("mn", "1"),
-                                                            ("mi", ","),
-                                                            ("mn", "2"),
-                                                        ]
-                                                    ),
-                                                }
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mn", "1"),
+                                                                    ("mi", ","),
+                                                                    ("mn", "2"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
                                             },
                                         ),
                                         ("mtd", {"mo": "&#x022EF;"}),
                                         (
                                             "mtd",
                                             {
-                                                "msub": {
-                                                    "mi": "a",
-                                                    "mrow": MultiDict(
-                                                        [
-                                                            ("mn", "1"),
-                                                            ("mi", ","),
-                                                            ("mi", "n"),
-                                                        ]
-                                                    ),
-                                                }
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mn", "1"),
+                                                                    ("mi", ","),
+                                                                    ("mi", "n"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
                                             },
                                         ),
                                     ]
@@ -295,47 +310,62 @@ PARAMS = [
                                         (
                                             "mtd",
                                             {
-                                                "msub": {
-                                                    "mi": "a",
-                                                    "mrow": MultiDict(
-                                                        [
-                                                            ("mn", "2"),
-                                                            ("mi", ","),
-                                                            ("mn", "1"),
-                                                        ]
-                                                    ),
-                                                }
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mn", "2"),
+                                                                    ("mi", ","),
+                                                                    ("mn", "1"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
                                             },
                                         ),
                                         (
                                             "mtd",
                                             {
-                                                "msub": {
-                                                    "mi": "a",
-                                                    "mrow": MultiDict(
-                                                        [
-                                                            ("mn", "2"),
-                                                            ("mi", ","),
-                                                            ("mn", "2"),
-                                                        ]
-                                                    ),
-                                                }
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mn", "2"),
+                                                                    ("mi", ","),
+                                                                    ("mn", "2"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
                                             },
                                         ),
                                         ("mtd", {"mo": "&#x022EF;"}),
                                         (
                                             "mtd",
                                             {
-                                                "msub": {
-                                                    "mi": "a",
-                                                    "mrow": MultiDict(
-                                                        [
-                                                            ("mn", "2"),
-                                                            ("mi", ","),
-                                                            ("mi", "n"),
-                                                        ]
-                                                    ),
-                                                }
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mn", "2"),
+                                                                    ("mi", ","),
+                                                                    ("mi", "n"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
                                             },
                                         ),
                                     ]
@@ -359,47 +389,62 @@ PARAMS = [
                                         (
                                             "mtd",
                                             {
-                                                "msub": {
-                                                    "mi": "a",
-                                                    "mrow": MultiDict(
-                                                        [
-                                                            ("mi", "m"),
-                                                            ("mi", ","),
-                                                            ("mn", "1"),
-                                                        ]
-                                                    ),
-                                                }
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mi", "m"),
+                                                                    ("mi", ","),
+                                                                    ("mn", "1"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
                                             },
                                         ),
                                         (
                                             "mtd",
                                             {
-                                                "msub": {
-                                                    "mi": "a",
-                                                    "mrow": MultiDict(
-                                                        [
-                                                            ("mi", "m"),
-                                                            ("mi", ","),
-                                                            ("mn", "2"),
-                                                        ]
-                                                    ),
-                                                }
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mi", "m"),
+                                                                    ("mi", ","),
+                                                                    ("mn", "2"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
                                             },
                                         ),
                                         ("mtd", {"mo": "&#x022EF;"}),
                                         (
                                             "mtd",
                                             {
-                                                "msub": {
-                                                    "mi": "a",
-                                                    "mrow": MultiDict(
-                                                        [
-                                                            ("mi", "m"),
-                                                            ("mi", ","),
-                                                            ("mi", "n"),
-                                                        ]
-                                                    ),
-                                                }
+                                                "msub": MultiDict(
+                                                    [
+                                                        ("mi", "a"),
+                                                        (
+                                                            "mrow",
+                                                            MultiDict(
+                                                                [
+                                                                    ("mi", "m"),
+                                                                    ("mi", ","),
+                                                                    ("mi", "n"),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                )
                                             },
                                         ),
                                     ]
@@ -645,11 +690,13 @@ PARAMS = [
                                             ),
                                             (
                                                 "mrow",
-                                                {
-                                                    "mi": "x",
-                                                    "mo": "&#x0002B;",
-                                                    "mn": "4",
-                                                },
+                                                MultiDict(
+                                                    [
+                                                        ("mi", "x"),
+                                                        ("mo", "&#x0002B;"),
+                                                        ("mn", "4"),
+                                                    ]
+                                                ),
                                             ),
                                         ]
                                     ),
