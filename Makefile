@@ -2,8 +2,8 @@ install:
 	pip3 install -U poetry
 	poetry install
 
-black:
-	poetry run pip install black
+optional:
+	poetry run pip install black mypy
 
 style:
 	poetry run isort -rc --atomic .
