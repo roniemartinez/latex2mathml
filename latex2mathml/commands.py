@@ -5,6 +5,7 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 from collections import OrderedDict
+from typing import Dict, Tuple
 
 MATRICES = (
     r"\matrix",
@@ -46,7 +47,7 @@ COMMANDS = {
     r"\overline": (1, "mover", {}),
     r"\bar": (1, "mover", {}),
     r"\underline": (1, "munder", {}),
-}
+}  # type: Dict[str, Tuple[int, str, dict]]
 
 for space in SPACES:
     COMMANDS[space] = (0, "mspace", {"width": "0.167em"})

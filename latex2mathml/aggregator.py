@@ -5,6 +5,7 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 from itertools import tee
+from typing import Any, Iterator, List, Tuple, Union
 
 from latex2mathml.commands import MATRICES
 from latex2mathml.exceptions import (
@@ -42,8 +43,13 @@ ROOT = r"\root"
 SQRT = r"\sqrt"
 
 
-def group(tokens, opening=OPENING_BRACES, closing=CLOSING_BRACES, delimiter=None):
-    g = []
+def group(
+    tokens: Iterator,
+    opening: str = OPENING_BRACES,
+    closing: str = CLOSING_BRACES,
+    delimiter: Union[str, None] = None,
+) -> list:
+    g = []  # type: List[Any]
     has_sub_sup = None
     if delimiter:
         g.append(delimiter)
@@ -101,8 +107,8 @@ def group(tokens, opening=OPENING_BRACES, closing=CLOSING_BRACES, delimiter=None
     return _aggregate(iter(g))
 
 
-def process_row(tokens):
-    row = []
+def process_row(tokens: List[Any]) -> list:
+    row = []  # type: List[Any]
     content = []
     for token in tokens:
         if token == AMPERSAND:
@@ -120,14 +126,16 @@ def process_row(tokens):
     return content
 
 
-def environment(begin, tokens):
+def environment(
+    begin: str, tokens: Iterator
+) -> Union[Tuple[str, List[Any]], Tuple[str, str, List[List[Any]]]]:
     if begin.startswith(BEGIN):
         env = begin[7:-1]
     else:
         env = begin[1:]
     alignment = None
     content = []
-    row = []
+    row = []  # type: List[Any]
     has_rowline = False
     while True:
         try:
@@ -184,8 +192,8 @@ def environment(begin, tokens):
     return r"\{}".format(env), content
 
 
-def group_columns(row):
-    grouped = [[]]
+def group_columns(row: list) -> list:
+    grouped = [[]]  # type: List[Any]
     for item in row:
         if item == AMPERSAND:
             grouped.append([])
@@ -194,7 +202,7 @@ def group_columns(row):
     return [item if len(item) > 1 else item.pop() for item in grouped]
 
 
-def next_item_or_group(tokens):
+def next_item_or_group(tokens: Iterator) -> Union[str, list]:
     token = next(tokens)
     if token == OPENING_BRACES:
         return group(tokens)
@@ -203,8 +211,8 @@ def next_item_or_group(tokens):
     return token
 
 
-def _aggregate(tokens):
-    aggregated = []
+def _aggregate(tokens: Iterator) -> list:
+    aggregated = []  # type: List[Any]
     while True:
         try:
             token = next_item_or_group(tokens)
@@ -254,12 +262,12 @@ def _aggregate(tokens):
     return aggregated
 
 
-def aggregate(data):
+def aggregate(data: str):
     tokens = tokenize(data)
     return _aggregate(tokens)
 
 
-def process_sub_sup(aggregated, token, tokens):
+def process_sub_sup(aggregated: list, token: str, tokens: Iterator) -> list:
     try:
         previous = aggregated.pop()
         if isinstance(previous, str) and previous in OPERATORS:

@@ -22,6 +22,7 @@ build: off
 
 cache:
   - '%LOCALAPPDATA%\pip\Cache'
+  - '%LOCALAPPDATA%\pypoetry\cache'
 
 test_script:
   - "make test"

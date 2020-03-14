@@ -7,23 +7,24 @@
 import codecs
 import os
 import re
+from typing import Union
 
-symbols_file = os.path.join(
+SYMBOLS_FILE = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), "unimathsymbols.txt"
-)
-symbols = None
+)  # type: str
+SYMBOLS = None  # type: Union[dict, None]
 
 
-def convert_symbol(symbol):
-    global symbols
-    if not symbols:
-        symbols = parse_symbols()
-    return symbols.get(symbol, None)
+def convert_symbol(symbol: str) -> Union[str, None]:
+    global SYMBOLS
+    if not SYMBOLS:
+        SYMBOLS = parse_symbols()
+    return SYMBOLS.get(symbol, None)
 
 
-def parse_symbols():
+def parse_symbols() -> dict:
     _symbols = {}
-    with codecs.open(symbols_file, encoding="utf-8") as f:
+    with codecs.open(SYMBOLS_FILE, encoding="utf-8") as f:
         for line in f:
             if not line.startswith("#"):
                 columns = line.strip().split("^")

@@ -5,7 +5,8 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import re
-import xml.etree.cElementTree as eTree
+from typing import Iterator, Union
+from xml.etree.cElementTree import Element, SubElement, tostring
 from xml.sax.saxutils import unescape
 
 from latex2mathml.aggregator import aggregate
@@ -13,29 +14,33 @@ from latex2mathml.commands import COMMANDS, MATRICES
 from latex2mathml.symbols_parser import convert_symbol
 
 
-def convert(latex, xmlns="http://www.w3.org/1998/Math/MathML"):
-    math = eTree.Element("math")
+def convert(latex: str, xmlns: str = "http://www.w3.org/1998/Math/MathML") -> str:
+    math = Element("math")
     math.attrib["xmlns"] = xmlns
-    row = eTree.SubElement(math, "mrow")
+    row = SubElement(math, "mrow")
     _classify_subgroup(aggregate(latex), row)
     return _convert(math)
 
 
-def _convert(tree):
-    return unescape(eTree.tostring(tree, encoding="unicode"))
+def _convert(tree: Element) -> str:
+    return unescape(tostring(tree, encoding="unicode"))
 
 
-def _convert_matrix_content(param, parent, alignment=None):
+def _convert_matrix_content(
+    param: list, parent: Element, alignment: Union[str, None] = None
+) -> None:
     for row in param:
-        mtr = eTree.SubElement(parent, "mtr")
-        iterable = iter(range(len(row)))
+        mtr = SubElement(parent, "mtr")
+        iterable = iter(range(len(row)))  # type: Iterator[int]
         for i in iterable:
             element = row[i]
             if alignment:
-                column_align = {"r": "right", "l": "left", "c": "center"}.get(alignment)
-                mtd = eTree.SubElement(mtr, "mtd", columnalign=column_align)
+                column_align = {"r": "right", "l": "left", "c": "center"}.get(
+                    alignment, ""
+                )  # type: str
+                mtd = SubElement(mtr, "mtd", columnalign=column_align)
             else:
-                mtd = eTree.SubElement(mtr, "mtd")
+                mtd = SubElement(mtr, "mtd")
             if isinstance(element, list):
                 _classify_subgroup(element, mtd)
             elif element in COMMANDS:
@@ -44,14 +49,14 @@ def _convert_matrix_content(param, parent, alignment=None):
                 _classify(element, mtd)
 
 
-def _convert_array_content(param, parent, alignment=None):
-    if "|" in alignment:
+def _convert_array_content(param: list, parent: Element, alignment: str = "") -> None:
+    if alignment and "|" in alignment:
         _alignment, column_lines = [], []
-        for i in alignment:
-            if i == "|":
+        for j in alignment:
+            if j == "|":
                 column_lines.append("solid")
             else:
-                _alignment.append(i)
+                _alignment.append(j)
             if len(_alignment) - len(column_lines) == 2:
                 column_lines.append("none")
         parent.attrib["columnlines"] = " ".join(column_lines)
@@ -61,8 +66,8 @@ def _convert_array_content(param, parent, alignment=None):
     row_count = 0
     for row in param:
         row_count += 1
-        mtr = eTree.SubElement(parent, "mtr")
-        iterable = iter(range(len(row)))
+        mtr = SubElement(parent, "mtr")
+        iterable = iter(range(len(row)))  # type: Iterator[int]
         index = 0
         has_row_line = False
         for i in iterable:
@@ -71,15 +76,18 @@ def _convert_array_content(param, parent, alignment=None):
                 row_lines.append("solid")
                 has_row_line = True
                 continue
+            align = None  # type: Union[str, None]
             try:
                 align = _alignment[index]
             except IndexError:
-                align = None
+                pass
             if align:
-                column_align = {"r": "right", "l": "left", "c": "center"}.get(align)
-                mtd = eTree.SubElement(mtr, "mtd", columnalign=column_align)
+                column_align = {"r": "right", "l": "left", "c": "center"}.get(
+                    align, ""
+                )  # type: str
+                mtd = SubElement(mtr, "mtd", columnalign=column_align)
             else:
-                mtd = eTree.SubElement(mtr, "mtd")
+                mtd = SubElement(mtr, "mtd")
             if isinstance(element, list):
                 _classify_subgroup(element, mtd)
             elif element in COMMANDS:
@@ -93,12 +101,14 @@ def _convert_array_content(param, parent, alignment=None):
         parent.set("rowlines", " ".join(row_lines))
 
 
-def _classify_subgroup(elements, row, is_math_mode=False):
+def _classify_subgroup(
+    elements: list, row: Element, is_math_mode: bool = False
+) -> None:
     iterable = iter(range(len(elements)))
     for i in iterable:
         element = elements[i]
         if isinstance(element, list):
-            _row = eTree.SubElement(row, "mrow")
+            _row = SubElement(row, "mrow")
             _classify_subgroup(element, _row, is_math_mode)
             is_math_mode = False
         elif element in COMMANDS:
@@ -109,11 +119,13 @@ def _classify_subgroup(elements, row, is_math_mode=False):
             _classify(element, row, is_math_mode)
 
 
-def _convert_command(element, elements, index, iterable, parent):
+def _convert_command(
+    element, elements, index: int, iterable: Iterator[int], parent: Element
+):
     _get_prefix_element(element, parent)
     params, tag, attributes = COMMANDS[element]
-    new_parent = eTree.SubElement(parent, tag, attributes)
-    alignment = None
+    new_parent = SubElement(parent, tag, attributes)
+    alignment = ""
     if element in MATRICES and (element.endswith("*") or element == r"\array"):
         index += 1
         alignment = elements[index]
@@ -133,27 +145,27 @@ def _convert_command(element, elements, index, iterable, parent):
             _convert_matrix_content(param, new_parent, alignment)
         else:
             if isinstance(param, list):
-                _parent = eTree.SubElement(new_parent, "mrow")
+                _parent = SubElement(new_parent, "mrow")
                 _classify_subgroup(param, _parent)
             else:
                 _classify(param, new_parent)
     _get_postfix_element(element, parent)
     if element in (r"\overline", r"\bar"):
-        mo = eTree.SubElement(new_parent, "mo", stretchy="true")
+        mo = SubElement(new_parent, "mo", stretchy="true")
         mo.text = "&#x000AF;"
     elif element == r"\underline":
-        mo = eTree.SubElement(new_parent, "mo", stretchy="true")
+        mo = SubElement(new_parent, "mo", stretchy="true")
         mo.text = "&#x00332;"
     [next(iterable) for _ in range(params)]
 
 
-def _convert_and_append_operator(symbol, parent):
-    symbol = convert_symbol(symbol)
-    mo = eTree.SubElement(parent, "mo")
-    mo.text = "&#x{};".format(symbol)
+def _convert_and_append_operator(symbol: str, parent: Element) -> None:
+    converted = convert_symbol(symbol)
+    mo = SubElement(parent, "mo")
+    mo.text = "&#x{};".format(converted)
 
 
-def _get_postfix_element(element, row):
+def _get_postfix_element(element: str, row: Element) -> None:
     if element in (r"\binom", r"\pmatrix"):
         _convert_and_append_operator(r"\rparen", row)
     elif element == r"\bmatrix":
@@ -166,7 +178,7 @@ def _get_postfix_element(element, row):
         _convert_and_append_operator(r"\Vert", row)
 
 
-def _get_prefix_element(element, row):
+def _get_prefix_element(element: str, row: Element) -> None:
     if element in (r"\binom", r"\pmatrix"):
         _convert_and_append_operator(r"\lparen", row)
     elif element == r"\bmatrix":
@@ -179,16 +191,16 @@ def _get_prefix_element(element, row):
         _convert_and_append_operator(r"\Vert", row)
 
 
-def _classify(_element, parent, is_math_mode=False):
+def _classify(_element: str, parent: Element, is_math_mode: bool = False) -> None:
     symbol = convert_symbol(_element)
     if re.match(r"\d+(.\d+)?", _element):
-        mn = eTree.SubElement(parent, "mn")
+        mn = SubElement(parent, "mn")
         mn.text = _element
     elif _element in "<>&":
-        mo = eTree.SubElement(parent, "mo")
+        mo = SubElement(parent, "mo")
         mo.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;"}[_element]
     elif _element in "+-*/()=":
-        mo = eTree.SubElement(parent, "mo")
+        mo = SubElement(parent, "mo")
         mo.text = _element if symbol is None else "&#x{};".format(symbol)
     elif (
         symbol
@@ -198,15 +210,15 @@ def _classify(_element, parent, is_math_mode=False):
         )
         or symbol == "."
     ):
-        mo = eTree.SubElement(parent, "mo")
+        mo = SubElement(parent, "mo")
         mo.text = "&#x{};".format(symbol)
     elif _element.startswith("\\"):
-        tag = eTree.SubElement(parent, "mo" if is_math_mode else "mi")
+        tag = SubElement(parent, "mo" if is_math_mode else "mi")
         if symbol:
             tag.text = "&#x{};".format(symbol)
         else:
             e = _element.lstrip("\\")
             tag.text = e
     else:
-        tag = eTree.SubElement(parent, "mo" if is_math_mode else "mi")
+        tag = SubElement(parent, "mo" if is_math_mode else "mi")
         tag.text = _element
