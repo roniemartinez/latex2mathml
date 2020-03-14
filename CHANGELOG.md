@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 2.8.9 - 2020-03-14
+### Changed
+- Cache '%PROGRAMDATA%\chocolatey\bin'
+
+## 2.8.8 - 2020-03-14
+### Changed
+- Update pytest
+
 ## 2.8.7 - 2020-03-14
 ### Added
 - Add type hinting
