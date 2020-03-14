@@ -10,6 +10,9 @@ style:
 	poetry run black .
 	poetry run flake8
 
+type:
+	poetry run mypy --ignore-missing-imports tests latex2mathml
+
 check:
 	poetry run safety check
 	poetry run bandit -r latex2mathml
