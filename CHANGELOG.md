@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 2.8.7 - 2020-03-14
+### Added
+- Add type hinting
+- Cache pypoetry on CI
+
 ## 2.8.6 - 2020-03-13
 ### Fixed
 - Fix #44
