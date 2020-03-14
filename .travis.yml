@@ -1,6 +1,10 @@
 language: python
 
-cache: pip
+cache:
+  - pip: true
+  - directories:
+      - $HOME/Library/Caches/pypoetry
+      - $HOME/.cache/pypoetry
 
 python:
   - 3.5
