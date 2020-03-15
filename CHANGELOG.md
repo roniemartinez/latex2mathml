@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## 2.8.10 - 2020-03-15
+### Changed
+- Remove coverage from dev dependencies
+- Update .travis.yml
+
 ## 2.8.9 - 2020-03-14
 ### Changed
 - Cache '%PROGRAMDATA%\chocolatey\bin'
