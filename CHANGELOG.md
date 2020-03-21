@@ -2,7 +2,15 @@
 
 ## Unreleased
 
-## 2.8.10 - 2020-03-15
+## 2.8.12 2020-03-21
+### Added
+- Add command-line interface (#73)
+- Improve test coverage
+
+### Changed
+- Update dependencies
+
+## 2.8.11 - 2020-03-15
 ### Changed
 - Remove coverage from dev dependencies
 - Update .travis.yml

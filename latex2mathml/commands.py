@@ -23,7 +23,7 @@ MATRICES = (
     r"\array",
 )
 
-SPACES = (r"\,", r"\:", r"\;", "\\", r"\quad", r"\qquad")
+SPACES = (r"\,", r"\:", r"\;", r"\\", r"\quad", r"\qquad")
 
 COMMANDS = {
     # command: (params_count, mathml_equivalent, attributes)

@@ -1108,6 +1108,28 @@ PARAMS = [
             }
         },
     ),
+    (r"empty subscript", r"1_{}", {"msub": MultiDict([("mn", "1"), ("mrow", {})])}),
+    (
+        r"\Bmatrix",
+        r"\begin{Bmatrix}\end{Bmatrix}",
+        MultiDict([("mo", "&#x0007B;"), ("mtable", {}), ("mo", "&#x0007D;")]),
+    ),
+    (
+        r"\vmatrix",
+        r"\begin{vmatrix}\end{vmatrix}",
+        MultiDict([("mo", "&#x0007C;"), ("mtable", {}), ("mo", "&#x0007C;")]),
+    ),
+    (
+        r"\Vmatrix",
+        r"\begin{Vmatrix}\end{Vmatrix}",
+        MultiDict([("mo", "&#x02016;"), ("mtable", {}), ("mo", "&#x02016;")]),
+    ),
+    (
+        r"command inside matrix",
+        r"\begin{matrix}1^2\end{matrix}",
+        {"mtable": {"mtr": {"mtd": {"msup": MultiDict([("mn", "1"), ("mn", "2")])}}}},
+    ),
+    (r"\e", r"\e", {"mi": r"\e"}),
 ]
 
 
