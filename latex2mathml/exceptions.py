@@ -20,3 +20,7 @@ class DenominatorNotFoundError(Exception):
 
 class ExtraLeftOrMissingRight(Exception):
     pass
+
+
+class MissingSuperScriptOrSubscript(Exception):
+    pass

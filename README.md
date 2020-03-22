@@ -43,6 +43,8 @@ pip install latex2mathml
 
 ## Usage
 
+### Python
+
 ```python
 import latex2mathml.converter
 
@@ -50,9 +52,21 @@ latex_input = "<your_latex_string>"
 mathml_output = latex2mathml.converter.convert(latex_input)
 ```
 
-## Demo
+### Command-line
 
-- [Demo for latex2mathml](https://apps.easyaspy.org/latex2mathml-demo)
+```shell
+% latex2mathml -h
+usage: latex2mathml [-h] (-t TEXT | -f FILE)
+
+Pure Python library for LaTeX to MathML conversion
+
+optional arguments:
+  -h, --help            show this help message and exit
+
+required arguments:
+  -t TEXT, --text TEXT  Text
+  -f FILE, --file FILE  File
+```
 
 ## Examples
 

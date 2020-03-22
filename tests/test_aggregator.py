@@ -9,11 +9,16 @@ import string
 import pytest
 
 from latex2mathml.aggregator import aggregate
-from latex2mathml.exceptions import ExtraLeftOrMissingRight
+from latex2mathml.exceptions import (
+    DenominatorNotFoundError,
+    ExtraLeftOrMissingRight,
+    MissingSuperScriptOrSubscript,
+    NumeratorNotFoundError,
+)
 
 PARAMS = [
     ("alphabets", string.ascii_letters, list(string.ascii_letters)),
-    ("empty group", "{{}}", [["{", "}"]]),
+    ("empty group", "{{}}", [[[]]]),
     ("numbers", string.digits, [string.digits]),
     ("numbers with decimal", "12.56", ["12.56"]),
     ("numbers and alphabets", "5x", list("5x")),
@@ -78,9 +83,19 @@ PARAMS = [
         [r"\matrix*", "r", [["a", "b"], ["c", "d"]]],
     ),
     (
+        "matrix with empty alignment",
+        r"\begin{matrix*}[]a & b \\ c & d \end{matrix*}",
+        [r"\matrix*", [["a", "b"], ["c", "d"]]],
+    ),
+    (
         "matrix with negative sign",
         r"\begin{matrix}-a & b \\ c & d \end{matrix}",
         [r"\matrix", [[["-", "a"], "b"], ["c", "d"]]],
+    ),
+    (
+        "matrix with just negative sign #1",
+        r"\begin{matrix}-\end{matrix}",
+        [r"\matrix", ["-"]],
     ),
     (
         "complex matrix",
@@ -153,9 +168,14 @@ PARAMS = [
         [r"\array", "rcl", [[["A", "B", "C"], "=", "a"], ["A", "=", ["a", "b", "c"]]]],
     ),
     (
-        "array with horizontal lines",
+        "array with horizontal line",
         r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}",
         [r"\array", "cr", [["1", "2"], ["3", "4"], [r"\hline", "5", "6"]]],
+    ),
+    (
+        "array with horizontal lines",
+        r"\begin{array}{cr} 1 & 2 \\ \hline 3 & 4 \\ \hline 5 & 6 \end{array}",
+        [r"\array", "cr", [["1", "2"], [r"\hline", "3", "4"], [r"\hline", "5", "6"]]],
     ),
     ("issue #60", r"\mathrm{...}", [r"\mathrm", [".", ".", "."]]),
     (
@@ -188,6 +208,18 @@ PARAMS = [
         r"\left(x\right){5}",
         [[r"\left", "(", ["x"], r"\right", ")", ["5"]]],
     ),
+    (r"empty nth root", r"\sqrt[3]{}", ["\\root", "", ["3"]]),
+    (r"empty subscript", r"1_{}", ["_", "1", []]),
+    (r"empty array", r"\array{}", [r"\array", []]),
+    (r"empty array with empty group", r"\array{{}}", [r"\array", []]),
+]
+
+PARAMS_WITH_EXCEPTION = [
+    (r"missing \right", r"\left(x", ExtraLeftOrMissingRight),
+    ("fraction without numerator", r"{ \over 2}", NumeratorNotFoundError),
+    ("fraction without denominator", r"{1 \over }", DenominatorNotFoundError),
+    ("missing subscript", r"1_", MissingSuperScriptOrSubscript),
+    ("missing superscript", r"1^", MissingSuperScriptOrSubscript),
 ]
 
 
@@ -198,7 +230,11 @@ def test_aggregator(name: str, latex: str, expected: list):
     assert aggregate(latex) == expected, name
 
 
-def test_missing_right():
-    latex = r"\left(x"
-    with pytest.raises(ExtraLeftOrMissingRight):
+@pytest.mark.parametrize(
+    "name, latex, exception",
+    ids=[x[0] for x in PARAMS_WITH_EXCEPTION],
+    argvalues=PARAMS_WITH_EXCEPTION,
+)
+def test_missing_right(name: str, latex: str, exception: Exception):
+    with pytest.raises(exception):
         aggregate(latex)

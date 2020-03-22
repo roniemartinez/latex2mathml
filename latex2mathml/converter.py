@@ -5,7 +5,7 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import re
-from typing import Iterator, Union
+from typing import Iterator, Optional, Union
 from xml.etree.cElementTree import Element, SubElement, tostring
 from xml.sax.saxutils import unescape
 
@@ -29,24 +29,38 @@ def _convert(tree: Element) -> str:
 def _convert_matrix_content(
     param: list, parent: Element, alignment: Union[str, None] = None
 ) -> None:
-    for row in param:
-        mtr = SubElement(parent, "mtr")
-        iterable = iter(range(len(row)))  # type: Iterator[int]
-        for i in iterable:
-            element = row[i]
-            if alignment:
-                column_align = {"r": "right", "l": "left", "c": "center"}.get(
-                    alignment, ""
-                )  # type: str
-                mtd = SubElement(mtr, "mtd", columnalign=column_align)
-            else:
-                mtd = SubElement(mtr, "mtd")
-            if isinstance(element, list):
-                _classify_subgroup(element, mtd)
-            elif element in COMMANDS:
-                _convert_command(element, row, i, iterable, mtd)
-            else:
-                _classify(element, mtd)
+    if not len(param):
+        return
+    has_list = False
+    for i in param:
+        if isinstance(i, list):
+            has_list = True
+            break
+    if has_list:
+        for row in param:
+            _convert_matrix_row(row, parent, alignment)
+    else:
+        _convert_matrix_row(param, parent, alignment)
+
+
+def _convert_matrix_row(row: list, parent: Element, alignment: Optional[str]):
+    mtr = SubElement(parent, "mtr")
+    iterable = iter(range(len(row)))  # type: Iterator[int]
+    for i in iterable:
+        element = row[i]
+        if alignment:
+            column_align = {"r": "right", "l": "left", "c": "center"}.get(
+                alignment, ""
+            )  # type: str
+            mtd = SubElement(mtr, "mtd", columnalign=column_align)
+        else:
+            mtd = SubElement(mtr, "mtd")
+        if isinstance(element, list):
+            _classify_subgroup(element, mtd)
+        elif element in COMMANDS:
+            _convert_command(element, row, i, iterable, mtd)
+        else:
+            _classify(element, mtd)
 
 
 def _convert_array_content(param: list, parent: Element, alignment: str = "") -> None:
@@ -217,8 +231,34 @@ def _classify(_element: str, parent: Element, is_math_mode: bool = False) -> Non
         if symbol:
             tag.text = "&#x{};".format(symbol)
         else:
-            e = _element.lstrip("\\")
-            tag.text = e
+            tag.text = _element
     else:
         tag = SubElement(parent, "mo" if is_math_mode else "mi")
         tag.text = _element
+
+
+def main() -> None:  # pragma: no cover
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Pure Python library for LaTeX to MathML conversion"
+    )
+    required = parser.add_argument_group("required arguments")
+    group = required.add_mutually_exclusive_group(required=True)
+    group.add_argument(
+        "-t", "--text", dest="text", type=str, required=False, help="Text",
+    )
+    group.add_argument(
+        "-f", "--file", dest="file", type=str, required=False, help="File",
+    )
+    arguments = parser.parse_args()
+
+    if arguments.text:
+        print(convert(arguments.text))
+    elif arguments.file:
+        with open(arguments.file) as f:
+            print(convert(f.read()))
+
+
+if __name__ == "__main__":  # pragma: no cover
+    main()

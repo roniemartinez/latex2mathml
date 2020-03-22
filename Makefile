@@ -18,4 +18,4 @@ check:
 	poetry run bandit -r latex2mathml
 
 test:
-	poetry run pytest --cov=latex2mathml --cov-report=xml -vv
+	poetry run pytest --cov=latex2mathml --cov-report=xml  --cov-report=html -vv

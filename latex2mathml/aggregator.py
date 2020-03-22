@@ -12,6 +12,7 @@ from latex2mathml.exceptions import (
     DenominatorNotFoundError,
     EmptyGroupError,
     ExtraLeftOrMissingRight,
+    MissingSuperScriptOrSubscript,
     NumeratorNotFoundError,
 )
 from latex2mathml.tokenizer import tokenize
@@ -65,7 +66,7 @@ def group(
                 try:
                     g.append(group(tokens))
                 except EmptyGroupError:
-                    g += [opening, closing]
+                    g += [[]]
             elif token == RIGHT:
                 g.append(token)
                 g.append(next(tokens))
@@ -141,10 +142,13 @@ def environment(
         try:
             token = next_item_or_group(tokens)
             if isinstance(token, list):
-                if env == "array" and all(x in "lcr|" for x in token):
-                    alignment = token
-                else:
-                    row.append(process_row(token))
+                try:
+                    if env == "array" and all(x in "lcr|" for x in token):
+                        alignment = token
+                    else:
+                        row.append(process_row(token))
+                except TypeError:
+                    row.append(token)
             elif token == r"\end{{{}}}".format(env):
                 break
             elif token == AMPERSAND:
@@ -165,17 +169,17 @@ def environment(
                 except EmptyGroupError:
                     pass
             elif token == DASH:
-                try:
-                    next_token = next(tokens)
-                    row.append([token, next_token])
-                except StopIteration:
+                next_token = next(tokens)
+                if next_token == r"\end{{{}}}".format(env):
                     row.append(token)
+                else:
+                    row.append([token, next_token])
             elif token in SUB_SUP:
                 row = process_sub_sup(row, token, tokens)
             else:
                 row.append(token)
         except EmptyGroupError:
-            row += [OPENING_BRACES, CLOSING_BRACES]
+            row.append([])
             continue
         except StopIteration:
             break
@@ -294,9 +298,9 @@ def process_sub_sup(aggregated: list, token: str, tokens: Iterator) -> list:
             else:
                 aggregated += [token, previous, next_token]
         except EmptyGroupError:
-            aggregated += [previous, token, OPENING_BRACES, CLOSING_BRACES]
+            aggregated += [token, previous, []]
         except StopIteration:
-            return aggregated
+            raise MissingSuperScriptOrSubscript
     except IndexError:
         aggregated.append(token)
     return aggregated
