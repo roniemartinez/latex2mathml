@@ -5,7 +5,7 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import re
-from typing import Iterator, Union, Optional
+from typing import Iterator, Optional, Union
 from xml.etree.cElementTree import Element, SubElement, tostring
 from xml.sax.saxutils import unescape
 

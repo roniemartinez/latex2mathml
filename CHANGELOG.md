@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 2.8.12 2020-03-21
+## 2.9.0 2020-03-22
 ### Added
 - Add command-line interface (#73)
 - Improve test coverage
