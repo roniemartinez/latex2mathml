@@ -55,6 +55,7 @@ mathml_output = latex2mathml.converter.convert(latex_input)
 ### Command-line
 
 ```shell
+% latex2mathml -h
 usage: latex2mathml [-h] (-t TEXT | -f FILE)
 
 Pure Python library for LaTeX to MathML conversion
