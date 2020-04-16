@@ -107,8 +107,10 @@ matrix:
       language: shell
       before_install:
         - choco install pypy3 -v
-        - choco install make -y
-        - pypy3 -m pip install -U pip setuptools
+        - choco install make
+        - choco install wget
+        - wget https://bootstrap.pypa.io/get-pip.py
+        - pypy3 get-pip.py
       env: PATH=/c/ProgramData/chocolatey/bin:$PATH
       cache:
         directories:
