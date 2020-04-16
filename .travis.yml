@@ -22,26 +22,38 @@ matrix:
         - directories:
           - $HOME/Library/Caches/pip
           - $HOME/Library/Caches/pypoetry
-#    - name: "Python: 3.6"
-#      os: osx
-#      language: shell
-#      python: 3.6
-#    - name: "Python: 3.7"
-#      os: osx
-#      language: shell
-#      python: 3.7
-#    - name: "Python: 3.8"
-#      os: osx
-#      language: shell
-#      python: 3.8
-#    - name: "Python: pypy3"
-#      os: osx
-#      language: shell
-#      python: pypy3
-#      cache:
-#        - pip: true
-#        - directories:
-#            - $HOME/Library/Caches/pypoetry
+    - name: "Python: 3.6"
+      os: osx
+      language: shell
+      python: 3.6
+      cache:
+        - directories:
+          - $HOME/Library/Caches/pip
+          - $HOME/Library/Caches/pypoetry
+    - name: "Python: 3.7"
+      os: osx
+      language: shell
+      python: 3.7
+      cache:
+        - directories:
+          - $HOME/Library/Caches/pip
+          - $HOME/Library/Caches/pypoetry
+    - name: "Python: 3.8"
+      os: osx
+      language: shell
+      python: 3.8
+      cache:
+        - directories:
+          - $HOME/Library/Caches/pip
+          - $HOME/Library/Caches/pypoetry
+    - name: "Python: pypy3"
+      os: osx
+      language: shell
+      python: pypy3
+      cache:
+        - directories:
+          - $HOME/Library/Caches/pip
+          - $HOME/Library/Caches/pypoetry
     - name: "Python: 3.5"
       os: windows
       language: shell
@@ -50,6 +62,18 @@ matrix:
         - choco install make -y
         - python -m pip install --upgrade pip
       env: PATH=/c/Python35:/c/Python35/Scripts:$PATH
+      cache:
+        directories:
+          - $LOCALAPPDATA/pip/Cache
+          - $LOCALAPPDATA/pypoetry/cache
+    - name: "Python: 3.6"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version=3.6.8
+        - choco install make -y
+        - python -m pip install --upgrade pip
+      env: PATH=/c/Python36:/c/Python36/Scripts:$PATH
       cache:
         directories:
           - $LOCALAPPDATA/pip/Cache
