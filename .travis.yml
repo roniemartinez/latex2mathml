@@ -5,10 +5,6 @@ cache:
   - directories:
       - $HOME/Library/Caches/pypoetry
       - $HOME/.cache/pypoetry
-      - $LOCALAPPDATA/pip/Cache
-      - $LOCALAPPDATA/pypoetry/cache
-      - $PROGRAMDATA/chocolatey/bin
-      - $PROGRAMDATA/chocolatey/lib
 
 python:
   - 3.5
@@ -42,11 +38,10 @@ matrix:
     - name: "Python: 3.5"
       os: windows
       language: shell
-      before_install:
-        - choco install python --version=3.5.4
-        - choco install make -y
+      install:
+        - choco install python --version=3.5.4 -v
+        - choco install make -y -v
         - python -m pip install --upgrade pip
-      env: PATH=/c/Python35:/c/Python38/Scripts:$PATH
 
 branches:
   except:
