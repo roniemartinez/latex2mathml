@@ -66,6 +66,8 @@ matrix:
         directories:
           - $LOCALAPPDATA/pip/Cache
           - $LOCALAPPDATA/pypoetry/cache
+          - /c/ProgramData/chocolatey/bin
+          - /c/ProgramData/chocolatey/lib
     - name: "Python: 3.6"
       os: windows
       language: shell
@@ -78,6 +80,8 @@ matrix:
         directories:
           - $LOCALAPPDATA/pip/Cache
           - $LOCALAPPDATA/pypoetry/cache
+          - $PROGRAMDATA/chocolatey/bin
+          - $PROGRAMDATA/chocolatey/lib
 
 branches:
   except:
