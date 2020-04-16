@@ -106,7 +106,7 @@ matrix:
       os: windows
       language: shell
       before_install:
-        - choco install python --version=3.8.2
+        - choco install pypy3
         - choco install make -y
         - pypy3 -m pip install -U pip setuptools
       env: PATH=/c/PyPy3:/c/PyPy3/Scripts:$PATH
