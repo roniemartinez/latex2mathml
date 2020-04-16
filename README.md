@@ -16,16 +16,10 @@ Pure Python library for LaTeX to MathML conversion
         <td><img src='https://codecov.io/gh/roniemartinez/latex2mathml/branch/master/graph/badge.svg' alt="CodeCov"></td>
     </tr>
     <tr>
-        <td>AppVeyor</td>
-        <td><img src='https://ci.appveyor.com/api/projects/status/9f4qhc3ko880dr59/branch/master?svg=true' alt="AppVeyor"></td>
         <td>Supported versions</td>
         <td><img src='https://img.shields.io/pypi/pyversions/latex2mathml.svg' alt="Python Versions"></td>
-    </tr>
-    <tr>
         <td>Wheel</td>
         <td><img src='https://img.shields.io/pypi/wheel/latex2mathml.svg' alt="Wheel"></td>
-        <td>Implementation</td>
-        <td><img src='https://img.shields.io/pypi/implementation/latex2mathml.svg' alt="Implementation"></td>
     </tr>
     <tr>
         <td>Status</td>
