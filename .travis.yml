@@ -7,10 +7,10 @@ cache:
 
 python:
   - 3.5
-#  - 3.6
-#  - 3.7
-#  - 3.8
-#  - pypy3
+  - 3.6
+  - 3.7
+  - 3.8
+  - pypy3
 
 matrix:
   include:
@@ -19,8 +19,8 @@ matrix:
       language: shell
       python: 3.5
       cache:
-        - pip: true
         - directories:
+          - $HOME/Library/Caches/pip
           - $HOME/Library/Caches/pypoetry
 #    - name: "Python: 3.6"
 #      os: osx
@@ -51,11 +51,9 @@ matrix:
         - python -m pip install --upgrade pip
       env: PATH=/c/Python35:/c/Python35/Scripts:$PATH
       cache:
-        pip: true
         directories:
+          - $LOCALAPPDATA/pip/Cache
           - $LOCALAPPDATA/pypoetry/cache
-          - "$PROGRAMDATA/chocolatey/bin"
-          - "$PROGRAMDATA/chocolatey/lib"
 
 branches:
   except:
