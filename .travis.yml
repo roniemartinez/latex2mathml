@@ -3,11 +3,10 @@ language: python
 cache:
   - pip: true
   - directories:
-      - $HOME/Library/Caches/pypoetry
       - $HOME/.cache/pypoetry
 
-#python:
-#  - 3.5
+python:
+  - 3.5
 #  - 3.6
 #  - 3.7
 #  - 3.8
@@ -15,10 +14,13 @@ cache:
 
 matrix:
   include:
-#    - name: "Python: 3.5"
-#      os: osx
-#      language: shell
-#      python: 3.5
+    - name: "Python: 3.5"
+      os: osx
+      language: shell
+      python: 3.5
+      cache:
+        - directories:
+          - $HOME/Library/Caches/pypoetry
 #    - name: "Python: 3.6"
 #      os: osx
 #      language: shell
@@ -31,18 +33,26 @@ matrix:
 #      os: osx
 #      language: shell
 #      python: 3.8
-#    - name: "Python: pypy3"
-#      os: osx
-#      language: shell
-#      python: pypy3
+    - name: "Python: pypy3"
+      os: osx
+      language: shell
+      python: pypy3
+      cache:
+        - directories:
+            - $HOME/Library/Caches/pypoetry
     - name: "Python: 3.5"
       os: windows
       language: shell
       before_install:
-        - choco install python --version=3.5.4 -v
-        - choco install make -y -v
+        - choco install python --version=3.5.4
+        - choco install make -y
         - python -m pip install --upgrade pip
       env: PATH=/c/Python35:/c/Python35/Scripts:$PATH
+      cache:
+        directories:
+          - $LOCALAPPDATA/pypoetry/cache
+          - $PROGRAMDATA/chocolatey/bin
+          - $PROGRAMDATA/chocolatey/lib
 
 branches:
   except:
