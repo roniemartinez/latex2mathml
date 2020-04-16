@@ -106,7 +106,7 @@ matrix:
       os: windows
       language: shell
       before_install:
-        - choco install pypy3
+        - choco install pypy3 -v
         - choco install make -y
         - pypy3 -m pip install -U pip setuptools
       env: PATH=/c/ProgramData/chocolatey/bin:$PATH
