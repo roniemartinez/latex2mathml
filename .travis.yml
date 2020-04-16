@@ -42,7 +42,7 @@ matrix:
     - name: "Python: 3.5"
       os: windows
       language: shell
-      install:
+      before_install:
         - choco install python --version=3.5.4
         - choco install make -y
         - python -m pip install --upgrade pip
