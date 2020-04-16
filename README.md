@@ -11,9 +11,9 @@ Pure Python library for LaTeX to MathML conversion
     </tr>
     <tr>
         <td>Travis CI</td>
-        <td><img src='https://travis-ci.org/roniemartinez/latex2mathml.svg?branch=develop' alt="Travis CI"></td>
+        <td><img src='https://travis-ci.org/roniemartinez/latex2mathml.svg?branch=master' alt="Travis CI"></td>
         <td>Coverage</td>
-        <td><img src='https://codecov.io/gh/roniemartinez/latex2mathml/branch/develop/graph/badge.svg' alt="CodeCov"></td>
+        <td><img src='https://codecov.io/gh/roniemartinez/latex2mathml/branch/master/graph/badge.svg' alt="CodeCov"></td>
     </tr>
     <tr>
         <td>Supported versions</td>
