@@ -60,6 +60,7 @@ matrix:
       before_install:
         - choco install python --version=3.5.4
         - choco install make -y
+        - python -m pip install -U pip setuptools
       env: PATH=/c/Python35:/c/Python35/Scripts:$PATH
       cache:
         directories:
@@ -71,6 +72,7 @@ matrix:
       before_install:
         - choco install python --version=3.6.8
         - choco install make -y
+        - python -m pip install -U pip setuptools
       env: PATH=/c/Python36:/c/Python36/Scripts:$PATH
       cache:
         directories:
@@ -82,6 +84,7 @@ matrix:
       before_install:
         - choco install python --version=3.7.7
         - choco install make -y
+        - python -m pip install -U pip setuptools
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
       cache:
         directories:
@@ -93,7 +96,20 @@ matrix:
       before_install:
         - choco install python --version=3.8.2
         - choco install make -y
+        - python -m pip install -U pip setuptools
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
+      cache:
+        directories:
+          - $LOCALAPPDATA/pip/Cache
+          - $LOCALAPPDATA/pypoetry/cache
+    - name: "Python: pypy3"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version=3.8.2
+        - choco install make -y
+        - pypy3 -m pip install -U pip setuptools
+      env: PATH=/c/PyPy3:/c/PyPy3/Scripts:$PATH
       cache:
         directories:
           - $LOCALAPPDATA/pip/Cache

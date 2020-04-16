@@ -1,5 +1,5 @@
 install:
-	pip3 install -U poetry pip setuptools
+	pip3 install -U poetry
 	poetry install
 
 optional:
