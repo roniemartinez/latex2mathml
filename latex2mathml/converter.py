@@ -102,12 +102,12 @@ def _convert_array_content(param: list, parent: Element, alignment: str = "") ->
                     align, ""
                 )  # type: str
                 mtd = SubElement(mtr, "mtd", columnalign=column_align)
-            else:
-                mtd = SubElement(mtr, "mtd")
+            # else:
+            #     mtd = SubElement(mtr, "mtd")
             if isinstance(element, list):
                 _classify_subgroup(element, mtd)
-            elif element in COMMANDS:
-                _convert_command(element, row, i, iterable, mtd)
+            # elif element in COMMANDS:
+            #     _convert_command(element, row, i, iterable, mtd)
             else:
                 _classify(element, mtd)
             index += 1
@@ -232,6 +232,8 @@ def _classify(_element: str, parent: Element, is_math_mode: bool = False) -> Non
         tag = SubElement(parent, "mo" if is_math_mode else "mi")
         if symbol:
             tag.text = "&#x{};".format(symbol)
+        elif _element in (r"\log", r"\ln"):
+            tag.text = "log"
         else:
             tag.text = _element
     else:
@@ -245,7 +247,14 @@ def main() -> None:  # pragma: no cover
     parser = argparse.ArgumentParser(
         description="Pure Python library for LaTeX to MathML conversion"
     )
-    parser.add_argument("-V", "--version", dest="version", action="store_true", required=False, help="Show version")
+    parser.add_argument(
+        "-V",
+        "--version",
+        dest="version",
+        action="store_true",
+        required=False,
+        help="Show version",
+    )
     required = parser.add_argument_group("required arguments")
     group = required.add_mutually_exclusive_group(required=False)
     group.add_argument(
@@ -257,7 +266,7 @@ def main() -> None:  # pragma: no cover
     arguments = parser.parse_args()
 
     if arguments.version:
-        version = pkg_resources.get_distribution('latex2mathml').version
+        version = pkg_resources.get_distribution("latex2mathml").version
         print("latex2mathml", version)
     elif arguments.text:
         print(convert(arguments.text))

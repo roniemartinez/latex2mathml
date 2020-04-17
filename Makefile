@@ -6,9 +6,10 @@ optional:
 	poetry run pip install black mypy dephell
 
 style:
+	poetry run autoflake --remove-all-unused-imports --in-place -r --exclude __init__.py .
 	poetry run isort -rc --atomic .
 	poetry run black --exclude setup.py .
-	poetry run flake8
+	poetry run flake8 .
 
 type:
 	poetry run mypy --ignore-missing-imports tests latex2mathml

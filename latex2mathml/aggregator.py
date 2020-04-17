@@ -4,7 +4,6 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
-from itertools import tee
 from typing import Any, Iterator, List, Tuple, Union
 
 from latex2mathml.commands import MATRICES
@@ -67,24 +66,11 @@ def group(
                     g.append(group(tokens))
                 except EmptyGroupError:
                     g += [[]]
+            elif token == LEFT:
+                g.append(group(tokens, delimiter=token))
             elif token == RIGHT:
                 g.append(token)
                 g.append(next(tokens))
-                try:
-                    t, u = tee(tokens)
-                    while True:
-                        token = next(t)
-                        if token == opening:
-                            g.append(group(t))
-                        elif token in SUB_SUP:
-                            has_sub_sup = token
-                            break
-                        elif token != closing:
-                            g.append(token)
-                        else:
-                            break
-                except StopIteration:
-                    pass
                 break
             elif isinstance(token, str) and token in SUB_SUP:
                 g = process_sub_sup(g, token, tokens)
@@ -99,9 +85,6 @@ def group(
             g_ = g
             if len(content):
                 g_ = g[0:2] + [_aggregate(iter(content))] + g[right:]
-            if has_sub_sup:
-                g_ = [g_]
-                g_ = process_sub_sup(g_, has_sub_sup, tokens)
             return g_
         except ValueError:
             raise ExtraLeftOrMissingRight

@@ -154,13 +154,7 @@ PARAMS = [
     (
         "issue #44",
         r"\left(- x^{3} + 5\right)^{5}",
-        [
-            [
-                "^",
-                [r"\left", "(", ["-", "^", "x", ["3"], "+", "5"], r"\right", ")"],
-                ["5"],
-            ]
-        ],
+        ["^", [r"\left", "(", ["-", "^", "x", ["3"], "+", "5"], r"\right", ")"], ["5"]],
     ),
     (
         "issue #55",
@@ -200,13 +194,13 @@ PARAMS = [
         r"\sqrt {\sqrt {\left( x^{3}\right) + v}}",
         [
             r"\sqrt",
-            [r"\sqrt", [[r"\left", "(", ["^", "x", ["3"]], r"\right", ")", "+", "v"]]],
+            [r"\sqrt", [[r"\left", "(", ["^", "x", ["3"]], r"\right", ")"], "+", "v"]],
         ],
     ),
     (
         r"group after \right",
         r"\left(x\right){5}",
-        [[r"\left", "(", ["x"], r"\right", ")", ["5"]]],
+        [[r"\left", "(", ["x"], r"\right", ")"], ["5"]],
     ),
     (r"empty nth root", r"\sqrt[3]{}", ["\\root", "", ["3"]]),
     (r"empty subscript", r"1_{}", ["_", "1", []]),
@@ -233,6 +227,67 @@ PARAMS = [
             ]
         ],
     ),
+    (
+        "issue #78",
+        r"x^{x^{x^{x}}} \left(x^{x^{x}} \left(x^{x} \left(\log{\left(x \right)} + 1\right) \log{\left(x \right)} + "
+        r"\frac{x^{x}}{x}\right) \log{\left(x \right)} + \frac{x^{x^{x}}}{x}\right)",
+        [
+            "^",
+            "x",
+            ["^", "x", ["^", "x", ["x"]]],
+            [
+                r"\left",
+                "(",
+                [
+                    "^",
+                    "x",
+                    ["^", "x", ["x"]],
+                    [
+                        r"\left",
+                        "(",
+                        [
+                            "^",
+                            "x",
+                            ["x"],
+                            [
+                                r"\left",
+                                "(",
+                                [
+                                    r"\log",
+                                    [[r"\left", "(", ["x"], r"\right", ")"]],
+                                    "+",
+                                    "1",
+                                ],
+                                r"\right",
+                                ")",
+                            ],
+                            r"\log",
+                            [[r"\left", "(", ["x"], r"\right", ")"]],
+                            "+",
+                            r"\frac",
+                            ["^", "x", ["x"]],
+                            ["x"],
+                        ],
+                        r"\right",
+                        ")",
+                    ],
+                    r"\log",
+                    [[r"\left", "(", ["x"], r"\right", ")"]],
+                    "+",
+                    r"\frac",
+                    ["^", "x", ["^", "x", ["x"]]],
+                    ["x"],
+                ],
+                r"\right",
+                ")",
+            ],
+        ],
+    ),
+    (
+        r"logarithm with base",
+        r"\log_2{x}",
+        ['_', r'\log', '2', ['x']]
+    )
 ]
 
 PARAMS_WITH_EXCEPTION = [
