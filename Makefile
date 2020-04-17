@@ -3,7 +3,7 @@ install:
 	poetry install
 
 optional:
-	poetry run pip install black mypy
+	poetry run pip install black mypy dephell
 
 style:
 	poetry run isort -rc --atomic .
@@ -19,3 +19,6 @@ check:
 
 test:
 	poetry run pytest --cov=latex2mathml --cov-report=xml  --cov-report=html -vv
+
+setup:
+	poetry run dephell deps convert --from=pyproject.toml --to=setup.py
