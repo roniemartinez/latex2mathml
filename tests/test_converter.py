@@ -1130,6 +1130,91 @@ PARAMS = [
         {"mtable": {"mtr": {"mtd": {"msup": MultiDict([("mn", "1"), ("mn", "2")])}}}},
     ),
     (r"\e", r"\e", {"mi": r"\e"}),
+    (
+        "issue #77",
+        r"\left[\begin{matrix}1 & 0 & 0 & 0\\0 & 1 & 0 & 0\\0 & 0 & 1 & 0\\0 & 0 & 0 & 1\end{matrix}\right]",
+        {
+            "mrow": MultiDict(
+                [
+                    (
+                        "mo",
+                        MultiDict(
+                            [
+                                ("@stretchy", "true"),
+                                ("@fence", "true"),
+                                ("@form", "prefix"),
+                                ("$", "["),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mrow",
+                        {
+                            "mtable": MultiDict(
+                                [
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                ("mtd", {"mn": "1"}),
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "0"}),
+                                            ]
+                                        ),
+                                    ),
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "1"}),
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "0"}),
+                                            ]
+                                        ),
+                                    ),
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "1"}),
+                                                ("mtd", {"mn": "0"}),
+                                            ]
+                                        ),
+                                    ),
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "1"}),
+                                            ]
+                                        ),
+                                    ),
+                                ]
+                            )
+                        },
+                    ),
+                    (
+                        "mo",
+                        MultiDict(
+                            [
+                                ("@stretchy", "true"),
+                                ("@fence", "true"),
+                                ("@form", "postfix"),
+                                ("$", "]"),
+                            ]
+                        ),
+                    ),
+                ]
+            )
+        },
+    ),
 ]
 
 

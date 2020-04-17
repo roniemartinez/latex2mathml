@@ -9,6 +9,8 @@ from typing import Iterator, Optional, Union
 from xml.etree.cElementTree import Element, SubElement, tostring
 from xml.sax.saxutils import unescape
 
+import pkg_resources
+
 from latex2mathml.aggregator import aggregate
 from latex2mathml.commands import COMMANDS, MATRICES
 from latex2mathml.symbols_parser import convert_symbol
@@ -243,8 +245,9 @@ def main() -> None:  # pragma: no cover
     parser = argparse.ArgumentParser(
         description="Pure Python library for LaTeX to MathML conversion"
     )
+    parser.add_argument("-V", "--version", dest="version", action="store_true", required=False, help="Show version")
     required = parser.add_argument_group("required arguments")
-    group = required.add_mutually_exclusive_group(required=True)
+    group = required.add_mutually_exclusive_group(required=False)
     group.add_argument(
         "-t", "--text", dest="text", type=str, required=False, help="Text",
     )
@@ -253,7 +256,10 @@ def main() -> None:  # pragma: no cover
     )
     arguments = parser.parse_args()
 
-    if arguments.text:
+    if arguments.version:
+        version = pkg_resources.get_distribution('latex2mathml').version
+        print("latex2mathml", version)
+    elif arguments.text:
         print(convert(arguments.text))
     elif arguments.file:
         with open(arguments.file) as f:

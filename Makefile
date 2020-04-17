@@ -7,7 +7,7 @@ optional:
 
 style:
 	poetry run isort -rc --atomic .
-	poetry run black .
+	poetry run black --exclude setup.py .
 	poetry run flake8
 
 type:
