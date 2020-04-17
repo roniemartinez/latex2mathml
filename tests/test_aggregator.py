@@ -212,6 +212,27 @@ PARAMS = [
     (r"empty subscript", r"1_{}", ["_", "1", []]),
     (r"empty array", r"\array{}", [r"\array", []]),
     (r"empty array with empty group", r"\array{{}}", [r"\array", []]),
+    (
+        "issue #77",
+        r"\left[\begin{matrix}1 & 0 & 0 & 0\\0 & 1 & 0 & 0\\0 & 0 & 1 & 0\\0 & 0 & 0 & 1\end{matrix}\right]",
+        [
+            [
+                r"\left",
+                "[",
+                [
+                    r"\matrix",
+                    [
+                        ["1", "0", "0", "0"],
+                        ["0", "1", "0", "0"],
+                        ["0", "0", "1", "0"],
+                        ["0", "0", "0", "1"],
+                    ],
+                ],
+                r"\right",
+                "]",
+            ]
+        ],
+    ),
 ]
 
 PARAMS_WITH_EXCEPTION = [
