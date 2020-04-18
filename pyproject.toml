@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "latex2mathml"
-version = "2.10.1-alpha.2"
+version = "2.10.1"
 repository = "https://github.com/roniemartinez/latex2mathml"
 description = "Pure Python library for LaTeX to MathML conversion"
 authors = ["Ronie Martinez <ronmarti18@gmail.com>"]
