@@ -283,11 +283,7 @@ PARAMS = [
             ],
         ],
     ),
-    (
-        r"logarithm with base",
-        r"\log_2{x}",
-        ['_', r'\log', '2', ['x']]
-    )
+    (r"logarithm with base", r"\log_2{x}", ["_", r"\log", "2", ["x"]]),
 ]
 
 PARAMS_WITH_EXCEPTION = [

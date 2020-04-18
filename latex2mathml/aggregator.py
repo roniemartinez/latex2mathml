@@ -50,7 +50,6 @@ def group(
     delimiter: Union[str, None] = None,
 ) -> list:
     g = []  # type: List[Any]
-    has_sub_sup = None
     if delimiter:
         g.append(delimiter)
         g.append(next(tokens))

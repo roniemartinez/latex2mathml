@@ -1210,29 +1210,14 @@ PARAMS = [
             )
         },
     ),
-    (
-        r"logarithm",
-        r"\log{x}",
-        {
-            "mi": "log",
-            "mrow": {
-                "mi": "x"
-            }
-        }
-    ),
+    (r"logarithm", r"\log{x}", MultiDict([("mi", "log"), ("mrow", {"mi": "x"})])),
     (
         r"logarithm with base",
         r"\log_2{x}",
-        {
-            "msub": {
-              "mi": "log",
-              "mn": "2"
-            },
-            "mrow": {
-                "mi": "x"
-            }
-        }
-    )
+        MultiDict(
+            [("msub", MultiDict([("mi", "log"), ("mn", "2")])), ("mrow", {"mi": "x"})]
+        ),
+    ),
 ]
 
 
