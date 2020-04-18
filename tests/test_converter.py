@@ -830,71 +830,66 @@ PARAMS = [
     (
         "issue #44",
         r"\left(- x^{3} + 5\right)^{5}",
-        {
-            "mrow": MultiDict(
-                [
-                    (
-                        "msup",
-                        MultiDict(
-                            [
-                                (
-                                    "mrow",
-                                    MultiDict(
-                                        [
-                                            (
-                                                "mo",
-                                                MultiDict(
-                                                    [
-                                                        ("@stretchy", "true"),
-                                                        ("@fence", "true"),
-                                                        ("@form", "prefix"),
-                                                        ("$", "&#x00028;"),
-                                                    ]
-                                                ),
+        MultiDict(
+            [
+                (
+                    "msup",
+                    MultiDict(
+                        [
+                            (
+                                "mrow",
+                                MultiDict(
+                                    [
+                                        (
+                                            "mo",
+                                            MultiDict(
+                                                [
+                                                    ("@stretchy", "true"),
+                                                    ("@fence", "true"),
+                                                    ("@form", "prefix"),
+                                                    ("$", "&#x00028;"),
+                                                ]
                                             ),
-                                            (
-                                                "mrow",
-                                                MultiDict(
-                                                    [
-                                                        ("mo", "&#x02212;"),
-                                                        (
-                                                            "msup",
-                                                            MultiDict(
-                                                                [
-                                                                    ("mi", "x"),
-                                                                    (
-                                                                        "mrow",
-                                                                        {"mn": "3"},
-                                                                    ),
-                                                                ]
-                                                            ),
+                                        ),
+                                        (
+                                            "mrow",
+                                            MultiDict(
+                                                [
+                                                    ("mo", "&#x02212;"),
+                                                    (
+                                                        "msup",
+                                                        MultiDict(
+                                                            [
+                                                                ("mi", "x"),
+                                                                ("mrow", {"mn": "3"},),
+                                                            ]
                                                         ),
-                                                        ("mo", "&#x0002B;"),
-                                                        ("mn", "5"),
-                                                    ]
-                                                ),
+                                                    ),
+                                                    ("mo", "&#x0002B;"),
+                                                    ("mn", "5"),
+                                                ]
                                             ),
-                                            (
-                                                "mo",
-                                                MultiDict(
-                                                    [
-                                                        ("@stretchy", "true"),
-                                                        ("@fence", "true"),
-                                                        ("@form", "postfix"),
-                                                        ("$", "&#x00029;"),
-                                                    ]
-                                                ),
+                                        ),
+                                        (
+                                            "mo",
+                                            MultiDict(
+                                                [
+                                                    ("@stretchy", "true"),
+                                                    ("@fence", "true"),
+                                                    ("@form", "postfix"),
+                                                    ("$", "&#x00029;"),
+                                                ]
                                             ),
-                                        ]
-                                    ),
+                                        ),
+                                    ]
                                 ),
-                                ("mrow", {"mn": "5"}),
-                            ]
-                        ),
-                    )
-                ]
-            )
-        },
+                            ),
+                            ("mrow", {"mn": "5"}),
+                        ]
+                    ),
+                )
+            ]
+        ),
     ),
     ("issue #51", r"\mathbb{R}", {"mi": "&#x0211D;"}),
     (
@@ -1065,44 +1060,52 @@ PARAMS = [
             "msqrt": {
                 "mrow": {
                     "msqrt": {
-                        "mrow": {
-                            "mrow": MultiDict(
-                                [
-                                    (
-                                        "mo",
-                                        MultiDict(
-                                            [
-                                                ("@stretchy", "true"),
-                                                ("@fence", "true"),
-                                                ("@form", "prefix"),
-                                                ("$", "&#x00028;"),
-                                            ]
-                                        ),
+                        "mrow": MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            (
+                                                "mo",
+                                                MultiDict(
+                                                    [
+                                                        ("@stretchy", "true"),
+                                                        ("@fence", "true"),
+                                                        ("@form", "prefix"),
+                                                        ("$", "&#x00028;"),
+                                                    ]
+                                                ),
+                                            ),
+                                            (
+                                                "mrow",
+                                                {
+                                                    "msup": MultiDict(
+                                                        [
+                                                            ("mi", "x"),
+                                                            ("mrow", {"mn": 3}),
+                                                        ]
+                                                    )
+                                                },
+                                            ),
+                                            (
+                                                "mo",
+                                                MultiDict(
+                                                    [
+                                                        ("@stretchy", "true"),
+                                                        ("@fence", "true"),
+                                                        ("@form", "postfix"),
+                                                        ("$", "&#x00029;"),
+                                                    ]
+                                                ),
+                                            ),
+                                        ]
                                     ),
-                                    (
-                                        "mrow",
-                                        {
-                                            "msup": MultiDict(
-                                                [("mi", "x"), ("mrow", {"mn": 3})]
-                                            )
-                                        },
-                                    ),
-                                    (
-                                        "mo",
-                                        MultiDict(
-                                            [
-                                                ("@stretchy", "true"),
-                                                ("@fence", "true"),
-                                                ("@form", "postfix"),
-                                                ("$", "&#x00029;"),
-                                            ]
-                                        ),
-                                    ),
-                                    ("mo", "&#x0002B;"),
-                                    ("mi", "v"),
-                                ]
-                            )
-                        }
+                                ),
+                                ("mo", "&#x0002B;"),
+                                ("mi", "v"),
+                            ]
+                        ),
                     }
                 }
             }
@@ -1214,6 +1217,14 @@ PARAMS = [
                 ]
             )
         },
+    ),
+    (r"logarithm", r"\log{x}", MultiDict([("mi", "log"), ("mrow", {"mi": "x"})])),
+    (
+        r"logarithm with base",
+        r"\log_2{x}",
+        MultiDict(
+            [("msub", MultiDict([("mi", "log"), ("mn", "2")])), ("mrow", {"mi": "x"})]
+        ),
     ),
 ]
 
