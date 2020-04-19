@@ -26,21 +26,18 @@
 #
 # 1. code point (Unicode character number)
 #
-#    The code point field is unique.
+#    There may be more than one record for one code point,
+#    if there are different TeX commands for the same character.
+#    (changed 2015-09-21, before the code point was unique.)
 #
 # 2. literal character (UTF-8 encoded)
 #
 # 3. (La)TeX _`command`
 #
-#    Preferred representation of the character in TeX.
+#    Preferred representation of the character in (La)TeX.
 #    Alternative commands are listed in the comments_ field.
 #
-# 4. command used by the `unicode-math`_ package
-#
-#    .. _unicode-math:
-#       http://mirror.ctan.org/help/Catalogue/entries/unicode-math.html
-#
-# 5. Unicode math character class (after MathClassEx_).
+# 4. Unicode math character class (after MathClassEx_).
 #
 #    .. _MathClassEx:
 #       http://www.unicode.org/Public/math/revision-11/MathClassEx-11.txt
@@ -68,18 +65,18 @@
 #    comments. The classes are also useful in determining extra spacing
 #    around the operators as discussed in UTR#25.
 #
-# 6. TeX math category (after unimath-symbols_)
+# 5. TeX math category (after unimath-symbols_)
 #
 #    .. _unimath-symbols:
 #       http://mirror.ctan.org/macros/latex/contrib/unicode-math/unimath-symbols.pdf
 #
-# 7. requirements and conflicts
+# 6. requirements and conflicts
 #
 #    Space delimited list of LaTeX packages or features [1]_ providing
 #    the LaTeX command_ or conflicting with it.
 #
 #    Packages/features preceded by a HYPHEN-MINUS (-) use the command
-#    for a different symbol.
+#    for a different character or purpose.
 #
 #    To save space, packages providing/modifying (almost) all commands
 #    of a feature or another package are not listed here but in the
@@ -98,8 +95,8 @@
 #    marked by a character describing the relation
 #
 #    :=:  equals  (alias commands),
-#    :#:  approx  (similar, different character with same glyph),
-#    :x:  not     (false friends and name clashes),
+#    :#:  approx  (compat mapping, different character with same glyph),
+#    :x:  → cross reference/see also (related, false friends, and name clashes),
 #    :t:  text    (text mode command),
 #
 #    followed by requirements in parantheses, and
@@ -108,6 +105,7 @@
 #    Comments in UPPERCASE are Unicode character names
 #
 # no.^chr^LaTeX^unicode-math^cls^category^requirements^comments
+00020^ ^^^S^^^SPACE
 00021^!^!^\exclam^N^mathpunct^^EXCLAMATION MARK
 00023^#^\#^\octothorpe^N^mathord^-oz^# \# (oz), NUMBER SIGN
 00024^$^\$^\mathdollar^N^mathord^^= \mathdollar, DOLLAR SIGN
@@ -200,7 +198,7 @@
 0007C^|^|^\vert^F^mathfence^^= \vert, vertical bar
 0007D^}^\}^\rbrace^C^mathclose^^= \rbrace, RIGHT CURLY BRACKET
 0007E^~^\sptilde^^N^mathord^amsxtra^# \sim, TILDE
-000A0^ ^~^^S^^^nbsp
+000A0^ ^^^S^^^nbsp
 000A1^¡^^^P^^^iexcl
 000A2^¢^\cent^^N^mathord^wasysym^= \mathcent (txfonts), cent
 000A3^£^\pounds^\sterling^N^mathord^-fourier -omlmathit^= \mathsterling (txfonts), POUND SIGN, fourier prints a dollar sign
@@ -237,36 +235,36 @@
 002D9^˙^^^D^mathord^^dot, alias for 0307
 002DA^˚^^^D^mathord^^ring, alias for 030A
 002DC^˜^^^D^mathord^^tilde, alias for 0303
-00300^x̀^\grave^\grave^D^mathaccent^^grave accent
-00301^x́^\acute^\acute^D^mathaccent^^acute accent
-00302^x̂^\hat^\hat^D^mathaccent^^# \widehat (amssymb), circumflex accent
-00303^x̃^\tilde^\tilde^D^mathaccent^^# \widetilde (yhmath, fourier), tilde
-00304^x̄^\bar^\bar^D^mathaccent^^macron
-00305^x̅^\overline^\overbar^D^mathaccent^^overbar embellishment
-00306^x̆^\breve^\breve^D^mathaccent^^breve
-00307^ẋ^\dot^\dot^D^mathaccent^-oz^= \Dot (wrisym), dot above
-00308^ẍ^\ddot^\ddot^D^mathaccent^^= \DDot (wrisym), dieresis
-00309^x̉^^\ovhook^^mathaccent^^COMBINING HOOK ABOVE
-0030A^x̊^\mathring^\ocirc^D^mathaccent^amssymb^= \ring (yhmath), ring
-0030C^x̌^\check^\check^D^mathaccent^^caron
-00310^x̐^^\candra^^mathaccent^^candrabindu (non-spacing)
-00311^x̑^^^D^mathaccent^^COMBINING INVERTED BREVE
-00312^x̒^^\oturnedcomma^^mathaccent^^COMBINING TURNED COMMA ABOVE
-00315^x̕^^\ocommatopright^^mathaccent^^COMBINING COMMA ABOVE RIGHT
-0031A^x̚^^\droang^^mathaccent^^left angle above (non-spacing)
-00323^x̣^^^D^mathaccent^^COMBINING DOT BELOW
-0032C^x̬^^^D^mathaccent^^COMBINING CARON BELOW
-0032D^x̭^^^D^mathaccent^^COMBINING CIRCUMFLEX ACCENT BELOW
-0032E^x̮^^^D^mathaccent^^COMBINING BREVE BELOW
-0032F^x̯^^^D^mathaccent^^COMBINING INVERTED BREVE BELOW
-00330^x̰^\utilde^\wideutilde^D^mathaccent^undertilde^under tilde accent (multiple characters and non-spacing)
-00331^x̱^\underbar^\underbar^D^mathaccent^^COMBINING MACRON BELOW
-00332^x̲^\underline^^D^mathaccent^^COMBINING LOW LINE
-00333^x̳^^^D^mathaccent^^2lowbar
-00338^x̸^\not^\not^D^mathaccent^^COMBINING LONG SOLIDUS OVERLAY
-0033A^x̺^^^D^mathaccent^^COMBINING INVERTED BRIDGE BELOW
-0033F^x̿^^^D^mathaccent^^COMBINING DOUBLE OVERLINE
-00346^x͆^^^D^mathaccent^^COMBINING BRIDGE ABOVE
+00300^ ̀^\grave^\grave^D^mathaccent^^grave accent
+00301^ ́^\acute^\acute^D^mathaccent^^acute accent
+00302^ ̂^\hat^\hat^D^mathaccent^^# \widehat (amssymb), circumflex accent
+00303^ ̃^\tilde^\tilde^D^mathaccent^^# \widetilde (yhmath, fourier), tilde
+00304^ ̄^\bar^\bar^D^mathaccent^^macron
+00305^ ̅^\overline^\overbar^D^mathaccent^^overbar embellishment
+00306^ ̆^\breve^\breve^D^mathaccent^^breve
+00307^ ̇^\dot^\dot^D^mathaccent^-oz^= \Dot (wrisym), dot above
+00308^ ̈^\ddot^\ddot^D^mathaccent^^= \DDot (wrisym), dieresis
+00309^ ̉^^\ovhook^^mathaccent^^COMBINING HOOK ABOVE
+0030A^ ̊^\mathring^\ocirc^D^mathaccent^amssymb^= \ring (yhmath), ring
+0030C^ ̌^\check^\check^D^mathaccent^^caron
+00310^ ̐^^\candra^^mathaccent^^candrabindu (non-spacing)
+00311^ ̑^^^D^mathaccent^^COMBINING INVERTED BREVE
+00312^ ̒^^\oturnedcomma^^mathaccent^^COMBINING TURNED COMMA ABOVE
+00315^ ̕^^\ocommatopright^^mathaccent^^COMBINING COMMA ABOVE RIGHT
+0031A^ ̚^^\droang^^mathaccent^^left angle above (non-spacing)
+00323^ ̣^^^D^mathaccent^^COMBINING DOT BELOW
+0032C^ ̬^^^D^mathaccent^^COMBINING CARON BELOW
+0032D^ ̭^^^D^mathaccent^^COMBINING CIRCUMFLEX ACCENT BELOW
+0032E^ ̮^^^D^mathaccent^^COMBINING BREVE BELOW
+0032F^ ̯^^^D^mathaccent^^COMBINING INVERTED BREVE BELOW
+00330^ ̰^\utilde^\wideutilde^D^mathaccent^undertilde^under tilde accent (multiple characters and non-spacing)
+00331^ ̱^\underbar^\underbar^D^mathaccent^^COMBINING MACRON BELOW
+00332^ ̲^\underline^^D^mathaccent^^COMBINING LOW LINE
+00333^ ̳^^^D^mathaccent^^2lowbar
+00338^ ̸^\not^\not^D^mathaccent^^COMBINING LONG SOLIDUS OVERLAY
+0033A^ ̺^^^D^mathaccent^^COMBINING INVERTED BRIDGE BELOW
+0033F^ ̿^^^D^mathaccent^^COMBINING DOUBLE OVERLINE
+00346^ ͆^^^D^mathaccent^^COMBINING BRIDGE ABOVE
 00391^Α^^\upAlpha^A^mathalpha^^capital alpha, greek
 00392^Β^^\upBeta^A^mathalpha^^capital beta, greek
 00393^Γ^\Gamma^\upGamma^A^mathalpha^-literal^= \Gamma (-slantedGreek), = \mathrm{\Gamma}, capital gamma, greek
@@ -325,18 +323,21 @@
 003D9^ϙ^\qoppa^\upoldkoppa^N^mathord^arevmath^= \koppa (wrisym), t \qoppa (LGR), GREEK SMALL LETTER ARCHAIC KOPPA
 003DA^Ϛ^\Stigma^\upStigma^A^mathalpha^arevmath wrisym^capital stigma
 003DB^ϛ^\stigma^\upstigma^A^mathalpha^arevmath wrisym^GREEK SMALL LETTER STIGMA
-003DC^Ϝ^\Digamma^\upDigamma^A^mathalpha^wrisym -amssymb^= \digamma (amssymb), capital digamma
-003DD^ϝ^\digamma^\updigamma^A^mathalpha^arevmath wrisym^GREEK SMALL LETTER DIGAMMA
+003DC^Ϝ^\Digamma^\upDigamma^A^mathalpha^wrisym^capital digamma
+003DD^ϝ^\digamma^\updigamma^A^mathalpha^amssymb arevmath wrisym^GREEK SMALL LETTER DIGAMMA
 003DE^Ϟ^\Koppa^\upKoppa^^mathalpha^arevmath^capital koppa
 003DF^ϟ^\koppa^\upkoppa^^mathalpha^arevmath^GREEK SMALL LETTER KOPPA
 003E0^Ϡ^\Sampi^\upSampi^A^mathalpha^arevmath wrisym^capital sampi
 003E1^ϡ^\sampi^\upsampi^A^mathalpha^arevmath^# \sampi (wrisym), GREEK SMALL LETTER SAMPI
-003F0^ϰ^^\upvarkappa^A^mathalpha^^GREEK KAPPA SYMBOL (round)
+003F0^ϰ^\varkappa^\upvarkappa^A^mathalpha^amssymb^GREEK KAPPA SYMBOL (round)
 003F1^ϱ^\varrho^\upvarrho^A^mathalpha^-literal^= \mathrm{\varrho} (omlmathrm), = \varrhoup (kpfonts mathdesign), GREEK RHO SYMBOL (round)
 003F4^ϴ^^\upvarTheta^A^mathalpha^^x \varTheta (amssymb), GREEK CAPITAL THETA SYMBOL
 003F5^ϵ^\epsilon^\upvarepsilon^A^mathalpha^-literal^= \mathrm{\epsilon} (omlmathrm), = \epsilonup (kpfonts mathdesign), GREEK LUNATE EPSILON SYMBOL
 003F6^϶^\backepsilon^\upbackepsilon^N^mathord^amssymb wrisym^GREEK REVERSED LUNATE EPSILON SYMBOL
-00428^Ш^^^A^mathalpha^^t \CYRSHHA (T2A), Shcy, CYRILLIC CAPITAL LETTER SHA
+00428^Ш^^^A^mathalpha^^t \CYRSHA (T2A), Shcy, CYRILLIC CAPITAL LETTER SHA
+00606^؆^^^L^mathord^^ARABIC-INDIC CUBE ROOT
+00607^؇^^^L^mathord^^ARABIC-INDIC FOURTH ROOT
+00608^؈^^^A^mathord^^ARABIC RAY
 02000^ ^^^S^^^enquad
 02001^ ^\quad^^S^^^emquad
 02002^ ^^^S^^^ensp (half an em)
@@ -355,9 +356,9 @@
 02015^―^^\horizbar^^mathord^^HORIZONTAL BAR
 02016^‖^\|^\Vert^F^mathfence^^= \Vert, double vertical bar
 02017^‗^^\twolowline^^mathord^^DOUBLE LOW LINE (spacing)
-02020^†^\dagger^\dagger^N^mathbin^^DAGGER relation
-02021^‡^\ddagger^\ddagger^N^mathbin^^DOUBLE DAGGER relation
-02022^•^^\smblkcircle^B^mathbin^^# \bullet, b: round BULLET, filled
+02020^†^\dagger^\dagger^R^mathbin^^DAGGER relation
+02021^‡^\ddagger^\ddagger^R^mathbin^^DOUBLE DAGGER relation
+02022^•^\bullet^\smblkcircle^B^mathbin^^BULLET (small, filled)
 02025^‥^^\enleadertwodots^^mathord^^double baseline dot (en leader)
 02026^…^\ldots^\unicodeellipsis^N^mathord^^ellipsis (horizontal)
 02032^′^\prime^\prime^N^mathord^^PRIME or minute, not superscripted
@@ -400,6 +401,7 @@
 020D2^x⃒^^\vertoverlay^D^mathaccent^^COMBINING LONG VERTICAL LINE OVERLAY
 020D3^x⃓^^^X^mathaccent^^COMBINING SHORT VERTICAL LINE OVERLAY
 020D4^x⃔^^^D^mathaccent^^COMBINING ANTICLOCKWISE ARROW ABOVE
+020D5^x⃕^^^D^mathaccent^^COMBINING CLOCKWISE ARROW ABOVE
 020D6^x⃖^\LVec^\overleftarrow^D^mathaccent^wrisym^# \overleftarrow, COMBINING LEFT ARROW ABOVE
 020D7^x⃗^\vec^\vec^D^mathaccent^-wrisym^= \Vec (wrisym), # \overrightarrow, COMBINING RIGHT ARROW ABOVE
 020D8^x⃘^^^D^mathaccent^^COMBINING RING OVERLAY
@@ -461,11 +463,11 @@
 02136^ℶ^\beth^\beth^A^mathalpha^amssymb wrisym^beth, hebrew
 02137^ℷ^\gimel^\gimel^A^mathalpha^amssymb wrisym^gimel, hebrew
 02138^ℸ^\daleth^\daleth^A^mathalpha^amssymb wrisym^daleth, hebrew
-0213C^ℼ^\mathbb{\pi}^\Bbbpi^A^mathord^bbold^\DoublePi (wrisym), DOUBLE-STRUCK SMALL PI
-0213D^ℽ^\mathbb{\gamma}^\Bbbgamma^A^mathalpha^bbold^\EulerGamma (wrisym), DOUBLE-STRUCK SMALL GAMMA
-0213E^ℾ^\mathbb{\Gamma}^\BbbGamma^N^mathalpha^bbold^DOUBLE-STRUCK CAPITAL GAMMA
-0213F^ℿ^\mathbb{\Pi}^\BbbPi^A^mathalpha^bbold^DOUBLE-STRUCK CAPITAL PI
-02140^⅀^\mathbb{\Sigma}^\Bbbsum^L^mathop^bbold^DOUBLE-STRUCK N-ARY SUMMATION
+0213C^ℼ^\mathbb{\pi}^\Bbbpi^A^mathord^mathbbol^\DoublePi (wrisym), DOUBLE-STRUCK SMALL PI
+0213D^ℽ^\mathbb{\gamma}^\Bbbgamma^A^mathalpha^mathbbol^\EulerGamma (wrisym), DOUBLE-STRUCK SMALL GAMMA
+0213E^ℾ^\mathbb{\Gamma}^\BbbGamma^N^mathalpha^mathbbol^DOUBLE-STRUCK CAPITAL GAMMA
+0213F^ℿ^\mathbb{\Pi}^\BbbPi^A^mathalpha^mathbbol^DOUBLE-STRUCK CAPITAL PI
+02140^⅀^\mathbb{\Sigma}^\Bbbsum^L^mathop^mathbbol^DOUBLE-STRUCK N-ARY SUMMATION
 02141^⅁^^\Game^N^mathord^^# \Game (amssymb), TURNED SANS-SERIF CAPITAL G (amssymb has mirrored G)
 02142^⅂^^\sansLturned^N^mathord^^TURNED SANS-SERIF CAPITAL L
 02143^⅃^^\sansLmirrored^N^mathord^^REVERSED SANS-SERIF CAPITAL L
@@ -508,7 +510,7 @@
 021AC^↬^\looparrowright^\looparrowright^R^mathrel^amssymb^right arrow-looped
 021AD^↭^\leftrightsquigarrow^\leftrightsquigarrow^R^mathrel^amssymb^left and right arr-wavy
 021AE^↮^\nleftrightarrow^\nleftrightarrow^R^mathrel^amssymb^not left and right arrow
-021AF^↯^\lightning^\downzigzagarrow^R^mathrel^stmaryrd^t \Lightning (marvosym), DOWNWARDS ZIGZAG ARROW
+021AF^↯^\lightning^\downzigzagarrow^R^mathrel^stmaryrd -wasysym^t \Lightning (marvosym), DOWNWARDS ZIGZAG ARROW
 021B0^↰^\Lsh^\Lsh^R^mathrel^amssymb^a: UPWARDS ARROW WITH TIP LEFTWARDS
 021B1^↱^\Rsh^\Rsh^R^mathrel^amssymb^a: UPWARDS ARROW WITH TIP RIGHTWARDS
 021B2^↲^\dlsh^\Ldsh^R^mathrel^mathabx^left down angled arrow
@@ -567,16 +569,16 @@
 021E7^⇧^^\upwhitearrow^R^mathord^^UPWARDS WHITE ARROW
 021E8^⇨^^\rightwhitearrow^R^mathord^^RIGHTWARDS WHITE ARROW
 021E9^⇩^^\downwhitearrow^R^mathord^^DOWNWARDS WHITE ARROW
-021EA^⇪^^\whitearrowupfrombar^^mathord^^UPWARDS WHITE ARROW FROM BAR
-021EB^⇫^^^^mathord^^UPWARDS WHITE ARROW ON PEDESTAL
-021EC^⇬^^^^mathord^^UPWARDS WHITE ARROW ON PEDESTAL WITH HORIZONTAL BAR
-021ED^⇭^^^^mathord^^UPWARDS WHITE ARROW ON PEDESTAL WITH VERTICAL BAR
-021EE^⇮^^^^mathord^^UPWARDS WHITE DOUBLE ARROW
-021EF^⇯^^^^mathord^^UPWARDS WHITE DOUBLE ARROW ON PEDESTAL
-021F0^⇰^^^^mathord^^RIGHTWARDS WHITE ARROW FROM WALL
-021F1^⇱^^^^mathord^^NORTH WEST ARROW TO CORNER
-021F2^⇲^^^^mathord^^SOUTH EAST ARROW TO CORNER
-021F3^⇳^^^^mathord^^UP DOWN WHITE ARROW
+021EA^⇪^^\whitearrowupfrombar^R^mathord^^UPWARDS WHITE ARROW FROM BAR
+021EB^⇫^^^R^mathord^^UPWARDS WHITE ARROW ON PEDESTAL
+021EC^⇬^^^R^mathord^^UPWARDS WHITE ARROW ON PEDESTAL WITH HORIZONTAL BAR
+021ED^⇭^^^R^mathord^^UPWARDS WHITE ARROW ON PEDESTAL WITH VERTICAL BAR
+021EE^⇮^^^R^mathord^^UPWARDS WHITE DOUBLE ARROW
+021EF^⇯^^^R^mathord^^UPWARDS WHITE DOUBLE ARROW ON PEDESTAL
+021F0^⇰^^^R^mathord^^RIGHTWARDS WHITE ARROW FROM WALL
+021F1^⇱^^^R^mathord^^NORTH WEST ARROW TO CORNER
+021F2^⇲^^^R^mathord^^SOUTH EAST ARROW TO CORNER
+021F3^⇳^^^R^mathord^^UP DOWN WHITE ARROW
 021F4^⇴^^\circleonrightarrow^R^mathrel^^RIGHT ARROW WITH SMALL CIRCLE
 021F5^⇵^\downuparrows^\downuparrows^R^mathrel^mathabx^= \downarrowuparrow (wrisym), DOWNWARDS ARROW LEFTWARDS OF UPWARDS ARROW
 021F6^⇶^^\rightthreearrows^R^mathrel^^THREE RIGHTWARDS ARROWS
@@ -888,7 +890,7 @@
 02346^⍆^^^^mathord^^APL FUNCTIONAL SYMBOL RIGHTWARDS VANE
 02347^⍇^\APLleftarrowbox^^^mathord^wasysym^APL FUNCTIONAL SYMBOL QUAD LEFTWARDS ARROW
 02348^⍈^\APLrightarrowbox^^^mathord^wasysym^APL FUNCTIONAL SYMBOL QUAD RIGHTWARDS ARROW
-02349^⍉^^^^mathord^^APL FUNCTIONAL SYMBOL CIRCLE BACKSLASH
+02349^⍉^\invdiameter^^^mathord^wasysym^APL FUNCTIONAL SYMBOL CIRCLE BACKSLASH
 0234A^⍊^^^^mathord^^APL FUNCTIONAL SYMBOL DOWN TACK UNDERBAR
 0234B^⍋^^^^mathord^^# \APLvert{\APLup} (wasysym), APL FUNCTIONAL SYMBOL DELTA STILE
 0234C^⍌^^^^mathord^^APL FUNCTIONAL SYMBOL QUAD DOWN CARET
@@ -937,7 +939,7 @@
 02377^⍷^^^^mathord^^APL FUNCTIONAL SYMBOL EPSILON UNDERBAR
 02378^⍸^^^^mathord^^APL FUNCTIONAL SYMBOL IOTA UNDERBAR
 02379^⍹^^^^mathord^^APL FUNCTIONAL SYMBOL OMEGA UNDERBAR
-0237C^⍼^^\rangledownzigzagarrow^^mathord^^RIGHT ANGLE WITH DOWNWARDS ZIGZAG ARROW
+0237C^⍼^^\rangledownzigzagarrow^R^mathord^^RIGHT ANGLE WITH DOWNWARDS ZIGZAG ARROW
 02394^⎔^^\hexagon^N^mathord^^horizontal benzene ring [hexagon flat open]
 0239B^⎛^^\lparenuend^G^mathord^^LEFT PARENTHESIS UPPER HOOK
 0239C^⎜^^\lparenextender^G^mathord^^LEFT PARENTHESIS EXTENSION
@@ -1010,7 +1012,7 @@
 025AD^▭^^\hrectangle^N^mathord^^horizontal rectangle, open
 025AE^▮^^\vrectangleblack^N^mathord^^BLACK VERTICAL RECTANGLE
 025AF^▯^^\vrectangle^N^mathord^^rectangle, white (vertical)
-025B0^▰^^\parallelogramblack^^mathord^^BLACK PARALLELOGRAM
+025B0^▰^^\parallelogramblack^N^mathord^^BLACK PARALLELOGRAM
 025B1^▱^^\parallelogram^N^mathord^^parallelogram, open
 025B2^▲^^\bigblacktriangleup^B^mathord^^BLACK UP-POINTING TRIANGLE
 025B3^△^\bigtriangleup^\bigtriangleup^B^mathbin^-stmaryrd^= \triangle (amsfonts), # \vartriangle (amssymb), big up triangle, open
@@ -1042,10 +1044,10 @@
 025CD^◍^^\circlevertfill^^mathord^^CIRCLE WITH VERTICAL FILL
 025CE^◎^^\bullseye^N^mathord^^# \circledcirc (amssymb), BULLSEYE
 025CF^●^\CIRCLE^\mdlgblkcircle^N^mathord^wasysym^circle, filled
-025D0^◐^\LEFTcircle^\circlelefthalfblack^^mathord^wasysym^circle, filled left half [harvey ball]
-025D1^◑^\RIGHTcircle^\circlerighthalfblack^^mathord^wasysym^circle, filled right half
-025D2^◒^^\circlebottomhalfblack^^mathord^^circle, filled bottom half
-025D3^◓^^\circletophalfblack^^mathord^^circle, filled top half
+025D0^◐^\LEFTcircle^\circlelefthalfblack^N^mathord^wasysym^circle, filled left half [harvey ball]
+025D1^◑^\RIGHTcircle^\circlerighthalfblack^N^mathord^wasysym^circle, filled right half
+025D2^◒^^\circlebottomhalfblack^N^mathord^^circle, filled bottom half
+025D3^◓^^\circletophalfblack^N^mathord^^circle, filled top half
 025D4^◔^^\circleurquadblack^^mathord^^CIRCLE WITH UPPER RIGHT QUADRANT BLACK
 025D5^◕^^\blackcircleulquadwhite^^mathord^^CIRCLE WITH ALL BUT UPPER LEFT QUADRANT BLACK
 025D6^◖^\LEFTCIRCLE^\blacklefthalfcircle^N^mathord^wasysym^LEFT HALF BLACK CIRCLE
@@ -1065,10 +1067,10 @@
 025E4^◤^^\ulblacktriangle^N^mathord^^upper left triangle, filled
 025E5^◥^^\urblacktriangle^N^mathord^^upper right triangle, filled
 025E6^◦^^\smwhtcircle^B^mathord^^WHITE BULLET
-025E7^◧^^\squareleftblack^^mathord^^square, filled left half
-025E8^◨^^\squarerightblack^^mathord^^square, filled right half
-025E9^◩^^\squareulblack^^mathord^^square, filled top left corner
-025EA^◪^^\squarelrblack^^mathord^^square, filled bottom right corner
+025E7^◧^^\squareleftblack^N^mathord^^square, filled left half
+025E8^◨^^\squarerightblack^N^mathord^^square, filled right half
+025E9^◩^^\squareulblack^N^mathord^^square, filled top left corner
+025EA^◪^^\squarelrblack^N^mathord^^square, filled bottom right corner
 025EB^◫^\boxbar^\boxbar^B^mathbin^stmaryrd txfonts^vertical bar in box
 025EC^◬^^\trianglecdot^B^mathord^^triangle with centered dot
 025ED^◭^^\triangleleftblack^^mathord^^UP-POINTING TRIANGLE WITH LEFT HALF BLACK
@@ -1168,7 +1170,7 @@
 026B2^⚲^^\neuter^N^mathord^^NEUTER
 0270E^✎^\pencil^^^mathord^arevmath^LOWER RIGHT PENCIL
 02713^✓^\checkmark^\checkmark^N^mathord^amsfonts^= \ballotcheck (arevmath), tick, CHECK MARK
-02717^✗^\ballotx^^^mathord^arevmath^BALLOT X
+02717^✗^\ballotx^^N^mathord^arevmath^BALLOT X
 02720^✠^\maltese^\maltese^N^mathord^amsfonts^MALTESE CROSS
 0272A^✪^^\circledstar^N^mathord^^CIRCLED WHITE STAR
 02736^✶^^\varstar^N^mathord^^SIX POINTED BLACK STAR
@@ -1187,7 +1189,8 @@
 027C7^⟇^^\veedot^R^mathbin^^OR WITH DOT INSIDE
 027C8^⟈^^\bsolhsub^R^mathrel^^REVERSE SOLIDUS PRECEDING SUBSET
 027C9^⟉^^\suphsol^R^mathrel^^SUPERSET PRECEDING SOLIDUS
-027CC^⟌^^\longdivision^^mathopen^^LONG DIVISION
+027CA^⟊^^^R^mathord^^VERTICAL BAR WITH HORIZONTAL STROKE
+027CC^⟌^^\longdivision^L^mathopen^^LONG DIVISION
 027D0^⟐^\Diamonddot^\diamondcdot^N^mathord^txfonts^WHITE DIAMOND WITH CENTRED DOT
 027D1^⟑^^\wedgedot^B^mathbin^^AND WITH DOT
 027D2^⟒^^\upin^R^mathrel^^ELEMENT OF OPENING UPWARDS
@@ -1748,24 +1751,24 @@
 02AFD^⫽^\sslash^\sslash^B^mathbin^stmaryrd^# \varparallel (txfonts), DOUBLE SOLIDUS OPERATOR
 02AFE^⫾^\talloblong^\talloblong^B^mathbin^stmaryrd^WHITE VERTICAL BAR
 02AFF^⫿^^\bigtalloblong^L^mathop^^N-ARY WHITE VERTICAL BAR
-02B00^⬀^^^R?^mathord^^NORTH EAST WHITE ARROW
-02B01^⬁^^^R?^mathord^^NORTH WEST WHITE ARROW
-02B02^⬂^^^R?^mathord^^SOUTH EAST WHITE ARROW
-02B03^⬃^^^R?^mathord^^SOUTH WEST WHITE ARROW
-02B04^⬄^^^R?^mathord^^LEFT RIGHT WHITE ARROW
-02B05^⬅^^^R?^mathord^^LEFTWARDS BLACK ARROW
-02B06^⬆^^^R?^mathord^^UPWARDS BLACK ARROW
-02B07^⬇^^^R?^mathord^^DOWNWARDS BLACK ARROW
-02B08^⬈^^^R?^mathord^^NORTH EAST BLACK ARROW
-02B09^⬉^^^R?^mathord^^NORTH WEST BLACK ARROW
-02B0A^⬊^^^R?^mathord^^SOUTH EAST BLACK ARROW
-02B0B^⬋^^^R?^mathord^^SOUTH WEST BLACK ARROW
-02B0C^⬌^^^R?^mathord^^LEFT RIGHT BLACK ARROW
-02B0D^⬍^^^R?^mathord^^UP DOWN BLACK ARROW
-02B0E^⬎^^^R?^mathord^^RIGHTWARDS ARROW WITH TIP DOWNWARDS
-02B0F^⬏^^^R?^mathord^^RIGHTWARDS ARROW WITH TIP UPWARDS
-02B10^⬐^^^R?^mathord^^LEFTWARDS ARROW WITH TIP DOWNWARDS
-02B11^⬑^^^R?^mathord^^LEFTWARDS ARROW WITH TIP UPWARDS
+02B00^⬀^^^R^mathord^^NORTH EAST WHITE ARROW
+02B01^⬁^^^R^mathord^^NORTH WEST WHITE ARROW
+02B02^⬂^^^R^mathord^^SOUTH EAST WHITE ARROW
+02B03^⬃^^^R^mathord^^SOUTH WEST WHITE ARROW
+02B04^⬄^^^R^mathord^^LEFT RIGHT WHITE ARROW
+02B05^⬅^^^R^mathord^^LEFTWARDS BLACK ARROW
+02B06^⬆^^^R^mathord^^UPWARDS BLACK ARROW
+02B07^⬇^^^R^mathord^^DOWNWARDS BLACK ARROW
+02B08^⬈^^^R^mathord^^NORTH EAST BLACK ARROW
+02B09^⬉^^^R^mathord^^NORTH WEST BLACK ARROW
+02B0A^⬊^^^R^mathord^^SOUTH EAST BLACK ARROW
+02B0B^⬋^^^R^mathord^^SOUTH WEST BLACK ARROW
+02B0C^⬌^^^R^mathord^^LEFT RIGHT BLACK ARROW
+02B0D^⬍^^^R^mathord^^UP DOWN BLACK ARROW
+02B0E^⬎^^^R^mathord^^RIGHTWARDS ARROW WITH TIP DOWNWARDS
+02B0F^⬏^^^R^mathord^^RIGHTWARDS ARROW WITH TIP UPWARDS
+02B10^⬐^^^R^mathord^^LEFTWARDS ARROW WITH TIP DOWNWARDS
+02B11^⬑^^^R^mathord^^LEFTWARDS ARROW WITH TIP UPWARDS
 02B12^⬒^^\squaretopblack^N^mathord^^SQUARE WITH TOP HALF BLACK
 02B13^⬓^^\squarebotblack^N^mathord^^SQUARE WITH BOTTOM HALF BLACK
 02B14^⬔^^\squareurblack^N^mathord^^SQUARE WITH UPPER RIGHT DIAGONAL HALF BLACK
@@ -1775,61 +1778,61 @@
 02B18^⬘^^\diamondtopblack^N^mathord^^DIAMOND WITH TOP HALF BLACK
 02B19^⬙^^\diamondbotblack^N^mathord^^DIAMOND WITH BOTTOM HALF BLACK
 02B1A^⬚^^\dottedsquare^^mathord^^DOTTED SQUARE
-02B1B^⬛^\blacksquare^\lgblksquare^^mathord^fourier -amssymb^BLACK LARGE SQUARE
-02B1C^⬜^\square^\lgwhtsquare^^mathord^fourier -amssymb^WHITE LARGE SQUARE
-02B1D^⬝^^\vysmblksquare^^mathord^^# \centerdot (amssymb), t \Squaredot (marvosym), BLACK VERY SMALL SQUARE
-02B1E^⬞^^\vysmwhtsquare^^mathord^^WHITE VERY SMALL SQUARE
-02B1F^⬟^^\pentagonblack^^mathord^^BLACK PENTAGON
+02B1B^⬛^\blacksquare^\lgblksquare^N^mathord^fourier -amssymb^BLACK LARGE SQUARE
+02B1C^⬜^\square^\lgwhtsquare^N^mathord^fourier -amssymb^WHITE LARGE SQUARE
+02B1D^⬝^^\vysmblksquare^N^mathord^^# \centerdot (amssymb), t \Squaredot (marvosym), BLACK VERY SMALL SQUARE
+02B1E^⬞^^\vysmwhtsquare^N^mathord^^WHITE VERY SMALL SQUARE
+02B1F^⬟^^\pentagonblack^N^mathord^^BLACK PENTAGON
 02B20^⬠^^\pentagon^N^mathord^^WHITE PENTAGON
 02B21^⬡^^\varhexagon^N^mathord^^WHITE HEXAGON
 02B22^⬢^^\varhexagonblack^N^mathord^^BLACK HEXAGON
 02B23^⬣^^\hexagonblack^N^mathord^^HORIZONTAL BLACK HEXAGON
-02B24^⬤^^\lgblkcircle^^mathord^^BLACK LARGE CIRCLE
-02B25^⬥^^\mdblkdiamond^^mathord^^BLACK MEDIUM DIAMOND
-02B26^⬦^^\mdwhtdiamond^^mathord^^WHITE MEDIUM DIAMOND
-02B27^⬧^^\mdblklozenge^^mathord^^# \blacklozenge (amssymb), BLACK MEDIUM LOZENGE
-02B28^⬨^^\mdwhtlozenge^^mathord^^# \lozenge (amssymb), WHITE MEDIUM LOZENGE
-02B29^⬩^^\smblkdiamond^^mathord^^BLACK SMALL DIAMOND
-02B2A^⬪^^\smblklozenge^^mathord^^BLACK SMALL LOZENGE
-02B2B^⬫^^\smwhtlozenge^^mathord^^WHITE SMALL LOZENGE
-02B2C^⬬^^\blkhorzoval^^mathord^^BLACK HORIZONTAL ELLIPSE
-02B2D^⬭^^\whthorzoval^^mathord^^WHITE HORIZONTAL ELLIPSE
-02B2E^⬮^^\blkvertoval^^mathord^^BLACK VERTICAL ELLIPSE
-02B2F^⬯^^\whtvertoval^^mathord^^WHITE VERTICAL ELLIPSE
-02B30^⬰^^\circleonleftarrow^^mathrel^^LEFT ARROW WITH SMALL CIRCLE
-02B31^⬱^^\leftthreearrows^^mathrel^^THREE LEFTWARDS ARROWS
-02B32^⬲^^\leftarrowonoplus^^mathrel^^LEFT ARROW WITH CIRCLED PLUS
-02B33^⬳^^\longleftsquigarrow^^mathrel^^LONG LEFTWARDS SQUIGGLE ARROW
-02B34^⬴^^\nvtwoheadleftarrow^^mathrel^^LEFTWARDS TWO-HEADED ARROW WITH VERTICAL STROKE
-02B35^⬵^^\nVtwoheadleftarrow^^mathrel^^LEFTWARDS TWO-HEADED ARROW WITH DOUBLE VERTICAL STROKE
-02B36^⬶^^\twoheadmapsfrom^^mathrel^^LEFTWARDS TWO-HEADED ARROW FROM BAR
-02B37^⬷^^\twoheadleftdbkarrow^^mathrel^^leftwards two-headed triple-dash arrow
-02B38^⬸^^\leftdotarrow^^mathrel^^LEFTWARDS ARROW WITH DOTTED STEM
-02B39^⬹^^\nvleftarrowtail^^mathrel^^LEFTWARDS ARROW WITH TAIL WITH VERTICAL STROKE
-02B3A^⬺^^\nVleftarrowtail^^mathrel^^LEFTWARDS ARROW WITH TAIL WITH DOUBLE VERTICAL STROKE
-02B3B^⬻^^\twoheadleftarrowtail^^mathrel^^LEFTWARDS TWO-HEADED ARROW WITH TAIL
-02B3C^⬼^^\nvtwoheadleftarrowtail^^mathrel^^LEFTWARDS TWO-HEADED ARROW WITH TAIL WITH VERTICAL STROKE
-02B3D^⬽^^\nVtwoheadleftarrowtail^^mathrel^^LEFTWARDS TWO-HEADED ARROW WITH TAIL WITH DOUBLE VERTICAL STROKE
-02B3E^⬾^^\leftarrowx^^mathrel^^LEFTWARDS ARROW THROUGH X
-02B3F^⬿^^\leftcurvedarrow^^mathrel^^WAVE ARROW POINTING DIRECTLY LEFT
-02B40^⭀^^\equalleftarrow^^mathrel^^EQUALS SIGN ABOVE LEFTWARDS ARROW
-02B41^⭁^^\bsimilarleftarrow^^mathrel^^REVERSE TILDE OPERATOR ABOVE LEFTWARDS ARROW
-02B42^⭂^^\leftarrowbackapprox^^mathrel^^LEFTWARDS ARROW ABOVE REVERSE ALMOST EQUAL TO
-02B43^⭃^^\rightarrowgtr^^mathrel^^rightwards arrow through less-than
-02B44^⭄^^\rightarrowsupset^^mathrel^^rightwards arrow through subset
-02B45^⭅^^\LLeftarrow^^mathrel^^LEFTWARDS QUADRUPLE ARROW
-02B46^⭆^^\RRightarrow^^mathrel^^RIGHTWARDS QUADRUPLE ARROW
-02B47^⭇^^\bsimilarrightarrow^^mathrel^^REVERSE TILDE OPERATOR ABOVE RIGHTWARDS ARROW
-02B48^⭈^^\rightarrowbackapprox^^mathrel^^RIGHTWARDS ARROW ABOVE REVERSE ALMOST EQUAL TO
-02B49^⭉^^\similarleftarrow^^mathrel^^TILDE OPERATOR ABOVE LEFTWARDS ARROW
-02B4A^⭊^^\leftarrowapprox^^mathrel^^LEFTWARDS ARROW ABOVE ALMOST EQUAL TO
-02B4B^⭋^^\leftarrowbsimilar^^mathrel^^LEFTWARDS ARROW ABOVE REVERSE TILDE OPERATOR
-02B4C^⭌^^\rightarrowbsimilar^^mathrel^^righttwards arrow above reverse tilde operator
-02B50^⭐^^\medwhitestar^^mathord^^WHITE MEDIUM STAR
-02B51^⭑^^\medblackstar^^mathord^^black medium star
-02B52^⭒^^\smwhitestar^^mathord^^WHITE SMALL STAR
-02B53^⭓^^\rightpentagonblack^^mathord^^BLACK RIGHT-POINTING PENTAGON
-02B54^⭔^^\rightpentagon^^mathord^^WHITE RIGHT-POINTING PENTAGON
+02B24^⬤^^\lgblkcircle^N^mathord^^BLACK LARGE CIRCLE
+02B25^⬥^^\mdblkdiamond^N^mathord^^BLACK MEDIUM DIAMOND
+02B26^⬦^^\mdwhtdiamond^N^mathord^^WHITE MEDIUM DIAMOND
+02B27^⬧^^\mdblklozenge^N^mathord^^# \blacklozenge (amssymb), BLACK MEDIUM LOZENGE
+02B28^⬨^^\mdwhtlozenge^N^mathord^^# \lozenge (amssymb), WHITE MEDIUM LOZENGE
+02B29^⬩^^\smblkdiamond^N^mathord^^BLACK SMALL DIAMOND
+02B2A^⬪^^\smblklozenge^N^mathord^^BLACK SMALL LOZENGE
+02B2B^⬫^^\smwhtlozenge^N^mathord^^WHITE SMALL LOZENGE
+02B2C^⬬^^\blkhorzoval^N^mathord^^BLACK HORIZONTAL ELLIPSE
+02B2D^⬭^^\whthorzoval^N^mathord^^WHITE HORIZONTAL ELLIPSE
+02B2E^⬮^^\blkvertoval^N^mathord^^BLACK VERTICAL ELLIPSE
+02B2F^⬯^^\whtvertoval^N^mathord^^WHITE VERTICAL ELLIPSE
+02B30^⬰^^\circleonleftarrow^R^mathrel^^LEFT ARROW WITH SMALL CIRCLE
+02B31^⬱^^\leftthreearrows^R^mathrel^^THREE LEFTWARDS ARROWS
+02B32^⬲^^\leftarrowonoplus^R^mathrel^^LEFT ARROW WITH CIRCLED PLUS
+02B33^⬳^^\longleftsquigarrow^R^mathrel^^LONG LEFTWARDS SQUIGGLE ARROW
+02B34^⬴^^\nvtwoheadleftarrow^R^mathrel^^LEFTWARDS TWO-HEADED ARROW WITH VERTICAL STROKE
+02B35^⬵^^\nVtwoheadleftarrow^R^mathrel^^LEFTWARDS TWO-HEADED ARROW WITH DOUBLE VERTICAL STROKE
+02B36^⬶^^\twoheadmapsfrom^R^mathrel^^LEFTWARDS TWO-HEADED ARROW FROM BAR
+02B37^⬷^^\twoheadleftdbkarrow^R^mathrel^^leftwards two-headed triple-dash arrow
+02B38^⬸^^\leftdotarrow^R^mathrel^^LEFTWARDS ARROW WITH DOTTED STEM
+02B39^⬹^^\nvleftarrowtail^R^mathrel^^LEFTWARDS ARROW WITH TAIL WITH VERTICAL STROKE
+02B3A^⬺^^\nVleftarrowtail^R^mathrel^^LEFTWARDS ARROW WITH TAIL WITH DOUBLE VERTICAL STROKE
+02B3B^⬻^^\twoheadleftarrowtail^R^mathrel^^LEFTWARDS TWO-HEADED ARROW WITH TAIL
+02B3C^⬼^^\nvtwoheadleftarrowtail^R^mathrel^^LEFTWARDS TWO-HEADED ARROW WITH TAIL WITH VERTICAL STROKE
+02B3D^⬽^^\nVtwoheadleftarrowtail^R^mathrel^^LEFTWARDS TWO-HEADED ARROW WITH TAIL WITH DOUBLE VERTICAL STROKE
+02B3E^⬾^^\leftarrowx^R^mathrel^^LEFTWARDS ARROW THROUGH X
+02B3F^⬿^^\leftcurvedarrow^R^mathrel^^WAVE ARROW POINTING DIRECTLY LEFT
+02B40^⭀^^\equalleftarrow^R^mathrel^^EQUALS SIGN ABOVE LEFTWARDS ARROW
+02B41^⭁^^\bsimilarleftarrow^R^mathrel^^REVERSE TILDE OPERATOR ABOVE LEFTWARDS ARROW
+02B42^⭂^^\leftarrowbackapprox^R^mathrel^^LEFTWARDS ARROW ABOVE REVERSE ALMOST EQUAL TO
+02B43^⭃^^\rightarrowgtr^R^mathrel^^rightwards arrow through less-than
+02B44^⭄^^\rightarrowsupset^R^mathrel^^rightwards arrow through subset
+02B45^⭅^^\LLeftarrow^R^mathrel^^LEFTWARDS QUADRUPLE ARROW
+02B46^⭆^^\RRightarrow^R^mathrel^^RIGHTWARDS QUADRUPLE ARROW
+02B47^⭇^^\bsimilarrightarrow^R^mathrel^^REVERSE TILDE OPERATOR ABOVE RIGHTWARDS ARROW
+02B48^⭈^^\rightarrowbackapprox^R^mathrel^^RIGHTWARDS ARROW ABOVE REVERSE ALMOST EQUAL TO
+02B49^⭉^^\similarleftarrow^R^mathrel^^TILDE OPERATOR ABOVE LEFTWARDS ARROW
+02B4A^⭊^^\leftarrowapprox^R^mathrel^^LEFTWARDS ARROW ABOVE ALMOST EQUAL TO
+02B4B^⭋^^\leftarrowbsimilar^R^mathrel^^LEFTWARDS ARROW ABOVE REVERSE TILDE OPERATOR
+02B4C^⭌^^\rightarrowbsimilar^R^mathrel^^righttwards arrow above reverse tilde operator
+02B50^⭐^^\medwhitestar^N^mathord^^WHITE MEDIUM STAR
+02B51^⭑^^\medblackstar^N^mathord^^black medium star
+02B52^⭒^^\smwhitestar^N^mathord^^WHITE SMALL STAR
+02B53^⭓^^\rightpentagonblack^N^mathord^^BLACK RIGHT-POINTING PENTAGON
+02B54^⭔^^\rightpentagon^N^mathord^^WHITE RIGHT-POINTING PENTAGON
 03008^〈^^^X^mathopen^^# \langle, LEFT ANGLE BRACKET (deprecated for math use)
 03009^〉^^^X^mathclose^^# \rangle, RIGHT ANGLE BRACKET (deprecated for math use)
 03012^〒^^\postalmark^^mathord^^POSTAL MARK

@@ -488,6 +488,7 @@ A_{m,n} =
 - http://artofproblemsolving.com/wiki/index.php?title=Main_Page
 - http://milde.users.sourceforge.net/LUCR/Math/
 - http://www.forkosh.com/mimetextutorial.html
+- https://math-linux.com/latex-26/faq/latex-faq/article/latex-derivatives-limits-sums-products-and-integrals
 
 ### MathML
 

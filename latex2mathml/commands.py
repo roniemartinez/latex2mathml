@@ -47,10 +47,16 @@ COMMANDS = {
     r"\overline": (1, "mover", {}),
     r"\bar": (1, "mover", {}),
     r"\underline": (1, "munder", {}),
+    r"\limits": (3, "munderover", {}),
 }  # type: Dict[str, Tuple[int, str, dict]]
+
+LIMITS = [r"\lim", r"\sup", r"\inf", r"\max", r"\min"]
 
 for space in SPACES:
     COMMANDS[space] = (0, "mspace", {"width": "0.167em"})
 
 for matrix in MATRICES:
     COMMANDS[matrix] = (1, "mtable", {})
+
+for limit in LIMITS:
+    COMMANDS[limit] = (1, "munder", {})
