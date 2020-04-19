@@ -5,7 +5,7 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import re
-from typing import Iterator, Optional, Union
+from typing import Any, Iterator, List, Optional, Union
 from xml.etree.cElementTree import Element, SubElement, tostring
 from xml.sax.saxutils import unescape
 
@@ -29,25 +29,28 @@ def _convert(tree: Element) -> str:
 
 
 def _convert_matrix_content(
-    param: list, parent: Element, alignment: Union[str, None] = None
+    param: list,
+    parent: Element,
+    alignment: Union[str, None] = None,
+    single_mtd: bool = True,
 ) -> None:
     if not len(param):
         return
-    has_list = False
-    for i in param:
-        if isinstance(i, list):
-            has_list = True
-            break
-    if has_list:
+    all_are_list = all(isinstance(i, list) for i in param)
+    if all_are_list:
         for row in param:
-            _convert_matrix_row(row, parent, alignment)
+            _convert_matrix_row(row, parent, alignment, single_mtd)
     else:
-        _convert_matrix_row(param, parent, alignment)
+        _convert_matrix_row(param, parent, alignment, single_mtd)
 
 
-def _convert_matrix_row(row: list, parent: Element, alignment: Optional[str]):
+def _convert_matrix_row(
+    row: list, parent: Element, alignment: Optional[str], single_mtd: bool
+):
     mtr = SubElement(parent, "mtr")
     iterable = iter(range(len(row)))  # type: Iterator[int]
+    if single_mtd:
+        mtd = SubElement(mtr, "mtd")
     for i in iterable:
         element = row[i]
         if alignment:
@@ -55,7 +58,7 @@ def _convert_matrix_row(row: list, parent: Element, alignment: Optional[str]):
                 alignment, ""
             )  # type: str
             mtd = SubElement(mtr, "mtd", columnalign=column_align)
-        else:
+        elif not single_mtd:
             mtd = SubElement(mtr, "mtd")
         if isinstance(element, list):
             _classify_subgroup(element, mtd)
@@ -136,9 +139,15 @@ def _classify_subgroup(
 
 
 def _convert_command(
-    element, elements, index: int, iterable: Iterator[int], parent: Element
+    element: str,
+    elements: List[Any],
+    index: int,
+    iterable: Iterator[int],
+    parent: Element,
 ):
     _get_prefix_element(element, parent)
+    if element == r"\substack":
+        parent = SubElement(parent, "mstyle", scriptlevel="1")
     params, tag, attributes = COMMANDS[element]
     new_parent = SubElement(parent, tag, attributes)
     alignment = ""
@@ -152,7 +161,10 @@ def _convert_command(
     for j in range(params):
         index += 1
         param = elements[index]
-        if element == r"\left" or element == r"\right":
+        if element == "_" and index == 1 and param == r"\sum":
+            new_parent.tag = "munder"
+            _classify(param, new_parent)
+        elif element == r"\left" or element == r"\right":
             if param == ".":
                 pass
             else:
@@ -161,7 +173,9 @@ def _convert_command(
         elif element == r"\array":
             _convert_array_content(param, new_parent, alignment)
         elif element in MATRICES:
-            _convert_matrix_content(param, new_parent, alignment)
+            _convert_matrix_content(
+                param, new_parent, alignment, element == r"\substack"
+            )
         else:
             if isinstance(param, list):
                 _parent = SubElement(new_parent, "mrow")

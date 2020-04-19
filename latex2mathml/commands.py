@@ -21,6 +21,7 @@ MATRICES = (
     r"\Vmatrix",
     r"\Vmatrix*",
     r"\array",
+    r"\substack",
 )
 
 SPACES = (r"\,", r"\:", r"\;", r"\\", r"\quad", r"\qquad")
