@@ -1226,6 +1226,16 @@ PARAMS = [
             [("msub", MultiDict([("mi", "log"), ("mn", "2")])), ("mrow", {"mi": "x"})]
         ),
     ),
+    (
+        "exponent without base works",
+        "^3",
+        MultiDict([
+            ("msup", MultiDict([
+                ("mi", ""),
+                ("mn", "3"),
+            ]))
+        ])
+    )
 ]
 
 

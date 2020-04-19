@@ -95,7 +95,7 @@ def _convert_array_content(param: list, parent: Element, alignment: str = "") ->
             align = None  # type: Union[str, None]
             try:
                 align = _alignment[index]
-            except IndexError:
+            except IndexError:  # pragma: no cover
                 pass
             if align:
                 column_align = {"r": "right", "l": "left", "c": "center"}.get(
@@ -212,10 +212,10 @@ def _classify(_element: str, parent: Element, is_math_mode: bool = False) -> Non
     if re.match(r"\d+(.\d+)?", _element):
         mn = SubElement(parent, "mn")
         mn.text = _element
-    elif _element in "<>&":
+    elif len(_element) and _element in "<>&":
         mo = SubElement(parent, "mo")
         mo.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;"}[_element]
-    elif _element in "+-*/()=":
+    elif len(_element) and _element in "+-*/()=":
         mo = SubElement(parent, "mo")
         mo.text = _element if symbol is None else "&#x{};".format(symbol)
     elif (

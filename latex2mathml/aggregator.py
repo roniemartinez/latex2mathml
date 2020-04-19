@@ -71,8 +71,6 @@ def group(
                 g.append(token)
                 g.append(next(tokens))
                 break
-            elif isinstance(token, str) and token in SUB_SUP:
-                g = process_sub_sup(g, token, tokens)
             else:
                 g.append(token)
         except StopIteration:
@@ -205,23 +203,26 @@ def _aggregate(tokens: Iterator) -> list:
             if isinstance(token, list):
                 aggregated.append(token)
             elif token == OPENING_BRACKET:
+                previous = None
+                if len(aggregated):
+                    previous = aggregated[-1]
                 try:
                     g = group(tokens, OPENING_BRACKET, CLOSING_BRACKET)
-                    if len(aggregated):
-                        previous = aggregated[-1]
-                        if previous == SQRT:
-                            root = next(tokens)
-                            if root == OPENING_BRACES:
-                                try:
-                                    root = group(tokens)
-                                except EmptyGroupError:
-                                    root = ""
-                            aggregated[-1] = ROOT
-                            aggregated.append(root)
-                        else:
-                            pass  # FIXME: possible issues
+                    if previous == SQRT:
+                        root = next(tokens)
+                        if root == OPENING_BRACES:
+                            try:
+                                root = group(tokens)
+                            except EmptyGroupError:
+                                root = ""
+                        aggregated[-1] = ROOT
+                        aggregated.append(root)
+                    else:
+                        pass  # FIXME: possible issues
                     aggregated.append(g)
                 except EmptyGroupError:
+                    if previous == SQRT:
+                        continue
                     aggregated += [OPENING_BRACKET, CLOSING_BRACKET]
             elif token in SUB_SUP:
                 aggregated = process_sub_sup(aggregated, token, tokens)
@@ -284,5 +285,6 @@ def process_sub_sup(aggregated: list, token: str, tokens: Iterator) -> list:
         except StopIteration:
             raise MissingSuperScriptOrSubscript
     except IndexError:
-        aggregated.append(token)
+        next_token = next_item_or_group(tokens)
+        aggregated += [token, "", next_token]
     return aggregated
