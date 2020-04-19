@@ -224,6 +224,17 @@ def _aggregate(tokens: Iterator) -> list:
                     if previous == SQRT:
                         continue
                     aggregated += [OPENING_BRACKET, CLOSING_BRACKET]
+            elif token in (r"\lim", r"\inf", r"\sup", r"\max", r"\min"):
+                next(tokens)
+                a = next_item_or_group(tokens)
+                aggregated += [token, a]
+            elif token == r"\limits":
+                previous = aggregated.pop()
+                next(tokens)
+                a = next_item_or_group(tokens)
+                next(tokens)
+                b = next_item_or_group(tokens)
+                aggregated += [token, previous, a, b]
             elif token in SUB_SUP:
                 aggregated = process_sub_sup(aggregated, token, tokens)
             elif token.startswith(BEGIN) or token in MATRICES:

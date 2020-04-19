@@ -314,6 +314,35 @@ PARAMS = [
         ],
     ),
     ("exponent without base works", "^3", ["^", "", "3"]),
+    (
+        "limit at plus infinity",
+        r"\lim_{x \to +\infty} f(x)",
+        [r"\lim", ["x", r"\to", "+", r"\infty"], "f", "(", "x", ")"],
+    ),
+    ("inf", r"\inf_{x > s}f(x)", [r"\inf", ["x", ">", "s"], "f", "(", "x", ")"],),
+    (
+        "sup",
+        r"\sup_{x \in \mathbb{R}}f(x)",
+        [r"\sup", ["x", r"\in", "&#x0211D;"], "f", "(", "x", ")"],
+    ),
+    (
+        "max",
+        r"\max_{x \in \[a,b\]}f(x)",
+        [r"\max", ["x", r"\in", r"\[", "a", ",", "b", r"\]"], "f", "(", "x", ")"],
+    ),
+    (
+        "min",
+        r"\min_{x \in \[\alpha,\beta\]}f(x)",
+        [
+            r"\min",
+            ["x", r"\in", r"\[", r"\alpha", ",", r"\beta", r"\]"],
+            "f",
+            "(",
+            "x",
+            ")",
+        ],
+    ),
+    ("issue #76", r"\int\limits_{0}^{\pi}", [r"\limits", r"\int", ["0"], [r"\pi"]]),
 ]
 
 PARAMS_WITH_EXCEPTION = [

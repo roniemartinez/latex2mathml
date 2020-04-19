@@ -146,6 +146,9 @@ def _convert_command(
         index += 1
         alignment = elements[index]
         next(iterable)
+    if element in (r"\lim", r"\inf", r"\sup", r"\max", r"\min"):
+        limit = SubElement(new_parent, "mo")
+        limit.text = element[1:]
     for j in range(params):
         index += 1
         param = elements[index]
@@ -218,6 +221,8 @@ def _classify(_element: str, parent: Element, is_math_mode: bool = False) -> Non
     elif len(_element) and _element in "+-*/()=":
         mo = SubElement(parent, "mo")
         mo.text = _element if symbol is None else "&#x{};".format(symbol)
+        if _element in "()":
+            mo.attrib["stretchy"] = "false"
     elif (
         symbol
         and (
@@ -233,7 +238,7 @@ def _classify(_element: str, parent: Element, is_math_mode: bool = False) -> Non
         if symbol:
             tag.text = "&#x{};".format(symbol)
         elif _element in (r"\log", r"\ln"):
-            tag.text = "log"
+            tag.text = _element[1:]
         else:
             tag.text = _element
     else:

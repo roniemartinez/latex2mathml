@@ -25,7 +25,7 @@ def tokenize(data) -> Iterator[str]:
                 buffer = char
                 try:
                     buffer += next(iterable)
-                    if buffer == r"\\":
+                    if buffer in (r"\\", r"\[", r"\]"):
                         yield buffer
                         buffer = ""
                 except StopIteration:

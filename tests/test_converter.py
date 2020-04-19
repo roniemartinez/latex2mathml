@@ -795,10 +795,22 @@ PARAMS = [
                                                 "mrow",
                                                 MultiDict(
                                                     [
-                                                        ("mo", {"$": "&#x00028;"}),
+                                                        (
+                                                            "mo",
+                                                            {
+                                                                "$": "&#x00028;",
+                                                                "@stretchy": "false",
+                                                            },
+                                                        ),
                                                         ("mo", {"$": "&#x02212;"}),
                                                         ("mn", {"$": "25"}),
-                                                        ("mo", {"$": "&#x00029;"}),
+                                                        (
+                                                            "mo",
+                                                            {
+                                                                "$": "&#x00029;",
+                                                                "@stretchy": "false",
+                                                            },
+                                                        ),
                                                     ]
                                                 ),
                                             ),
@@ -1230,6 +1242,79 @@ PARAMS = [
         "exponent without base works",
         "^3",
         MultiDict([("msup", MultiDict([("mi", ""), ("mn", "3")]))]),
+    ),
+    (
+        "limit at plus infinity",
+        r"\lim_{x \to +\infty} f(x)",
+        MultiDict(
+            [
+                (
+                    "munder",
+                    MultiDict(
+                        [
+                            ("mo", "lim"),
+                            (
+                                "mrow",
+                                MultiDict(
+                                    [
+                                        ("mi", "x"),
+                                        ("mo", "&#x02192;"),
+                                        ("mo", "&#x0002B;"),
+                                        ("mo", "&#x0221E;"),
+                                    ]
+                                ),
+                            ),
+                        ]
+                    ),
+                ),
+                ("mi", "f"),
+                ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
+                ("mi", "x"),
+                ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
+            ]
+        ),
+    ),
+    (
+        "inf",
+        r"\inf_{x > s}f(x)",
+        MultiDict(
+            [
+                (
+                    "munder",
+                    MultiDict(
+                        [
+                            ("mo", "inf"),
+                            (
+                                "mrow",
+                                MultiDict([("mi", "x"), ("mo", "&gt;"), ("mi", "s")]),
+                            ),
+                        ]
+                    ),
+                ),
+                ("mi", "f"),
+                ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
+                ("mi", "x"),
+                ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
+            ]
+        ),
+    ),
+    (
+        "issue #76",
+        r"\int\limits_{0}^{\pi}",
+        MultiDict(
+            [
+                (
+                    "munderover",
+                    MultiDict(
+                        [
+                            ("mo", "&#x0222B;"),
+                            ("mrow", MultiDict([("mn", "0")])),
+                            ("mrow", MultiDict([("mi", "&#x003C0;")])),
+                        ]
+                    ),
+                ),
+            ]
+        ),
     ),
 ]
 
