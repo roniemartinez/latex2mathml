@@ -367,7 +367,7 @@ PARAMS_WITH_EXCEPTION = [
     "name, latex, expected", ids=[x[0] for x in PARAMS], argvalues=PARAMS,
 )
 def test_aggregator(name: str, latex: str, expected: list):
-    assert aggregate(latex) == expected, name
+    assert aggregate(latex) == expected
 
 
 @pytest.mark.parametrize(
