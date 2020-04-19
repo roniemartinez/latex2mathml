@@ -1316,6 +1316,106 @@ PARAMS = [
             ]
         ),
     ),
+    (
+        "issue #75 - 1 row",
+        r"\substack{ \xi{2}=g{\left(x \right)}}",
+        {
+            "mstyle": {
+                "@scriptlevel": "1",
+                "mtable": {
+                    "mtr": {
+                        "mtd": MultiDict(
+                            [
+                                ("mi", "&#x003BE;"),
+                                ("mn", "2"),
+                                ("mo", "&#x0003D;"),
+                                ("mi", "g"),
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            (
+                                                "mo",
+                                                MultiDict(
+                                                    [
+                                                        ("@stretchy", "true"),
+                                                        ("@fence", "true"),
+                                                        ("@form", "prefix"),
+                                                        ("$", "&#x00028;"),
+                                                    ]
+                                                ),
+                                            ),
+                                            ("mrow", {"mi": "x"}),
+                                            (
+                                                "mo",
+                                                MultiDict(
+                                                    [
+                                                        ("@stretchy", "true"),
+                                                        ("@fence", "true"),
+                                                        ("@form", "postfix"),
+                                                        ("$", "&#x00029;"),
+                                                    ]
+                                                ),
+                                            ),
+                                        ]
+                                    ),
+                                ),
+                            ]
+                        )
+                    }
+                },
+            }
+        },
+    ),
+    (
+        "issue #75 - 2 rows",
+        r"\sum_{\substack{1\le i\le n\\ i\ne j}}",
+        {
+            "munder": MultiDict(
+                [
+                    ("mo", "&#x02211;"),
+                    (
+                        "mrow",
+                        {
+                            "mstyle": {
+                                "@scriptlevel": "1",
+                                "mtable": MultiDict(
+                                    [
+                                        (
+                                            "mtr",
+                                            {
+                                                "mtd": MultiDict(
+                                                    [
+                                                        ("mn", "1"),
+                                                        ("mo", "&#x02264;"),
+                                                        ("mi", "i"),
+                                                        ("mo", "&#x02264;"),
+                                                        ("mi", "n"),
+                                                    ]
+                                                )
+                                            },
+                                        ),
+                                        (
+                                            "mtr",
+                                            {
+                                                "mtd": MultiDict(
+                                                    [
+                                                        ("mi", "i"),
+                                                        ("mo", "&#x02260;"),
+                                                        ("mi", "j"),
+                                                    ]
+                                                )
+                                            },
+                                        ),
+                                    ]
+                                ),
+                            }
+                        },
+                    ),
+                ]
+            )
+        },
+    ),
 ]
 
 

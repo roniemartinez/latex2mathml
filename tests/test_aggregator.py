@@ -343,6 +343,15 @@ PARAMS = [
         ],
     ),
     ("issue #76", r"\int\limits_{0}^{\pi}", [r"\limits", r"\int", ["0"], [r"\pi"]]),
+    (
+        "issue #75",
+        r"\sum_{\substack{1\le i\le n\\ i\ne j}}",
+        [
+            "_",
+            r"\sum",
+            [r"\substack", [["1", r"\le", "i", r"\le", "n"], ["i", r"\ne", "j"]]],
+        ],
+    ),
 ]
 
 PARAMS_WITH_EXCEPTION = [
