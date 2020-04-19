@@ -284,15 +284,11 @@ PARAMS = [
         ],
     ),
     (r"logarithm with base", r"\log_2{x}", ["_", r"\log", "2", ["x"]]),
-    (
-        "issue #79 - empty root",
-        r"\sqrt[]{3}",
-        [r"\sqrt", ["3"]]
-    ),
+    ("issue #79 - empty root", r"\sqrt[]{3}", [r"\sqrt", ["3"]]),
     (
         "issue #79 - exponent after fraction",
         r"\frac{3}{\frac{1}{2}{x}^{2}}",
-        [r"\frac", ["3"], [r"\frac", ["1"], ["2"], "^", ["x"], ["2"]]]
+        [r"\frac", ["3"], [r"\frac", ["1"], ["2"], "^", ["x"], ["2"]]],
     ),
     (
         "issue #79",
@@ -301,19 +297,23 @@ PARAMS = [
             r"\frac",
             ["3"],
             [
-                r"\frac", ["1"], ["2"], "^", ["x"], ["2"],
+                r"\frac",
+                ["1"],
+                ["2"],
+                "^",
+                ["x"],
+                ["2"],
                 "-",
-                r"\frac", ["3", r"\sqrt", ["3"]], ["2"], "x",
+                r"\frac",
+                ["3", r"\sqrt", ["3"]],
+                ["2"],
+                "x",
                 "+",
                 "3",
             ],
         ],
     ),
-    (
-        "exponent without base works",
-        "^3",
-        ["^", "", "3"]
-    )
+    ("exponent without base works", "^3", ["^", "", "3"]),
 ]
 
 PARAMS_WITH_EXCEPTION = [

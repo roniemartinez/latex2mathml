@@ -1229,13 +1229,8 @@ PARAMS = [
     (
         "exponent without base works",
         "^3",
-        MultiDict([
-            ("msup", MultiDict([
-                ("mi", ""),
-                ("mn", "3"),
-            ]))
-        ])
-    )
+        MultiDict([("msup", MultiDict([("mi", ""), ("mn", "3")]))]),
+    ),
 ]
 
 
