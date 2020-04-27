@@ -4,6 +4,7 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
+import sys
 
 import pytest
 from multidict import MultiDict
@@ -1423,7 +1424,25 @@ PARAMS = [
     "name, latex, json", ids=[x[0] for x in PARAMS], argvalues=PARAMS,
 )
 def test_converter(name: str, latex: str, json: MultiDict):
-    parent = {"math": {"@xmlns": "http://www.w3.org/1998/Math/MathML", "mrow": json}}
+    parent = {
+        "math": {
+            "@xmlns": "http://www.w3.org/1998/Math/MathML",
+            "@display": "inline",
+            "mrow": json,
+        }
+    }
     bf = BadgerFish(dict_type=MultiDict)
     math = bf.etree(parent)
-    assert convert(latex) == _convert(math[0]), name
+    assert convert(latex) == _convert(math[0])
+
+
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="xml.etree sorts attributes in 3.7 and below")
+def test_attributes():
+    assert (
+        convert("1")
+        == '<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math>'
+    )
+    assert (
+        convert("1", display="block")
+        == '<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mn>1</mn></mrow></math>'
+    )
