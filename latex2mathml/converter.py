@@ -16,9 +16,12 @@ from latex2mathml.commands import COMMANDS, MATRICES
 from latex2mathml.symbols_parser import convert_symbol
 
 
-def convert(latex: str, xmlns: str = "http://www.w3.org/1998/Math/MathML") -> str:
-    math = Element("math")
-    math.attrib["xmlns"] = xmlns
+def convert(
+    latex: str,
+    xmlns: str = "http://www.w3.org/1998/Math/MathML",
+    display: str = "inline",
+) -> str:
+    math = Element("math", xmlns=xmlns, display=display)
     row = SubElement(math, "mrow")
     _classify_subgroup(aggregate(latex), row)
     return _convert(math)

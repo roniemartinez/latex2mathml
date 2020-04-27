@@ -1423,7 +1423,25 @@ PARAMS = [
     "name, latex, json", ids=[x[0] for x in PARAMS], argvalues=PARAMS,
 )
 def test_converter(name: str, latex: str, json: MultiDict):
-    parent = {"math": {"@xmlns": "http://www.w3.org/1998/Math/MathML", "mrow": json}}
+    parent = {
+        "math": {
+            "@xmlns": "http://www.w3.org/1998/Math/MathML",
+            "@display": "inline",
+            "mrow": json,
+        }
+    }
     bf = BadgerFish(dict_type=MultiDict)
     math = bf.etree(parent)
     assert convert(latex) == _convert(math[0])
+
+
+def test_attributes():
+    # FIXME: xml.etree sorts attributes
+    assert (
+        convert("1")
+        == '<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn></mrow></math>'
+    )
+    assert (
+        convert("1", display="block")
+        == '<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn></mrow></math>'
+    )
