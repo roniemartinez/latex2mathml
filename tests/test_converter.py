@@ -4,6 +4,7 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
+import sys
 
 import pytest
 from multidict import MultiDict
@@ -1435,13 +1436,13 @@ def test_converter(name: str, latex: str, json: MultiDict):
     assert convert(latex) == _convert(math[0])
 
 
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="xml.etree sorts attributes in 3.7 and below")
 def test_attributes():
-    # FIXME: xml.etree sorts attributes
     assert (
         convert("1")
-        == '<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn></mrow></math>'
+        == '<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math>'
     )
     assert (
         convert("1", display="block")
-        == '<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn></mrow></math>'
+        == '<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mn>1</mn></mrow></math>'
     )
