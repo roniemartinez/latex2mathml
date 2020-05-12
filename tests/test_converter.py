@@ -1417,6 +1417,31 @@ PARAMS = [
             )
         },
     ),
+    (
+        "issue #91",
+        r"\tan x + \sec x + \cos x + \sin x + \cot x + \csc x",
+        MultiDict(
+            [
+                ("mi", "tan"),
+                ("mi", "x"),
+                ("mo", "&#x0002B;"),
+                ("mi", "sec"),
+                ("mi", "x"),
+                ("mo", "&#x0002B;"),
+                ("mi", "cos"),
+                ("mi", "x"),
+                ("mo", "&#x0002B;"),
+                ("mi", "sin"),
+                ("mi", "x"),
+                ("mo", "&#x0002B;"),
+                ("mi", "cot"),
+                ("mi", "x"),
+                ("mo", "&#x0002B;"),
+                ("mi", "csc"),
+                ("mi", "x"),
+            ]
+        ),
+    ),
 ]
 
 
@@ -1436,7 +1461,9 @@ def test_converter(name: str, latex: str, json: MultiDict):
     assert convert(latex) == _convert(math[0])
 
 
-@pytest.mark.skipif(sys.version_info < (3, 8), reason="xml.etree sorts attributes in 3.7 and below")
+@pytest.mark.skipif(
+    sys.version_info < (3, 8), reason="xml.etree sorts attributes in 3.7 and below"
+)
 def test_attributes():
     assert (
         convert("1")
