@@ -254,7 +254,16 @@ def _classify(_element: str, parent: Element, is_math_mode: bool = False) -> Non
         tag = SubElement(parent, "mo" if is_math_mode else "mi")
         if symbol:
             tag.text = "&#x{};".format(symbol)
-        elif _element in (r"\log", r"\ln"):
+        elif _element in (
+            r"\log",
+            r"\ln",
+            r"\tan",
+            r"\sec",
+            r"\cos",
+            r"\sin",
+            r"\cot",
+            r"\csc",
+        ):
             tag.text = _element[1:]
         else:
             tag.text = _element
