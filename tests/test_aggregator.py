@@ -352,6 +352,7 @@ PARAMS = [
             [r"\substack", [["1", r"\le", "i", r"\le", "n"], ["i", r"\ne", "j"]]],
         ],
     ),
+    ("issue #94", r"\mathrm{AA}", [r"\mathrm", ["A", "A"]]),
 ]
 
 PARAMS_WITH_EXCEPTION = [

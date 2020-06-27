@@ -90,6 +90,12 @@ def tokenize(data) -> Iterator[str]:
                             yield "&#x{};".format(symbol)
                             buffer = ""
                             continue
+                        else:
+                            index = buffer.index("{")
+                            yield buffer[:index]
+                            yield list(tokenize(buffer[index + 1 :]))
+                            buffer = ""
+                            continue
                     buffer += char
                 else:
                     if len(buffer):
