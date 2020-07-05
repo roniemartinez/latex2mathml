@@ -393,3 +393,8 @@ def test_missing_right(name: str, latex: str, exception: Exception):
 )
 def test_find_opening_parenthesis(tokens: List[Any], index: int) -> None:
     assert find_opening_parenthesis(tokens) == index
+
+
+def test_find_opening_parenthesis_raises_error() -> None:
+    with pytest.raises(ExtraLeftOrMissingRight):
+        find_opening_parenthesis([])
