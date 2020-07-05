@@ -5,10 +5,11 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import string
+from typing import Any, List
 
 import pytest
 
-from latex2mathml.aggregator import aggregate
+from latex2mathml.aggregator import aggregate, find_opening_parenthesis
 from latex2mathml.exceptions import (
     DenominatorNotFoundError,
     ExtraLeftOrMissingRight,
@@ -353,6 +354,11 @@ PARAMS = [
         ],
     ),
     ("issue #94", r"\mathrm{AA}", [r"\mathrm", ["A", "A"]]),
+    (
+        "issue #96",
+        r"(1+(x-y)^{2})",
+        ["(", "1", "+", "^", ["(", "x", "-", "y", ")"], ["2"], ")"],
+    ),
 ]
 
 PARAMS_WITH_EXCEPTION = [
@@ -379,3 +385,16 @@ def test_aggregator(name: str, latex: str, expected: list):
 def test_missing_right(name: str, latex: str, exception: Exception):
     with pytest.raises(exception):
         aggregate(latex)
+
+
+@pytest.mark.parametrize(
+    "tokens, index",
+    [(["("], 0), (["(", "("], 1), (["(", "(", "("], 2), (["(", "(", ")"], 0)],
+)
+def test_find_opening_parenthesis(tokens: List[Any], index: int) -> None:
+    assert find_opening_parenthesis(tokens) == index
+
+
+def test_find_opening_parenthesis_raises_error() -> None:
+    with pytest.raises(ExtraLeftOrMissingRight):
+        find_opening_parenthesis([])

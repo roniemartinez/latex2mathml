@@ -265,15 +265,27 @@ def aggregate(data: str):
     return _aggregate(tokens)
 
 
+def find_opening_parenthesis(tokens: List[Any]) -> int:
+    closing = 0
+    for index, token in reversed(list(enumerate(tokens))):
+        if token == CLOSING_PARENTHESIS:
+            closing += 1
+        elif token == OPENING_PARENTHESIS:
+            if closing == 0:
+                return index
+            else:
+                closing -= 1
+    raise ExtraLeftOrMissingRight
+
+
 def process_sub_sup(aggregated: list, token: str, tokens: Iterator) -> list:
     try:
         previous = aggregated.pop()
         if isinstance(previous, str) and previous in OPERATORS:
             if previous == CLOSING_PARENTHESIS and OPENING_PARENTHESIS in aggregated:
+                index = find_opening_parenthesis(aggregated)
                 aggregated = (
-                    aggregated[: aggregated.index(OPENING_PARENTHESIS)]
-                    + [token]
-                    + [aggregated[aggregated.index(OPENING_PARENTHESIS) :] + [previous]]
+                    aggregated[:index] + [token] + [aggregated[index:] + [previous]]
                 )
             else:
                 aggregated += [previous, token]

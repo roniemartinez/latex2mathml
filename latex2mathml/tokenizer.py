@@ -4,12 +4,12 @@
 # __credits__ = ["Ronie Martinez"]
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
-from typing import Iterator
+from typing import Iterator, Union
 
 from latex2mathml.symbols_parser import convert_symbol
 
 
-def tokenize(data) -> Iterator[str]:
+def tokenize(data) -> Iterator[Union[str, list]]:
     iterable = iter(data)
     buffer = ""
     while True:
