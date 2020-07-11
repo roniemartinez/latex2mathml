@@ -152,6 +152,10 @@ def _convert_command(
     if element == r"\substack":
         parent = SubElement(parent, "mstyle", scriptlevel="1")
     params, tag, attributes = COMMANDS[element]
+    if len(elements) - 1 < params:
+        mo = SubElement(parent, "mo")
+        mo.text = element[1:]
+        return
     new_parent = SubElement(parent, tag, attributes)
     alignment = ""
     if element in MATRICES and (element.endswith("*") or element == r"\array"):
