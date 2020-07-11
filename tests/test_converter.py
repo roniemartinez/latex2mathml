@@ -1442,6 +1442,11 @@ PARAMS = [
             ]
         ),
     ),
+    (
+        "issue #98",
+        r"p_{\max}",
+        {"msub": MultiDict([("mi", "p"), ("mrow", {"mo": "max"})])},
+    ),
 ]
 
 

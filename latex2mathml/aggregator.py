@@ -198,6 +198,7 @@ def next_item_or_group(tokens: Iterator) -> Union[str, list]:
 def _aggregate(tokens: Iterator) -> list:
     aggregated = []  # type: List[Any]
     while True:
+        token = None
         try:
             token = next_item_or_group(tokens)
             if isinstance(token, list):
@@ -256,6 +257,8 @@ def _aggregate(tokens: Iterator) -> list:
             aggregated += [OPENING_BRACES, CLOSING_BRACES]
             continue
         except StopIteration:
+            if token is not None:
+                aggregated.append(token)
             break
     return aggregated
 
