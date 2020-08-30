@@ -3,7 +3,7 @@ install:
 	poetry install
 
 optional:
-	poetry run pip install mypy
+	poetry run pip install black mypy
 
 style:
 	poetry run autoflake --remove-all-unused-imports --in-place -r --exclude __init__.py .
