@@ -24,7 +24,7 @@ if os.path.exists(readme_path):
 setup(
     long_description=readme,
     name='latex2mathml',
-    version='2.16.0-alpha.0',
+    version='2.16.0',
     description='Pure Python library for LaTeX to MathML conversion',
     python_requires='<4,>=3.6',
     project_urls={"repository": "https://github.com/roniemartinez/latex2mathml"},
@@ -38,5 +38,5 @@ setup(
     package_dir={"": "."},
     package_data={"latex2mathml": ["*.txt"]},
     install_requires=[],
-    extras_require={"dev": ["autoflake==1.*,>=1.3.1", "bandit==1.*,>=1.6.2", "codecov==2.*,>=2.0.16", "dephell==0.*,>=0.8.3", "flake8==3.*,>=3.7.9", "isort==5.*,>=5.4.2", "multidict==4.*,>=4.7.5", "pytest==6.*,>=6.0.1", "pytest-cov==2.*,>=2.8.1", "safety==1.*,>=1.8.7", "xmljson==0.*,>=0.2.0"]},
+    extras_require={"dev": ["autoflake==1.*,>=1.3.1", "bandit==1.*,>=1.6.2", "codecov==2.*,>=2.0.16", "dephell==0.*,>=0.8.3", "flake8==3.*,>=3.7.9", "isort==5.*,>=5.4.2", "multidict==4.*,>=4.7.5", "pytest==6.*,>=6.0.1", "pytest-cov==2.*,>=2.8.1", "safety==1.*,>=1.8.7", "typing-extensions==3.*,>=3.7.4", "xmljson==0.*,>=0.2.0"]},
 )
