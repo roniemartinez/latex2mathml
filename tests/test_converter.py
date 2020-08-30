@@ -1465,6 +1465,15 @@ PARAMS = [
         r"p_{\max}",
         {"msub": MultiDict([("mi", "p"), ("mrow", {"mo": "max"})])},
     ),
+    (
+        "issue #100",
+        r"\overrightarrow {a}",
+        {
+            "mover": MultiDict(
+                [("mrow", {"mi": "a"}), ("mo", {"@stretchy": "true", "$": "&#x02192;"})]
+            )
+        },
+    ),
 ]
 
 
