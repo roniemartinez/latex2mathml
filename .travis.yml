@@ -6,7 +6,6 @@ cache:
       - $HOME/.cache/pypoetry
 
 python:
-  - 3.5
   - 3.6
   - 3.7
   - 3.8
@@ -14,14 +13,6 @@ python:
 
 matrix:
   include:
-    - name: "Python: 3.5"
-      os: osx
-      language: shell
-      python: 3.5
-      cache:
-        - directories:
-          - $HOME/Library/Caches/pip
-          - $HOME/Library/Caches/pypoetry
     - name: "Python: 3.6"
       os: osx
       language: shell
@@ -54,18 +45,6 @@ matrix:
         - directories:
           - $HOME/Library/Caches/pip
           - $HOME/Library/Caches/pypoetry
-    - name: "Python: 3.5"
-      os: windows
-      language: shell
-      before_install:
-        - choco install python --version=3.5.4
-        - choco install make
-        - python -m pip install -U pip setuptools
-      env: PATH=/c/Python35:/c/Python35/Scripts:$PATH
-      cache:
-        directories:
-          - $LOCALAPPDATA/pip/Cache
-          - $LOCALAPPDATA/pypoetry/cache
     - name: "Python: 3.6"
       os: windows
       language: shell
@@ -82,7 +61,7 @@ matrix:
       os: windows
       language: shell
       before_install:
-        - choco install python --version=3.7.7
+        - choco install python --version=3.7.9
         - choco install make
         - python -m pip install -U pip setuptools
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
@@ -94,7 +73,7 @@ matrix:
       os: windows
       language: shell
       before_install:
-        - choco install python --version=3.8.2
+        - choco install python --version=3.8.5
         - choco install make
         - python -m pip install -U pip setuptools
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH

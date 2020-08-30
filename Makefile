@@ -3,11 +3,11 @@ install:
 	poetry install
 
 optional:
-	poetry run pip install black mypy dephell
+	poetry run pip install black mypy
 
 style:
 	poetry run autoflake --remove-all-unused-imports --in-place -r --exclude __init__.py .
-	poetry run isort -rc --atomic .
+	poetry run isort --atomic .
 	poetry run black --exclude setup.py .
 	poetry run flake8 .
 
@@ -22,4 +22,4 @@ test:
 	poetry run pytest --cov=latex2mathml --cov-report=xml  --cov-report=html -vv
 
 setup:
-	poetry run dephell deps convert --from=pyproject.toml --to=setup.py
+	poetry run dephell deps convert

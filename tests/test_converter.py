@@ -353,8 +353,14 @@ PARAMS = [
         {
             "mtable": MultiDict(
                 [
-                    ("mtr", MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),),
-                    ("mtr", MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),),
+                    (
+                        "mtr",
+                        MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),
+                    ),
+                    (
+                        "mtr",
+                        MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),
+                    ),
                 ]
             ),
         },
@@ -365,8 +371,14 @@ PARAMS = [
         {
             "mtable": MultiDict(
                 [
-                    ("mtr", MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),),
-                    ("mtr", MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),),
+                    (
+                        "mtr",
+                        MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),
+                    ),
+                    (
+                        "mtr",
+                        MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),
+                    ),
                 ]
             ),
         },
@@ -414,7 +426,10 @@ PARAMS = [
                             ]
                         ),
                     ),
-                    ("mtr", MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),),
+                    (
+                        "mtr",
+                        MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),
+                    ),
                 ]
             ),
         },
@@ -874,7 +889,10 @@ PARAMS = [
                                                         MultiDict(
                                                             [
                                                                 ("mi", "x"),
-                                                                ("mrow", {"mn": "3"},),
+                                                                (
+                                                                    "mrow",
+                                                                    {"mn": "3"},
+                                                                ),
                                                             ]
                                                         ),
                                                     ),
@@ -1451,7 +1469,9 @@ PARAMS = [
 
 
 @pytest.mark.parametrize(
-    "name, latex, json", ids=[x[0] for x in PARAMS], argvalues=PARAMS,
+    "name, latex, json",
+    ids=[x[0] for x in PARAMS],
+    argvalues=PARAMS,
 )
 def test_converter(name: str, latex: str, json: MultiDict):
     parent = {

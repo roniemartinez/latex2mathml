@@ -6,8 +6,8 @@
 # __email__ = "ronmarti18@gmail.com"
 import re
 from typing import Any, Iterator, List, Optional, Union
-from xml.etree.cElementTree import Element, SubElement, tostring
-from xml.sax.saxutils import unescape
+from xml.etree.cElementTree import Element, SubElement, tostring  # nosec
+from xml.sax.saxutils import unescape  # nosec
 
 import pkg_resources
 
@@ -51,15 +51,15 @@ def _convert_matrix_row(
     row: list, parent: Element, alignment: Optional[str], single_mtd: bool
 ):
     mtr = SubElement(parent, "mtr")
-    iterable = iter(range(len(row)))  # type: Iterator[int]
+    iterable: Iterator[int] = iter(range(len(row)))
     if single_mtd:
         mtd = SubElement(mtr, "mtd")
     for i in iterable:
         element = row[i]
         if alignment:
-            column_align = {"r": "right", "l": "left", "c": "center"}.get(
+            column_align: str = {"r": "right", "l": "left", "c": "center"}.get(
                 alignment, ""
-            )  # type: str
+            )
             mtd = SubElement(mtr, "mtd", columnalign=column_align)
         elif not single_mtd:
             mtd = SubElement(mtr, "mtd")
@@ -89,7 +89,7 @@ def _convert_array_content(param: list, parent: Element, alignment: str = "") ->
     for row in param:
         row_count += 1
         mtr = SubElement(parent, "mtr")
-        iterable = iter(range(len(row)))  # type: Iterator[int]
+        iterable: Iterator[int] = iter(range(len(row)))
         index = 0
         has_row_line = False
         for i in iterable:
@@ -98,15 +98,15 @@ def _convert_array_content(param: list, parent: Element, alignment: str = "") ->
                 row_lines.append("solid")
                 has_row_line = True
                 continue
-            align = None  # type: Union[str, None]
+            align: Union[str, None] = None
             try:
                 align = _alignment[index]
             except IndexError:  # pragma: no cover
                 pass
             if align:
-                column_align = {"r": "right", "l": "left", "c": "center"}.get(
+                column_align: str = {"r": "right", "l": "left", "c": "center"}.get(
                     align, ""
-                )  # type: str
+                )
                 mtd = SubElement(mtr, "mtd", columnalign=column_align)
             # else:
             #     mtd = SubElement(mtr, "mtd")
@@ -293,10 +293,20 @@ def main() -> None:  # pragma: no cover
     required = parser.add_argument_group("required arguments")
     group = required.add_mutually_exclusive_group(required=False)
     group.add_argument(
-        "-t", "--text", dest="text", type=str, required=False, help="Text",
+        "-t",
+        "--text",
+        dest="text",
+        type=str,
+        required=False,
+        help="Text",
     )
     group.add_argument(
-        "-f", "--file", dest="file", type=str, required=False, help="File",
+        "-f",
+        "--file",
+        dest="file",
+        type=str,
+        required=False,
+        help="File",
     )
     arguments = parser.parse_args()
 

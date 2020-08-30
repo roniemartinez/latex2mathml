@@ -438,7 +438,9 @@ PARAMS = [
 
 
 @pytest.mark.parametrize(
-    "name, latex, expected", ids=[x[0] for x in PARAMS], argvalues=PARAMS,
+    "name, latex, expected",
+    ids=[x[0] for x in PARAMS],
+    argvalues=PARAMS,
 )
 def test_tokenize(name: str, latex: str, expected: list):
     assert list(tokenize(latex)) == expected
