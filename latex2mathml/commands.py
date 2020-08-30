@@ -26,7 +26,7 @@ MATRICES = (
 
 SPACES = (r"\,", r"\:", r"\;", r"\\", r"\quad", r"\qquad")
 
-COMMANDS = {
+COMMANDS: Dict[str, Tuple[int, str, dict]] = {
     # command: (params_count, mathml_equivalent, attributes)
     "_": (2, "msub", {}),
     "^": (2, "msup", {}),
@@ -49,7 +49,7 @@ COMMANDS = {
     r"\bar": (1, "mover", {}),
     r"\underline": (1, "munder", {}),
     r"\limits": (3, "munderover", {}),
-}  # type: Dict[str, Tuple[int, str, dict]]
+}
 
 LIMITS = [r"\lim", r"\sup", r"\inf", r"\max", r"\min"]
 

@@ -49,7 +49,7 @@ def group(
     closing: str = CLOSING_BRACES,
     delimiter: Union[str, None] = None,
 ) -> list:
-    g = []  # type: List[Any]
+    g: List[Any] = []
     if delimiter:
         g.append(delimiter)
         g.append(next(tokens))
@@ -89,7 +89,7 @@ def group(
 
 
 def process_row(tokens: List[Any]) -> list:
-    row = []  # type: List[Any]
+    row: List[Any] = []
     content = []
     for token in tokens:
         if token == AMPERSAND:
@@ -116,7 +116,7 @@ def environment(
         env = begin[1:]
     alignment = None
     content = []
-    row = []  # type: List[Any]
+    row: List[Any] = []
     has_rowline = False
     while True:
         try:
@@ -177,7 +177,7 @@ def environment(
 
 
 def group_columns(row: list) -> list:
-    grouped = [[]]  # type: List[Any]
+    grouped: List[Any] = [[]]
     for item in row:
         if item == AMPERSAND:
             grouped.append([])
@@ -196,7 +196,7 @@ def next_item_or_group(tokens: Iterator) -> Union[str, list]:
 
 
 def _aggregate(tokens: Iterator) -> list:
-    aggregated = []  # type: List[Any]
+    aggregated: List[Any] = []
     while True:
         token = None
         try:

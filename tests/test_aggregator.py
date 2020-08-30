@@ -5,7 +5,7 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import string
-from typing import Any, List
+from typing import Any, List, Tuple, Union
 
 import pytest
 
@@ -46,7 +46,11 @@ PARAMS = [
     ("subscript and superscript #1", "a_b^c", ["_^", "a", "b", "c"]),
     ("subscript and superscript #2", "a^b_c", ["_^", "a", "c", "b"]),
     ("root", r"\sqrt[3]{2}", [r"\root", ["2"], ["3"]]),
-    ("matrix #1", r"\matrix{a & b \\ c & d}", [r"\matrix", [["a", "b"], ["c", "d"]]],),
+    (
+        "matrix #1",
+        r"\matrix{a & b \\ c & d}",
+        [r"\matrix", [["a", "b"], ["c", "d"]]],
+    ),
     (
         "matrix #2",
         r"\begin{matrix}a & b \\ c & d \end{matrix}",
@@ -320,7 +324,11 @@ PARAMS = [
         r"\lim_{x \to +\infty} f(x)",
         [r"\lim", ["x", r"\to", "+", r"\infty"], "f", "(", "x", ")"],
     ),
-    ("inf", r"\inf_{x > s}f(x)", [r"\inf", ["x", ">", "s"], "f", "(", "x", ")"],),
+    (
+        "inf",
+        r"\inf_{x > s}f(x)",
+        [r"\inf", ["x", ">", "s"], "f", "(", "x", ")"],
+    ),
     (
         "sup",
         r"\sup_{x \in \mathbb{R}}f(x)",
@@ -372,7 +380,9 @@ PARAMS_WITH_EXCEPTION = [
 
 
 @pytest.mark.parametrize(
-    "name, latex, expected", ids=[x[0] for x in PARAMS], argvalues=PARAMS,
+    "name, latex, expected",
+    ids=[x[0] for x in PARAMS],
+    argvalues=PARAMS,
 )
 def test_aggregator(name: str, latex: str, expected: list):
     assert aggregate(latex) == expected
@@ -383,7 +393,7 @@ def test_aggregator(name: str, latex: str, expected: list):
     ids=[x[0] for x in PARAMS_WITH_EXCEPTION],
     argvalues=PARAMS_WITH_EXCEPTION,
 )
-def test_missing_right(name: str, latex: str, exception: Exception):
+def test_missing_right(name: str, latex: str, exception: Union[Tuple[Any, ...], Any]):
     with pytest.raises(exception):
         aggregate(latex)
 
