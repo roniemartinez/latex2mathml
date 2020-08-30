@@ -9,7 +9,7 @@ python:
   - 3.6
   - 3.7
   - 3.8
-  - pypy3
+  - pypy3.6-7.3.1
 
 matrix:
   include:
@@ -61,7 +61,7 @@ matrix:
       os: windows
       language: shell
       before_install:
-        - choco install python --version=3.7.7
+        - choco install python --version=3.7.9
         - choco install make
         - python -m pip install -U pip setuptools
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
@@ -73,7 +73,7 @@ matrix:
       os: windows
       language: shell
       before_install:
-        - choco install python --version=3.8.2
+        - choco install python --version=3.8.5
         - choco install make
         - python -m pip install -U pip setuptools
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
