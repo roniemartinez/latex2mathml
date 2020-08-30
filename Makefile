@@ -2,6 +2,9 @@ install:
 	pip3 install -U poetry
 	poetry install
 
+optional:
+	poetry run pip install mypy
+
 style:
 	poetry run autoflake --remove-all-unused-imports --in-place -r --exclude __init__.py .
 	poetry run isort --atomic .
