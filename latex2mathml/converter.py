@@ -196,7 +196,7 @@ def _convert_command(
     elif element == r"\underline":
         mo = SubElement(new_parent, "mo", stretchy="true")
         mo.text = "&#x00332;"
-    elif element == r"\overrightarrow":
+    elif element in (r"\overrightarrow", r"\vec"):
         mo = SubElement(new_parent, "mo", stretchy="true")
         mo.text = "&#x02192;"
     [next(iterable) for _ in range(params)]

@@ -1474,6 +1474,18 @@ PARAMS = [
             )
         },
     ),
+    (
+        "issue #103",
+        r"\vec{AB}",
+        {
+            "mover": MultiDict(
+                [
+                    ("mrow", MultiDict([("mi", "A"), ("mi", "B")])),
+                    ("mo", {"@stretchy": "true", "$": "&#x02192;"}),
+                ]
+            )
+        },
+    ),
 ]
 
 
