@@ -368,6 +368,7 @@ PARAMS = [
         ["(", "1", "+", "^", ["(", "x", "-", "y", ")"], ["2"], ")"],
     ),
     ("issue #98", r"p_{\max}", ["_", "p", [r"\max"]]),
+    ("issue #103", r"\vec{AB}", [r"\vec", ["A", "B"]]),
 ]
 
 PARAMS_WITH_EXCEPTION = [
