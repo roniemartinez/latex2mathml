@@ -5,6 +5,7 @@
 # __maintainer__ = "Ronie Martinez"
 # __email__ = "ronmarti18@gmail.com"
 import re
+from collections import OrderedDict
 from typing import Any, Iterator, List, Optional, Union
 from xml.etree.cElementTree import Element, SubElement, tostring  # nosec
 from xml.sax.saxutils import unescape  # nosec
@@ -151,6 +152,13 @@ def _convert_command(
     _get_prefix_element(element, parent)
     if element == r"\substack":
         parent = SubElement(parent, "mstyle", scriptlevel="1")
+    elif element == r"\cases":
+        lbrace = SubElement(
+            parent,
+            "mo",
+            OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")]),
+        )
+        lbrace.text = "&#x{};".format(convert_symbol(r"\{"))
     params, tag, attributes = COMMANDS[element]
     if len(elements) - 1 < params:
         mo = SubElement(parent, "mo")
@@ -158,10 +166,13 @@ def _convert_command(
         return
     new_parent = SubElement(parent, tag, attributes)
     alignment = ""
-    if element in MATRICES and (element.endswith("*") or element == r"\array"):
-        index += 1
-        alignment = elements[index]
-        next(iterable)
+    if element in MATRICES:
+        if element.endswith("*") or element == r"\array":
+            index += 1
+            alignment = elements[index]
+            next(iterable)
+        elif element == r"\cases":
+            alignment = "l"
     if element in (r"\lim", r"\inf", r"\sup", r"\max", r"\min"):
         limit = SubElement(new_parent, "mo")
         limit.text = element[1:]

@@ -1486,6 +1486,59 @@ PARAMS = [
             )
         },
     ),
+    (
+        "issue #106",
+        r"\begin{cases} {x=1} \\ {y=-2}\end{cases}",
+        MultiDict(
+            [
+                (
+                    "mo",
+                    MultiDict(
+                        [
+                            ("@stretchy", "true"),
+                            ("@fence", "true"),
+                            ("@form", "prefix"),
+                            ("$", "&#x0007B;"),
+                        ]
+                    ),
+                ),
+                (
+                    "mtable",
+                    MultiDict(
+                        [
+                            (
+                                "mtr",
+                                {
+                                    "mtd": MultiDict(
+                                        [
+                                            ("@columnalign", "left"),
+                                            ("mi", "x"),
+                                            ("mo", "&#x0003D;"),
+                                            ("mn", "1"),
+                                        ]
+                                    )
+                                },
+                            ),
+                            (
+                                "mtr",
+                                {
+                                    "mtd": MultiDict(
+                                        [
+                                            ("@columnalign", "left"),
+                                            ("mi", "y"),
+                                            ("mo", "&#x0003D;"),
+                                            ("mo", "&#x02212;"),
+                                            ("mn", "2"),
+                                        ]
+                                    )
+                                },
+                            ),
+                        ]
+                    ),
+                ),
+            ]
+        ),
+    ),
 ]
 
 
