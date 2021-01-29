@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "latex2mathml"
-version = "2.16.2"
+version = "2.16.3-alpha.0"
 repository = "https://github.com/roniemartinez/latex2mathml"
 description = "Pure Python library for LaTeX to MathML conversion"
 authors = ["Ronie Martinez <ronmarti18@gmail.com>"]
@@ -39,7 +39,7 @@ codecov = "^2.0.16"
 dephell = "^0.8.3"
 flake8 = "^3.7.9"
 isort = "^5.4.2"
-multidict = "^4.7.5"
+multidict = "^5.1.0"
 pytest = "^6.0.1"
 pytest-cov = "^2.8.1"
 safety = "^1.8.7"
@@ -47,9 +47,35 @@ typing-extensions = "^3.7.4"  # prevent poetry from removing this
 xmljson = "^0.2.0"
 
 [tool.isort]
-line_length = 99
+line_length = 120
 multi_line_output = 3
+force_grid_wrap = 0
+use_parentheses = true
 include_trailing_comma = true
+ensure_newline_before_comments = true
+
+[tool.black]
+line-length = 120
+target-version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''
 
 [tool.dephell.main]
 from = {format = "poetry", path = "pyproject.toml"}

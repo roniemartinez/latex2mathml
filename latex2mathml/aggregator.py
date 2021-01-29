@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2016-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
 from typing import Any, Iterator, List, Tuple, Union
 
 from latex2mathml.commands import MATRICES
@@ -107,9 +101,7 @@ def process_row(tokens: List[Any]) -> list:
     return content
 
 
-def environment(
-    begin: str, tokens: Iterator
-) -> Union[Tuple[str, List[Any]], Tuple[str, str, List[List[Any]]]]:
+def environment(begin: str, tokens: Iterator) -> Union[Tuple[str, List[Any]], Tuple[str, str, List[List[Any]]]]:
     if begin.startswith(BEGIN):
         env = begin[7:-1]
     else:
@@ -287,9 +279,7 @@ def process_sub_sup(aggregated: list, token: str, tokens: Iterator) -> list:
         if isinstance(previous, str) and previous in OPERATORS:
             if previous == CLOSING_PARENTHESIS and OPENING_PARENTHESIS in aggregated:
                 index = find_opening_parenthesis(aggregated)
-                aggregated = (
-                    aggregated[:index] + [token] + [aggregated[index:] + [previous]]
-                )
+                aggregated = aggregated[:index] + [token] + [aggregated[index:] + [previous]]
             else:
                 aggregated += [previous, token]
             return aggregated

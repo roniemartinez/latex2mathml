@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2018-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
 from typing import Iterator, Union
 
 from latex2mathml.symbols_parser import convert_symbol
@@ -74,11 +68,7 @@ def tokenize(data) -> Iterator[Union[str, list]]:
             elif char in "{}*":
                 # FIXME: Anything that starts with '\math' passes. There is a huge list of math symbols in
                 #  unimathsymbols.txt and hard-coding all of them is inefficient.
-                if (
-                    buffer.startswith(r"\begin")
-                    or buffer.startswith(r"\end")
-                    or buffer.startswith(r"\math")
-                ):
+                if buffer.startswith(r"\begin") or buffer.startswith(r"\end") or buffer.startswith(r"\math"):
                     if buffer.endswith("}"):
                         yield buffer
                         yield char
