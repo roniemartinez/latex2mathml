@@ -1,5 +1,6 @@
 .PHONY: install
 install:
+	pip3 install -U pip setuptools
 	pip3 install -U poetry
 	poetry install
 

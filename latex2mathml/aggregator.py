@@ -221,7 +221,7 @@ def _aggregate(tokens: Iterator) -> list:
                 next(tokens)
                 a = next_item_or_group(tokens)
                 aggregated += [token, a]
-            elif token == r"\limits":
+            elif token == r"\limits":  # nosec
                 previous = aggregated.pop()
                 next(tokens)
                 a = next_item_or_group(tokens)

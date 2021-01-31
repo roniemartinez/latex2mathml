@@ -9,6 +9,7 @@ python:
   - 3.6
   - 3.7
   - 3.8
+  - 3.9
   - pypy3
 
 matrix:
@@ -33,6 +34,14 @@ matrix:
       os: osx
       language: shell
       python: 3.8
+      cache:
+        - directories:
+          - $HOME/Library/Caches/pip
+          - $HOME/Library/Caches/pypoetry
+    - name: "Python: 3.9"
+      os: osx
+      language: shell
+      python: 3.9
       cache:
         - directories:
           - $HOME/Library/Caches/pip
@@ -73,10 +82,22 @@ matrix:
       os: windows
       language: shell
       before_install:
-        - choco install python --version=3.8.5
+        - choco install python --version=3.8.7
         - choco install make
         - python -m pip install -U pip setuptools
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
+      cache:
+        directories:
+          - $LOCALAPPDATA/pip/Cache
+          - $LOCALAPPDATA/pypoetry/cache
+    - name: "Python: 3.9"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version=3.9.1
+        - choco install make
+        - python -m pip install -U pip setuptools
+      env: PATH=/c/Python39:/c/Python39/Scripts:$PATH
       cache:
         directories:
           - $LOCALAPPDATA/pip/Cache

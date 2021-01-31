@@ -24,7 +24,7 @@ if os.path.exists(readme_path):
 setup(
     long_description=readme,
     name='latex2mathml',
-    version='2.16.2',
+    version='2.16.3-alpha.2',
     description='Pure Python library for LaTeX to MathML conversion',
     python_requires='<4,>=3.6',
     project_urls={"repository": "https://github.com/roniemartinez/latex2mathml"},
@@ -32,7 +32,7 @@ setup(
     author_email='ronmarti18@gmail.com',
     license='MIT',
     keywords='latex mathml',
-    classifiers=['Development Status :: 5 - Production/Stable', 'License :: OSI Approved :: MIT License', 'Topic :: Scientific/Engineering :: Mathematics', 'Topic :: Software Development :: Libraries :: Python Modules', 'Topic :: Text Processing :: Markup :: HTML', 'Topic :: Text Processing :: Markup :: LaTeX', 'Programming Language :: Python :: 3', 'Programming Language :: Python :: 3.6', 'Programming Language :: Python :: 3.7', 'Programming Language :: Python :: 3.8', 'Programming Language :: Python :: Implementation :: CPython'],
+    classifiers=['Development Status :: 5 - Production/Stable', 'License :: OSI Approved :: MIT License', 'Topic :: Scientific/Engineering :: Mathematics', 'Topic :: Software Development :: Libraries :: Python Modules', 'Topic :: Text Processing :: Markup :: HTML', 'Topic :: Text Processing :: Markup :: LaTeX', 'Programming Language :: Python :: 3', 'Programming Language :: Python :: 3.6', 'Programming Language :: Python :: 3.7', 'Programming Language :: Python :: 3.8', 'Programming Language :: Python :: 3.9', 'Programming Language :: Python :: Implementation :: CPython'],
     entry_points={"console_scripts": ["latex2mathml = latex2mathml.converter:main", "l2m = latex2mathml.converter:main"]},
     packages=['latex2mathml'],
     package_dir={"": "."},
