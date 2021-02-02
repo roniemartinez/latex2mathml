@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# __author__ = "Ronie Martinez"
-# __copyright__ = "Copyright 2016-2020, Ronie Martinez"
-# __credits__ = ["Ronie Martinez"]
-# __maintainer__ = "Ronie Martinez"
-# __email__ = "ronmarti18@gmail.com"
 import re
 from collections import OrderedDict
 from typing import Any, Iterator, List, Optional, Union
@@ -48,9 +42,7 @@ def _convert_matrix_content(
         _convert_matrix_row(param, parent, alignment, single_mtd)
 
 
-def _convert_matrix_row(
-    row: list, parent: Element, alignment: Optional[str], single_mtd: bool
-):
+def _convert_matrix_row(row: list, parent: Element, alignment: Optional[str], single_mtd: bool):
     mtr = SubElement(parent, "mtr")
     iterable: Iterator[int] = iter(range(len(row)))
     if single_mtd:
@@ -58,9 +50,7 @@ def _convert_matrix_row(
     for i in iterable:
         element = row[i]
         if alignment:
-            column_align: str = {"r": "right", "l": "left", "c": "center"}.get(
-                alignment, ""
-            )
+            column_align: str = {"r": "right", "l": "left", "c": "center"}.get(alignment, "")
             mtd = SubElement(mtr, "mtd", columnalign=column_align)
         elif not single_mtd:
             mtd = SubElement(mtr, "mtd")
@@ -105,9 +95,7 @@ def _convert_array_content(param: list, parent: Element, alignment: str = "") ->
             except IndexError:  # pragma: no cover
                 pass
             if align:
-                column_align: str = {"r": "right", "l": "left", "c": "center"}.get(
-                    align, ""
-                )
+                column_align: str = {"r": "right", "l": "left", "c": "center"}.get(align, "")
                 mtd = SubElement(mtr, "mtd", columnalign=column_align)
             # else:
             #     mtd = SubElement(mtr, "mtd")
@@ -124,9 +112,7 @@ def _convert_array_content(param: list, parent: Element, alignment: str = "") ->
         parent.set("rowlines", " ".join(row_lines))
 
 
-def _classify_subgroup(
-    elements: list, row: Element, is_math_mode: bool = False
-) -> None:
+def _classify_subgroup(elements: list, row: Element, is_math_mode: bool = False) -> None:
     iterable = iter(range(len(elements)))
     for i in iterable:
         element = elements[i]
@@ -191,9 +177,7 @@ def _convert_command(
         elif element == r"\array":
             _convert_array_content(param, new_parent, alignment)
         elif element in MATRICES:
-            _convert_matrix_content(
-                param, new_parent, alignment, element == r"\substack"
-            )
+            _convert_matrix_content(param, new_parent, alignment, element == r"\substack")
         else:
             if isinstance(param, list):
                 _parent = SubElement(new_parent, "mrow")
@@ -293,9 +277,7 @@ def _classify(_element: str, parent: Element, is_math_mode: bool = False) -> Non
 def main() -> None:  # pragma: no cover
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Pure Python library for LaTeX to MathML conversion"
-    )
+    parser = argparse.ArgumentParser(description="Pure Python library for LaTeX to MathML conversion")
     parser.add_argument(
         "-V",
         "--version",
