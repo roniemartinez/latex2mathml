@@ -218,9 +218,15 @@ def _aggregate(tokens: Iterator) -> list:
                         continue
                     aggregated += [OPENING_BRACKET, CLOSING_BRACKET]
             elif token in (r"\lim", r"\inf", r"\sup", r"\max", r"\min"):
-                next(tokens)
-                a = next_item_or_group(tokens)
-                aggregated += [token, a]
+                next_token = next(tokens)
+                try:
+                    if next_token != "_":  # nosec
+                        raise StopIteration
+                    a = next_item_or_group(tokens)
+                    aggregated += [token, a]
+                except StopIteration:
+                    aggregated += [token, [], next_token]
+                    continue
             elif token == r"\limits":  # nosec
                 previous = aggregated.pop()
                 next(tokens)

@@ -425,6 +425,7 @@ from latex2mathml.tokenizer import tokenize
             ],
             id="max",
         ),
+        pytest.param(r"\max \{a, b, c\}", [r"\max", r"\{", "a", ",", "b", ",", "c", r"\}"], id="issue-108-1"),
     ],
 )
 def test_tokenize(latex: str, expected: list):
