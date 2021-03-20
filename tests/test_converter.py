@@ -1462,6 +1462,57 @@ from latex2mathml.converter import _convert, convert
             ),
             id="issue-106",
         ),
+        pytest.param(
+            r"\max f", MultiDict([("munder", MultiDict([("mo", "max"), ("mrow", "")])), ("mi", "f")]), id="issue-108-1"
+        ),
+        pytest.param(
+            r"\max \{a, b, c\}",
+            MultiDict(
+                [
+                    ("munder", MultiDict([("mo", "max"), ("mrow", "")])),
+                    ("mi", "&#x0007B;"),
+                    ("mi", "a"),
+                    ("mi", ","),
+                    ("mi", "b"),
+                    ("mi", ","),
+                    ("mi", "c"),
+                    ("mi", "&#x0007D;"),
+                ]
+            ),
+            id="issue-108-1",
+        ),
+        pytest.param(
+            r"\min{(x, y)}",
+            MultiDict(
+                [
+                    ("munder", MultiDict([("mo", "min"), ("mrow", "")])),
+                    ("mi", "{"),
+                    (
+                        "mo",
+                        MultiDict(
+                            [
+                                ("@stretchy", "false"),
+                                ("$", "&#x00028;"),
+                            ]
+                        ),
+                    ),
+                    ("mi", "x"),
+                    ("mi", ","),
+                    ("mi", "y"),
+                    (
+                        "mo",
+                        MultiDict(
+                            [
+                                ("@stretchy", "false"),
+                                ("$", "&#x00029;"),
+                            ]
+                        ),
+                    ),
+                    ("mi", "}"),
+                ]
+            ),
+            id="issue-108-2",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict):

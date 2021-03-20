@@ -19,7 +19,7 @@ def tokenize(data) -> Iterator[Union[str, list]]:
                 buffer = char
                 try:
                     buffer += next(iterable)
-                    if buffer in (r"\\", r"\[", r"\]"):
+                    if buffer in (r"\\", r"\[", r"\]", r"\{", r"\}"):
                         yield buffer
                         buffer = ""
                 except StopIteration:

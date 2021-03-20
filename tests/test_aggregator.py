@@ -340,6 +340,9 @@ from latex2mathml.exceptions import (
         pytest.param(r"(1+(x-y)^{2})", ["(", "1", "+", "^", ["(", "x", "-", "y", ")"], ["2"], ")"], id="issue-96"),
         pytest.param(r"p_{\max}", ["_", "p", [r"\max"]], id="issue-98"),
         pytest.param(r"\vec{AB}", [r"\vec", ["A", "B"]], id="issue-103"),
+        pytest.param(r"\max f", [r"\max", [], "f"], id="issue-108-1"),
+        pytest.param(r"\max \{a, b, c\}", [r"\max", [], r"\{", "a", ",", "b", ",", "c", r"\}"], id="issue-108-2"),
+        pytest.param(r"\min{(x, y)}", [r"\min", [], "{", "(", "x", ",", "y", ")", "}"], id="issue-108-3"),
     ],
 )
 def test_aggregator(latex: str, expected: list):
