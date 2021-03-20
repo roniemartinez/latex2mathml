@@ -46,6 +46,7 @@ COMMANDS: Dict[str, Tuple[int, str, dict]] = {
     r"\limits": (3, "munderover", {}),
     r"\overrightarrow": (1, "mover", {}),
     r"\vec": (1, "mover", {}),
+    r"\dot": (1, "mover", {}),
 }
 
 LIMITS = [r"\lim", r"\sup", r"\inf", r"\max", r"\min"]

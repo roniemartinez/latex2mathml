@@ -1513,6 +1513,30 @@ from latex2mathml.converter import _convert, convert
             ),
             id="issue-108-2",
         ),
+        pytest.param(
+            r"\dot A",
+            {
+                "mover": MultiDict(
+                    [
+                        ("mi", "A"),
+                        ("mo", "&#x002D9;"),
+                    ]
+                )
+            },
+            id="issue-112-1",
+        ),
+        pytest.param(
+            r"\dot{A}",
+            {
+                "mover": MultiDict(
+                    [
+                        ("mrow", MultiDict([("mi", "A")])),
+                        ("mo", "&#x002D9;"),
+                    ]
+                )
+            },
+            id="issue-112-2",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict):
