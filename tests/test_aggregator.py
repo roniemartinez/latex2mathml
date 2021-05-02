@@ -345,7 +345,7 @@ from latex2mathml.exceptions import (
         pytest.param(r"\min{(x, y)}", [r"\min", [], "{", "(", "x", ",", "y", ")", "}"], id="issue-108-3"),
     ],
 )
-def test_aggregator(latex: str, expected: list):
+def test_aggregator(latex: str, expected: list) -> None:
     assert aggregate(latex) == expected
 
 
@@ -359,7 +359,7 @@ def test_aggregator(latex: str, expected: list):
         pytest.param(r"1^", MissingSuperScriptOrSubscript, id="missing-superscript"),
     ],
 )
-def test_missing_right(latex: str, exception: Union[Tuple[Any, ...], Any]):
+def test_missing_right(latex: str, exception: Union[Tuple[Any, ...], Any]) -> None:
     with pytest.raises(exception):
         aggregate(latex)
 

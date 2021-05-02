@@ -261,7 +261,7 @@ def _aggregate(tokens: Iterator) -> list:
     return aggregated
 
 
-def aggregate(data: str):
+def aggregate(data: str) -> list:
     tokens = tokenize(data)
     return _aggregate(tokens)
 

@@ -3,10 +3,6 @@ install:
 	pip3 install -U poetry
 	poetry install
 
-.PHONY: optional
-optional:
-	poetry run pip install black mypy
-
 .PHONY: style
 style:
 	poetry run autoflake --remove-all-unused-imports --in-place -r --exclude __init__.py .
@@ -17,11 +13,6 @@ style:
 .PHONY: type
 type:
 	poetry run mypy --ignore-missing-imports tests latex2mathml
-
-.PHONY: check
-check:
-	poetry run safety check
-	poetry run bandit -r latex2mathml
 
 .PHONY: test
 test:
