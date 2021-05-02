@@ -11,9 +11,9 @@ Pure Python library for LaTeX to MathML conversion
     </tr>
     <tr>
         <td>Travis CI</td>
-        <td><img src='https://travis-ci.org/roniemartinez/latex2mathml.svg?branch=master' alt="Travis CI"></td>
+        <td><img src='https://www.travis-ci.com/roniemartinez/latex2mathml.svg?branch=master' alt="Travis CI"></td>
         <td>Coverage</td>
-        <td><img src='https://codecov.io/gh/roniemartinez/latex2mathml/branch/master/graph/badge.svg' alt="CodeCov"></td>
+        <td><img src='https://codecov.io/gh/roniemartinez/latex2mathml/branch/develop/graph/badge.svg' alt="CodeCov"></td>
     </tr>
     <tr>
         <td>Supported versions</td>
@@ -487,7 +487,6 @@ A_{m,n} =
 - https://en.wikibooks.org/wiki/LaTeX/Mathematics
 - http://artofproblemsolving.com/wiki/index.php?title=Main_Page
 - http://milde.users.sourceforge.net/LUCR/Math/
-- http://www.forkosh.com/mimetextutorial.html
 - https://math-linux.com/latex-26/faq/latex-faq/article/latex-derivatives-limits-sums-products-and-integrals
 
 ### MathML
