@@ -426,7 +426,8 @@ from latex2mathml.tokenizer import tokenize
             id="max",
         ),
         pytest.param(r"\max \{a, b, c\}", [r"\max", r"\{", "a", ",", "b", ",", "c", r"\}"], id="issue-108-1"),
+        pytest.param(r"\operatorname{sn}x", [r"\operatorname{sn}", "x"], id="issue-109"),
     ],
 )
-def test_tokenize(latex: str, expected: list):
+def test_tokenize(latex: str, expected: list) -> None:
     assert list(tokenize(latex)) == expected

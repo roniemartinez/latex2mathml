@@ -3,7 +3,7 @@ from typing import Iterator, Union
 from latex2mathml.symbols_parser import convert_symbol
 
 
-def tokenize(data) -> Iterator[Union[str, list]]:
+def tokenize(data: str) -> Iterator[Union[str, list]]:
     iterable = iter(data)
     buffer = ""
     while True:
@@ -68,7 +68,7 @@ def tokenize(data) -> Iterator[Union[str, list]]:
             elif char in "{}*":
                 # FIXME: Anything that starts with '\math' passes. There is a huge list of math symbols in
                 #  unimathsymbols.txt and hard-coding all of them is inefficient.
-                if buffer.startswith(r"\begin") or buffer.startswith(r"\end") or buffer.startswith(r"\math"):
+                if buffer.startswith((r"\begin", r"\end", r"\math", r"\operatorname")):
                     if buffer.endswith("}"):
                         yield buffer
                         yield char

@@ -42,7 +42,7 @@ def _convert_matrix_content(
         _convert_matrix_row(param, parent, alignment, single_mtd)
 
 
-def _convert_matrix_row(row: list, parent: Element, alignment: Optional[str], single_mtd: bool):
+def _convert_matrix_row(row: list, parent: Element, alignment: Optional[str], single_mtd: bool) -> None:
     mtr = SubElement(parent, "mtr")
     iterable: Iterator[int] = iter(range(len(row)))
     if single_mtd:
@@ -134,7 +134,7 @@ def _convert_command(
     index: int,
     iterable: Iterator[int],
     parent: Element,
-):
+) -> None:
     _get_prefix_element(element, parent)
     if element == r"\substack":
         parent = SubElement(parent, "mstyle", scriptlevel="1")
@@ -270,6 +270,8 @@ def _classify(_element: str, parent: Element, is_math_mode: bool = False) -> Non
             r"\csc",
         ):
             tag.text = _element[1:]
+        elif _element.startswith(r"\operatorname"):
+            tag.text = _element[14:-1]
         else:
             tag.text = _element
     else:

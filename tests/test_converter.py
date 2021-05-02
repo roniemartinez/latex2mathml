@@ -1513,33 +1513,46 @@ from latex2mathml.converter import _convert, convert
             ),
             id="issue-108-2",
         ),
-        pytest.param(
-            r"\dot A",
-            {
-                "mover": MultiDict(
-                    [
-                        ("mi", "A"),
-                        ("mo", "&#x002D9;"),
-                    ]
-                )
-            },
-            id="issue-112-1",
-        ),
+        pytest.param(r"\dot A", {"mover": MultiDict([("mi", "A"), ("mo", "&#x002D9;")])}, id="issue-112-1"),
         pytest.param(
             r"\dot{A}",
-            {
-                "mover": MultiDict(
-                    [
-                        ("mrow", MultiDict([("mi", "A")])),
-                        ("mo", "&#x002D9;"),
-                    ]
-                )
-            },
+            {"mover": MultiDict([("mrow", MultiDict([("mi", "A")])), ("mo", "&#x002D9;")])},
             id="issue-112-2",
+        ),
+        pytest.param(r"\operatorname{sn}x", MultiDict([("mi", "sn"), ("mi", "x")]), id="issue-109-1"),
+        pytest.param(
+            r"\operatorname{sn}(x+y)",
+            MultiDict(
+                [
+                    ("mi", "sn"),
+                    (
+                        "mo",
+                        MultiDict(
+                            [
+                                ("@stretchy", "false"),
+                                ("$", "&#x00028;"),
+                            ]
+                        ),
+                    ),
+                    ("mi", "x"),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "y"),
+                    (
+                        "mo",
+                        MultiDict(
+                            [
+                                ("@stretchy", "false"),
+                                ("$", "&#x00029;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="issue-109-2",
         ),
     ],
 )
-def test_converter(latex: str, json: MultiDict):
+def test_converter(latex: str, json: MultiDict) -> None:
     parent = {
         "math": {
             "@xmlns": "http://www.w3.org/1998/Math/MathML",
@@ -1553,7 +1566,7 @@ def test_converter(latex: str, json: MultiDict):
 
 
 @pytest.mark.skipif(sys.version_info < (3, 8), reason="xml.etree sorts attributes in 3.7 and below")
-def test_attributes():
+def test_attributes() -> None:
     assert (
         convert("1")
         == '<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mn>1</mn></mrow></math>'
