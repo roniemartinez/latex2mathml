@@ -24,7 +24,7 @@ if os.path.exists(readme_path):
 setup(
     long_description=readme,
     name='latex2mathml',
-    version='2.17.0',
+    version='2.17.1-alpha.0',
     description='Pure Python library for LaTeX to MathML conversion',
     python_requires='<4,>=3.6.2',
     project_urls={"repository": "https://github.com/roniemartinez/latex2mathml"},
