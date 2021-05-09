@@ -19,7 +19,7 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                 buffer = char
                 try:
                     buffer += next(iterable)
-                    if buffer in (r"\\", r"\[", r"\]", r"\{", r"\}"):
+                    if buffer in (r"\\", r"\[", r"\]", r"\{", r"\}", r"\ "):
                         yield buffer
                         buffer = ""
                 except StopIteration:
@@ -62,13 +62,16 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                             yield char
                         break
             elif char.isspace():
+                if buffer.startswith(r"\text"):
+                    buffer += char
+                    continue
                 if len(buffer):
                     yield buffer
                     buffer = ""
             elif char in "{}*":
                 # FIXME: Anything that starts with '\math' passes. There is a huge list of math symbols in
                 #  unimathsymbols.txt and hard-coding all of them is inefficient.
-                if buffer.startswith((r"\begin", r"\end", r"\math", r"\operatorname")):
+                if buffer.startswith((r"\begin", r"\end", r"\math", r"\operatorname", r"\text")):
                     if buffer.endswith("}"):
                         yield buffer
                         yield char
@@ -86,6 +89,11 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                             yield list(tokenize(buffer[index + 1 :]))
                             buffer = ""
                             continue
+                    elif buffer.startswith(r"\text") and char == "}":
+                        yield buffer[0:5]
+                        yield buffer[6:]
+                        buffer = ""
+                        continue
                     buffer += char
                 else:
                     if len(buffer):
