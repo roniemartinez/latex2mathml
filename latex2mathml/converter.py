@@ -182,6 +182,8 @@ def _convert_command(
             if isinstance(param, list):
                 _parent = SubElement(new_parent, "mrow")
                 _classify_subgroup(param, _parent)
+            elif element == r"\text":
+                new_parent.text = param
             else:
                 _classify(param, new_parent)
     _get_postfix_element(element, parent)
@@ -255,6 +257,9 @@ def _classify(_element: str, parent: Element, is_math_mode: bool = False) -> Non
     ):
         mo = SubElement(parent, "mo")
         mo.text = "&#x{};".format(symbol)
+    elif _element == r"\ ":
+        tag = SubElement(parent, "mtext")
+        tag.text = "&#x000A0;"
     elif _element.startswith("\\"):
         tag = SubElement(parent, "mo" if is_math_mode else "mi")
         if symbol:

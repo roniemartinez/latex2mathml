@@ -427,6 +427,11 @@ from latex2mathml.tokenizer import tokenize
         ),
         pytest.param(r"\max \{a, b, c\}", [r"\max", r"\{", "a", ",", "b", ",", "c", r"\}"], id="issue-108-1"),
         pytest.param(r"\operatorname{sn}x", [r"\operatorname{sn}", "x"], id="issue-109"),
+        pytest.param(
+            r"\text{Let}\ x=\text{number of cats}.",
+            [r"\text", "Let", r"\ ", "x", "=", r"\text", "number of cats", "."],
+            id="issue-109",
+        ),
     ],
 )
 def test_tokenize(latex: str, expected: list) -> None:

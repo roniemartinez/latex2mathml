@@ -1550,6 +1550,20 @@ from latex2mathml.converter import _convert, convert
             ),
             id="issue-109-2",
         ),
+        pytest.param(
+            r"\text{Let}\ x=\text{number of cats}.",
+            MultiDict(
+                [
+                    ("mtext", "Let"),
+                    ("mtext", "&#x000A0;"),
+                    ("mi", "x"),
+                    ("mo", "&#x0003D;"),
+                    ("mtext", "number of cats"),
+                    ("mi", "."),
+                ]
+            ),
+            id="issue-118",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
