@@ -242,7 +242,7 @@ def _classify(_element: str, parent: Element, is_math_mode: bool = False) -> Non
     elif len(_element) and _element in "<>&":
         mo = SubElement(parent, "mo")
         mo.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;"}[_element]
-    elif len(_element) and _element in "+-*/()=":
+    elif len(_element) and _element in "+-*/()=,":
         mo = SubElement(parent, "mo")
         mo.text = _element if symbol is None else "&#x{};".format(symbol)
         if _element in "()":

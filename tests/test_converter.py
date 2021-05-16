@@ -530,7 +530,7 @@ from latex2mathml.converter import _convert, convert
                                                                 MultiDict(
                                                                     [
                                                                         ("mn", "1"),
-                                                                        ("mi", ","),
+                                                                        ("mo", "&#x0002C;"),
                                                                         ("mn", "1"),
                                                                     ]
                                                                 ),
@@ -550,7 +550,7 @@ from latex2mathml.converter import _convert, convert
                                                                 MultiDict(
                                                                     [
                                                                         ("mn", "1"),
-                                                                        ("mi", ","),
+                                                                        ("mo", "&#x0002C;"),
                                                                         ("mn", "2"),
                                                                     ]
                                                                 ),
@@ -571,7 +571,7 @@ from latex2mathml.converter import _convert, convert
                                                                 MultiDict(
                                                                     [
                                                                         ("mn", "1"),
-                                                                        ("mi", ","),
+                                                                        ("mo", "&#x0002C;"),
                                                                         ("mi", "n"),
                                                                     ]
                                                                 ),
@@ -598,7 +598,7 @@ from latex2mathml.converter import _convert, convert
                                                                 MultiDict(
                                                                     [
                                                                         ("mn", "2"),
-                                                                        ("mi", ","),
+                                                                        ("mo", "&#x0002C;"),
                                                                         ("mn", "1"),
                                                                     ]
                                                                 ),
@@ -618,7 +618,7 @@ from latex2mathml.converter import _convert, convert
                                                                 MultiDict(
                                                                     [
                                                                         ("mn", "2"),
-                                                                        ("mi", ","),
+                                                                        ("mo", "&#x0002C;"),
                                                                         ("mn", "2"),
                                                                     ]
                                                                 ),
@@ -639,7 +639,7 @@ from latex2mathml.converter import _convert, convert
                                                                 MultiDict(
                                                                     [
                                                                         ("mn", "2"),
-                                                                        ("mi", ","),
+                                                                        ("mo", "&#x0002C;"),
                                                                         ("mi", "n"),
                                                                     ]
                                                                 ),
@@ -677,7 +677,7 @@ from latex2mathml.converter import _convert, convert
                                                                 MultiDict(
                                                                     [
                                                                         ("mi", "m"),
-                                                                        ("mi", ","),
+                                                                        ("mo", "&#x0002C;"),
                                                                         ("mn", "1"),
                                                                     ]
                                                                 ),
@@ -697,7 +697,7 @@ from latex2mathml.converter import _convert, convert
                                                                 MultiDict(
                                                                     [
                                                                         ("mi", "m"),
-                                                                        ("mi", ","),
+                                                                        ("mo", "&#x0002C;"),
                                                                         ("mn", "2"),
                                                                     ]
                                                                 ),
@@ -718,7 +718,7 @@ from latex2mathml.converter import _convert, convert
                                                                 MultiDict(
                                                                     [
                                                                         ("mi", "m"),
-                                                                        ("mi", ","),
+                                                                        ("mo", "&#x0002C;"),
                                                                         ("mi", "n"),
                                                                     ]
                                                                 ),
@@ -1472,14 +1472,14 @@ from latex2mathml.converter import _convert, convert
                     ("munder", MultiDict([("mo", "max"), ("mrow", "")])),
                     ("mi", "&#x0007B;"),
                     ("mi", "a"),
-                    ("mi", ","),
+                    ("mo", "&#x0002C;"),
                     ("mi", "b"),
-                    ("mi", ","),
+                    ("mo", "&#x0002C;"),
                     ("mi", "c"),
                     ("mi", "&#x0007D;"),
                 ]
             ),
-            id="issue-108-1",
+            id="issue-108-2",
         ),
         pytest.param(
             r"\min{(x, y)}",
@@ -1497,7 +1497,7 @@ from latex2mathml.converter import _convert, convert
                         ),
                     ),
                     ("mi", "x"),
-                    ("mi", ","),
+                    ("mo", "&#x0002C;"),
                     ("mi", "y"),
                     (
                         "mo",
@@ -1511,7 +1511,7 @@ from latex2mathml.converter import _convert, convert
                     ("mi", "}"),
                 ]
             ),
-            id="issue-108-2",
+            id="issue-108-3",
         ),
         pytest.param(r"\dot A", {"mover": MultiDict([("mi", "A"), ("mo", "&#x002D9;")])}, id="issue-112-1"),
         pytest.param(

@@ -10,6 +10,9 @@ style:
 	poetry run black --exclude setup.py .
 	poetry run flake8 .
 
+.PHONY: format
+format: style
+
 .PHONY: type
 type:
 	poetry run mypy --ignore-missing-imports tests latex2mathml
