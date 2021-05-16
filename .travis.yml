@@ -140,10 +140,10 @@ deploy:
     skip_cleanup: true
     on:
       all_branches: true
-      condition: $TRAVIS_PYTHON_VERSION = "3.6" && $TRAVIS_OS_NAME = "linux" && NOT $TRAVIS_BRANCH = "master"
+      condition: $TRAVIS_BRANCH != "master" && $TRAVIS_PYTHON_VERSION == "3.6" && $TRAVIS_OS_NAME == "linux"
   - provider: script
     script: poetry publish
     skip_cleanup: true
     on:
       branch: master
-      condition: $TRAVIS_PYTHON_VERSION = "3.6" && $TRAVIS_OS_NAME = "linux"
+      condition: $TRAVIS_PYTHON_VERSION == "3.6" && $TRAVIS_OS_NAME == "linux"
