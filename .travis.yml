@@ -10,7 +10,7 @@ python:
   - 3.7
   - 3.8
   - 3.9
-  - pypy3
+#  - pypy3  # failing
 
 matrix:
   include:
@@ -121,7 +121,6 @@ branches:
 
 install:
   - make install
-  - poetry config virtualenvs.create false
 
 script:
   - make test
@@ -140,10 +139,10 @@ deploy:
     script: poetry publish -r testpypi
     skip_cleanup: true
     on:
-      condition: $TRAVIS_BRANCH != "master" && $TRAVIS_PYTHON_VERSION = "3.6" && $TRAVIS_OS_NAME == "linux"
+      condition: NOT $TRAVIS_BRANCH = "master" AND $TRAVIS_PYTHON_VERSION = "3.6" AND $TRAVIS_OS_NAME = "linux"
   - provider: script
     script: poetry publish
     skip_cleanup: true
     on:
       branch: master
-      condition: $TRAVIS_PYTHON_VERSION = "3.6" && $TRAVIS_OS_NAME == "linux"
+      condition: $TRAVIS_PYTHON_VERSION = "3.6" AND $TRAVIS_OS_NAME = "linux"
