@@ -139,7 +139,7 @@ deploy:
     script: poetry publish -r testpypi
     skip_cleanup: true
     on:
-      condition: (NOT $TRAVIS_BRANCH = "master") AND( $TRAVIS_PYTHON_VERSION = "3.6") AND ($TRAVIS_OS_NAME = "linux")
+      condition: (NOT $TRAVIS_BRANCH = "master") AND ($TRAVIS_PYTHON_VERSION = "3.6") AND ($TRAVIS_OS_NAME = "linux")
   - provider: script
     script: poetry publish
     skip_cleanup: true
