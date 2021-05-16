@@ -347,7 +347,7 @@ A_{m,n} =
             &lt;mi&gt;A&lt;/mi&gt;
             &lt;mrow&gt;
                 &lt;mi&gt;m&lt;/mi&gt;
-                &lt;mi&gt;,&lt;/mi&gt;
+                &lt;mi&gt;&#x0002C;&lt;/mi&gt;
                 &lt;mi&gt;n&lt;/mi&gt;
             &lt;/mrow&gt;
         &lt;/msub&gt;
@@ -360,7 +360,7 @@ A_{m,n} =
                         &lt;mi&gt;a&lt;/mi&gt;
                         &lt;mrow&gt;
                             &lt;mn&gt;1&lt;/mn&gt;
-                            &lt;mi&gt;,&lt;/mi&gt;
+                            &lt;mi&gt;&#x0002C;&lt;/mi&gt;
                             &lt;mn&gt;1&lt;/mn&gt;
                         &lt;/mrow&gt;
                     &lt;/msub&gt;
@@ -370,7 +370,7 @@ A_{m,n} =
                         &lt;mi&gt;a&lt;/mi&gt;
                         &lt;mrow&gt;
                             &lt;mn&gt;1&lt;/mn&gt;
-                            &lt;mi&gt;,&lt;/mi&gt;
+                            &lt;mi&gt;&#x0002C;&lt;/mi&gt;
                             &lt;mn&gt;2&lt;/mn&gt;
                         &lt;/mrow&gt;
                     &lt;/msub&gt;
@@ -383,7 +383,7 @@ A_{m,n} =
                         &lt;mi&gt;a&lt;/mi&gt;
                         &lt;mrow&gt;
                             &lt;mn&gt;1&lt;/mn&gt;
-                            &lt;mi&gt;,&lt;/mi&gt;
+                            &lt;mi&gt;&#x0002C;&lt;/mi&gt;
                             &lt;mi&gt;n&lt;/mi&gt;
                         &lt;/mrow&gt;
                     &lt;/msub&gt;
@@ -395,7 +395,7 @@ A_{m,n} =
                         &lt;mi&gt;a&lt;/mi&gt;
                         &lt;mrow&gt;
                             &lt;mn&gt;2&lt;/mn&gt;
-                            &lt;mi&gt;,&lt;/mi&gt;
+                            &lt;mi&gt;&#x0002C;&lt;/mi&gt;
                             &lt;mn&gt;1&lt;/mn&gt;
                         &lt;/mrow&gt;
                     &lt;/msub&gt;
@@ -405,7 +405,7 @@ A_{m,n} =
                         &lt;mi&gt;a&lt;/mi&gt;
                         &lt;mrow&gt;
                             &lt;mn&gt;2&lt;/mn&gt;
-                            &lt;mi&gt;,&lt;/mi&gt;
+                            &lt;mi&gt;&#x0002C;&lt;/mi&gt;
                             &lt;mn&gt;2&lt;/mn&gt;
                         &lt;/mrow&gt;
                     &lt;/msub&gt;
@@ -418,7 +418,7 @@ A_{m,n} =
                         &lt;mi&gt;a&lt;/mi&gt;
                         &lt;mrow&gt;
                             &lt;mn&gt;2&lt;/mn&gt;
-                            &lt;mi&gt;,&lt;/mi&gt;
+                            &lt;mi&gt;&#x0002C;&lt;/mi&gt;
                             &lt;mi&gt;n&lt;/mi&gt;
                         &lt;/mrow&gt;
                     &lt;/msub&gt;
@@ -444,7 +444,7 @@ A_{m,n} =
                         &lt;mi&gt;a&lt;/mi&gt;
                         &lt;mrow&gt;
                             &lt;mi&gt;m&lt;/mi&gt;
-                            &lt;mi&gt;,&lt;/mi&gt;
+                            &lt;mi&gt;&#x0002C;&lt;/mi&gt;
                             &lt;mn&gt;1&lt;/mn&gt;
                         &lt;/mrow&gt;
                     &lt;/msub&gt;
@@ -454,7 +454,7 @@ A_{m,n} =
                         &lt;mi&gt;a&lt;/mi&gt;
                         &lt;mrow&gt;
                             &lt;mi&gt;m&lt;/mi&gt;
-                            &lt;mi&gt;,&lt;/mi&gt;
+                            &lt;mi&gt;&#x0002C;&lt;/mi&gt;
                             &lt;mn&gt;2&lt;/mn&gt;
                         &lt;/mrow&gt;
                     &lt;/msub&gt;
@@ -467,7 +467,7 @@ A_{m,n} =
                         &lt;mi&gt;a&lt;/mi&gt;
                         &lt;mrow&gt;
                             &lt;mi&gt;m&lt;/mi&gt;
-                            &lt;mi&gt;,&lt;/mi&gt;
+                            &lt;mi&gt;&#x0002C;&lt;/mi&gt;
                             &lt;mi&gt;n&lt;/mi&gt;
                         &lt;/mrow&gt;
                     &lt;/msub&gt;
