@@ -1,23 +1,21 @@
-from typing import Any, Iterator, List, Tuple, Union
+from typing import Any, Iterator, List, NamedTuple, Optional, Tuple, Union
 
-from latex2mathml.commands import MATRICES
-from latex2mathml.exceptions import (
-    DenominatorNotFoundError,
-    EmptyGroupError,
-    ExtraLeftOrMissingRight,
-    MissingSuperScriptOrSubscript,
-    NumeratorNotFoundError,
-)
+from latex2mathml.exceptions import EmptyGroupError, ExtraLeftOrMissingRight, MissingSuperScriptOrSubscript
 from latex2mathml.tokenizer import tokenize
 
 OPERATORS = "+-*/=[]_^{}()"
 
 OPENING_BRACES = "{"
 CLOSING_BRACES = "}"
+BRACES = "{}"
+
 OPENING_BRACKET = "["
 CLOSING_BRACKET = "]"
+BRACKETS = "[]"
+
 OPENING_PARENTHESIS = "("
 CLOSING_PARENTHESIS = ")"
+PARENTHESES = "()"
 
 BACKSLASH = r"\\"
 AMPERSAND = "&"
@@ -35,6 +33,12 @@ BEGIN = r"\begin"
 FRAC = r"\frac"
 ROOT = r"\root"
 SQRT = r"\sqrt"
+
+
+class Node(NamedTuple):
+    token: str
+    children: Optional[Tuple[Any, ...]] = None
+    root: Optional[Any] = None
 
 
 def group(
@@ -187,77 +191,140 @@ def next_item_or_group(tokens: Iterator) -> Union[str, list]:
     return token
 
 
-def _aggregate(tokens: Iterator) -> list:
-    aggregated: List[Any] = []
-    while True:
-        token = None
-        try:
-            token = next_item_or_group(tokens)
-            if isinstance(token, list):
-                aggregated.append(token)
-            elif token == OPENING_BRACKET:
-                previous = None
-                if len(aggregated):
-                    previous = aggregated[-1]
-                try:
-                    g = group(tokens, OPENING_BRACKET, CLOSING_BRACKET)
-                    if previous == SQRT:
-                        root = next(tokens)
-                        if root == OPENING_BRACES:
-                            try:
-                                root = group(tokens)
-                            except EmptyGroupError:
-                                root = ""
-                        aggregated[-1] = ROOT
-                        aggregated.append(root)
-                    else:
-                        pass  # FIXME: possible issues
-                    aggregated.append(g)
-                except EmptyGroupError:
-                    if previous == SQRT:
-                        continue
-                    aggregated += [OPENING_BRACKET, CLOSING_BRACKET]
-            elif token in (r"\lim", r"\inf", r"\sup", r"\max", r"\min"):
-                next_token = next(tokens)
-                try:
-                    if next_token != "_":  # nosec
-                        raise StopIteration
-                    a = next_item_or_group(tokens)
-                    aggregated += [token, a]
-                except StopIteration:
-                    aggregated += [token, [], next_token]
-                    continue
-            elif token == r"\limits":  # nosec
-                previous = aggregated.pop()
-                next(tokens)
-                a = next_item_or_group(tokens)
-                next(tokens)
-                b = next_item_or_group(tokens)
-                aggregated += [token, previous, a, b]
-            elif token in SUB_SUP:
-                aggregated = process_sub_sup(aggregated, token, tokens)
-            elif token.startswith(BEGIN) or token in MATRICES:
-                aggregated += environment(token, tokens)
-            elif token == OVER:
-                try:
-                    numerator = aggregated.pop()
-                    aggregated.append(FRAC)
-                    aggregated.append([numerator])
-                    denominator = next_item_or_group(tokens)
-                    aggregated.append([denominator])
-                except IndexError:
-                    raise NumeratorNotFoundError
-                except (StopIteration, EmptyGroupError):
-                    raise DenominatorNotFoundError
-            else:
-                aggregated.append(token)
-        except EmptyGroupError:
-            aggregated += [OPENING_BRACES, CLOSING_BRACES]
-            continue
-        except StopIteration:
-            if token is not None:
-                aggregated.append(token)
+def _aggregate(tokens: Iterator, terminator=None, n=0) -> List[Node]:
+    aggregated: List[Node] = []
+    for token in tokens:
+        if token == terminator:
             break
+        elif token == OPENING_BRACES:
+            children = tuple(_aggregate(tokens, terminator=CLOSING_BRACES))
+            node = Node(token=BRACES, children=children if len(children) else None)
+        elif token == OPENING_PARENTHESIS:
+            children = tuple(_aggregate(tokens, terminator=CLOSING_PARENTHESIS))
+            if len(children):
+                node = Node(token=PARENTHESES, children=children)
+            else:
+                aggregated.append(Node(token=token))
+                aggregated.append(Node(token=CLOSING_PARENTHESIS))
+                continue
+        elif token == OPENING_BRACKET:
+            children = tuple(_aggregate(tokens, terminator=CLOSING_BRACKET))
+            if len(children):
+                node = Node(token=BRACKETS, children=children)
+            else:
+                aggregated.append(Node(token=token))
+                aggregated.append(Node(token=CLOSING_BRACKET))
+                continue
+        elif token == SUBSCRIPT or token == SUPERSCRIPT:
+            try:
+                previous = aggregated.pop()
+            except IndexError:
+                previous = Node(token="")
+            if token == SUBSCRIPT and previous.token == SUPERSCRIPT:
+                node = Node(
+                    token=SUB_SUP,
+                    children=(
+                        previous.children[0],
+                        *_aggregate(tokens, terminator=terminator, n=1),
+                        previous.children[1],
+                    ),
+                )
+            elif token == SUPERSCRIPT and previous.token == SUBSCRIPT:
+                node = Node(
+                    token=SUB_SUP,
+                    children=(*previous.children, *_aggregate(tokens, terminator=terminator, n=1)),
+                )
+            elif token == previous.token:
+                pass  # TODO: Raise error
+            else:
+                node = Node(token=token, children=(previous, *_aggregate(tokens, terminator=terminator, n=1)))
+        elif token == FRAC:
+            node = Node(token=token, children=tuple(_aggregate(tokens, terminator=terminator, n=2)))
+        elif token == OVER:
+            denominator = tuple(_aggregate(tokens, terminator=terminator))
+            if len(denominator) > 1:
+                denominator = (Node(token=BRACES, children=denominator),)
+            node = Node(token=FRAC, children=(aggregated.pop(), *denominator))
+        elif token == SQRT:
+            root = None
+            next_node = tuple(_aggregate(tokens, terminator=terminator, n=1))
+            if next_node[0].token == BRACKETS:
+                root = next_node[0].children[0]
+                next_node = tuple(_aggregate(tokens, terminator=terminator, n=1))
+            node = Node(token=token, children=next_node[-1:], root=root)
+        else:
+            node = Node(token=token)
+        aggregated.append(node)
+        if n and len(aggregated) == n:
+            break
+        # token = None
+        # try:
+        #     token = next_item_or_group(tokens)
+        #     if isinstance(token, list):
+        #         aggregated.append(token)
+        #     elif token == OPENING_BRACKET:
+        #         previous = None
+        #         if len(aggregated):
+        #             previous = aggregated[-1]
+        #         try:
+        #             g = group(tokens, OPENING_BRACKET, CLOSING_BRACKET)
+        #             if previous == SQRT:
+        #                 root = next(tokens)
+        #                 if root == OPENING_BRACES:
+        #                     try:
+        #                         root = group(tokens)
+        #                     except EmptyGroupError:
+        #                         root = ""
+        #                 aggregated[-1] = ROOT
+        #                 aggregated.append(root)
+        #             else:
+        #                 pass  # FIXME: possible issues
+        #             aggregated.append(g)
+        #         except EmptyGroupError:
+        #             if previous == SQRT:
+        #                 continue
+        #             aggregated += [OPENING_BRACKET, CLOSING_BRACKET]
+        #     elif token in (r"\lim", r"\inf", r"\sup", r"\max", r"\min"):
+        #         next_token = next(tokens)
+        #         try:
+        #             if next_token != "_":  # nosec
+        #                 raise StopIteration
+        #             a = next_item_or_group(tokens)
+        #             aggregated += [token, a]
+        #         except StopIteration:
+        #             aggregated += [token, [], next_token]
+        #             continue
+        #     elif token == r"\limits":  # nosec
+        #         previous = aggregated.pop()
+        #         next(tokens)
+        #         a = next_item_or_group(tokens)
+        #         next(tokens)
+        #         b = next_item_or_group(tokens)
+        #         aggregated += [token, previous, a, b]
+        #     elif token in SUB_SUP:
+        #         aggregated = process_sub_sup(aggregated, token, tokens)
+        #     elif token.startswith(BEGIN) or token in MATRICES:
+        #         aggregated += environment(token, tokens)
+        #     elif token == OVER:
+        #         try:
+        #             numerator = aggregated.pop()
+        #             aggregated.append(FRAC)
+        #             aggregated.append([numerator])
+        #             denominator = next_item_or_group(tokens)
+        #             aggregated.append([denominator])
+        #         except IndexError:
+        #             raise NumeratorNotFoundError
+        #         except (StopIteration, EmptyGroupError):
+        #             raise DenominatorNotFoundError
+        #     else:
+        #         aggregated.append(token)
+        # except EmptyGroupError:
+        #     aggregated += [OPENING_BRACES, CLOSING_BRACES]
+        #     continue
+        # except StopIteration:
+        #     if token is not None:
+        #         aggregated.append(token)
+        #     break
     return aggregated
 
 
