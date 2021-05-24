@@ -465,281 +465,281 @@ from latex2mathml.converter import _convert, convert
             },
             id="array-with-vertical-bar",
         ),
-        #     pytest.param(
-        #         r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}",
-        #         {
-        #             "mtable": MultiDict(
-        #                 [
-        #                     ("@rowlines", "none solid"),
-        #                     (
-        #                         "mtr",
-        #                         MultiDict(
-        #                             [
-        #                                 ("mtd", {"@columnalign": "center", "mn": "1"}),
-        #                                 ("mtd", {"@columnalign": "right", "mn": "2"}),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                     (
-        #                         "mtr",
-        #                         MultiDict(
-        #                             [
-        #                                 ("mtd", {"@columnalign": "center", "mn": "3"}),
-        #                                 ("mtd", {"@columnalign": "right", "mn": "4"}),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                     (
-        #                         "mtr",
-        #                         MultiDict(
-        #                             [
-        #                                 ("mtd", {"@columnalign": "center", "mn": "5"}),
-        #                                 ("mtd", {"@columnalign": "right", "mn": "6"}),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                 ]
-        #             )
-        #         },
-        #         id="array-with-horizontal-lines",
-        #     ),
-        #     pytest.param(
-        #         r"""\begin{bmatrix}
-        #      a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
-        #      a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
-        #      \vdots  & \vdots  & \ddots & \vdots  \\
-        #      a_{m,1} & a_{m,2} & \cdots & a_{m,n}
-        #     \end{bmatrix}""",
-        #         MultiDict(
+        # pytest.param(
+        #     r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}",
+        #     {
+        #         "mtable": MultiDict(
         #             [
-        #                 ("mo", "&#x0005B;"),
+        #                 ("@rowlines", "none solid"),
         #                 (
-        #                     "mtable",
+        #                     "mtr",
         #                     MultiDict(
         #                         [
-        #                             (
-        #                                 "mtr",
-        #                                 MultiDict(
-        #                                     [
-        #                                         (
-        #                                             "mtd",
-        #                                             {
-        #                                                 "msub": MultiDict(
-        #                                                     [
-        #                                                         ("mi", "a"),
-        #                                                         (
-        #                                                             "mrow",
-        #                                                             MultiDict(
-        #                                                                 [
-        #                                                                     ("mn", "1"),
-        #                                                                     ("mo", "&#x0002C;"),
-        #                                                                     ("mn", "1"),
-        #                                                                 ]
-        #                                                             ),
-        #                                                         ),
-        #                                                     ]
-        #                                                 )
-        #                                             },
-        #                                         ),
-        #                                         (
-        #                                             "mtd",
-        #                                             {
-        #                                                 "msub": MultiDict(
-        #                                                     [
-        #                                                         ("mi", "a"),
-        #                                                         (
-        #                                                             "mrow",
-        #                                                             MultiDict(
-        #                                                                 [
-        #                                                                     ("mn", "1"),
-        #                                                                     ("mo", "&#x0002C;"),
-        #                                                                     ("mn", "2"),
-        #                                                                 ]
-        #                                                             ),
-        #                                                         ),
-        #                                                     ]
-        #                                                 )
-        #                                             },
-        #                                         ),
-        #                                         ("mtd", {"mo": "&#x022EF;"}),
-        #                                         (
-        #                                             "mtd",
-        #                                             {
-        #                                                 "msub": MultiDict(
-        #                                                     [
-        #                                                         ("mi", "a"),
-        #                                                         (
-        #                                                             "mrow",
-        #                                                             MultiDict(
-        #                                                                 [
-        #                                                                     ("mn", "1"),
-        #                                                                     ("mo", "&#x0002C;"),
-        #                                                                     ("mi", "n"),
-        #                                                                 ]
-        #                                                             ),
-        #                                                         ),
-        #                                                     ]
-        #                                                 )
-        #                                             },
-        #                                         ),
-        #                                     ]
-        #                                 ),
-        #                             ),
-        #                             (
-        #                                 "mtr",
-        #                                 MultiDict(
-        #                                     [
-        #                                         (
-        #                                             "mtd",
-        #                                             {
-        #                                                 "msub": MultiDict(
-        #                                                     [
-        #                                                         ("mi", "a"),
-        #                                                         (
-        #                                                             "mrow",
-        #                                                             MultiDict(
-        #                                                                 [
-        #                                                                     ("mn", "2"),
-        #                                                                     ("mo", "&#x0002C;"),
-        #                                                                     ("mn", "1"),
-        #                                                                 ]
-        #                                                             ),
-        #                                                         ),
-        #                                                     ]
-        #                                                 )
-        #                                             },
-        #                                         ),
-        #                                         (
-        #                                             "mtd",
-        #                                             {
-        #                                                 "msub": MultiDict(
-        #                                                     [
-        #                                                         ("mi", "a"),
-        #                                                         (
-        #                                                             "mrow",
-        #                                                             MultiDict(
-        #                                                                 [
-        #                                                                     ("mn", "2"),
-        #                                                                     ("mo", "&#x0002C;"),
-        #                                                                     ("mn", "2"),
-        #                                                                 ]
-        #                                                             ),
-        #                                                         ),
-        #                                                     ]
-        #                                                 )
-        #                                             },
-        #                                         ),
-        #                                         ("mtd", {"mo": "&#x022EF;"}),
-        #                                         (
-        #                                             "mtd",
-        #                                             {
-        #                                                 "msub": MultiDict(
-        #                                                     [
-        #                                                         ("mi", "a"),
-        #                                                         (
-        #                                                             "mrow",
-        #                                                             MultiDict(
-        #                                                                 [
-        #                                                                     ("mn", "2"),
-        #                                                                     ("mo", "&#x0002C;"),
-        #                                                                     ("mi", "n"),
-        #                                                                 ]
-        #                                                             ),
-        #                                                         ),
-        #                                                     ]
-        #                                                 )
-        #                                             },
-        #                                         ),
-        #                                     ]
-        #                                 ),
-        #                             ),
-        #                             (
-        #                                 "mtr",
-        #                                 MultiDict(
-        #                                     [
-        #                                         ("mtd", {"mo": "&#x022EE;"}),
-        #                                         ("mtd", {"mo": "&#x022EE;"}),
-        #                                         ("mtd", {"mo": "&#x022F1;"}),
-        #                                         ("mtd", {"mo": "&#x022EE;"}),
-        #                                     ]
-        #                                 ),
-        #                             ),
-        #                             (
-        #                                 "mtr",
-        #                                 MultiDict(
-        #                                     [
-        #                                         (
-        #                                             "mtd",
-        #                                             {
-        #                                                 "msub": MultiDict(
-        #                                                     [
-        #                                                         ("mi", "a"),
-        #                                                         (
-        #                                                             "mrow",
-        #                                                             MultiDict(
-        #                                                                 [
-        #                                                                     ("mi", "m"),
-        #                                                                     ("mo", "&#x0002C;"),
-        #                                                                     ("mn", "1"),
-        #                                                                 ]
-        #                                                             ),
-        #                                                         ),
-        #                                                     ]
-        #                                                 )
-        #                                             },
-        #                                         ),
-        #                                         (
-        #                                             "mtd",
-        #                                             {
-        #                                                 "msub": MultiDict(
-        #                                                     [
-        #                                                         ("mi", "a"),
-        #                                                         (
-        #                                                             "mrow",
-        #                                                             MultiDict(
-        #                                                                 [
-        #                                                                     ("mi", "m"),
-        #                                                                     ("mo", "&#x0002C;"),
-        #                                                                     ("mn", "2"),
-        #                                                                 ]
-        #                                                             ),
-        #                                                         ),
-        #                                                     ]
-        #                                                 )
-        #                                             },
-        #                                         ),
-        #                                         ("mtd", {"mo": "&#x022EF;"}),
-        #                                         (
-        #                                             "mtd",
-        #                                             {
-        #                                                 "msub": MultiDict(
-        #                                                     [
-        #                                                         ("mi", "a"),
-        #                                                         (
-        #                                                             "mrow",
-        #                                                             MultiDict(
-        #                                                                 [
-        #                                                                     ("mi", "m"),
-        #                                                                     ("mo", "&#x0002C;"),
-        #                                                                     ("mi", "n"),
-        #                                                                 ]
-        #                                                             ),
-        #                                                         ),
-        #                                                     ]
-        #                                                 )
-        #                                             },
-        #                                         ),
-        #                                     ]
-        #                                 ),
-        #                             ),
+        #                             ("mtd", {"@columnalign": "center", "mn": "1"}),
+        #                             ("mtd", {"@columnalign": "right", "mn": "2"}),
         #                         ]
         #                     ),
         #                 ),
-        #                 ("mo", "&#x0005D;"),
+        #                 (
+        #                     "mtr",
+        #                     MultiDict(
+        #                         [
+        #                             ("mtd", {"@columnalign": "center", "mn": "3"}),
+        #                             ("mtd", {"@columnalign": "right", "mn": "4"}),
+        #                         ]
+        #                     ),
+        #                 ),
+        #                 (
+        #                     "mtr",
+        #                     MultiDict(
+        #                         [
+        #                             ("mtd", {"@columnalign": "center", "mn": "5"}),
+        #                             ("mtd", {"@columnalign": "right", "mn": "6"}),
+        #                         ]
+        #                     ),
+        #                 ),
         #             ]
-        #         ),
-        #         id="issue-33",
-        #     ),
+        #         )
+        #     },
+        #     id="array-with-horizontal-lines",
+        # ),
+        pytest.param(
+            r"""\begin{bmatrix}
+             a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
+             a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
+             \vdots  & \vdots  & \ddots & \vdots  \\
+             a_{m,1} & a_{m,2} & \cdots & a_{m,n}
+            \end{bmatrix}""",
+            MultiDict(
+                [
+                    ("mo", "&#x0005B;"),
+                    (
+                        "mtable",
+                        MultiDict(
+                            [
+                                (
+                                    "mtr",
+                                    MultiDict(
+                                        [
+                                            (
+                                                "mtd",
+                                                {
+                                                    "msub": MultiDict(
+                                                        [
+                                                            ("mi", "a"),
+                                                            (
+                                                                "mrow",
+                                                                MultiDict(
+                                                                    [
+                                                                        ("mn", "1"),
+                                                                        ("mo", "&#x0002C;"),
+                                                                        ("mn", "1"),
+                                                                    ]
+                                                                ),
+                                                            ),
+                                                        ]
+                                                    )
+                                                },
+                                            ),
+                                            (
+                                                "mtd",
+                                                {
+                                                    "msub": MultiDict(
+                                                        [
+                                                            ("mi", "a"),
+                                                            (
+                                                                "mrow",
+                                                                MultiDict(
+                                                                    [
+                                                                        ("mn", "1"),
+                                                                        ("mo", "&#x0002C;"),
+                                                                        ("mn", "2"),
+                                                                    ]
+                                                                ),
+                                                            ),
+                                                        ]
+                                                    )
+                                                },
+                                            ),
+                                            ("mtd", {"mo": "&#x022EF;"}),
+                                            (
+                                                "mtd",
+                                                {
+                                                    "msub": MultiDict(
+                                                        [
+                                                            ("mi", "a"),
+                                                            (
+                                                                "mrow",
+                                                                MultiDict(
+                                                                    [
+                                                                        ("mn", "1"),
+                                                                        ("mo", "&#x0002C;"),
+                                                                        ("mi", "n"),
+                                                                    ]
+                                                                ),
+                                                            ),
+                                                        ]
+                                                    )
+                                                },
+                                            ),
+                                        ]
+                                    ),
+                                ),
+                                (
+                                    "mtr",
+                                    MultiDict(
+                                        [
+                                            (
+                                                "mtd",
+                                                {
+                                                    "msub": MultiDict(
+                                                        [
+                                                            ("mi", "a"),
+                                                            (
+                                                                "mrow",
+                                                                MultiDict(
+                                                                    [
+                                                                        ("mn", "2"),
+                                                                        ("mo", "&#x0002C;"),
+                                                                        ("mn", "1"),
+                                                                    ]
+                                                                ),
+                                                            ),
+                                                        ]
+                                                    )
+                                                },
+                                            ),
+                                            (
+                                                "mtd",
+                                                {
+                                                    "msub": MultiDict(
+                                                        [
+                                                            ("mi", "a"),
+                                                            (
+                                                                "mrow",
+                                                                MultiDict(
+                                                                    [
+                                                                        ("mn", "2"),
+                                                                        ("mo", "&#x0002C;"),
+                                                                        ("mn", "2"),
+                                                                    ]
+                                                                ),
+                                                            ),
+                                                        ]
+                                                    )
+                                                },
+                                            ),
+                                            ("mtd", {"mo": "&#x022EF;"}),
+                                            (
+                                                "mtd",
+                                                {
+                                                    "msub": MultiDict(
+                                                        [
+                                                            ("mi", "a"),
+                                                            (
+                                                                "mrow",
+                                                                MultiDict(
+                                                                    [
+                                                                        ("mn", "2"),
+                                                                        ("mo", "&#x0002C;"),
+                                                                        ("mi", "n"),
+                                                                    ]
+                                                                ),
+                                                            ),
+                                                        ]
+                                                    )
+                                                },
+                                            ),
+                                        ]
+                                    ),
+                                ),
+                                (
+                                    "mtr",
+                                    MultiDict(
+                                        [
+                                            ("mtd", {"mo": "&#x022EE;"}),
+                                            ("mtd", {"mo": "&#x022EE;"}),
+                                            ("mtd", {"mo": "&#x022F1;"}),
+                                            ("mtd", {"mo": "&#x022EE;"}),
+                                        ]
+                                    ),
+                                ),
+                                (
+                                    "mtr",
+                                    MultiDict(
+                                        [
+                                            (
+                                                "mtd",
+                                                {
+                                                    "msub": MultiDict(
+                                                        [
+                                                            ("mi", "a"),
+                                                            (
+                                                                "mrow",
+                                                                MultiDict(
+                                                                    [
+                                                                        ("mi", "m"),
+                                                                        ("mo", "&#x0002C;"),
+                                                                        ("mn", "1"),
+                                                                    ]
+                                                                ),
+                                                            ),
+                                                        ]
+                                                    )
+                                                },
+                                            ),
+                                            (
+                                                "mtd",
+                                                {
+                                                    "msub": MultiDict(
+                                                        [
+                                                            ("mi", "a"),
+                                                            (
+                                                                "mrow",
+                                                                MultiDict(
+                                                                    [
+                                                                        ("mi", "m"),
+                                                                        ("mo", "&#x0002C;"),
+                                                                        ("mn", "2"),
+                                                                    ]
+                                                                ),
+                                                            ),
+                                                        ]
+                                                    )
+                                                },
+                                            ),
+                                            ("mtd", {"mo": "&#x022EF;"}),
+                                            (
+                                                "mtd",
+                                                {
+                                                    "msub": MultiDict(
+                                                        [
+                                                            ("mi", "a"),
+                                                            (
+                                                                "mrow",
+                                                                MultiDict(
+                                                                    [
+                                                                        ("mi", "m"),
+                                                                        ("mo", "&#x0002C;"),
+                                                                        ("mi", "n"),
+                                                                    ]
+                                                                ),
+                                                            ),
+                                                        ]
+                                                    )
+                                                },
+                                            ),
+                                        ]
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                    ("mo", "&#x0005D;"),
+                ]
+            ),
+            id="issue-33",
+        ),
         pytest.param(
             r"\sqrt { ( - 25 ) ^ { 2 } } = \pm 25",
             MultiDict(
@@ -1177,179 +1177,195 @@ from latex2mathml.converter import _convert, convert
         pytest.param(
             "^3", MultiDict([("msup", MultiDict([("mi", ""), ("mn", "3")]))]), id="exponent-without-base-works"
         ),
-        # pytest.param(
-        #     r"\lim_{x \to +\infty} f(x)",
-        #     MultiDict(
-        #         [
-        #             (
-        #                 "munder",
-        #                 MultiDict(
-        #                     [
-        #                         ("mo", "lim"),
-        #                         (
-        #                             "mrow",
-        #                             MultiDict(
-        #                                 [
-        #                                     ("mi", "x"),
-        #                                     ("mo", "&#x02192;"),
-        #                                     ("mo", "&#x0002B;"),
-        #                                     ("mo", "&#x0221E;"),
-        #                                 ]
-        #                             ),
-        #                         ),
-        #                     ]
-        #                 ),
-        #             ),
-        #             ("mi", "f"),
-        #             ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
-        #             ("mi", "x"),
-        #             ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
-        #         ]
-        #     ),
-        #     id="limit-at-plus-infinity",
-        # ),
-        #     pytest.param(
-        #         r"\inf_{x > s}f(x)",
-        #         MultiDict(
-        #             [
-        #                 (
-        #                     "munder",
-        #                     MultiDict(
-        #                         [
-        #                             ("mo", "inf"),
-        #                             (
-        #                                 "mrow",
-        #                                 MultiDict([("mi", "x"), ("mo", "&gt;"), ("mi", "s")]),
-        #                             ),
-        #                         ]
-        #                     ),
-        #                 ),
-        #                 ("mi", "f"),
-        #                 ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
-        #                 ("mi", "x"),
-        #                 ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
-        #             ]
-        #         ),
-        #         id="inf",
-        #     ),
-        #     pytest.param(
-        #         r"\int\limits_{0}^{\pi}",
-        #         MultiDict(
-        #             [
-        #                 (
-        #                     "munderover",
-        #                     MultiDict(
-        #                         [
-        #                             ("mo", "&#x0222B;"),
-        #                             ("mrow", MultiDict([("mn", "0")])),
-        #                             ("mrow", MultiDict([("mi", "&#x003C0;")])),
-        #                         ]
-        #                     ),
-        #                 ),
-        #             ]
-        #         ),
-        #         id="issue-76",
-        #     ),
-        #     pytest.param(
-        #         r"\substack{ \xi{2}=g{\left(x \right)}}",
-        #         {
-        #             "mstyle": {
-        #                 "@scriptlevel": "1",
-        #                 "mtable": {
-        #                     "mtr": {
-        #                         "mtd": MultiDict(
-        #                             [
-        #                                 ("mi", "&#x003BE;"),
-        #                                 ("mn", "2"),
-        #                                 ("mo", "&#x0003D;"),
-        #                                 ("mi", "g"),
-        #                                 (
-        #                                     "mrow",
-        #                                     MultiDict(
-        #                                         [
-        #                                             (
-        #                                                 "mo",
-        #                                                 MultiDict(
-        #                                                     [
-        #                                                         ("@stretchy", "true"),
-        #                                                         ("@fence", "true"),
-        #                                                         ("@form", "prefix"),
-        #                                                         ("$", "&#x00028;"),
-        #                                                     ]
-        #                                                 ),
-        #                                             ),
-        #                                             ("mrow", {"mi": "x"}),
-        #                                             (
-        #                                                 "mo",
-        #                                                 MultiDict(
-        #                                                     [
-        #                                                         ("@stretchy", "true"),
-        #                                                         ("@fence", "true"),
-        #                                                         ("@form", "postfix"),
-        #                                                         ("$", "&#x00029;"),
-        #                                                     ]
-        #                                                 ),
-        #                                             ),
-        #                                         ]
-        #                                     ),
-        #                                 ),
-        #                             ]
-        #                         )
-        #                     }
-        #                 },
-        #             }
-        #         },
-        #         id="issue-75-1-row",
-        #     ),
-        #     pytest.param(
-        #         r"\sum_{\substack{1\le i\le n\\ i\ne j}}",
-        #         {
-        #             "munder": MultiDict(
-        #                 [
-        #                     ("mo", "&#x02211;"),
-        #                     (
-        #                         "mrow",
-        #                         {
-        #                             "mstyle": {
-        #                                 "@scriptlevel": "1",
-        #                                 "mtable": MultiDict(
-        #                                     [
-        #                                         (
-        #                                             "mtr",
-        #                                             {
-        #                                                 "mtd": MultiDict(
-        #                                                     [
-        #                                                         ("mn", "1"),
-        #                                                         ("mo", "&#x02264;"),
-        #                                                         ("mi", "i"),
-        #                                                         ("mo", "&#x02264;"),
-        #                                                         ("mi", "n"),
-        #                                                     ]
-        #                                                 )
-        #                                             },
-        #                                         ),
-        #                                         (
-        #                                             "mtr",
-        #                                             {
-        #                                                 "mtd": MultiDict(
-        #                                                     [
-        #                                                         ("mi", "i"),
-        #                                                         ("mo", "&#x02260;"),
-        #                                                         ("mi", "j"),
-        #                                                     ]
-        #                                                 )
-        #                                             },
-        #                                         ),
-        #                                     ]
-        #                                 ),
-        #                             }
-        #                         },
-        #                     ),
-        #                 ]
-        #             )
-        #         },
-        #         id="issue-75-2-rows",
-        #     ),
+        pytest.param(
+            r"\lim_{x \to +\infty} f(x)",
+            MultiDict(
+                [
+                    (
+                        "munder",
+                        MultiDict(
+                            [
+                                ("mo", "lim"),
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "x"),
+                                            ("mo", "&#x02192;"),
+                                            ("mo", "&#x0002B;"),
+                                            ("mo", "&#x0221E;"),
+                                        ]
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                    ("mi", "f"),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
+                                ("mi", "x"),
+                                ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="limit-at-plus-infinity",
+        ),
+        pytest.param(
+            r"\inf_{x > s}f(x)",
+            MultiDict(
+                [
+                    (
+                        "munder",
+                        MultiDict(
+                            [
+                                ("mo", "inf"),
+                                (
+                                    "mrow",
+                                    MultiDict([("mi", "x"), ("mo", "&gt;"), ("mi", "s")]),
+                                ),
+                            ]
+                        ),
+                    ),
+                    ("mi", "f"),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
+                                ("mi", "x"),
+                                ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="inf",
+        ),
+        pytest.param(
+            r"\int\limits_{0}^{\pi}",
+            MultiDict(
+                [
+                    (
+                        "munderover",
+                        MultiDict(
+                            [
+                                ("mo", "&#x0222B;"),
+                                ("mrow", MultiDict([("mn", "0")])),
+                                ("mrow", MultiDict([("mi", "&#x003C0;")])),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="issue-76",
+        ),
+        pytest.param(
+            r"\substack{ \xi{2}=g{\left(x \right)}}",
+            {
+                "mstyle": {
+                    "@scriptlevel": "1",
+                    "mtable": {
+                        "mtr": {
+                            "mtd": MultiDict(
+                                [
+                                    ("mi", "&#x003BE;"),
+                                    ("mrow", {"mn": "2"}),
+                                    ("mo", "&#x0003D;"),
+                                    ("mi", "g"),
+                                    (
+                                        "mrow",
+                                        {
+                                            "mrow": MultiDict(
+                                                [
+                                                    (
+                                                        "mo",
+                                                        MultiDict(
+                                                            [
+                                                                ("@stretchy", "true"),
+                                                                ("@fence", "true"),
+                                                                ("@form", "prefix"),
+                                                                ("$", "&#x00028;"),
+                                                            ]
+                                                        ),
+                                                    ),
+                                                    ("mi", "x"),
+                                                    (
+                                                        "mo",
+                                                        MultiDict(
+                                                            [
+                                                                ("@stretchy", "true"),
+                                                                ("@fence", "true"),
+                                                                ("@form", "postfix"),
+                                                                ("$", "&#x00029;"),
+                                                            ]
+                                                        ),
+                                                    ),
+                                                ]
+                                            ),
+                                        },
+                                    ),
+                                ]
+                            )
+                        }
+                    },
+                }
+            },
+            id="issue-75-1-row",
+        ),
+        pytest.param(
+            r"\sum_{\substack{1\le i\le n\\ i\ne j}}",
+            {
+                "munder": MultiDict(
+                    [
+                        ("mo", "&#x02211;"),
+                        (
+                            "mrow",
+                            {
+                                "mstyle": {
+                                    "@scriptlevel": "1",
+                                    "mtable": MultiDict(
+                                        [
+                                            (
+                                                "mtr",
+                                                {
+                                                    "mtd": MultiDict(
+                                                        [
+                                                            ("mn", "1"),
+                                                            ("mo", "&#x02264;"),
+                                                            ("mi", "i"),
+                                                            ("mo", "&#x02264;"),
+                                                            ("mi", "n"),
+                                                        ]
+                                                    )
+                                                },
+                                            ),
+                                            (
+                                                "mtr",
+                                                {
+                                                    "mtd": MultiDict(
+                                                        [
+                                                            ("mi", "i"),
+                                                            ("mo", "&#x02260;"),
+                                                            ("mi", "j"),
+                                                        ]
+                                                    )
+                                                },
+                                            ),
+                                        ]
+                                    ),
+                                }
+                            },
+                        ),
+                    ]
+                )
+            },
+            id="issue-75-2-rows",
+        ),
         pytest.param(
             r"\tan x + \sec x + \cos x + \sin x + \cot x + \csc x",
             MultiDict(

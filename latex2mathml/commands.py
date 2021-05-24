@@ -50,7 +50,7 @@ COMMANDS: Dict[str, Tuple[int, str, dict]] = {
     r"\text": (1, "mtext", {}),
 }
 
-LIMITS = [r"\lim", r"\sup", r"\inf", r"\max", r"\min"]
+LIMIT = (r"\lim", r"\sup", r"\inf", r"\max", r"\min")
 
 for space in SPACES:
     COMMANDS[space] = (0, "mspace", {"width": "0.167em"})
@@ -58,5 +58,5 @@ for space in SPACES:
 for matrix in MATRICES:
     COMMANDS[matrix] = (1, "mtable", {})
 
-for limit in LIMITS:
-    COMMANDS[limit] = (1, "munder", {})
+for limit in LIMIT:
+    COMMANDS[limit] = (1, "mo", {})

@@ -46,6 +46,9 @@ COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DO
 BEGIN = r"\begin"
 END = r"\end"
 
+LIMITS = r"\limits"
+INTEGRAL = r"\int"
+
 
 class Node(NamedTuple):
     token: str
@@ -107,14 +110,15 @@ def _aggregate(tokens: Iterator, terminator: str = None, limit: int = 0) -> List
                     ),
                 )
             elif token == SUPERSCRIPT and previous.token == SUBSCRIPT and previous.children is not None:
-                node = Node(
-                    token=SUB_SUP,
-                    children=(*previous.children, *_aggregate(tokens, terminator=terminator, limit=1)),
-                )
+                next_children = _aggregate(tokens, terminator=terminator, limit=1)
+                if previous.children[0].token == LIMITS and aggregated[-1].token == INTEGRAL:
+                    node = Node(LIMITS, children=(aggregated.pop(), *previous.children[1:], *next_children))
+                else:
+                    node = Node(token=SUB_SUP, children=(*previous.children, *next_children))
             elif token == previous.token:
                 pass  # TODO: Raise error
             else:
-                next_nodes = tuple(_aggregate(tokens, terminator=terminator, limit=1))
+                next_nodes = _aggregate(tokens, terminator=terminator, limit=1)
                 if len(next_nodes) == 0:
                     raise MissingSuperScriptOrSubscript
                 node = Node(token=token, children=(previous, *next_nodes))
@@ -164,7 +168,7 @@ def _aggregate(tokens: Iterator, terminator: str = None, limit: int = 0) -> List
             node = Node(token=rf"\{matrix}", children=children, alignment=alignment)
         elif token in MATRICES:
             children = tuple(_aggregate(tokens, terminator=terminator))
-            if len(children) == 1 and children[0].token == BRACES:
+            if len(children) == 1 and children[0].token == BRACES and children[0].children:
                 children = children[0].children
             node = Node(token=token, children=children, alignment="")
         else:

@@ -5,9 +5,23 @@ from xml.sax.saxutils import unescape  # nosec
 
 import pkg_resources
 
-from latex2mathml.aggregator import BAR, BRACES, DOT, LEFT, OVERLINE, OVERRIGHTARROW, UNDERLINE, VEC, Node, aggregate
-from latex2mathml.commands import COMMANDS, MATRICES
+from latex2mathml.aggregator import (
+    BAR,
+    BRACES,
+    DOT,
+    LEFT,
+    OVERLINE,
+    OVERRIGHTARROW,
+    SUBSCRIPT,
+    UNDERLINE,
+    VEC,
+    Node,
+    aggregate,
+)
+from latex2mathml.commands import COMMANDS, LIMIT, MATRICES
 from latex2mathml.symbols_parser import convert_symbol
+
+SUMMATION = r"\sum"
 
 
 def convert(latex: str, xmlns: str = "http://www.w3.org/1998/Math/MathML", display: str = "inline") -> str:
@@ -212,6 +226,10 @@ def _get_alignment_and_column_lines(alignment: Optional[str] = None) -> Tuple[Op
 
 def _convert_command(node: Node, parent: Element) -> None:
     command = node.token
+
+    if command == r"\substack":
+        parent = SubElement(parent, "mstyle", scriptlevel="1")
+
     _, tag, attributes = COMMANDS[command]
 
     if command == LEFT:
@@ -219,18 +237,16 @@ def _convert_command(node: Node, parent: Element) -> None:
 
     _append_prefix_element(command, parent)
 
-    alignment = None
+    alignment, column_lines = _get_alignment_and_column_lines(node.alignment)
+    if column_lines:
+        attributes["columnlines"] = column_lines
+    if command == SUBSCRIPT and len(node.children[0]) and node.children[0].token in (*LIMIT, SUMMATION):
+        tag = "munder"
+    element = SubElement(parent, tag, attributes)
 
-    if command in (r"\lim", r"\inf", r"\sup", r"\max", r"\min"):
-        element = SubElement(parent, "mo")
+    if command in LIMIT:
         element.text = command[1:]
-    else:
-        alignment, column_lines = _get_alignment_and_column_lines(node.alignment)
-        if column_lines:
-            attributes["columnlines"] = column_lines
-        element = SubElement(parent, tag, attributes)
-
-    if node.text is not None:
+    elif node.text is not None:
         element.text = node.text
     elif node.delimiter is not None:
         if node.delimiter != ".":
@@ -357,16 +373,16 @@ def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False) -> 
         mo.text = token if symbol is None else "&#x{};".format(symbol)
         if token in "()":
             mo.attrib["stretchy"] = "false"
-    # elif (
-    #     symbol
-    #     and (
-    #         int(symbol, 16) in range(int("2200", 16), int("22FF", 16) + 1)
-    #         or int(symbol, 16) in range(int("2190", 16), int("21FF", 16) + 1)
-    #     )
-    #     or symbol == "."
-    # ):
-    #     mo = SubElement(parent, "mo")
-    #     mo.text = "&#x{};".format(symbol)
+    elif (
+        symbol
+        and (
+            int(symbol, 16) in range(int("2200", 16), int("22FF", 16) + 1)
+            or int(symbol, 16) in range(int("2190", 16), int("21FF", 16) + 1)
+        )
+        or symbol == "."
+    ):
+        mo = SubElement(parent, "mo")
+        mo.text = "&#x{};".format(symbol)
     elif token == r"\ ":
         tag = SubElement(parent, "mtext")
         tag.text = "&#x000A0;"
