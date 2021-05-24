@@ -1,7 +1,3 @@
-class EmptyGroupError(Exception):
-    pass
-
-
 class NumeratorNotFoundError(Exception):
     pass
 

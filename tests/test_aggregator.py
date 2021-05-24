@@ -1,9 +1,9 @@
 import string
-from typing import Any, List, Tuple, Union
+from typing import Any, Tuple, Union
 
 import pytest
 
-from latex2mathml.aggregator import Node, aggregate, find_opening_parenthesis
+from latex2mathml.aggregator import Node, aggregate
 from latex2mathml.exceptions import (
     DenominatorNotFoundError,
     ExtraLeftOrMissingRight,
@@ -50,11 +50,7 @@ from latex2mathml.exceptions import (
             ],
             id="inner-group",
         ),
-        pytest.param(
-            "a_b",
-            [Node(token="_", children=(Node(token="a"), Node(token="b")))],
-            id="subscript-1",
-        ),
+        pytest.param("a_b", [Node(token="_", children=(Node(token="a"), Node(token="b")))], id="subscript-1"),
         pytest.param(
             "{a_b}",
             [Node(token="{}", children=(Node(token="_", children=(Node(token="a"), Node(token="b"))),))],
@@ -125,97 +121,316 @@ from latex2mathml.exceptions import (
             [Node(token=r"\left", children=(Node(token=r"\right", delimiter="."),), delimiter=r"\{")],
             id="null-delimiter-1",
         ),
-        # pytest.param(r"\matrix{a & b \\ c & d}", [r"\matrix", [["a", "b"], ["c", "d"]]], id="matrix-1"),
-        # pytest.param(
-        #     r"\begin{matrix}a & b \\ c & d \end{matrix}", [r"\matrix", [["a", "b"], ["c", "d"]]], id="matrix-2"
-        # ),
-        # pytest.param(
-        #     r"\left\{ \begin{array} { l } { 3x - 5y + 4z = 0} \\ { x - y + 8z = 0} \\ { 2x - 6y + z = 0} "
-        #     r"\end{array}\right.",
-        #     [
-        #         [
-        #             r"\left",
-        #             r"\{",
-        #             [
-        #                 r"\array",
-        #                 "l",
-        #                 [
-        #                     [["3", "x", "-", "5", "y", "+", "4", "z", "=", "0"]],
-        #                     [["x", "-", "y", "+", "8", "z", "=", "0"]],
-        #                     [["2", "x", "-", "6", "y", "+", "z", "=", "0"]],
-        #                 ],
-        #             ],
-        #             r"\right",
-        #             ".",
-        #         ]
-        #     ],
-        #     id="null-delimiter-2",
-        # ),
-        # pytest.param(
-        #     r"\begin{matrix*}[r]a & b \\ c & d \end{matrix*}",
-        #     [r"\matrix*", "r", [["a", "b"], ["c", "d"]]],
-        #     id="matrix-with-alignment",
-        # ),
-        # pytest.param(
-        #     r"\begin{matrix*}[]a & b \\ c & d \end{matrix*}",
-        #     [r"\matrix*", [["a", "b"], ["c", "d"]]],
-        #     id="matrix-with-empty-alignment",
-        # ),
-        # pytest.param(
-        #     r"\begin{matrix}-a & b \\ c & d \end{matrix}",
-        #     [r"\matrix", [[["-", "a"], "b"], ["c", "d"]]],
-        #     id="matrix-with-negative-sign",
-        # ),
-        # pytest.param(r"\begin{matrix}-\end{matrix}", [r"\matrix", ["-"]], id="matrix-with-just-negative-sign-1"),
-        # pytest.param(
-        #     r"\begin{matrix}a_{1} & b_{2} \\ c_{3} & d_{4} \end{matrix}",
-        #     [
-        #         r"\matrix",
-        #         [
-        #             [["_", "a", ["1"]], ["_", "b", ["2"]]],
-        #             [["_", "c", ["3"]], ["_", "d", ["4"]]],
-        #         ],
-        #     ],
-        #     id="complex-matrix",
-        # ),
-        # pytest.param(
-        #     r"\begin{array}{cc} 1 & 2 \\ 3 & 4 \end{array}",
-        #     [r"\array", "cc", [["1", "2"], ["3", "4"]]],
-        #     id="simple-array",
-        # ),
-        # pytest.param(
-        #     r"""\begin{bmatrix}
-        #      a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
-        #      a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
-        #      \vdots  & \vdots  & \ddots & \vdots  \\
-        #      a_{m,1} & a_{m,2} & \cdots & a_{m,n}
-        #     \end{bmatrix}""",
-        #     [
-        #         r"\bmatrix",
-        #         [
-        #             [
-        #                 ["_", "a", ["1", ",", "1"]],
-        #                 ["_", "a", ["1", ",", "2"]],
-        #                 r"\cdots",
-        #                 ["_", "a", ["1", ",", "n"]],
-        #             ],
-        #             [
-        #                 ["_", "a", ["2", ",", "1"]],
-        #                 ["_", "a", ["2", ",", "2"]],
-        #                 r"\cdots",
-        #                 ["_", "a", ["2", ",", "n"]],
-        #             ],
-        #             [r"\vdots", r"\vdots", r"\ddots", r"\vdots"],
-        #             [
-        #                 ["_", "a", ["m", ",", "1"]],
-        #                 ["_", "a", ["m", ",", "2"]],
-        #                 r"\cdots",
-        #                 ["_", "a", ["m", ",", "n"]],
-        #             ],
-        #         ],
-        #     ],
-        #     id="issue-33",
-        # ),
+        pytest.param(
+            r"\matrix{a & b \\ c & d}",
+            [
+                Node(
+                    token=r"\matrix",
+                    children=(
+                        Node(
+                            token="{}",
+                            children=(
+                                Node(token="a"),
+                                Node(token="&"),
+                                Node(token="b"),
+                                Node(token=r"\\"),
+                                Node(token="c"),
+                                Node(token="&"),
+                                Node(token="d"),
+                            ),
+                        ),
+                    ),
+                    alignment="",
+                )
+            ],
+            id="matrix-1",
+        ),
+        pytest.param(
+            r"\begin{matrix}a & b \\ c & d \end{matrix}",
+            [
+                Node(
+                    token=r"\matrix",
+                    children=(
+                        Node(token="a"),
+                        Node(token="&"),
+                        Node(token="b"),
+                        Node(token=r"\\"),
+                        Node(token="c"),
+                        Node(token="&"),
+                        Node(token="d"),
+                    ),
+                    alignment="",
+                )
+            ],
+            id="matrix-2",
+        ),
+        pytest.param(
+            r"\left\{ \begin{array} { l } { 3x - 5y + 4z = 0} \\ { x - y + 8z = 0} \\ { 2x - 6y + z = 0} "
+            r"\end{array}\right.",
+            [
+                Node(
+                    token=r"\left",
+                    children=(
+                        Node(
+                            token=r"\array",
+                            alignment="l",
+                            children=(
+                                Node(
+                                    token="{}",
+                                    children=(
+                                        Node(token="3"),
+                                        Node(token="x"),
+                                        Node(token="-"),
+                                        Node(token="5"),
+                                        Node(token="y"),
+                                        Node(token="+"),
+                                        Node(token="4"),
+                                        Node(token="z"),
+                                        Node(token="="),
+                                        Node(token="0"),
+                                    ),
+                                ),
+                                Node(token=r"\\"),
+                                Node(
+                                    token="{}",
+                                    children=(
+                                        Node(token="x"),
+                                        Node(token="-"),
+                                        Node(token="y"),
+                                        Node(token="+"),
+                                        Node(token="8"),
+                                        Node(token="z"),
+                                        Node(token="="),
+                                        Node(token="0"),
+                                    ),
+                                ),
+                                Node(token=r"\\"),
+                                Node(
+                                    token="{}",
+                                    children=(
+                                        Node(token="2"),
+                                        Node(token="x"),
+                                        Node(token="-"),
+                                        Node(token="6"),
+                                        Node(token="y"),
+                                        Node(token="+"),
+                                        Node(token="z"),
+                                        Node(token="="),
+                                        Node(token="0"),
+                                    ),
+                                ),
+                            ),
+                        ),
+                        Node(token=r"\right", delimiter="."),
+                    ),
+                    delimiter=r"\{",
+                )
+            ],
+            id="null-delimiter-2",
+        ),
+        pytest.param(
+            r"\begin{matrix*}[r]a & b \\ c & d \end{matrix*}",
+            [
+                Node(
+                    token=r"\matrix*",
+                    children=(
+                        Node(token="a"),
+                        Node(token="&"),
+                        Node(token="b"),
+                        Node(token=r"\\"),
+                        Node(token="c"),
+                        Node(token="&"),
+                        Node(token="d"),
+                    ),
+                    alignment="r",
+                )
+            ],
+            id="matrix-with-alignment",
+        ),
+        pytest.param(
+            r"\begin{matrix*}[]a & b \\ c & d \end{matrix*}",
+            [
+                Node(
+                    token=r"\matrix*",
+                    children=(
+                        Node(token="a"),
+                        Node(token="&"),
+                        Node(token="b"),
+                        Node(token=r"\\"),
+                        Node(token="c"),
+                        Node(token="&"),
+                        Node(token="d"),
+                    ),
+                    alignment="",
+                )
+            ],
+            id="matrix-with-empty-alignment",
+        ),
+        pytest.param(
+            r"\begin{matrix}-a & b \\ c & d \end{matrix}",
+            [
+                Node(
+                    token=r"\matrix",
+                    children=(
+                        Node(token="-"),
+                        Node(token="a"),
+                        Node(token="&"),
+                        Node(token="b"),
+                        Node(token=r"\\"),
+                        Node(token="c"),
+                        Node(token="&"),
+                        Node(token="d"),
+                    ),
+                    alignment="",
+                )
+            ],
+            id="matrix-with-negative-sign",
+        ),
+        pytest.param(
+            r"\begin{matrix}-\end{matrix}",
+            [Node(token=r"\matrix", children=(Node(token="-"),), alignment="")],
+            id="matrix-with-just-negative-sign-1",
+        ),
+        pytest.param(
+            r"\begin{matrix}a_{1} & b_{2} \\ c_{3} & d_{4} \end{matrix}",
+            [
+                Node(
+                    token=r"\matrix",
+                    children=(
+                        Node(token="_", children=(Node(token="a"), Node(token="{}", children=(Node(token="1"),)))),
+                        Node(token="&"),
+                        Node(token="_", children=(Node(token="b"), Node(token="{}", children=(Node(token="2"),)))),
+                        Node(token=r"\\"),
+                        Node(token="_", children=(Node(token="c"), Node(token="{}", children=(Node(token="3"),)))),
+                        Node(token="&"),
+                        Node(token="_", children=(Node(token="d"), Node(token="{}", children=(Node(token="4"),)))),
+                    ),
+                    alignment="",
+                ),
+            ],
+            id="complex-matrix",
+        ),
+        pytest.param(
+            r"\begin{array}{cc} 1 & 2 \\ 3 & 4 \end{array}",
+            [
+                Node(
+                    token=r"\array",
+                    children=(
+                        Node(token="1"),
+                        Node(token="&"),
+                        Node(token="2"),
+                        Node(token=r"\\"),
+                        Node(token="3"),
+                        Node(token="&"),
+                        Node(token="4"),
+                    ),
+                    alignment="cc",
+                )
+            ],
+            id="simple-array",
+        ),
+        pytest.param(
+            r"""\begin{bmatrix}
+             a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
+             a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
+             \vdots  & \vdots  & \ddots & \vdots  \\
+             a_{m,1} & a_{m,2} & \cdots & a_{m,n}
+            \end{bmatrix}""",
+            [
+                Node(
+                    token=r"\bmatrix",
+                    children=(
+                        Node(
+                            token="_",
+                            children=(
+                                Node(token="a"),
+                                Node(token="{}", children=(Node(token="1"), Node(token=","), Node(token="1"))),
+                            ),
+                        ),
+                        Node(token="&"),
+                        Node(
+                            token="_",
+                            children=(
+                                Node(token="a"),
+                                Node(token="{}", children=(Node(token="1"), Node(token=","), Node(token="2"))),
+                            ),
+                        ),
+                        Node(token="&"),
+                        Node(token=r"\cdots"),
+                        Node(token="&"),
+                        Node(
+                            token="_",
+                            children=(
+                                Node(token="a"),
+                                Node(token="{}", children=(Node(token="1"), Node(token=","), Node(token="n"))),
+                            ),
+                        ),
+                        Node(token=r"\\"),
+                        Node(
+                            token="_",
+                            children=(
+                                Node(token="a"),
+                                Node(token="{}", children=(Node(token="2"), Node(token=","), Node(token="1"))),
+                            ),
+                        ),
+                        Node(token="&"),
+                        Node(
+                            token="_",
+                            children=(
+                                Node(token="a"),
+                                Node(token="{}", children=(Node(token="2"), Node(token=","), Node(token="2"))),
+                            ),
+                        ),
+                        Node(token="&"),
+                        Node(token=r"\cdots"),
+                        Node(token="&"),
+                        Node(
+                            token="_",
+                            children=(
+                                Node(token="a"),
+                                Node(token="{}", children=(Node(token="2"), Node(token=","), Node(token="n"))),
+                            ),
+                        ),
+                        Node(token=r"\\"),
+                        Node(token=r"\vdots"),
+                        Node(token="&"),
+                        Node(token=r"\vdots"),
+                        Node(token="&"),
+                        Node(token=r"\ddots"),
+                        Node(token="&"),
+                        Node(token=r"\vdots"),
+                        Node(token=r"\\"),
+                        Node(
+                            token="_",
+                            children=(
+                                Node(token="a"),
+                                Node(token="{}", children=(Node(token="m"), Node(token=","), Node(token="1"))),
+                            ),
+                        ),
+                        Node(token="&"),
+                        Node(
+                            token="_",
+                            children=(
+                                Node(token="a"),
+                                Node(token="{}", children=(Node(token="m"), Node(token=","), Node(token="2"))),
+                            ),
+                        ),
+                        Node(token="&"),
+                        Node(token=r"\cdots"),
+                        Node(token="&"),
+                        Node(
+                            token="_",
+                            children=(
+                                Node(token="a"),
+                                Node(token="{}", children=(Node(token="m"), Node(token=","), Node(token="n"))),
+                            ),
+                        ),
+                    ),
+                    alignment="",
+                )
+            ],
+            id="issue-33",
+        ),
         pytest.param(
             r"\sqrt { ( - 25 ) ^ { 2 } } = \pm 25",
             [
@@ -267,21 +482,82 @@ from latex2mathml.exceptions import (
             ],
             id="issue-44",
         ),
-        # pytest.param(
-        #     r"\begin{array}{rcl}ABC&=&a\\A&=&abc\end{array}",
-        #     [r"\array", "rcl", [[["A", "B", "C"], "=", "a"], ["A", "=", ["a", "b", "c"]]]],
-        #     id="issue-55",
-        # ),
-        # pytest.param(
-        #     r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}",
-        #     [r"\array", "cr", [["1", "2"], ["3", "4"], [r"\hline", "5", "6"]]],
-        #     id="array-with-horizontal-line",
-        # ),
-        # pytest.param(
-        #     r"\begin{array}{cr} 1 & 2 \\ \hline 3 & 4 \\ \hline 5 & 6 \end{array}",
-        #     [r"\array", "cr", [["1", "2"], [r"\hline", "3", "4"], [r"\hline", "5", "6"]]],
-        #     id="array-with-horizontal-lines",
-        # ),
+        pytest.param(
+            r"\begin{array}{rcl}ABC&=&a\\A&=&abc\end{array}",
+            [
+                Node(
+                    token=r"\array",
+                    children=(
+                        Node(token="A"),
+                        Node(token="B"),
+                        Node(token="C"),
+                        Node(token="&"),
+                        Node(token="="),
+                        Node(token="&"),
+                        Node(token="a"),
+                        Node(token=r"\\"),
+                        Node(token="A"),
+                        Node(token="&"),
+                        Node(token="="),
+                        Node(token="&"),
+                        Node(token="a"),
+                        Node(token="b"),
+                        Node(token="c"),
+                    ),
+                    alignment="rcl",
+                )
+            ],
+            id="issue-55",
+        ),
+        pytest.param(
+            r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}",
+            [
+                Node(
+                    token=r"\array",
+                    children=(
+                        Node(token="1"),
+                        Node(token="&"),
+                        Node(token="2"),
+                        Node(token=r"\\"),
+                        Node(token="3"),
+                        Node(token="&"),
+                        Node(token="4"),
+                        Node(token=r"\\"),
+                        Node(token=r"\hline"),
+                        Node(token="5"),
+                        Node(token="&"),
+                        Node(token="6"),
+                    ),
+                    alignment="cr",
+                )
+            ],
+            id="array-with-horizontal-line",
+        ),
+        pytest.param(
+            r"\begin{array}{cr} 1 & 2 \\ \hline 3 & 4 \\ \hline 5 & 6 \end{array}",
+            [
+                Node(
+                    token=r"\array",
+                    children=(
+                        Node(token="1"),
+                        Node(token="&"),
+                        Node(token="2"),
+                        Node(token=r"\\"),
+                        Node(token=r"\hline"),
+                        Node(token="3"),
+                        Node(token="&"),
+                        Node(token="4"),
+                        Node(token=r"\\"),
+                        Node(token=r"\hline"),
+                        Node(token="5"),
+                        Node(token="&"),
+                        Node(token="6"),
+                    ),
+                    alignment="cr",
+                )
+            ],
+            id="array-with-horizontal-lines",
+        ),
         pytest.param(
             r"\mathrm{...}",
             [Node(token=r"\mathrm"), Node(token="{}", children=(Node(token="."), Node(token="."), Node(token=".")))],
@@ -409,38 +685,67 @@ from latex2mathml.exceptions import (
             id=r"group-after-right",
         ),
         pytest.param(
-            r"\sqrt[3]{}",
-            [Node(token=r"\sqrt", children=(Node(token="{}"),), root="3")],
-            id="empty-nth-root",
+            r"\sqrt[3]{}", [Node(token=r"\sqrt", children=(Node(token="{}"),), root="3")], id="empty-nth-root"
+        ),
+        pytest.param(r"1_{}", [Node(token="_", children=(Node(token="1"), Node(token="{}")))], id="empty-subscript"),
+        pytest.param(
+            r"\array{}", [Node(token=r"\array", children=(Node(token="{}"),), alignment="")], id="empty-array"
         ),
         pytest.param(
-            r"1_{}",
-            [Node(token="_", children=(Node(token="1"), Node(token="{}")))],
-            id="empty-subscript",
+            r"\array{{}}",
+            [Node(token=r"\array", children=(Node(token="{}", children=(Node(token="{}"),)),), alignment="")],
+            id="empty-array-with-empty-group",
         ),
-        # pytest.param(r"\array{}", [r"\array", []], id="empty-array"),
-        # pytest.param(r"\array{{}}", [r"\array", []], id="empty-array-with-empty-group"),
-        # pytest.param(
-        #     r"\left[\begin{matrix}1 & 0 & 0 & 0\\0 & 1 & 0 & 0\\0 & 0 & 1 & 0\\0 & 0 & 0 & 1\end{matrix}\right]",
-        #     [
-        #         [
-        #             r"\left",
-        #             "[",
-        #             [
-        #                 r"\matrix",
-        #                 [
-        #                     ["1", "0", "0", "0"],
-        #                     ["0", "1", "0", "0"],
-        #                     ["0", "0", "1", "0"],
-        #                     ["0", "0", "0", "1"],
-        #                 ],
-        #             ],
-        #             r"\right",
-        #             "]",
-        #         ]
-        #     ],
-        #     id="issue-77",
-        # ),
+        pytest.param(
+            r"\left[\begin{matrix}1 & 0 & 0 & 0\\0 & 1 & 0 & 0\\0 & 0 & 1 & 0\\0 & 0 & 0 & 1\end{matrix}\right]",
+            [
+                Node(
+                    token=r"\left",
+                    children=(
+                        Node(
+                            token=r"\matrix",
+                            children=(
+                                Node(token="1"),
+                                Node(token="&"),
+                                Node(token="0"),
+                                Node(token="&"),
+                                Node(token="0"),
+                                Node(token="&"),
+                                Node(token="0"),
+                                Node(token=r"\\"),
+                                Node(token="0"),
+                                Node(token="&"),
+                                Node(token="1"),
+                                Node(token="&"),
+                                Node(token="0"),
+                                Node(token="&"),
+                                Node(token="0"),
+                                Node(token=r"\\"),
+                                Node(token="0"),
+                                Node(token="&"),
+                                Node(token="0"),
+                                Node(token="&"),
+                                Node(token="1"),
+                                Node(token="&"),
+                                Node(token="0"),
+                                Node(token=r"\\"),
+                                Node(token="0"),
+                                Node(token="&"),
+                                Node(token="0"),
+                                Node(token="&"),
+                                Node(token="0"),
+                                Node(token="&"),
+                                Node(token="1"),
+                            ),
+                            alignment="",
+                        ),
+                        Node(token=r"\right", delimiter="]"),
+                    ),
+                    delimiter="[",
+                )
+            ],
+            id="issue-77",
+        ),
         pytest.param(
             r"\left({x}\right)",
             [
@@ -876,25 +1181,30 @@ from latex2mathml.exceptions import (
                         Node(
                             token="{}",
                             children=(
-                                Node(token=r"\substack"),
                                 Node(
-                                    token="{}",
+                                    token=r"\substack",
                                     children=(
-                                        Node(token="1"),
-                                        Node(token=r"\le"),
-                                        Node(token="i"),
-                                        Node(token=r"\le"),
-                                        Node(token="n"),
-                                        Node(token=r"\\"),
-                                        Node(token="i"),
-                                        Node(token=r"\ne"),
-                                        Node(token="j"),
+                                        Node(
+                                            token="{}",
+                                            children=(
+                                                Node(token="1"),
+                                                Node(token=r"\le"),
+                                                Node(token="i"),
+                                                Node(token=r"\le"),
+                                                Node(token="n"),
+                                                Node(token=r"\\"),
+                                                Node(token="i"),
+                                                Node(token=r"\ne"),
+                                                Node(token="j"),
+                                            ),
+                                        ),
                                     ),
+                                    alignment="",
                                 ),
                             ),
                         ),
                     ),
-                ),
+                )
             ],
             id="issue-75",
         ),
@@ -1012,6 +1322,7 @@ def test_aggregator(latex: str, expected: list) -> None:
 @pytest.mark.parametrize(
     "latex, exception",
     [
+        pytest.param(r"\right)", ExtraLeftOrMissingRight, id=r"missing-\left"),
         pytest.param(r"\left(x", ExtraLeftOrMissingRight, id=r"missing-\right"),
         pytest.param(r"{ \over 2}", NumeratorNotFoundError, id="fraction-without-numerator"),
         pytest.param(r"{1 \over }", DenominatorNotFoundError, id="fraction-without-denominator"),
@@ -1021,22 +1332,4 @@ def test_aggregator(latex: str, expected: list) -> None:
 )
 def test_missing_right(latex: str, exception: Union[Tuple[Any, ...], Any]) -> None:
     with pytest.raises(exception):
-        aggregate(latex)
-
-
-@pytest.mark.parametrize(
-    "tokens, index",
-    [
-        pytest.param(["("], 0, id="index-0-1"),
-        pytest.param(["(", "(", ")"], 0, id="index-0-2"),
-        pytest.param(["(", "("], 1, id="index-1"),
-        pytest.param(["(", "(", "("], 2, id="index-2"),
-    ],
-)
-def test_find_opening_parenthesis(tokens: List[Any], index: int) -> None:
-    assert find_opening_parenthesis(tokens) == index
-
-
-def test_find_opening_parenthesis_raises_error() -> None:
-    with pytest.raises(ExtraLeftOrMissingRight):
-        find_opening_parenthesis([])
+        print(aggregate(latex))
