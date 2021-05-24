@@ -127,18 +127,13 @@ from latex2mathml.exceptions import (
                 Node(
                     token=r"\matrix",
                     children=(
-                        Node(
-                            token="{}",
-                            children=(
-                                Node(token="a"),
-                                Node(token="&"),
-                                Node(token="b"),
-                                Node(token=r"\\"),
-                                Node(token="c"),
-                                Node(token="&"),
-                                Node(token="d"),
-                            ),
-                        ),
+                        Node(token="a"),
+                        Node(token="&"),
+                        Node(token="b"),
+                        Node(token=r"\\"),
+                        Node(token="c"),
+                        Node(token="&"),
+                        Node(token="d"),
                     ),
                     alignment="",
                 )
@@ -694,18 +689,12 @@ from latex2mathml.exceptions import (
         ),
         pytest.param(
             r"\array{}",
-            [Node(token=r"\array", children=(Node(token="{}", children=()),), alignment="")],
+            [Node(token=r"\array", children=(), alignment="")],
             id="empty-array",
         ),
         pytest.param(
             r"\array{{}}",
-            [
-                Node(
-                    token=r"\array",
-                    children=(Node(token="{}", children=(Node(token="{}", children=()),)),),
-                    alignment="",
-                )
-            ],
+            [Node(token=r"\array", children=(Node(token="{}", children=()),), alignment="")],
             id="empty-array-with-empty-group",
         ),
         pytest.param(
@@ -1196,20 +1185,15 @@ from latex2mathml.exceptions import (
                                 Node(
                                     token=r"\substack",
                                     children=(
-                                        Node(
-                                            token="{}",
-                                            children=(
-                                                Node(token="1"),
-                                                Node(token=r"\le"),
-                                                Node(token="i"),
-                                                Node(token=r"\le"),
-                                                Node(token="n"),
-                                                Node(token=r"\\"),
-                                                Node(token="i"),
-                                                Node(token=r"\ne"),
-                                                Node(token="j"),
-                                            ),
-                                        ),
+                                        Node(token="1"),
+                                        Node(token=r"\le"),
+                                        Node(token="i"),
+                                        Node(token=r"\le"),
+                                        Node(token="n"),
+                                        Node(token=r"\\"),
+                                        Node(token="i"),
+                                        Node(token=r"\ne"),
+                                        Node(token="j"),
                                     ),
                                     alignment="",
                                 ),

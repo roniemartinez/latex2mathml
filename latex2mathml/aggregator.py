@@ -163,7 +163,10 @@ def _aggregate(tokens: Iterator, terminator: str = None, limit: int = 0) -> List
                 children = children[1:]
             node = Node(token=rf"\{matrix}", children=children, alignment=alignment)
         elif token in MATRICES:
-            node = Node(token=token, children=tuple(_aggregate(tokens, terminator=terminator)), alignment="")
+            children = tuple(_aggregate(tokens, terminator=terminator))
+            if len(children) == 1 and children[0].token == BRACES:
+                children = children[0].children
+            node = Node(token=token, children=children, alignment="")
         else:
             node = Node(token=token)
         aggregated.append(node)

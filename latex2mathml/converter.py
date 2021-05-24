@@ -1,23 +1,19 @@
 import re
-from typing import Iterable, Iterator, Optional, Union
+from typing import Iterable, Iterator, Optional, Tuple, Union
 from xml.etree.cElementTree import Element, SubElement, tostring  # nosec
 from xml.sax.saxutils import unescape  # nosec
 
 import pkg_resources
 
-from latex2mathml.aggregator import BAR, DOT, LEFT, OVERLINE, OVERRIGHTARROW, TEXT, UNDERLINE, VEC, Node, aggregate
-from latex2mathml.commands import COMMANDS
+from latex2mathml.aggregator import BAR, BRACES, DOT, LEFT, OVERLINE, OVERRIGHTARROW, UNDERLINE, VEC, Node, aggregate
+from latex2mathml.commands import COMMANDS, MATRICES
 from latex2mathml.symbols_parser import convert_symbol
 
 
-def convert(
-    latex: str,
-    xmlns: str = "http://www.w3.org/1998/Math/MathML",
-    display: str = "inline",
-) -> str:
+def convert(latex: str, xmlns: str = "http://www.w3.org/1998/Math/MathML", display: str = "inline") -> str:
     math = Element("math", xmlns=xmlns, display=display)
     row = SubElement(math, "mrow")
-    _classify_subgroup(iter(aggregate(latex)), row)
+    _convert_group(iter(aggregate(latex)), row)
     return _convert(math)
 
 
@@ -26,10 +22,7 @@ def _convert(tree: Element) -> str:
 
 
 def _convert_matrix_content(
-    param: list,
-    parent: Element,
-    alignment: Union[str, None] = None,
-    single_mtd: bool = True,
+    param: list, parent: Element, alignment: Union[str, None] = None, single_mtd: bool = True
 ) -> None:
     if not len(param):
         return
@@ -39,6 +32,65 @@ def _convert_matrix_content(
             _convert_matrix_row(row, parent, alignment, single_mtd)
     else:
         _convert_matrix_row(param, parent, alignment, single_mtd)
+
+
+def _get_column_lines(alignment):
+    pass
+
+
+def _convert_matrix(nodes: Iterator[Node], parent: Element, alignment: Optional[str] = None) -> None:
+    row = None
+    cell = None
+    index = 0
+    column_align = {"r": "right", "l": "left", "c": "center"}
+    column_alignment = None
+    for node in nodes:
+        if row is None:
+            row = SubElement(parent, "mtr")
+
+        if cell is None:
+            if alignment:
+                try:
+                    column_alignment = column_align.get(alignment[index])
+                    index += 1
+                except IndexError:
+                    pass
+
+            cell = _make_matrix_cell(row, column_alignment)
+
+        if node.token == BRACES:
+            _convert_group(iter([node]), cell)
+            continue
+
+        if node.token == "&":
+            if alignment:
+                try:
+                    column_alignment = column_align.get(alignment[index])
+                    index += 1
+                except IndexError:
+                    pass
+
+            cell = _make_matrix_cell(row, column_alignment)
+            continue
+        elif node.token == r"\\":
+            index = 0
+            if alignment:
+                try:
+                    column_alignment = column_align.get(alignment[index])
+                    index += 1
+                except IndexError:
+                    pass
+            row = SubElement(parent, "mtr")
+            cell = _make_matrix_cell(row, column_alignment)
+            continue
+
+        _convert_group(iter([node]), cell)
+
+
+def _make_matrix_cell(row: Element, column_alignment: Optional[str]) -> Element:
+    if column_alignment:
+        return SubElement(row, "mtd", columnalign=column_alignment)
+    return SubElement(row, "mtd")
 
 
 def _convert_matrix_row(row: list, parent: Element, alignment: Optional[str], single_mtd: bool) -> None:
@@ -54,11 +106,11 @@ def _convert_matrix_row(row: list, parent: Element, alignment: Optional[str], si
         elif not single_mtd:
             mtd = SubElement(mtr, "mtd")
         if isinstance(element, list):
-            _classify_subgroup(element, mtd)
+            _convert_group(element, mtd)
         elif element in COMMANDS:
             _convert_command(element, row, i, iterable, mtd)
         else:
-            _classify(element, mtd)
+            _convert_symbol(element, mtd)
 
 
 def _convert_array_content(param: list, parent: Element, alignment: str = "") -> None:
@@ -99,11 +151,11 @@ def _convert_array_content(param: list, parent: Element, alignment: str = "") ->
             # else:
             #     mtd = SubElement(mtr, "mtd")
             if isinstance(element, list):
-                _classify_subgroup(element, mtd)
+                _convert_group(element, mtd)
             # elif element in COMMANDS:
             #     _convert_command(element, row, i, iterable, mtd)
             else:
-                _classify(element, mtd)
+                _convert_symbol(element, mtd)
             index += 1
         if not has_row_line and row_count > 1:
             row_lines.append("none")
@@ -111,7 +163,7 @@ def _convert_array_content(param: list, parent: Element, alignment: str = "") ->
         parent.set("rowlines", " ".join(row_lines))
 
 
-def _classify_subgroup(nodes: Iterable[Node], parent: Element, is_math_mode: bool = False) -> None:
+def _convert_group(nodes: Iterable[Node], parent: Element, is_math_mode: bool = False) -> None:
     for node in nodes:
         token = node.token
         if token in COMMANDS:
@@ -119,14 +171,14 @@ def _classify_subgroup(nodes: Iterable[Node], parent: Element, is_math_mode: boo
         elif token.startswith(r"\math"):
             is_math_mode = True
         elif node.children is None:
-            _classify(node, parent, is_math_mode)
+            _convert_symbol(node, parent, is_math_mode)
         elif node.children is not None:
             _row = SubElement(parent, "mrow")
             if token == "()":  # TODO: other pairs
-                _classify(Node(token=token[0]), _row, is_math_mode)
-            _classify_subgroup(iter(node.children), _row, is_math_mode)
+                _convert_symbol(Node(token=token[0]), _row, is_math_mode)
+            _convert_group(iter(node.children), _row, is_math_mode)
             if token == "()":  # TODO: other pairs
-                _classify(Node(token=token[1]), _row, is_math_mode)
+                _convert_symbol(Node(token=token[1]), _row, is_math_mode)
     # for i in iterable:
     #     element = nodes[i]
     #     if isinstance(element, list):
@@ -141,6 +193,23 @@ def _classify_subgroup(nodes: Iterable[Node], parent: Element, is_math_mode: boo
     #         _classify(element, row, is_math_mode)
 
 
+def _get_alignment_and_column_lines(alignment: Optional[str] = None) -> Tuple[Optional[str], Optional[str]]:
+    if alignment is None:
+        return None, None
+    if "|" not in alignment:
+        return alignment, None
+    _alignment = ""
+    column_lines = []
+    for c in alignment:
+        if c == "|":
+            column_lines.append("solid")
+        else:
+            _alignment += c
+        if len(_alignment) - len(column_lines) == 2:
+            column_lines.append("none")
+    return _alignment, " ".join(column_lines)
+
+
 def _convert_command(node: Node, parent: Element) -> None:
     command = node.token
     _, tag, attributes = COMMANDS[command]
@@ -148,27 +217,36 @@ def _convert_command(node: Node, parent: Element) -> None:
     if command == LEFT:
         parent = SubElement(parent, "mrow")
 
-    _get_prefix_element(command, parent)
+    _append_prefix_element(command, parent)
+
+    alignment = None
 
     if command in (r"\lim", r"\inf", r"\sup", r"\max", r"\min"):
         element = SubElement(parent, "mo")
         element.text = command[1:]
     else:
+        alignment, column_lines = _get_alignment_and_column_lines(node.alignment)
+        if column_lines:
+            attributes["columnlines"] = column_lines
         element = SubElement(parent, tag, attributes)
-        if node.text:
-            element.text = node.text
 
-    if node.delimiter:
-        symbol = convert_symbol(node.delimiter)
-        element.text = node.delimiter if symbol is None else "&#x{};".format(symbol)
+    if node.text is not None:
+        element.text = node.text
+    elif node.delimiter is not None:
+        if node.delimiter != ".":
+            symbol = convert_symbol(node.delimiter)
+            element.text = node.delimiter if symbol is None else "&#x{};".format(symbol)
 
     if node.children is not None:
         _parent = element
         if command == LEFT:
             _parent = parent
-        _classify_subgroup(iter(node.children), _parent)
+        if command in MATRICES:
+            _convert_matrix(iter(node.children), _parent, alignment=alignment)
+        else:
+            _convert_group(iter(node.children), _parent)
 
-    _get_postfix_element(command, parent)
+    _append_postfix_element(command, parent)
 
     # if element == r"\substack":
     #     parent = SubElement(parent, "mstyle", scriptlevel="1")
@@ -239,20 +317,7 @@ def _convert_and_append_command(command: str, parent: Element) -> None:
     mo.text = "&#x{};".format(code_point)
 
 
-def _get_postfix_element(command: str, parent: Element) -> None:
-    if command in (r"\binom", r"\pmatrix"):
-        _convert_and_append_command(r"\rparen", parent)
-    elif command == r"\bmatrix":
-        _convert_and_append_command(r"\rbrack", parent)
-    elif command == r"\Bmatrix":
-        _convert_and_append_command(r"\rbrace", parent)
-    elif command == r"\vmatrix":
-        _convert_and_append_command(r"\vert", parent)
-    elif command == r"\Vmatrix":
-        _convert_and_append_command(r"\Vert", parent)
-
-
-def _get_prefix_element(command: str, parent: Element) -> None:
+def _append_prefix_element(command: str, parent: Element) -> None:
     if command in (r"\binom", r"\pmatrix"):
         _convert_and_append_command(r"\lparen", parent)
     elif command == r"\bmatrix":
@@ -265,7 +330,20 @@ def _get_prefix_element(command: str, parent: Element) -> None:
         _convert_and_append_command(r"\Vert", parent)
 
 
-def _classify(node: Node, parent: Element, is_math_mode: bool = False) -> None:
+def _append_postfix_element(command: str, parent: Element) -> None:
+    if command in (r"\binom", r"\pmatrix"):
+        _convert_and_append_command(r"\rparen", parent)
+    elif command == r"\bmatrix":
+        _convert_and_append_command(r"\rbrack", parent)
+    elif command == r"\Bmatrix":
+        _convert_and_append_command(r"\rbrace", parent)
+    elif command == r"\vmatrix":
+        _convert_and_append_command(r"\vert", parent)
+    elif command == r"\Vmatrix":
+        _convert_and_append_command(r"\Vert", parent)
+
+
+def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False) -> None:
     token = node.token
     symbol = convert_symbol(token)
     if re.match(r"\d+(.\d+)?", token):
@@ -320,32 +398,14 @@ def main() -> None:  # pragma: no cover
     import argparse
 
     parser = argparse.ArgumentParser(description="Pure Python library for LaTeX to MathML conversion")
-    parser.add_argument(
-        "-V",
-        "--version",
-        dest="version",
-        action="store_true",
-        required=False,
-        help="Show version",
-    )
+    parser.add_argument("-V", "--version", dest="version", action="store_true", required=False, help="Show version")
+
     required = parser.add_argument_group("required arguments")
+
     group = required.add_mutually_exclusive_group(required=False)
-    group.add_argument(
-        "-t",
-        "--text",
-        dest="text",
-        type=str,
-        required=False,
-        help="Text",
-    )
-    group.add_argument(
-        "-f",
-        "--file",
-        dest="file",
-        type=str,
-        required=False,
-        help="File",
-    )
+    group.add_argument("-t", "--text", dest="text", type=str, required=False, help="Text")
+    group.add_argument("-f", "--file", dest="file", type=str, required=False, help="File")
+
     arguments = parser.parse_args()
 
     if arguments.version:

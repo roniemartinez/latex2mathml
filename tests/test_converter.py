@@ -33,159 +33,163 @@ from latex2mathml.converter import _convert, convert
         pytest.param(
             r"{1 \over 2}", {"mrow": {"mfrac": MultiDict([("mn", "1"), ("mn", "2")])}}, id="over-inside-braces"
         ),
-        #     pytest.param(
-        #         r"\begin{matrix}a_{1} & b_{2} \\ c_{3} & d_{4} \end{matrix}",
-        #         {
-        #             "mtable": MultiDict(
-        #                 [
-        #                     (
-        #                         "mtr",
-        #                         MultiDict(
-        #                             [
-        #                                 (
-        #                                     "mtd",
-        #                                     {"msub": MultiDict([("mi", "a"), ("mrow", {"mn": "1"})])},
-        #                                 ),
-        #                                 (
-        #                                     "mtd",
-        #                                     {"msub": MultiDict([("mi", "b"), ("mrow", {"mn": "2"})])},
-        #                                 ),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                     (
-        #                         "mtr",
-        #                         MultiDict(
-        #                             [
-        #                                 (
-        #                                     "mtd",
-        #                                     {"msub": MultiDict([("mi", "c"), ("mrow", {"mn": "3"})])},
-        #                                 ),
-        #                                 (
-        #                                     "mtd",
-        #                                     {"msub": MultiDict([("mi", "d"), ("mrow", {"mn": "4"})])},
-        #                                 ),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                 ]
-        #             )
-        #         },
-        #         id="complex-matrix",
-        #     ),
-        #     pytest.param(
-        #         r"\left\{ \begin{array} { l } { 3x - 5y + 4z = 0} \\ { x - y + 8z = 0} \\ { 2x - 6y + z = 0} \end{array} "
-        #         r"\right.",
-        #         {
-        #             "mrow": MultiDict(
-        #                 [
-        #                     (
-        #                         "mo",
-        #                         MultiDict(
-        #                             [
-        #                                 ("@stretchy", "true"),
-        #                                 ("@fence", "true"),
-        #                                 ("@form", "prefix"),
-        #                                 ("$", "&#x0007B;"),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                     (
-        #                         "mrow",
-        #                         {
-        #                             "mtable": MultiDict(
-        #                                 [
-        #                                     (
-        #                                         "mtr",
-        #                                         MultiDict(
-        #                                             [
-        #                                                 (
-        #                                                     "mtd",
-        #                                                     MultiDict(
-        #                                                         [
-        #                                                             ("@columnalign", "left"),
-        #                                                             ("mn", "3"),
-        #                                                             ("mi", "x"),
-        #                                                             ("mo", "&#x02212;"),
-        #                                                             ("mn", "5"),
-        #                                                             ("mi", "y"),
-        #                                                             ("mo", "&#x0002B;"),
-        #                                                             ("mn", "4"),
-        #                                                             ("mi", "z"),
-        #                                                             ("mo", "&#x0003D;"),
-        #                                                             ("mn", "0"),
-        #                                                         ]
-        #                                                     ),
-        #                                                 ),
-        #                                             ]
-        #                                         ),
-        #                                     ),
-        #                                     (
-        #                                         "mtr",
-        #                                         MultiDict(
-        #                                             [
-        #                                                 (
-        #                                                     "mtd",
-        #                                                     MultiDict(
-        #                                                         [
-        #                                                             ("@columnalign", "left"),
-        #                                                             ("mi", "x"),
-        #                                                             ("mo", "&#x02212;"),
-        #                                                             ("mi", "y"),
-        #                                                             ("mo", "&#x0002B;"),
-        #                                                             ("mn", "8"),
-        #                                                             ("mi", "z"),
-        #                                                             ("mo", "&#x0003D;"),
-        #                                                             ("mn", "0"),
-        #                                                         ]
-        #                                                     ),
-        #                                                 ),
-        #                                             ]
-        #                                         ),
-        #                                     ),
-        #                                     (
-        #                                         "mtr",
-        #                                         MultiDict(
-        #                                             [
-        #                                                 (
-        #                                                     "mtd",
-        #                                                     MultiDict(
-        #                                                         [
-        #                                                             ("@columnalign", "left"),
-        #                                                             ("mn", "2"),
-        #                                                             ("mi", "x"),
-        #                                                             ("mo", "&#x02212;"),
-        #                                                             ("mn", "6"),
-        #                                                             ("mi", "y"),
-        #                                                             ("mo", "&#x0002B;"),
-        #                                                             ("mi", "z"),
-        #                                                             ("mo", "&#x0003D;"),
-        #                                                             ("mn", "0"),
-        #                                                         ]
-        #                                                     ),
-        #                                                 ),
-        #                                             ]
-        #                                         ),
-        #                                     ),
-        #                                 ]
-        #                             )
-        #                         },
-        #                     ),
-        #                     (
-        #                         "mo",
-        #                         MultiDict(
-        #                             [
-        #                                 ("@stretchy", "true"),
-        #                                 ("@fence", "true"),
-        #                                 ("@form", "postfix"),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                 ]
-        #             )
-        #         },
-        #         id="null-delimiter",
-        #     ),
+        pytest.param(
+            r"\begin{matrix}a_{1} & b_{2} \\ c_{3} & d_{4} \end{matrix}",
+            {
+                "mtable": MultiDict(
+                    [
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    (
+                                        "mtd",
+                                        {"msub": MultiDict([("mi", "a"), ("mrow", {"mn": "1"})])},
+                                    ),
+                                    (
+                                        "mtd",
+                                        {"msub": MultiDict([("mi", "b"), ("mrow", {"mn": "2"})])},
+                                    ),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    (
+                                        "mtd",
+                                        {"msub": MultiDict([("mi", "c"), ("mrow", {"mn": "3"})])},
+                                    ),
+                                    (
+                                        "mtd",
+                                        {"msub": MultiDict([("mi", "d"), ("mrow", {"mn": "4"})])},
+                                    ),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="complex-matrix",
+        ),
+        pytest.param(
+            r"\left\{ \begin{array} { l } { 3x - 5y + 4z = 0} \\ { x - y + 8z = 0} \\ { 2x - 6y + z = 0} \end{array} "
+            r"\right.",
+            {
+                "mrow": MultiDict(
+                    [
+                        (
+                            "mo",
+                            MultiDict(
+                                [
+                                    ("@stretchy", "true"),
+                                    ("@fence", "true"),
+                                    ("@form", "prefix"),
+                                    ("$", "&#x0007B;"),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mtable",
+                            MultiDict(
+                                [
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                (
+                                                    "mtd",
+                                                    {
+                                                        "@columnalign": "left",
+                                                        "mrow": MultiDict(
+                                                            [
+                                                                ("mn", "3"),
+                                                                ("mi", "x"),
+                                                                ("mo", "&#x02212;"),
+                                                                ("mn", "5"),
+                                                                ("mi", "y"),
+                                                                ("mo", "&#x0002B;"),
+                                                                ("mn", "4"),
+                                                                ("mi", "z"),
+                                                                ("mo", "&#x0003D;"),
+                                                                ("mn", "0"),
+                                                            ]
+                                                        ),
+                                                    },
+                                                ),
+                                            ]
+                                        ),
+                                    ),
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                (
+                                                    "mtd",
+                                                    {
+                                                        "@columnalign": "left",
+                                                        "mrow": MultiDict(
+                                                            [
+                                                                ("mi", "x"),
+                                                                ("mo", "&#x02212;"),
+                                                                ("mi", "y"),
+                                                                ("mo", "&#x0002B;"),
+                                                                ("mn", "8"),
+                                                                ("mi", "z"),
+                                                                ("mo", "&#x0003D;"),
+                                                                ("mn", "0"),
+                                                            ]
+                                                        ),
+                                                    },
+                                                ),
+                                            ]
+                                        ),
+                                    ),
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                (
+                                                    "mtd",
+                                                    {
+                                                        "@columnalign": "left",
+                                                        "mrow": MultiDict(
+                                                            [
+                                                                ("mn", "2"),
+                                                                ("mi", "x"),
+                                                                ("mo", "&#x02212;"),
+                                                                ("mn", "6"),
+                                                                ("mi", "y"),
+                                                                ("mo", "&#x0002B;"),
+                                                                ("mi", "z"),
+                                                                ("mo", "&#x0003D;"),
+                                                                ("mn", "0"),
+                                                            ]
+                                                        ),
+                                                    },
+                                                ),
+                                            ]
+                                        ),
+                                    ),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mo",
+                            MultiDict(
+                                [
+                                    ("@stretchy", "true"),
+                                    ("@fence", "true"),
+                                    ("@form", "postfix"),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="null-delimiter",
+        ),
         pytest.param("a_b", {"msub": MultiDict([("mi", "a"), ("mi", "b")])}, id="subscript"),
         pytest.param("a^b", {"msup": MultiDict([("mi", "a"), ("mi", "b")])}, id="superscript"),
         pytest.param(
@@ -290,177 +294,177 @@ from latex2mathml.converter import _convert, convert
             {"munder": MultiDict([("mrow", {"mi": "a"}), ("mo", {"@stretchy": "true", "$": "&#x00332;"})])},
             id="underline",
         ),
-        #     pytest.param(
-        #         r"\begin{matrix}a & b \\ c & d \end{matrix}",
-        #         {
-        #             "mtable": MultiDict(
-        #                 [
-        #                     (
-        #                         "mtr",
-        #                         MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),
-        #                     ),
-        #                     (
-        #                         "mtr",
-        #                         MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),
-        #                     ),
-        #                 ]
-        #             ),
-        #         },
-        #         id="matrix",
-        #     ),
-        #     pytest.param(
-        #         r"\matrix{a & b \\ c & d}",
-        #         {
-        #             "mtable": MultiDict(
-        #                 [
-        #                     (
-        #                         "mtr",
-        #                         MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),
-        #                     ),
-        #                     (
-        #                         "mtr",
-        #                         MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),
-        #                     ),
-        #                 ]
-        #             ),
-        #         },
-        #         id="matrix-without-begin-and-end",
-        #     ),
-        #     pytest.param(
-        #         r"\begin{matrix*}[r]a & b \\ c & d \end{matrix*}",
-        #         {
-        #             "mtable": MultiDict(
-        #                 [
-        #                     (
-        #                         "mtr",
-        #                         MultiDict(
-        #                             [
-        #                                 ("mtd", {"@columnalign": "right", "mi": "a"}),
-        #                                 ("mtd", {"@columnalign": "right", "mi": "b"}),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                     (
-        #                         "mtr",
-        #                         MultiDict(
-        #                             [
-        #                                 ("mtd", {"@columnalign": "right", "mi": "c"}),
-        #                                 ("mtd", {"@columnalign": "right", "mi": "d"}),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                 ]
-        #             )
-        #         },
-        #         id="matrix-with-alignment",
-        #     ),
-        #     pytest.param(
-        #         r"\begin{matrix}-a & b \\ c & d \end{matrix}",
-        #         {
-        #             "mtable": MultiDict(
-        #                 [
-        #                     (
-        #                         "mtr",
-        #                         MultiDict(
-        #                             [
-        #                                 ("mtd", MultiDict([("mo", "&#x02212;"), ("mi", "a")])),
-        #                                 ("mtd", {"mi": "b"}),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                     (
-        #                         "mtr",
-        #                         MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),
-        #                     ),
-        #                 ]
-        #             ),
-        #         },
-        #         id="matrix-with-negative-sign",
-        #     ),
-        #     pytest.param(
-        #         r"\begin{pmatrix}a & b \\ c & d \end{pmatrix}",
-        #         MultiDict(
-        #             [
-        #                 ("mo", "&#x00028;"),
-        #                 (
-        #                     "mtable",
-        #                     MultiDict(
-        #                         [
-        #                             (
-        #                                 "mtr",
-        #                                 MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),
-        #                             ),
-        #                             (
-        #                                 "mtr",
-        #                                 MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),
-        #                             ),
-        #                         ]
-        #                     ),
-        #                 ),
-        #                 ("mo", "&#x00029;"),
-        #             ]
-        #         ),
-        #         id="pmatrix",
-        #     ),
-        #     pytest.param(
-        #         r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \end{array}",
-        #         {
-        #             "mtable": MultiDict(
-        #                 [
-        #                     (
-        #                         "mtr",
-        #                         MultiDict(
-        #                             [
-        #                                 ("mtd", {"@columnalign": "center", "mn": "1"}),
-        #                                 ("mtd", {"@columnalign": "right", "mn": "2"}),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                     (
-        #                         "mtr",
-        #                         MultiDict(
-        #                             [
-        #                                 ("mtd", {"@columnalign": "center", "mn": "3"}),
-        #                                 ("mtd", {"@columnalign": "right", "mn": "4"}),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                 ]
-        #             )
-        #         },
-        #         id="simple-array",
-        #     ),
-        #     pytest.param(
-        #         r"\begin{array}{c|rl} 1 & 2 & 3 \\ 4 & 5 & 6 \end{array}",
-        #         {
-        #             "mtable": MultiDict(
-        #                 [
-        #                     ("@columnlines", "solid none"),
-        #                     (
-        #                         "mtr",
-        #                         MultiDict(
-        #                             [
-        #                                 ("mtd", {"@columnalign": "center", "mn": "1"}),
-        #                                 ("mtd", {"@columnalign": "right", "mn": "2"}),
-        #                                 ("mtd", {"@columnalign": "left", "mn": "3"}),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                     (
-        #                         "mtr",
-        #                         MultiDict(
-        #                             [
-        #                                 ("mtd", {"@columnalign": "center", "mn": "4"}),
-        #                                 ("mtd", {"@columnalign": "right", "mn": "5"}),
-        #                                 ("mtd", {"@columnalign": "left", "mn": "6"}),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                 ]
-        #             )
-        #         },
-        #         id="array-with-vertical-bar",
-        #     ),
+        pytest.param(
+            r"\begin{matrix}a & b \\ c & d \end{matrix}",
+            {
+                "mtable": MultiDict(
+                    [
+                        (
+                            "mtr",
+                            MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),
+                        ),
+                        (
+                            "mtr",
+                            MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),
+                        ),
+                    ]
+                ),
+            },
+            id="matrix",
+        ),
+        pytest.param(
+            r"\matrix{a & b \\ c & d}",
+            {
+                "mtable": MultiDict(
+                    [
+                        (
+                            "mtr",
+                            MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),
+                        ),
+                        (
+                            "mtr",
+                            MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),
+                        ),
+                    ]
+                ),
+            },
+            id="matrix-without-begin-and-end",
+        ),
+        pytest.param(
+            r"\begin{matrix*}[r]a & b \\ c & d \end{matrix*}",
+            {
+                "mtable": MultiDict(
+                    [
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", {"@columnalign": "right", "mi": "a"}),
+                                    ("mtd", {"@columnalign": "right", "mi": "b"}),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", {"@columnalign": "right", "mi": "c"}),
+                                    ("mtd", {"@columnalign": "right", "mi": "d"}),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="matrix-with-alignment",
+        ),
+        pytest.param(
+            r"\begin{matrix}-a & b \\ c & d \end{matrix}",
+            {
+                "mtable": MultiDict(
+                    [
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", MultiDict([("mo", "&#x02212;"), ("mi", "a")])),
+                                    ("mtd", {"mi": "b"}),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mtr",
+                            MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),
+                        ),
+                    ]
+                ),
+            },
+            id="matrix-with-negative-sign",
+        ),
+        pytest.param(
+            r"\begin{pmatrix}a & b \\ c & d \end{pmatrix}",
+            MultiDict(
+                [
+                    ("mo", "&#x00028;"),
+                    (
+                        "mtable",
+                        MultiDict(
+                            [
+                                (
+                                    "mtr",
+                                    MultiDict([("mtd", {"mi": "a"}), ("mtd", {"mi": "b"})]),
+                                ),
+                                (
+                                    "mtr",
+                                    MultiDict([("mtd", {"mi": "c"}), ("mtd", {"mi": "d"})]),
+                                ),
+                            ]
+                        ),
+                    ),
+                    ("mo", "&#x00029;"),
+                ]
+            ),
+            id="pmatrix",
+        ),
+        pytest.param(
+            r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \end{array}",
+            {
+                "mtable": MultiDict(
+                    [
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", {"@columnalign": "center", "mn": "1"}),
+                                    ("mtd", {"@columnalign": "right", "mn": "2"}),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", {"@columnalign": "center", "mn": "3"}),
+                                    ("mtd", {"@columnalign": "right", "mn": "4"}),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="simple-array",
+        ),
+        pytest.param(
+            r"\begin{array}{c|rl} 1 & 2 & 3 \\ 4 & 5 & 6 \end{array}",
+            {
+                "mtable": MultiDict(
+                    [
+                        ("@columnlines", "solid none"),
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", {"@columnalign": "center", "mn": "1"}),
+                                    ("mtd", {"@columnalign": "right", "mn": "2"}),
+                                    ("mtd", {"@columnalign": "left", "mn": "3"}),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", {"@columnalign": "center", "mn": "4"}),
+                                    ("mtd", {"@columnalign": "right", "mn": "5"}),
+                                    ("mtd", {"@columnalign": "left", "mn": "6"}),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="array-with-vertical-bar",
+        ),
         #     pytest.param(
         #         r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}",
         #         {
@@ -1060,112 +1064,110 @@ from latex2mathml.converter import _convert, convert
             id="issue-63",
         ),
         pytest.param(r"1_{}", {"msub": MultiDict([("mn", "1"), ("mrow", {})])}, id="empty-subscript"),
-        # pytest.param(
-        #     r"\begin{Bmatrix}\end{Bmatrix}",
-        #     MultiDict([("mo", "&#x0007B;"), ("mtable", {}), ("mo", "&#x0007D;")]),
-        #     id=r"\Bmatrix",
-        # ),
-        #     pytest.param(
-        #         r"\begin{vmatrix}\end{vmatrix}",
-        #         MultiDict([("mo", "&#x0007C;"), ("mtable", {}), ("mo", "&#x0007C;")]),
-        #         id=r"\vmatrix",
-        #     ),
-        #     pytest.param(
-        #         r"\begin{Vmatrix}\end{Vmatrix}",
-        #         MultiDict([("mo", "&#x02016;"), ("mtable", {}), ("mo", "&#x02016;")]),
-        #         id=r"\Vmatrix",
-        #     ),
-        #     pytest.param(
-        #         r"\begin{matrix}1^2\end{matrix}",
-        #         {"mtable": {"mtr": {"mtd": {"msup": MultiDict([("mn", "1"), ("mn", "2")])}}}},
-        #         id="command-inside-matrix",
-        #     ),
+        pytest.param(
+            r"\begin{Bmatrix}\end{Bmatrix}",
+            MultiDict([("mo", "&#x0007B;"), ("mtable", {}), ("mo", "&#x0007D;")]),
+            id=r"\Bmatrix",
+        ),
+        pytest.param(
+            r"\begin{vmatrix}\end{vmatrix}",
+            MultiDict([("mo", "&#x0007C;"), ("mtable", {}), ("mo", "&#x0007C;")]),
+            id=r"\vmatrix",
+        ),
+        pytest.param(
+            r"\begin{Vmatrix}\end{Vmatrix}",
+            MultiDict([("mo", "&#x02016;"), ("mtable", {}), ("mo", "&#x02016;")]),
+            id=r"\Vmatrix",
+        ),
+        pytest.param(
+            r"\begin{matrix}1^2\end{matrix}",
+            {"mtable": {"mtr": {"mtd": {"msup": MultiDict([("mn", "1"), ("mn", "2")])}}}},
+            id="command-inside-matrix",
+        ),
         pytest.param(r"\e", {"mi": r"\e"}, id=r"\e"),
-        #     pytest.param(
-        #         r"\left[\begin{matrix}1 & 0 & 0 & 0\\0 & 1 & 0 & 0\\0 & 0 & 1 & 0\\0 & 0 & 0 & 1\end{matrix}\right]",
-        #         {
-        #             "mrow": MultiDict(
-        #                 [
-        #                     (
-        #                         "mo",
-        #                         MultiDict(
-        #                             [
-        #                                 ("@stretchy", "true"),
-        #                                 ("@fence", "true"),
-        #                                 ("@form", "prefix"),
-        #                                 ("$", "["),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                     (
-        #                         "mrow",
-        #                         {
-        #                             "mtable": MultiDict(
-        #                                 [
-        #                                     (
-        #                                         "mtr",
-        #                                         MultiDict(
-        #                                             [
-        #                                                 ("mtd", {"mn": "1"}),
-        #                                                 ("mtd", {"mn": "0"}),
-        #                                                 ("mtd", {"mn": "0"}),
-        #                                                 ("mtd", {"mn": "0"}),
-        #                                             ]
-        #                                         ),
-        #                                     ),
-        #                                     (
-        #                                         "mtr",
-        #                                         MultiDict(
-        #                                             [
-        #                                                 ("mtd", {"mn": "0"}),
-        #                                                 ("mtd", {"mn": "1"}),
-        #                                                 ("mtd", {"mn": "0"}),
-        #                                                 ("mtd", {"mn": "0"}),
-        #                                             ]
-        #                                         ),
-        #                                     ),
-        #                                     (
-        #                                         "mtr",
-        #                                         MultiDict(
-        #                                             [
-        #                                                 ("mtd", {"mn": "0"}),
-        #                                                 ("mtd", {"mn": "0"}),
-        #                                                 ("mtd", {"mn": "1"}),
-        #                                                 ("mtd", {"mn": "0"}),
-        #                                             ]
-        #                                         ),
-        #                                     ),
-        #                                     (
-        #                                         "mtr",
-        #                                         MultiDict(
-        #                                             [
-        #                                                 ("mtd", {"mn": "0"}),
-        #                                                 ("mtd", {"mn": "0"}),
-        #                                                 ("mtd", {"mn": "0"}),
-        #                                                 ("mtd", {"mn": "1"}),
-        #                                             ]
-        #                                         ),
-        #                                     ),
-        #                                 ]
-        #                             )
-        #                         },
-        #                     ),
-        #                     (
-        #                         "mo",
-        #                         MultiDict(
-        #                             [
-        #                                 ("@stretchy", "true"),
-        #                                 ("@fence", "true"),
-        #                                 ("@form", "postfix"),
-        #                                 ("$", "]"),
-        #                             ]
-        #                         ),
-        #                     ),
-        #                 ]
-        #             )
-        #         },
-        #         id="issue-77",
-        #     ),
+        pytest.param(
+            r"\left[\begin{matrix}1 & 0 & 0 & 0\\0 & 1 & 0 & 0\\0 & 0 & 1 & 0\\0 & 0 & 0 & 1\end{matrix}\right]",
+            {
+                "mrow": MultiDict(
+                    [
+                        (
+                            "mo",
+                            MultiDict(
+                                [
+                                    ("@stretchy", "true"),
+                                    ("@fence", "true"),
+                                    ("@form", "prefix"),
+                                    ("$", "["),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mtable",
+                            MultiDict(
+                                [
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                ("mtd", {"mn": "1"}),
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "0"}),
+                                            ]
+                                        ),
+                                    ),
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "1"}),
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "0"}),
+                                            ]
+                                        ),
+                                    ),
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "1"}),
+                                                ("mtd", {"mn": "0"}),
+                                            ]
+                                        ),
+                                    ),
+                                    (
+                                        "mtr",
+                                        MultiDict(
+                                            [
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "0"}),
+                                                ("mtd", {"mn": "1"}),
+                                            ]
+                                        ),
+                                    ),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mo",
+                            MultiDict(
+                                [
+                                    ("@stretchy", "true"),
+                                    ("@fence", "true"),
+                                    ("@form", "postfix"),
+                                    ("$", "]"),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="issue-77",
+        ),
         pytest.param(r"\log{x}", MultiDict([("mi", "log"), ("mrow", {"mi": "x"})]), id="logarithm"),
         pytest.param(
             r"\log_2{x}",
