@@ -39,6 +39,7 @@ class Node(NamedTuple):
     token: str
     children: Optional[Tuple[Any, ...]] = None
     root: Optional[Any] = None
+    delimiter: Optional[Any] = None
 
 
 def group(
@@ -195,7 +196,15 @@ def _aggregate(tokens: Iterator, terminator=None, n=0) -> List[Node]:
     aggregated: List[Node] = []
     for token in tokens:
         if token == terminator:
+            if terminator == RIGHT:
+                delimiter = next(tokens)
+                node = Node(token=token, delimiter=delimiter)
+                aggregated.append(node)
             break
+        elif token == LEFT:
+            delimiter = next(tokens)
+            children = tuple(_aggregate(tokens, terminator=RIGHT))  # make \right as a child of \left]
+            node = Node(token=token, children=children if len(children) else None, delimiter=delimiter)
         elif token == OPENING_BRACES:
             children = tuple(_aggregate(tokens, terminator=CLOSING_BRACES))
             node = Node(token=BRACES, children=children if len(children) else None)
@@ -247,15 +256,15 @@ def _aggregate(tokens: Iterator, terminator=None, n=0) -> List[Node]:
             node = Node(token=FRAC, children=(aggregated.pop(), *denominator))
         elif token == SQRT:
             root = None
-            next_node = tuple(_aggregate(tokens, terminator=terminator, n=1))
+            next_node = tuple(_aggregate(tokens, n=1))
             if next_node[0].token == BRACKETS:
-                root = next_node[0].children[0]
-                next_node = tuple(_aggregate(tokens, terminator=terminator, n=1))
+                root = next_node[0].children[0].token
+                next_node = tuple(_aggregate(tokens, n=1))
             node = Node(token=token, children=next_node[-1:], root=root)
         else:
             node = Node(token=token)
         aggregated.append(node)
-        if n and len(aggregated) == n:
+        if n and len(aggregated) >= n:
             break
         # token = None
         # try:

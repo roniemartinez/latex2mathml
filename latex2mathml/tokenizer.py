@@ -86,7 +86,9 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                         else:
                             index = buffer.index("{")
                             yield buffer[:index]
-                            yield list(tokenize(buffer[index + 1 :]))
+                            yield buffer[index]
+                            yield from tokenize(buffer[index + 1 :])
+                            yield char
                             buffer = ""
                             continue
                     elif buffer.startswith(r"\text") and char == "}":
