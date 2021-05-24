@@ -29,8 +29,19 @@ LEFT = r"\left"
 RIGHT = r"\right"
 OVER = r"\over"
 FRAC = r"\frac"
+BINOM = r"\binom"
 ROOT = r"\root"
 SQRT = r"\sqrt"
+
+OVERLINE = r"\overline"
+BAR = r"\bar"
+UNDERLINE = r"\underline"
+OVERRIGHTARROW = r"\overrightarrow"
+VEC = r"\vec"
+DOT = r"\dot"
+TEXT = r"\text"
+
+COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT)
 
 BEGIN = r"\begin"
 END = r"\end"
@@ -39,9 +50,9 @@ END = r"\end"
 class Node(NamedTuple):
     token: str
     children: Optional[Tuple[Any, ...]] = None
-    root: Optional[str] = None
     delimiter: Optional[str] = None
     alignment: Optional[str] = None
+    text: Optional[str] = None
 
 
 def _aggregate(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node]:
@@ -64,7 +75,7 @@ def _aggregate(tokens: Iterator, terminator: str = None, limit: int = 0) -> List
             node = Node(token=token, children=children if len(children) else None, delimiter=delimiter)
         elif token == OPENING_BRACES:
             children = tuple(_aggregate(tokens, terminator=CLOSING_BRACES))
-            node = Node(token=BRACES, children=children if len(children) else None)
+            node = Node(token=BRACES, children=children)
         elif token == OPENING_PARENTHESIS:
             children = tuple(_aggregate(tokens, terminator=CLOSING_PARENTHESIS))
             if len(children):
@@ -107,8 +118,12 @@ def _aggregate(tokens: Iterator, terminator: str = None, limit: int = 0) -> List
                 if len(next_nodes) == 0:
                     raise MissingSuperScriptOrSubscript
                 node = Node(token=token, children=(previous, *next_nodes))
-        elif token == FRAC:
+        elif token == FRAC or token == BINOM:
             node = Node(token=token, children=tuple(_aggregate(tokens, terminator=terminator, limit=2)))
+        elif token in COMMANDS_WITH_ONE_PARAMETER:
+            node = Node(token=token, children=tuple(_aggregate(tokens, terminator=terminator, limit=1)))
+        elif token == TEXT:
+            node = Node(token=token, text=next(tokens))
         elif token == OVER:
             denominator = tuple(_aggregate(tokens, terminator=terminator))
             if len(denominator) > 1:
@@ -123,9 +138,12 @@ def _aggregate(tokens: Iterator, terminator: str = None, limit: int = 0) -> List
             root = None
             next_node = tuple(_aggregate(tokens, limit=1))
             if next_node[0].token == BRACKETS and next_node[0].children is not None:
-                root = next_node[0].children[0].token
+                root = next_node[0].children[0]
                 next_node = tuple(_aggregate(tokens, limit=1))
-            node = Node(token=token, children=next_node[-1:], root=root)
+            if root:
+                node = Node(token=ROOT, children=(*next_node[-1:], root))
+            else:
+                node = Node(token=token, children=next_node[-1:])
         elif token.startswith(BEGIN):
             # TODO: support non-matrix environments
             matrix = token[token.index("{") + 1 : -1]

@@ -16,7 +16,7 @@ from latex2mathml.exceptions import (
     "latex, expected",
     [
         pytest.param(string.ascii_letters, [Node(token=c) for c in string.ascii_letters], id="alphabets"),
-        pytest.param("{{}}", [Node(token="{}", children=(Node(token="{}"),))], id="empty-group"),
+        pytest.param("{{}}", [Node(token="{}", children=(Node(token="{}", children=()),))], id="empty-group"),
         pytest.param(string.digits, [Node(token=string.digits)], id="numbers"),
         pytest.param("12.56", [Node(token="12.56")], id="decimals"),
         pytest.param("5x", [Node(token="5"), Node(token="x")], id="numbers-and-alphabets"),
@@ -90,7 +90,7 @@ from latex2mathml.exceptions import (
         ),
         pytest.param(
             r"\sqrt[3]{2}",
-            [Node(token=r"\sqrt", children=(Node(token="{}", children=(Node(token="2"),)),), root="3")],
+            [Node(token=r"\root", children=(Node(token="{}", children=(Node(token="2"),)), Node(token="3")))],
             id="root",
         ),
         pytest.param(
@@ -685,15 +685,27 @@ from latex2mathml.exceptions import (
             id=r"group-after-right",
         ),
         pytest.param(
-            r"\sqrt[3]{}", [Node(token=r"\sqrt", children=(Node(token="{}"),), root="3")], id="empty-nth-root"
+            r"\sqrt[3]{}",
+            [Node(token=r"\root", children=(Node(token="{}", children=()), Node(token="3")))],
+            id="empty-nth-root",
         ),
-        pytest.param(r"1_{}", [Node(token="_", children=(Node(token="1"), Node(token="{}")))], id="empty-subscript"),
         pytest.param(
-            r"\array{}", [Node(token=r"\array", children=(Node(token="{}"),), alignment="")], id="empty-array"
+            r"1_{}", [Node(token="_", children=(Node(token="1"), Node(token="{}", children=())))], id="empty-subscript"
+        ),
+        pytest.param(
+            r"\array{}",
+            [Node(token=r"\array", children=(Node(token="{}", children=()),), alignment="")],
+            id="empty-array",
         ),
         pytest.param(
             r"\array{{}}",
-            [Node(token=r"\array", children=(Node(token="{}", children=(Node(token="{}"),)),), alignment="")],
+            [
+                Node(
+                    token=r"\array",
+                    children=(Node(token="{}", children=(Node(token="{}", children=()),)),),
+                    alignment="",
+                )
+            ],
             id="empty-array-with-empty-group",
         ),
         pytest.param(
@@ -1240,7 +1252,7 @@ from latex2mathml.exceptions import (
         ),
         pytest.param(
             r"\vec{AB}",
-            [Node(token=r"\vec"), Node(token="{}", children=(Node(token="A"), Node(token="B")))],
+            [Node(token=r"\vec", children=(Node(token="{}", children=(Node(token="A"), Node(token="B"))),))],
             id="issue-103",
         ),
         pytest.param(r"\max f", [Node(token=r"\max"), Node(token="f")], id="issue-108-1"),
@@ -1313,6 +1325,40 @@ from latex2mathml.exceptions import (
             ],
             id="quadratic-equation",
         ),
+        pytest.param(
+            r"\binom{2}{3}",
+            [
+                Node(
+                    token=r"\binom",
+                    children=(
+                        Node(token="{}", children=(Node(token="2"),)),
+                        Node(token="{}", children=(Node(token="3"),)),
+                    ),
+                )
+            ],
+            id="binomial",
+        ),
+        pytest.param(
+            r"\overline{a}",
+            [Node(token=r"\overline", children=(Node(token="{}", children=(Node(token="a"),)),))],
+            id="overline",
+        ),
+        pytest.param(
+            r"\bar{a}",
+            [Node(token=r"\bar", children=(Node(token="{}", children=(Node(token="a"),)),))],
+            id="bar",
+        ),
+        pytest.param(
+            r"\underline{a}",
+            [Node(token=r"\underline", children=(Node(token="{}", children=(Node(token="a"),)),))],
+            id="underline",
+        ),
+        pytest.param(
+            r"\overrightarrow{a}",
+            [Node(token=r"\overrightarrow", children=(Node(token="{}", children=(Node(token="a"),)),))],
+            id="overrightarrow",
+        ),
+        pytest.param(r"\text{Let}", [Node(token=r"\text", text="Let")], id="text"),
     ],
 )
 def test_aggregator(latex: str, expected: list) -> None:

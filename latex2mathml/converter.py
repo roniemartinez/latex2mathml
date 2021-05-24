@@ -1,13 +1,12 @@
 import re
-from collections import OrderedDict
-from typing import Any, Iterator, List, Optional, Union
+from typing import Iterable, Iterator, Optional, Union
 from xml.etree.cElementTree import Element, SubElement, tostring  # nosec
 from xml.sax.saxutils import unescape  # nosec
 
 import pkg_resources
 
-from latex2mathml.aggregator import aggregate
-from latex2mathml.commands import COMMANDS, MATRICES
+from latex2mathml.aggregator import BAR, DOT, LEFT, OVERLINE, OVERRIGHTARROW, TEXT, UNDERLINE, VEC, Node, aggregate
+from latex2mathml.commands import COMMANDS
 from latex2mathml.symbols_parser import convert_symbol
 
 
@@ -18,7 +17,7 @@ def convert(
 ) -> str:
     math = Element("math", xmlns=xmlns, display=display)
     row = SubElement(math, "mrow")
-    _classify_subgroup(aggregate(latex), row)
+    _classify_subgroup(iter(aggregate(latex)), row)
     return _convert(math)
 
 
@@ -112,159 +111,192 @@ def _convert_array_content(param: list, parent: Element, alignment: str = "") ->
         parent.set("rowlines", " ".join(row_lines))
 
 
-def _classify_subgroup(elements: list, row: Element, is_math_mode: bool = False) -> None:
-    iterable = iter(range(len(elements)))
-    for i in iterable:
-        element = elements[i]
-        if isinstance(element, list):
-            _row = SubElement(row, "mrow")
-            _classify_subgroup(element, _row, is_math_mode)
-            is_math_mode = False
-        elif element in COMMANDS:
-            _convert_command(element, elements, i, iterable, row)
-        elif element.startswith(r"\math"):
+def _classify_subgroup(nodes: Iterable[Node], parent: Element, is_math_mode: bool = False) -> None:
+    for node in nodes:
+        token = node.token
+        if token in COMMANDS:
+            _convert_command(node, parent)
+        elif token.startswith(r"\math"):
             is_math_mode = True
-        else:
-            _classify(element, row, is_math_mode)
+        elif node.children is None:
+            _classify(node, parent, is_math_mode)
+        elif node.children is not None:
+            _row = SubElement(parent, "mrow")
+            if token == "()":  # TODO: other pairs
+                _classify(Node(token=token[0]), _row, is_math_mode)
+            _classify_subgroup(iter(node.children), _row, is_math_mode)
+            if token == "()":  # TODO: other pairs
+                _classify(Node(token=token[1]), _row, is_math_mode)
+    # for i in iterable:
+    #     element = nodes[i]
+    #     if isinstance(element, list):
+    #         _row = SubElement(row, "mrow")
+    #         _classify_subgroup(element, _row, is_math_mode)
+    #         is_math_mode = False
+    #     elif element in COMMANDS:
+    #         _convert_command(element, nodes, i, iterable, row)
+    #     elif element.startswith(r"\math"):
+    #         is_math_mode = True
+    #     else:
+    #         _classify(element, row, is_math_mode)
 
 
-def _convert_command(
-    element: str,
-    elements: List[Any],
-    index: int,
-    iterable: Iterator[int],
-    parent: Element,
-) -> None:
-    _get_prefix_element(element, parent)
-    if element == r"\substack":
-        parent = SubElement(parent, "mstyle", scriptlevel="1")
-    elif element == r"\cases":
-        lbrace = SubElement(
-            parent,
-            "mo",
-            OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")]),
-        )
-        lbrace.text = "&#x{};".format(convert_symbol(r"\{"))
-    params, tag, attributes = COMMANDS[element]
-    if len(elements) - 1 < params:
-        mo = SubElement(parent, "mo")
-        mo.text = element[1:]
-        return
-    new_parent = SubElement(parent, tag, attributes)
-    alignment = ""
-    if element in MATRICES:
-        if element.endswith("*") or element == r"\array":
-            index += 1
-            alignment = elements[index]
-            next(iterable)
-        elif element == r"\cases":
-            alignment = "l"
-    if element in (r"\lim", r"\inf", r"\sup", r"\max", r"\min"):
-        limit = SubElement(new_parent, "mo")
-        limit.text = element[1:]
-    for j in range(params):
-        index += 1
-        param = elements[index]
-        if element == "_" and index == 1 and param == r"\sum":
-            new_parent.tag = "munder"
-            _classify(param, new_parent)
-        elif element == r"\left" or element == r"\right":
-            if param == ".":
-                pass
-            else:
-                symbol = convert_symbol(param)
-                new_parent.text = param if symbol is None else "&#x{};".format(symbol)
-        elif element == r"\array":
-            _convert_array_content(param, new_parent, alignment)
-        elif element in MATRICES:
-            _convert_matrix_content(param, new_parent, alignment, element == r"\substack")
-        else:
-            if isinstance(param, list):
-                _parent = SubElement(new_parent, "mrow")
-                _classify_subgroup(param, _parent)
-            elif element == r"\text":
-                new_parent.text = param
-            else:
-                _classify(param, new_parent)
-    _get_postfix_element(element, parent)
-    if element in (r"\overline", r"\bar"):
-        mo = SubElement(new_parent, "mo", stretchy="true")
+def _convert_command(node: Node, parent: Element) -> None:
+    command = node.token
+    _, tag, attributes = COMMANDS[command]
+
+    if command == LEFT:
+        parent = SubElement(parent, "mrow")
+
+    _get_prefix_element(command, parent)
+
+    if command in (r"\lim", r"\inf", r"\sup", r"\max", r"\min"):
+        element = SubElement(parent, "mo")
+        element.text = command[1:]
+    else:
+        element = SubElement(parent, tag, attributes)
+        if node.text:
+            element.text = node.text
+
+    if node.delimiter:
+        symbol = convert_symbol(node.delimiter)
+        element.text = node.delimiter if symbol is None else "&#x{};".format(symbol)
+
+    if node.children is not None:
+        _parent = element
+        if command == LEFT:
+            _parent = parent
+        _classify_subgroup(iter(node.children), _parent)
+
+    _get_postfix_element(command, parent)
+
+    # if element == r"\substack":
+    #     parent = SubElement(parent, "mstyle", scriptlevel="1")
+    # elif element == r"\cases":
+    #     lbrace = SubElement(
+    #         parent,
+    #         "mo",
+    #         OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")]),
+    #     )
+    #     lbrace.text = "&#x{};".format(convert_symbol(r"\{"))
+    # params, tag, attributes = COMMANDS[element]
+    # if len(elements) - 1 < params:
+    #     mo = SubElement(parent, "mo")
+    #     mo.text = element[1:]
+    #     return
+    # new_parent = SubElement(parent, tag, attributes)
+    # alignment = ""
+    # if element in MATRICES:
+    #     if element.endswith("*") or element == r"\array":
+    #         index += 1
+    #         alignment = elements[index]
+    #         next(iterable)
+    #     elif element == r"\cases":
+    #         alignment = "l"
+    # for j in range(params):
+    #     index += 1
+    #     param = elements[index]
+    #     if element == "_" and index == 1 and param == r"\sum":
+    #         new_parent.tag = "munder"
+    #         _classify(param, new_parent)
+    #     elif element == r"\left" or element == r"\right":
+    #         if param == ".":
+    #             pass
+    #         else:
+    #             symbol = convert_symbol(param)
+    #             new_parent.text = param if symbol is None else "&#x{};".format(symbol)
+    #     elif element == r"\array":
+    #         _convert_array_content(param, new_parent, alignment)
+    #     elif element in MATRICES:
+    #         _convert_matrix_content(param, new_parent, alignment, element == r"\substack")
+    #     else:
+    #         if isinstance(param, list):
+    #             _parent = SubElement(new_parent, "mrow")
+    #             _classify_subgroup(param, _parent)
+    #         elif element == r"\text":
+    #             new_parent.text = param
+    #         else:
+    #             _classify(param, new_parent)
+    # _get_postfix_element(element, parent)
+    if command in (OVERLINE, BAR):
+        mo = SubElement(element, "mo", stretchy="true")
         mo.text = "&#x000AF;"
-    elif element == r"\underline":
-        mo = SubElement(new_parent, "mo", stretchy="true")
+    elif command == UNDERLINE:
+        mo = SubElement(element, "mo", stretchy="true")
         mo.text = "&#x00332;"
-    elif element in (r"\overrightarrow", r"\vec"):
-        mo = SubElement(new_parent, "mo", stretchy="true")
+    elif command in (OVERRIGHTARROW, VEC):
+        mo = SubElement(element, "mo", stretchy="true")
         mo.text = "&#x02192;"
-    elif element == r"\dot":
-        mo = SubElement(new_parent, "mo")
+    elif command == DOT:
+        mo = SubElement(element, "mo")
         mo.text = "&#x002D9;"
-    [next(iterable) for _ in range(params)]
+    # [next(iterable) for _ in range(params)]
 
 
-def _convert_and_append_operator(symbol: str, parent: Element) -> None:
-    converted = convert_symbol(symbol)
+def _convert_and_append_command(command: str, parent: Element) -> None:
+    code_point = convert_symbol(command)
     mo = SubElement(parent, "mo")
-    mo.text = "&#x{};".format(converted)
+    mo.text = "&#x{};".format(code_point)
 
 
-def _get_postfix_element(element: str, row: Element) -> None:
-    if element in (r"\binom", r"\pmatrix"):
-        _convert_and_append_operator(r"\rparen", row)
-    elif element == r"\bmatrix":
-        _convert_and_append_operator(r"\rbrack", row)
-    elif element == r"\Bmatrix":
-        _convert_and_append_operator(r"\rbrace", row)
-    elif element == r"\vmatrix":
-        _convert_and_append_operator(r"\vert", row)
-    elif element == r"\Vmatrix":
-        _convert_and_append_operator(r"\Vert", row)
+def _get_postfix_element(command: str, parent: Element) -> None:
+    if command in (r"\binom", r"\pmatrix"):
+        _convert_and_append_command(r"\rparen", parent)
+    elif command == r"\bmatrix":
+        _convert_and_append_command(r"\rbrack", parent)
+    elif command == r"\Bmatrix":
+        _convert_and_append_command(r"\rbrace", parent)
+    elif command == r"\vmatrix":
+        _convert_and_append_command(r"\vert", parent)
+    elif command == r"\Vmatrix":
+        _convert_and_append_command(r"\Vert", parent)
 
 
-def _get_prefix_element(element: str, row: Element) -> None:
-    if element in (r"\binom", r"\pmatrix"):
-        _convert_and_append_operator(r"\lparen", row)
-    elif element == r"\bmatrix":
-        _convert_and_append_operator(r"\lbrack", row)
-    elif element == r"\Bmatrix":
-        _convert_and_append_operator(r"\lbrace", row)
-    elif element == r"\vmatrix":
-        _convert_and_append_operator(r"\vert", row)
-    elif element == r"\Vmatrix":
-        _convert_and_append_operator(r"\Vert", row)
+def _get_prefix_element(command: str, parent: Element) -> None:
+    if command in (r"\binom", r"\pmatrix"):
+        _convert_and_append_command(r"\lparen", parent)
+    elif command == r"\bmatrix":
+        _convert_and_append_command(r"\lbrack", parent)
+    elif command == r"\Bmatrix":
+        _convert_and_append_command(r"\lbrace", parent)
+    elif command == r"\vmatrix":
+        _convert_and_append_command(r"\vert", parent)
+    elif command == r"\Vmatrix":
+        _convert_and_append_command(r"\Vert", parent)
 
 
-def _classify(_element: str, parent: Element, is_math_mode: bool = False) -> None:
-    symbol = convert_symbol(_element)
-    if re.match(r"\d+(.\d+)?", _element):
+def _classify(node: Node, parent: Element, is_math_mode: bool = False) -> None:
+    token = node.token
+    symbol = convert_symbol(token)
+    if re.match(r"\d+(.\d+)?", token):
         mn = SubElement(parent, "mn")
-        mn.text = _element
-    elif len(_element) and _element in "<>&":
+        mn.text = token
+    elif len(token) and token in "<>&":
         mo = SubElement(parent, "mo")
-        mo.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;"}[_element]
-    elif len(_element) and _element in "+-*/()=,":
+        mo.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;"}[token]
+    elif len(token) and token in "+-*/()=,":
         mo = SubElement(parent, "mo")
-        mo.text = _element if symbol is None else "&#x{};".format(symbol)
-        if _element in "()":
+        mo.text = token if symbol is None else "&#x{};".format(symbol)
+        if token in "()":
             mo.attrib["stretchy"] = "false"
-    elif (
-        symbol
-        and (
-            int(symbol, 16) in range(int("2200", 16), int("22FF", 16) + 1)
-            or int(symbol, 16) in range(int("2190", 16), int("21FF", 16) + 1)
-        )
-        or symbol == "."
-    ):
-        mo = SubElement(parent, "mo")
-        mo.text = "&#x{};".format(symbol)
-    elif _element == r"\ ":
+    # elif (
+    #     symbol
+    #     and (
+    #         int(symbol, 16) in range(int("2200", 16), int("22FF", 16) + 1)
+    #         or int(symbol, 16) in range(int("2190", 16), int("21FF", 16) + 1)
+    #     )
+    #     or symbol == "."
+    # ):
+    #     mo = SubElement(parent, "mo")
+    #     mo.text = "&#x{};".format(symbol)
+    elif token == r"\ ":
         tag = SubElement(parent, "mtext")
         tag.text = "&#x000A0;"
-    elif _element.startswith("\\"):
+    elif token.startswith("\\"):
         tag = SubElement(parent, "mo" if is_math_mode else "mi")
         if symbol:
             tag.text = "&#x{};".format(symbol)
-        elif _element in (
+        elif token in (
             r"\log",
             r"\ln",
             r"\tan",
@@ -274,14 +306,14 @@ def _classify(_element: str, parent: Element, is_math_mode: bool = False) -> Non
             r"\cot",
             r"\csc",
         ):
-            tag.text = _element[1:]
-        elif _element.startswith(r"\operatorname"):
-            tag.text = _element[14:-1]
+            tag.text = token[1:]
+        elif token.startswith(r"\operatorname"):
+            tag.text = token[14:-1]
         else:
-            tag.text = _element
+            tag.text = token
     else:
         tag = SubElement(parent, "mo" if is_math_mode else "mi")
-        tag.text = _element
+        tag.text = token
 
 
 def main() -> None:  # pragma: no cover
