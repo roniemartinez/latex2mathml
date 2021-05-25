@@ -1,53 +1,15 @@
 from typing import Any, Iterator, List, NamedTuple, Optional, Tuple
 
-from latex2mathml.commands import MATRICES
+from latex2mathml import commands
 from latex2mathml.exceptions import (
     DenominatorNotFoundError,
+    DoubleSubscriptsError,
+    DoubleSuperscriptsError,
     ExtraLeftOrMissingRight,
     MissingSuperScriptOrSubscript,
     NumeratorNotFoundError,
 )
 from latex2mathml.tokenizer import tokenize
-
-OPENING_BRACES = "{"
-CLOSING_BRACES = "}"
-BRACES = "{}"
-
-OPENING_BRACKET = "["
-CLOSING_BRACKET = "]"
-BRACKETS = "[]"
-
-OPENING_PARENTHESIS = "("
-CLOSING_PARENTHESIS = ")"
-PARENTHESES = "()"
-
-SUB_SUP = "_^"
-SUBSCRIPT = "_"
-SUPERSCRIPT = "^"
-
-LEFT = r"\left"
-RIGHT = r"\right"
-OVER = r"\over"
-FRAC = r"\frac"
-BINOM = r"\binom"
-ROOT = r"\root"
-SQRT = r"\sqrt"
-
-OVERLINE = r"\overline"
-BAR = r"\bar"
-UNDERLINE = r"\underline"
-OVERRIGHTARROW = r"\overrightarrow"
-VEC = r"\vec"
-DOT = r"\dot"
-TEXT = r"\text"
-
-COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT)
-
-BEGIN = r"\begin"
-END = r"\end"
-
-LIMITS = r"\limits"
-INTEGRAL = r"\int"
 
 
 class Node(NamedTuple):
@@ -63,102 +25,111 @@ def _aggregate(tokens: Iterator, terminator: str = None, limit: int = 0) -> List
     token: str
     for token in tokens:
         if token == terminator:
-            if terminator == RIGHT:
+            if terminator == commands.RIGHT:
                 delimiter = next(tokens)
                 node = Node(token=token, delimiter=delimiter)
                 aggregated.append(node)
             break
-        elif token == RIGHT != terminator:
+        elif token == commands.RIGHT != terminator:
             raise ExtraLeftOrMissingRight
-        elif token == LEFT:
+        elif token == commands.LEFT:
             delimiter = next(tokens)
-            children = tuple(_aggregate(tokens, terminator=RIGHT))  # make \right as a child of \left
-            if len(children) == 0 or children[-1].token != RIGHT:
+            children = tuple(_aggregate(tokens, terminator=commands.RIGHT))  # make \right as a child of \left
+            if len(children) == 0 or children[-1].token != commands.RIGHT:
                 raise ExtraLeftOrMissingRight
             node = Node(token=token, children=children if len(children) else None, delimiter=delimiter)
-        elif token == OPENING_BRACES:
-            children = tuple(_aggregate(tokens, terminator=CLOSING_BRACES))
-            node = Node(token=BRACES, children=children)
-        elif token == OPENING_PARENTHESIS:
-            children = tuple(_aggregate(tokens, terminator=CLOSING_PARENTHESIS))
+        elif token == commands.OPENING_BRACES:
+            children = tuple(_aggregate(tokens, terminator=commands.CLOSING_BRACES))
+            node = Node(token=commands.BRACES, children=children)
+        elif token == commands.OPENING_PARENTHESIS:
+            children = tuple(_aggregate(tokens, terminator=commands.CLOSING_PARENTHESIS))
             if len(children):
-                node = Node(token=PARENTHESES, children=children)
+                node = Node(token=commands.PARENTHESES, children=children)
             else:
-                aggregated.append(Node(token=token))
-                aggregated.append(Node(token=CLOSING_PARENTHESIS))
+                aggregated.extend([Node(token=token), Node(token=commands.CLOSING_PARENTHESIS)])
                 continue
-        elif token == OPENING_BRACKET:
-            children = tuple(_aggregate(tokens, terminator=CLOSING_BRACKET))
-            if len(children) or (terminator is not None and terminator.startswith(END)):
-                node = Node(token=BRACKETS, children=children)
+        elif token == commands.OPENING_BRACKET:
+            children = tuple(_aggregate(tokens, terminator=commands.CLOSING_BRACKET))
+            if len(children) or (terminator is not None and terminator.startswith(commands.END)):
+                node = Node(token=commands.BRACKETS, children=children)
             else:
-                aggregated.append(Node(token=token))
-                aggregated.append(Node(token=CLOSING_BRACKET))
+                aggregated.extend([Node(token=token), Node(token=commands.CLOSING_BRACKET)])
                 continue
-        elif token == SUBSCRIPT or token == SUPERSCRIPT:
+        elif token == commands.SUBSCRIPT or token == commands.SUPERSCRIPT:
             try:
                 previous = aggregated.pop()
             except IndexError:
                 previous = Node(token="")
-            if token == SUBSCRIPT and previous.token == SUPERSCRIPT and previous.children is not None:
+            if token == commands.SUBSCRIPT and previous.token == commands.SUPERSCRIPT and previous.children is not None:
                 node = Node(
-                    token=SUB_SUP,
+                    token=commands.SUBSUP,
                     children=(
                         previous.children[0],
                         *_aggregate(tokens, terminator=terminator, limit=1),
                         previous.children[1],
                     ),
                 )
-            elif token == SUPERSCRIPT and previous.token == SUBSCRIPT and previous.children is not None:
+            elif (
+                token == commands.SUPERSCRIPT and previous.token == commands.SUBSCRIPT and previous.children is not None
+            ):
                 next_children = _aggregate(tokens, terminator=terminator, limit=1)
-                if previous.children[0].token == LIMITS and aggregated[-1].token == INTEGRAL:
-                    node = Node(LIMITS, children=(aggregated.pop(), *previous.children[1:], *next_children))
+                if previous.children[0].token == commands.LIMITS and aggregated[-1].token == commands.INTEGRAL:
+                    node = Node(commands.LIMITS, children=(aggregated.pop(), *previous.children[1:], *next_children))
                 else:
-                    node = Node(token=SUB_SUP, children=(*previous.children, *next_children))
-            elif token == previous.token:
-                pass  # TODO: Raise error
+                    node = Node(token=commands.SUBSUP, children=(*previous.children, *next_children))
+            elif token == previous.token == commands.SUBSCRIPT:
+                raise DoubleSubscriptsError
+            elif token == previous.token == commands.SUPERSCRIPT:
+                raise DoubleSuperscriptsError
             else:
                 next_nodes = _aggregate(tokens, terminator=terminator, limit=1)
                 if len(next_nodes) == 0:
                     raise MissingSuperScriptOrSubscript
                 node = Node(token=token, children=(previous, *next_nodes))
-        elif token == FRAC or token == BINOM:
+        elif token == commands.FRAC or token == commands.BINOM:
             node = Node(token=token, children=tuple(_aggregate(tokens, terminator=terminator, limit=2)))
-        elif token in COMMANDS_WITH_ONE_PARAMETER:
+        elif token in commands.COMMANDS_WITH_ONE_PARAMETER:
             node = Node(token=token, children=tuple(_aggregate(tokens, terminator=terminator, limit=1)))
-        elif token == TEXT:
+        elif token == commands.TEXT:
             node = Node(token=token, text=next(tokens))
-        elif token == OVER:
+        elif token == commands.OVER:
             denominator = tuple(_aggregate(tokens, terminator=terminator))
             if len(denominator) > 1:
-                denominator = (Node(token=BRACES, children=denominator),)
+                denominator = (Node(token=commands.BRACES, children=denominator),)
             if len(denominator) == 0:
                 raise DenominatorNotFoundError
-            try:
-                node = Node(token=FRAC, children=(aggregated.pop(), *denominator))
-            except IndexError:
+            if len(aggregated) == 0:
                 raise NumeratorNotFoundError
-        elif token == SQRT:
+            elif len(aggregated) == 1:
+                children = (*aggregated, *denominator)
+            else:
+                children = (Node(token=commands.BRACES, children=tuple(aggregated)), *denominator)
+            aggregated = [Node(token=commands.FRAC, children=children)]
+            continue
+        elif token == commands.SQRT:
             root = None
             next_node = tuple(_aggregate(tokens, limit=1))
-            if next_node[0].token == BRACKETS and next_node[0].children is not None:
+            if next_node[0].token == commands.BRACKETS and next_node[0].children is not None:
                 root = next_node[0].children[0]
                 next_node = tuple(_aggregate(tokens, limit=1))
             if root:
-                node = Node(token=ROOT, children=(*next_node[-1:], root))
+                node = Node(token=commands.ROOT, children=(*next_node[-1:], root))
             else:
                 node = Node(token=token, children=next_node[-1:])
-        elif token.startswith(BEGIN):
+        elif token.startswith(commands.BEGIN):
             # TODO: support non-matrix environments
             matrix = token[token.index("{") + 1 : -1]
-            children = tuple(_aggregate(tokens, terminator=rf"{END}{{{matrix}}}"))
+            children = tuple(_aggregate(tokens, terminator=rf"{commands.END}{{{matrix}}}"))
             alignment = ""
             try:
                 if (
                     len(children) > 1
                     and children[0] is not None
                     and children[0].children is not None
-                    and (children[0].token == BRACES or (matrix.endswith("*") and children[0].token == BRACKETS))
+                    and (
+                        children[0].token == commands.BRACES
+                        or (matrix.endswith("*") and children[0].token == commands.BRACKETS)
+                    )
                     and all(c.token in "lcr|" for c in children[0].children)
                 ):
                     alignment = "".join(c.token for c in children[0].children)
@@ -166,9 +137,9 @@ def _aggregate(tokens: Iterator, terminator: str = None, limit: int = 0) -> List
             except IndexError:  # TODO: refactor
                 children = children[1:]
             node = Node(token=rf"\{matrix}", children=children, alignment=alignment)
-        elif token in MATRICES:
+        elif token in commands.MATRICES:
             children = tuple(_aggregate(tokens, terminator=terminator))
-            if len(children) == 1 and children[0].token == BRACES and children[0].children:
+            if len(children) == 1 and children[0].token == commands.BRACES and children[0].children:
                 children = children[0].children
             node = Node(token=token, children=children, alignment="")
         else:

@@ -6,6 +6,8 @@ import pytest
 from latex2mathml.aggregator import Node, aggregate
 from latex2mathml.exceptions import (
     DenominatorNotFoundError,
+    DoubleSubscriptsError,
+    DoubleSuperscriptsError,
     ExtraLeftOrMissingRight,
     MissingSuperScriptOrSubscript,
     NumeratorNotFoundError,
@@ -689,7 +691,7 @@ from latex2mathml.exceptions import (
         ),
         pytest.param(
             r"\array{}",
-            [Node(token=r"\array", children=(), alignment="")],
+            [Node(token=r"\array", children=(Node(token="{}", children=()),), alignment="")],
             id="empty-array",
         ),
         pytest.param(
@@ -1160,13 +1162,18 @@ from latex2mathml.exceptions import (
         pytest.param(
             r"\int\limits_{0}^{\pi}",
             [
-                Node(token=r"\int"),
                 Node(
-                    token="_^",
+                    token=r"\limits",
                     children=(
-                        Node(token=r"\limits"),
-                        Node(token="{}", children=(Node(token="0"),)),
-                        Node(token="{}", children=(Node(token=r"\pi"),)),
+                        Node(token=r"\int"),
+                        Node(
+                            token="{}",
+                            children=(Node(token="0"),),
+                        ),
+                        Node(
+                            token="{}",
+                            children=(Node(token="\\pi"),),
+                        ),
                     ),
                 ),
             ],
@@ -1267,41 +1274,39 @@ from latex2mathml.exceptions import (
         ),
         pytest.param(
             r"x = {-b \pm \sqrt{b^2-4ac} \over 2a}",
-            # FIXME: -b \pm should be inside \frac
             [
                 Node(token="x"),
                 Node(token="="),
                 Node(
                     token="{}",
                     children=(
-                        Node(token="-"),
-                        Node(token="b"),
-                        Node(token=r"\pm"),
                         Node(
                             token=r"\frac",
                             children=(
                                 Node(
-                                    token=r"\sqrt",
+                                    token="{}",
                                     children=(
+                                        Node(token="-"),
+                                        Node(token="b"),
+                                        Node(token=r"\pm"),
                                         Node(
-                                            token="{}",
+                                            token=r"\sqrt",
                                             children=(
-                                                Node(token="^", children=(Node(token="b"), Node(token="2"))),
-                                                Node(token="-"),
-                                                Node(token="4"),
-                                                Node(token="a"),
-                                                Node(token="c"),
+                                                Node(
+                                                    token="{}",
+                                                    children=(
+                                                        Node(token="^", children=(Node(token="b"), Node(token="2"))),
+                                                        Node(token="-"),
+                                                        Node(token="4"),
+                                                        Node(token="a"),
+                                                        Node(token="c"),
+                                                    ),
+                                                ),
                                             ),
                                         ),
                                     ),
                                 ),
-                                Node(
-                                    token="{}",
-                                    children=(
-                                        Node(token="2"),
-                                        Node(token="a"),
-                                    ),
-                                ),
+                                Node(token="{}", children=(Node(token="2"), Node(token="a"))),
                             ),
                         ),
                     ),
@@ -1358,6 +1363,8 @@ def test_aggregator(latex: str, expected: list) -> None:
         pytest.param(r"{1 \over }", DenominatorNotFoundError, id="fraction-without-denominator"),
         pytest.param(r"1_", MissingSuperScriptOrSubscript, id="missing-subscript"),
         pytest.param(r"1^", MissingSuperScriptOrSubscript, id="missing-superscript"),
+        pytest.param(r"1_2_3", DoubleSubscriptsError, id="double-subscript"),
+        pytest.param(r"1^2^3", DoubleSuperscriptsError, id="double-superscript"),
     ],
 )
 def test_missing_right(latex: str, exception: Union[Tuple[Any, ...], Any]) -> None:

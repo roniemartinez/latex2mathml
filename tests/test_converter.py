@@ -465,44 +465,44 @@ from latex2mathml.converter import _convert, convert
             },
             id="array-with-vertical-bar",
         ),
-        # pytest.param(
-        #     r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}",
-        #     {
-        #         "mtable": MultiDict(
-        #             [
-        #                 ("@rowlines", "none solid"),
-        #                 (
-        #                     "mtr",
-        #                     MultiDict(
-        #                         [
-        #                             ("mtd", {"@columnalign": "center", "mn": "1"}),
-        #                             ("mtd", {"@columnalign": "right", "mn": "2"}),
-        #                         ]
-        #                     ),
-        #                 ),
-        #                 (
-        #                     "mtr",
-        #                     MultiDict(
-        #                         [
-        #                             ("mtd", {"@columnalign": "center", "mn": "3"}),
-        #                             ("mtd", {"@columnalign": "right", "mn": "4"}),
-        #                         ]
-        #                     ),
-        #                 ),
-        #                 (
-        #                     "mtr",
-        #                     MultiDict(
-        #                         [
-        #                             ("mtd", {"@columnalign": "center", "mn": "5"}),
-        #                             ("mtd", {"@columnalign": "right", "mn": "6"}),
-        #                         ]
-        #                     ),
-        #                 ),
-        #             ]
-        #         )
-        #     },
-        #     id="array-with-horizontal-lines",
-        # ),
+        pytest.param(
+            r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}",
+            {
+                "mtable": MultiDict(
+                    [
+                        ("@rowlines", "none solid"),
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", {"@columnalign": "center", "mn": "1"}),
+                                    ("mtd", {"@columnalign": "right", "mn": "2"}),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", {"@columnalign": "center", "mn": "3"}),
+                                    ("mtd", {"@columnalign": "right", "mn": "4"}),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", {"@columnalign": "center", "mn": "5"}),
+                                    ("mtd", {"@columnalign": "right", "mn": "6"}),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="array-with-horizontal-lines",
+        ),
         pytest.param(
             r"""\begin{bmatrix}
              a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
@@ -1409,59 +1409,73 @@ from latex2mathml.converter import _convert, convert
             },
             id="issue-103",
         ),
-        #     pytest.param(
-        #         r"\begin{cases} {x=1} \\ {y=-2}\end{cases}",
-        #         MultiDict(
-        #             [
-        #                 (
-        #                     "mo",
-        #                     MultiDict(
-        #                         [
-        #                             ("@stretchy", "true"),
-        #                             ("@fence", "true"),
-        #                             ("@form", "prefix"),
-        #                             ("$", "&#x0007B;"),
-        #                         ]
-        #                     ),
-        #                 ),
-        #                 (
-        #                     "mtable",
-        #                     MultiDict(
-        #                         [
-        #                             (
-        #                                 "mtr",
-        #                                 {
-        #                                     "mtd": MultiDict(
-        #                                         [
-        #                                             ("@columnalign", "left"),
-        #                                             ("mi", "x"),
-        #                                             ("mo", "&#x0003D;"),
-        #                                             ("mn", "1"),
-        #                                         ]
-        #                                     )
-        #                                 },
-        #                             ),
-        #                             (
-        #                                 "mtr",
-        #                                 {
-        #                                     "mtd": MultiDict(
-        #                                         [
-        #                                             ("@columnalign", "left"),
-        #                                             ("mi", "y"),
-        #                                             ("mo", "&#x0003D;"),
-        #                                             ("mo", "&#x02212;"),
-        #                                             ("mn", "2"),
-        #                                         ]
-        #                                     )
-        #                                 },
-        #                             ),
-        #                         ]
-        #                     ),
-        #                 ),
-        #             ]
-        #         ),
-        #         id="issue-106",
-        #     ),
+        pytest.param(
+            r"\begin{cases} {x=1} \\ {y=-2}\end{cases}",
+            MultiDict(
+                [
+                    (
+                        "mo",
+                        MultiDict(
+                            [
+                                ("@stretchy", "true"),
+                                ("@fence", "true"),
+                                ("@form", "prefix"),
+                                ("$", "&#x0007B;"),
+                            ]
+                        ),
+                    ),
+                    (
+                        "mtable",
+                        MultiDict(
+                            [
+                                (
+                                    "mtr",
+                                    {
+                                        "mtd": MultiDict(
+                                            [
+                                                ("@columnalign", "left"),
+                                                (
+                                                    "mrow",
+                                                    MultiDict(
+                                                        [
+                                                            ("mi", "x"),
+                                                            ("mo", "&#x0003D;"),
+                                                            ("mn", "1"),
+                                                        ]
+                                                    ),
+                                                ),
+                                            ]
+                                        )
+                                    },
+                                ),
+                                (
+                                    "mtr",
+                                    {
+                                        "mtd": MultiDict(
+                                            [
+                                                ("@columnalign", "left"),
+                                                (
+                                                    "mrow",
+                                                    MultiDict(
+                                                        [
+                                                            ("mi", "y"),
+                                                            ("mo", "&#x0003D;"),
+                                                            ("mo", "&#x02212;"),
+                                                            ("mn", "2"),
+                                                        ]
+                                                    ),
+                                                ),
+                                            ]
+                                        )
+                                    },
+                                ),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="issue-106",
+        ),
         pytest.param(r"\max f", MultiDict([("mo", "max"), ("mi", "f")]), id="issue-108-1"),
         pytest.param(
             r"\max \{a, b, c\}",
