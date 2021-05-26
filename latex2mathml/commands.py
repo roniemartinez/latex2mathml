@@ -1,6 +1,58 @@
 from collections import OrderedDict
 from typing import Dict, Tuple
 
+OPENING_BRACES = "{"
+CLOSING_BRACES = "}"
+BRACES = "{}"
+
+OPENING_BRACKET = "["
+CLOSING_BRACKET = "]"
+BRACKETS = "[]"
+
+OPENING_PARENTHESIS = "("
+CLOSING_PARENTHESIS = ")"
+PARENTHESES = "()"
+
+SUBSUP = "_^"
+SUBSCRIPT = "_"
+SUPERSCRIPT = "^"
+
+LEFT = r"\left"
+RIGHT = r"\right"
+OVER = r"\over"
+FRAC = r"\frac"
+BINOM = r"\binom"
+ROOT = r"\root"
+SQRT = r"\sqrt"
+
+OVERLINE = r"\overline"
+BAR = r"\bar"
+UNDERLINE = r"\underline"
+OVERRIGHTARROW = r"\overrightarrow"
+VEC = r"\vec"
+DOT = r"\dot"
+TEXT = r"\text"
+
+COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT)
+
+BEGIN = r"\begin"
+END = r"\end"
+
+LIMITS = r"\limits"
+INTEGRAL = r"\int"
+SUMMATION = r"\sum"
+LIMIT = (r"\lim", r"\sup", r"\inf", r"\max", r"\min")
+
+OPERATORNAME = r"\operatorname"
+
+LBRACE = r"\{"
+
+FUNCTIONS = (r"\log", r"\ln", r"\tan", r"\sec", r"\cos", r"\sin", r"\cot", r"\csc")
+
+HLINE = r"\hline"
+
+CASES = r"\cases"
+SUBSTACK = r"\substack"
 MATRICES = (
     r"\matrix",
     r"\matrix*",
@@ -15,48 +67,41 @@ MATRICES = (
     r"\Vmatrix",
     r"\Vmatrix*",
     r"\array",
-    r"\substack",
-    r"\cases",
+    SUBSTACK,
+    CASES,
 )
+
+BACKSLASH = "\\"
+DOUBLEBACKSLASH = r"\\"
 
 SPACES = (r"\,", r"\:", r"\;", r"\\", r"\quad", r"\qquad")
 
-COMMANDS: Dict[str, Tuple[int, str, dict]] = {
-    # command: (params_count, mathml_equivalent, attributes)
-    "_": (2, "msub", {}),
-    "^": (2, "msup", {}),
-    "_^": (3, "msubsup", {}),
-    r"\frac": (2, "mfrac", {}),
-    r"\sqrt": (1, "msqrt", {}),
-    r"\root": (2, "mroot", {}),
-    r"\binom": (2, "mfrac", {"linethickness": "0"}),
-    r"\left": (
-        1,
-        "mo",
-        OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")]),
-    ),
-    r"\right": (
-        1,
-        "mo",
-        OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "postfix")]),
-    ),
-    r"\overline": (1, "mover", {}),
-    r"\bar": (1, "mover", {}),
-    r"\underline": (1, "munder", {}),
-    r"\limits": (3, "munderover", {}),
-    r"\overrightarrow": (1, "mover", {}),
-    r"\vec": (1, "mover", {}),
-    r"\dot": (1, "mover", {}),
-    r"\text": (1, "mtext", {}),
+CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
+    # command: (mathml_equivalent, attributes)
+    SUBSCRIPT: ("msub", {}),
+    SUPERSCRIPT: ("msup", {}),
+    SUBSUP: ("msubsup", {}),
+    FRAC: ("mfrac", {}),
+    SQRT: ("msqrt", {}),
+    ROOT: ("mroot", {}),
+    BINOM: ("mfrac", {"linethickness": "0"}),
+    LEFT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")])),
+    RIGHT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "postfix")])),
+    OVERLINE: ("mover", {}),
+    BAR: ("mover", {}),
+    UNDERLINE: ("munder", {}),
+    LIMITS: ("munderover", {}),
+    OVERRIGHTARROW: ("mover", {}),
+    VEC: ("mover", {}),
+    DOT: ("mover", {}),
+    TEXT: ("mtext", {}),
 }
 
-LIMITS = [r"\lim", r"\sup", r"\inf", r"\max", r"\min"]
-
 for space in SPACES:
-    COMMANDS[space] = (0, "mspace", {"width": "0.167em"})
+    CONVERSION_MAP[space] = ("mspace", {"width": "0.167em"})
 
 for matrix in MATRICES:
-    COMMANDS[matrix] = (1, "mtable", {})
+    CONVERSION_MAP[matrix] = ("mtable", {})
 
-for limit in LIMITS:
-    COMMANDS[limit] = (1, "munder", {})
+for limit in LIMIT:
+    CONVERSION_MAP[limit] = ("mo", {})
