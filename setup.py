@@ -10,6 +10,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
+
 import os.path
 
 readme = ''
@@ -22,10 +23,10 @@ if os.path.exists(readme_path):
 
 setup(
     long_description=readme,
-    name="latex2mathml",
-    version="3.0.0-alpha.0",
-    description="Pure Python library for LaTeX to MathML conversion",
-    python_requires="<4,>=3.6.2",
+    name='latex2mathml',
+    version='3.0.0-alpha.1',
+    description='Pure Python library for LaTeX to MathML conversion',
+    python_requires='<4,>=3.6.2',
     project_urls={"repository": "https://github.com/roniemartinez/latex2mathml"},
     author='Ronie Martinez',
     author_email='ronmarti18@gmail.com',
@@ -37,5 +38,5 @@ setup(
     package_dir={"": "."},
     package_data={"latex2mathml": ["*.txt"]},
     install_requires=[],
-    extras_require={"dev": ["autoflake==1.*,>=1.3.1", "black==21.*,>=21.4.0.b2", "codecov==2.*,>=2.0.16", "dephell==0.*,>=0.8.3", "flake8==3.*,>=3.7.9", "isort==5.*,>=5.4.2", "multidict==5.*,>=5.1.0", "mypy==0.*,>=0.812.0", "pytest==6.*,>=6.0.1", "pytest-cov==2.*,>=2.8.1", "typing-extensions==3.*,>=3.7.4", "xmljson==0.*,>=0.2.0"]},
+    extras_require={"dev": ["autoflake==1.*,>=1.3.1", "black==21.*,>=21.4.0.b2", "codecov==2.*,>=2.0.16", "dephell==0.*,>=0.8.3", "flake8==3.*,>=3.7.9", "isort==5.*,>=5.4.2", "multidict==5.*,>=5.1.0", "mypy==0.*,>=0.812.0", "pytest==6.*,>=6.0.1", "pytest-cov==2.*,>=2.8.1", "tomlkit==0.7.0", "typing-extensions==3.*,>=3.7.4", "xmljson==0.*,>=0.2.0"]},
 )

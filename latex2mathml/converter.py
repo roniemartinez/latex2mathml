@@ -5,11 +5,9 @@ from typing import Iterable, Iterator, Optional, Tuple
 from xml.etree.cElementTree import Element, SubElement, tostring
 from xml.sax.saxutils import unescape
 
-import pkg_resources
-
 from latex2mathml import commands
-from latex2mathml.aggregator import Node, aggregate
 from latex2mathml.symbols_parser import convert_symbol
+from latex2mathml.walker import Node, walk
 
 COLUMN_ALIGNMENT_MAP = {"r": "right", "l": "left", "c": "center"}
 
@@ -17,7 +15,7 @@ COLUMN_ALIGNMENT_MAP = {"r": "right", "l": "left", "c": "center"}
 def convert(latex: str, xmlns: str = "http://www.w3.org/1998/Math/MathML", display: str = "inline") -> str:
     math = Element("math", xmlns=xmlns, display=display)
     row = SubElement(math, "mrow")
-    _convert_group(iter(aggregate(latex)), row)
+    _convert_group(iter(walk(latex)), row)
     return _convert(math)
 
 
@@ -29,8 +27,8 @@ def _convert_matrix(nodes: Iterator[Node], parent: Element, alignment: Optional[
     row = None
     cell = None
 
-    column_index = 0
-    column_alignment = None
+    col_index = 0
+    col_alignment = None
 
     row_index = 0
     row_lines = []
@@ -40,40 +38,23 @@ def _convert_matrix(nodes: Iterator[Node], parent: Element, alignment: Optional[
             row = SubElement(parent, "mtr")
 
         if cell is None:
-            if alignment:
-                try:
-                    column_alignment = COLUMN_ALIGNMENT_MAP.get(alignment[column_index])
-                    column_index += 1
-                except IndexError:
-                    pass
-
-            cell = _make_matrix_cell(row, column_alignment)
+            col_alignment, col_index = _get_column_alignment(alignment, col_alignment, col_index)
+            cell = _make_matrix_cell(row, col_alignment)
 
         if node.token == commands.BRACES:
             _convert_group(iter([node]), cell)
             continue
 
         if node.token == "&":
-            if alignment:
-                try:
-                    column_alignment = COLUMN_ALIGNMENT_MAP.get(alignment[column_index])
-                    column_index += 1
-                except IndexError:
-                    pass
-
-            cell = _make_matrix_cell(row, column_alignment)
+            col_alignment, col_index = _get_column_alignment(alignment, col_alignment, col_index)
+            cell = _make_matrix_cell(row, col_alignment)
             continue
         elif node.token == commands.DOUBLEBACKSLASH:
             row_index += 1
-            column_index = 0
-            if alignment:
-                try:
-                    column_alignment = COLUMN_ALIGNMENT_MAP.get(alignment[column_index])
-                    column_index += 1
-                except IndexError:
-                    pass
+            col_index = 0
+            col_alignment, col_index = _get_column_alignment(alignment, col_alignment, col_index)
             row = SubElement(parent, "mtr")
-            cell = _make_matrix_cell(row, column_alignment)
+            cell = _make_matrix_cell(row, col_alignment)
             continue
         elif node.token == commands.HLINE:
             row_lines.append("solid")
@@ -86,6 +67,18 @@ def _convert_matrix(nodes: Iterator[Node], parent: Element, alignment: Optional[
 
     if any(r == "solid" for r in row_lines):
         parent.set("rowlines", " ".join(row_lines))
+
+
+def _get_column_alignment(
+    alignment: Optional[str], column_alignment: Optional[str], column_index: int
+) -> Tuple[Optional[str], int]:
+    if alignment:
+        try:
+            column_alignment = COLUMN_ALIGNMENT_MAP.get(alignment[column_index])
+            column_index += 1
+        except IndexError:
+            pass
+    return column_alignment, column_index
 
 
 def _make_matrix_cell(row: Element, column_alignment: Optional[str]) -> Element:
@@ -271,6 +264,8 @@ def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False) -> 
 
 def main() -> None:  # pragma: no cover
     import argparse
+
+    import pkg_resources
 
     parser = argparse.ArgumentParser(description="Pure Python library for LaTeX to MathML conversion")
     parser.add_argument("-V", "--version", dest="version", action="store_true", required=False, help="Show version")

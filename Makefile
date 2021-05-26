@@ -7,7 +7,7 @@ install:
 style:
 	poetry run autoflake --remove-all-unused-imports --in-place -r --exclude __init__.py .
 	poetry run isort --atomic .
-	poetry run black --exclude setup.py .
+	poetry run black .
 	poetry run flake8 .
 
 .PHONY: format

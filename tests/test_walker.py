@@ -3,7 +3,6 @@ from typing import Any, Tuple, Union
 
 import pytest
 
-from latex2mathml.aggregator import Node, aggregate
 from latex2mathml.exceptions import (
     DenominatorNotFoundError,
     DoubleSubscriptsError,
@@ -12,6 +11,7 @@ from latex2mathml.exceptions import (
     MissingSuperScriptOrSubscript,
     NumeratorNotFoundError,
 )
+from latex2mathml.walker import Node, walk
 
 
 @pytest.mark.parametrize(
@@ -1350,8 +1350,8 @@ from latex2mathml.exceptions import (
         pytest.param(r"\text{Let}", [Node(token=r"\text", text="Let")], id="text"),
     ],
 )
-def test_aggregator(latex: str, expected: list) -> None:
-    assert aggregate(latex) == expected
+def test_walk(latex: str, expected: list) -> None:
+    assert walk(latex) == expected
 
 
 @pytest.mark.parametrize(
@@ -1369,4 +1369,4 @@ def test_aggregator(latex: str, expected: list) -> None:
 )
 def test_missing_right(latex: str, exception: Union[Tuple[Any, ...], Any]) -> None:
     with pytest.raises(exception):
-        print(aggregate(latex))
+        print(walk(latex))
