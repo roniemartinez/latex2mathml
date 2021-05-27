@@ -46,7 +46,7 @@ typing-extensions = "^3.7.4"  # prevent poetry from removing this
 xmljson = "^0.2.0"
 black = "^21.4b2"
 mypy = "^0.812"
-tomlkit = "0.7.0"  # dephell is broken on versions above 0.7.0
+tomlkit = "0.7.2"  # dephell is broken on versions above 0.7.2
 
 [tool.isort]
 line_length = 120
