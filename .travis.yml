@@ -118,6 +118,7 @@ matrix:
 branches:
   except:
     - /^[0-9]+\.[0-9]+\.[0-9]+/
+    - /^dependabot\/pip\//
 
 install:
   - make install
