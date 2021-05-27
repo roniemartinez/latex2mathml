@@ -1348,6 +1348,41 @@ from latex2mathml.walker import Node, walk
             id="overrightarrow",
         ),
         pytest.param(r"\text{Let}", [Node(token=r"\text", text="Let")], id="text"),
+        pytest.param(
+            r"F(a,n)=\overset{a-a-a\cdots-a}{}ntext{个}a",
+            [
+                Node(token="F"),
+                Node(token="()", children=(Node(token="a"), Node(token=","), Node(token="n"))),
+                Node(token="="),
+                Node(
+                    token=r"\overset",
+                    children=(
+                        Node(
+                            token="{}",
+                            children=(
+                                Node(token="a"),
+                                Node(token="-"),
+                                Node(token="a"),
+                                Node(token="-"),
+                                Node(token="a"),
+                                Node(token=r"\cdots"),
+                                Node(token="-"),
+                                Node(token="a"),
+                            ),
+                        ),
+                    ),
+                ),
+                Node(token="{}", children=()),
+                Node(token="n"),
+                Node(token="t"),
+                Node(token="e"),
+                Node(token="x"),
+                Node(token="t"),
+                Node(token="{}", children=(Node(token="个"),)),
+                Node(token="a"),
+            ],
+            id="issue-125-overset",
+        ),
     ],
 )
 def test_walk(latex: str, expected: list) -> None:

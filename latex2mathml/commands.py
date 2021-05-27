@@ -29,11 +29,12 @@ OVERLINE = r"\overline"
 BAR = r"\bar"
 UNDERLINE = r"\underline"
 OVERRIGHTARROW = r"\overrightarrow"
+OVERSET = r"\overset"
 VEC = r"\vec"
 DOT = r"\dot"
 TEXT = r"\text"
 
-COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT)
+COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT, OVERSET)
 
 BEGIN = r"\begin"
 END = r"\end"
@@ -94,6 +95,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     OVERRIGHTARROW: ("mover", {}),
     VEC: ("mover", {}),
     DOT: ("mover", {}),
+    OVERSET: ("mover", {}),
     TEXT: ("mtext", {}),
 }
 

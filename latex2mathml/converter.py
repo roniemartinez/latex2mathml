@@ -152,6 +152,9 @@ def _convert_command(node: Node, parent: Element) -> None:
 
     element = SubElement(parent, tag, attributes)
 
+    if command == commands.OVERSET:
+        SubElement(element, "mrow")
+
     if command in commands.LIMIT:
         element.text = command[1:]
     elif node.text is not None:
