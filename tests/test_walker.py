@@ -43,11 +43,7 @@ from latex2mathml.walker import Node, walk
             [
                 Node(
                     token="{}",
-                    children=(
-                        Node(token="a"),
-                        Node(token="+"),
-                        Node(token="{}", children=(Node(token="b"),)),
-                    ),
+                    children=(Node(token="a"), Node(token="+"), Node(token="{}", children=(Node(token="b"),))),
                 )
             ],
             id="inner-group",
@@ -656,10 +652,7 @@ from latex2mathml.walker import Node, walk
                     children=(
                         Node(
                             token=r"\left",
-                            children=(
-                                Node(token="x"),
-                                Node(token=r"\right", delimiter=")"),
-                            ),
+                            children=(Node(token="x"), Node(token=r"\right", delimiter=")")),
                             delimiter="(",
                         ),
                         Node(token=r"\right", delimiter=")"),
@@ -1166,14 +1159,8 @@ from latex2mathml.walker import Node, walk
                     token=r"\limits",
                     children=(
                         Node(token=r"\int"),
-                        Node(
-                            token="{}",
-                            children=(Node(token="0"),),
-                        ),
-                        Node(
-                            token="{}",
-                            children=(Node(token="\\pi"),),
-                        ),
+                        Node(token="{}", children=(Node(token="0"),)),
+                        Node(token="{}", children=(Node(token=r"\pi"),)),
                     ),
                 ),
             ],
