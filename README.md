@@ -55,13 +55,14 @@ mathml_output = latex2mathml.converter.convert(latex_input)
 
 ```shell
 % latex2mathml -h
-usage: l2m [-h] [-V] [-t TEXT | -f FILE]
+usage: l2m [-h] [-V] [-b] [-t TEXT | -f FILE]
 
 Pure Python library for LaTeX to MathML conversion
 
 optional arguments:
   -h, --help            show this help message and exit
   -V, --version         Show version
+  -b, --block           Display block
 
 required arguments:
   -t TEXT, --text TEXT  Text
@@ -75,6 +76,7 @@ required arguments:
 - http://artofproblemsolving.com/wiki/index.php?title=Main_Page
 - http://milde.users.sourceforge.net/LUCR/Math/
 - https://math-linux.com/latex-26/faq/latex-faq/article/latex-derivatives-limits-sums-products-and-integrals
+- https://www.tutorialspoint.com/tex_commands
 
 ### MathML
 
