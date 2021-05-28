@@ -152,9 +152,6 @@ def _convert_command(node: Node, parent: Element) -> None:
 
     element = SubElement(parent, tag, attributes)
 
-    if command == commands.OVERSET:
-        SubElement(element, "mrow")
-
     if command in commands.LIMIT:
         element.text = command[1:]
     elif node.text is not None:
@@ -172,6 +169,8 @@ def _convert_command(node: Node, parent: Element) -> None:
             if command == commands.CASES:
                 alignment = "l"
             _convert_matrix(iter(node.children), _parent, alignment=alignment)
+        elif command == commands.MATHOP:
+            _convert_group(iter(node.children), _parent, True)
         else:
             _convert_group(iter(node.children), _parent)
 
@@ -232,7 +231,7 @@ def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False) -> 
     elif len(token) and token in "<>&":
         mo = SubElement(parent, "mo")
         mo.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;"}[token]
-    elif len(token) and token in "+-*/()=,":
+    elif len(token) and token in "+-*/()=,?":
         mo = SubElement(parent, "mo")
         mo.text = token if symbol is None else "&#x{};".format(symbol)
         if token in "()":

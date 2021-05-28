@@ -25,16 +25,21 @@ BINOM = r"\binom"
 ROOT = r"\root"
 SQRT = r"\sqrt"
 
+OVERSET = r"\overset"
+UNDERSET = r"\underset"
+
+COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET)
+
 OVERLINE = r"\overline"
 BAR = r"\bar"
 UNDERLINE = r"\underline"
 OVERRIGHTARROW = r"\overrightarrow"
-OVERSET = r"\overset"
 VEC = r"\vec"
 DOT = r"\dot"
 TEXT = r"\text"
+MATHOP = r"\mathop"
 
-COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT, OVERSET)
+COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT, MATHOP)
 
 BEGIN = r"\begin"
 END = r"\end"
@@ -96,7 +101,9 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     VEC: ("mover", {}),
     DOT: ("mover", {}),
     OVERSET: ("mover", {}),
+    UNDERSET: ("munder", {}),
     TEXT: ("mtext", {}),
+    MATHOP: ("mrow", {}),
 }
 
 for space in SPACES:

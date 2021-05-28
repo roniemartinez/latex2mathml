@@ -1631,7 +1631,6 @@ from latex2mathml.converter import _convert, convert
                             ]
                         ),
                     ),
-                    ("mrow", ""),
                     ("mi", "n"),
                     ("mi", "t"),
                     ("mi", "e"),
@@ -1641,7 +1640,34 @@ from latex2mathml.converter import _convert, convert
                     ("mi", "a"),
                 ]
             ),
-            id="issue-125-overset",
+            id="issue-125-1-overset",
+        ),
+        pytest.param(
+            r"a\,\overset{?}{=}\,b",
+            MultiDict(
+                [
+                    ("mi", "a"),
+                    ("mspace", {"@width": "0.167em"}),
+                    ("mover", MultiDict([("mrow", {"mo": "&#x0003D;"}), ("mrow", {"mo": "&#x0003F;"})])),
+                    ("mspace", {"@width": "0.167em"}),
+                    ("mi", "b"),
+                ]
+            ),
+            id="issue-125-2-overset",
+        ),
+        pytest.param(r"\underset ab", {"munder": MultiDict([("mi", "b"), ("mi", "a")])}, id="issue-125-3-underset"),
+        pytest.param(
+            r"a\mathop{t}b\mathop{t}c",
+            MultiDict(
+                [
+                    ("mi", "a"),
+                    ("mrow", {"mrow": {"mo": "t"}}),
+                    ("mi", "b"),
+                    ("mrow", {"mrow": {"mo": "t"}}),
+                    ("mi", "c"),
+                ]
+            ),
+            id="issue-125-4-mathop",
         ),
     ],
 )

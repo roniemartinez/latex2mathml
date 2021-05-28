@@ -1357,6 +1357,7 @@ from latex2mathml.walker import Node, walk
                 Node(
                     token=r"\overset",
                     children=(
+                        Node(token="{}", children=()),
                         Node(
                             token="{}",
                             children=(
@@ -1372,7 +1373,6 @@ from latex2mathml.walker import Node, walk
                         ),
                     ),
                 ),
-                Node(token="{}", children=()),
                 Node(token="n"),
                 Node(token="t"),
                 Node(token="e"),
