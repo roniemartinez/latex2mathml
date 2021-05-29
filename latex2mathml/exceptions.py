@@ -6,11 +6,11 @@ class DenominatorNotFoundError(Exception):
     pass
 
 
-class ExtraLeftOrMissingRight(Exception):
+class ExtraLeftOrMissingRightError(Exception):
     pass
 
 
-class MissingSuperScriptOrSubscript(Exception):
+class MissingSuperScriptOrSubscriptError(Exception):
     pass
 
 
@@ -19,4 +19,8 @@ class DoubleSubscriptsError(Exception):
 
 
 class DoubleSuperscriptsError(Exception):
+    pass
+
+
+class NoAvailableTokensError(Exception):
     pass
