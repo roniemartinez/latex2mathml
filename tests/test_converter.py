@@ -1362,6 +1362,18 @@ from latex2mathml.converter import _convert, convert
             ),
             id="big",
         ),
+        pytest.param(
+            r"x\rm y2\sf z",
+            MultiDict(
+                [
+                    ("mi", "x"),
+                    ("mi", {"@mathvariant": "normal", "$": "y"}),
+                    ("mn", "2"),
+                    ("mi", {"@mathvariant": "sans-serif", "$": "z"}),
+                ]
+            ),
+            id="rm",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

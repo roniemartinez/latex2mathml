@@ -85,7 +85,16 @@ SPACES = (r"\,", r"\:", r"\;", r"\\")
 COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT, MATHOP, HSPACE)
 COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET)
 
+OLD_STYLE_FONTS = {
+    r"\rm": "normal",
+    r"\bf": "bold",
+    r"\it": "italic",
+    r"\sf": "sans-serif",
+    r"\tt": "monospace",
+}
+
 BIG: Dict[str, Tuple[str, dict]] = {
+    # command: (mathml_equivalent, attributes)
     r"\Bigg": ("mo", OrderedDict([("minsize", "2.470em"), ("maxsize", "2.470em")])),
     r"\bigg": ("mo", OrderedDict([("minsize", "2.047em"), ("maxsize", "2.047em")])),
     r"\Big": ("mo", OrderedDict([("minsize", "1.623em"), ("maxsize", "1.623em")])),
