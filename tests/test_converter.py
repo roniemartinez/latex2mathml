@@ -1349,6 +1349,19 @@ from latex2mathml.converter import _convert, convert
             ),
             id="issue-129-hspace",
         ),
+        pytest.param(
+            r"\Bigg[\bigg[\Big[\big[[",
+            MultiDict(
+                [
+                    ("mo", {"@minsize": "2.470em", "@maxsize": "2.470em", "$": "["}),
+                    ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "["}),
+                    ("mo", {"@minsize": "1.623em", "@maxsize": "1.623em", "$": "["}),
+                    ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "["}),
+                    ("mo", {"@stretchy": "false", "$": "["}),
+                ]
+            ),
+            id="big",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

@@ -85,6 +85,13 @@ SPACES = (r"\,", r"\:", r"\;", r"\\")
 COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT, MATHOP, HSPACE)
 COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET)
 
+BIG: Dict[str, Tuple[str, dict]] = {
+    r"\Bigg": ("mo", OrderedDict([("minsize", "2.470em"), ("maxsize", "2.470em")])),
+    r"\bigg": ("mo", OrderedDict([("minsize", "2.047em"), ("maxsize", "2.047em")])),
+    r"\Big": ("mo", OrderedDict([("minsize", "1.623em"), ("maxsize", "1.623em")])),
+    r"\big": ("mo", OrderedDict([("minsize", "1.2em"), ("maxsize", "1.2em")])),
+}
+
 CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
     SUBSCRIPT: ("msub", {}),
@@ -111,6 +118,8 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     QQUAD: ("mspace", {"width": "2em"}),
     HSPACE: ("mspace", {}),
 }
+
+CONVERSION_MAP.update(BIG)
 
 for space in SPACES:
     CONVERSION_MAP[space] = ("mspace", {"width": "0.167em"})

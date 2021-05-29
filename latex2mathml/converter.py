@@ -233,10 +233,10 @@ def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False) -> 
     elif len(token) and token in "<>&":
         mo = SubElement(parent, "mo")
         mo.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;"}[token]
-    elif len(token) and token in "+-*/()=,?":
+    elif len(token) and token in "+-*/()=,?[]":
         mo = SubElement(parent, "mo")
         mo.text = token if symbol is None else "&#x{};".format(symbol)
-        if token in "()":
+        if token in "()[]":
             mo.attrib["stretchy"] = "false"
     elif (
         symbol

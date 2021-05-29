@@ -7,8 +7,8 @@ from latex2mathml.exceptions import (
     DenominatorNotFoundError,
     DoubleSubscriptsError,
     DoubleSuperscriptsError,
-    ExtraLeftOrMissingRight,
-    MissingSuperScriptOrSubscript,
+    ExtraLeftOrMissingRightError,
+    MissingSuperScriptOrSubscriptError,
     NumeratorNotFoundError,
 )
 from latex2mathml.walker import Node, walk
@@ -1390,12 +1390,12 @@ def test_walk(latex: str, expected: list) -> None:
 @pytest.mark.parametrize(
     "latex, exception",
     [
-        pytest.param(r"\right)", ExtraLeftOrMissingRight, id=r"missing-\left"),
-        pytest.param(r"\left(x", ExtraLeftOrMissingRight, id=r"missing-\right"),
+        pytest.param(r"\right)", ExtraLeftOrMissingRightError, id=r"missing-\left"),
+        pytest.param(r"\left(x", ExtraLeftOrMissingRightError, id=r"missing-\right"),
         pytest.param(r"{ \over 2}", NumeratorNotFoundError, id="fraction-without-numerator"),
         pytest.param(r"{1 \over }", DenominatorNotFoundError, id="fraction-without-denominator"),
-        pytest.param(r"1_", MissingSuperScriptOrSubscript, id="missing-subscript"),
-        pytest.param(r"1^", MissingSuperScriptOrSubscript, id="missing-superscript"),
+        pytest.param(r"1_", MissingSuperScriptOrSubscriptError, id="missing-subscript"),
+        pytest.param(r"1^", MissingSuperScriptOrSubscriptError, id="missing-superscript"),
         pytest.param(r"1_2_3", DoubleSubscriptsError, id="double-subscript"),
         pytest.param(r"1^2^3", DoubleSuperscriptsError, id="double-superscript"),
     ],
