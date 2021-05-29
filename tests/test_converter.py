@@ -1363,13 +1363,13 @@ from latex2mathml.converter import _convert, convert
             id="big",
         ),
         pytest.param(
-            r"x\rm y2\sf z",
+            r"x\rm y2\sf \Delta",
             MultiDict(
                 [
                     ("mi", "x"),
                     ("mi", {"@mathvariant": "normal", "$": "y"}),
                     ("mn", "2"),
-                    ("mi", {"@mathvariant": "sans-serif", "$": "z"}),
+                    ("mi", {"@mathvariant": "sans-serif", "$": "&#x00394;"}),
                 ]
             ),
             id="rm",
