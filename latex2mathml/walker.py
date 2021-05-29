@@ -76,7 +76,7 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                 token == commands.SUPERSCRIPT and previous.token == commands.SUBSCRIPT and previous.children is not None
             ):
                 next_nodes = _walk(tokens, terminator=terminator, limit=1)
-                if previous.children[0].token == commands.LIMITS and group[-1].token == commands.INTEGRAL:
+                if previous.children[0].token == commands.LIMITS:
                     node = Node(commands.LIMITS, children=(group.pop(), *previous.children[1:], *next_nodes))
                 else:
                     node = Node(token=commands.SUBSUP, children=(*previous.children, *next_nodes))

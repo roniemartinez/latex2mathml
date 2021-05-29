@@ -170,7 +170,7 @@ def _convert_command(node: Node, parent: Element) -> None:
                 alignment = "l"
             _convert_matrix(iter(node.children), _parent, alignment=alignment)
         elif command == commands.MATHOP:
-            _convert_group(iter(node.children), _parent, True)
+            _convert_group(iter(node.children), _parent)
         else:
             _convert_group(iter(node.children), _parent)
 

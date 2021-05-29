@@ -1315,13 +1315,18 @@ from latex2mathml.converter import _convert, convert
             MultiDict(
                 [
                     ("mi", "a"),
-                    ("mrow", {"mrow": {"mo": "t"}}),
+                    ("mrow", {"mrow": {"mi": "t"}}),
                     ("mi", "b"),
-                    ("mrow", {"mrow": {"mo": "t"}}),
+                    ("mrow", {"mrow": {"mi": "t"}}),
                     ("mi", "c"),
                 ]
             ),
             id="issue-125-4-mathop",
+        ),
+        pytest.param(
+            r"\mathop{x}\limits_0^1",
+            {"munderover": MultiDict([("mrow", {"mrow": {"mi": "x"}}), ("mn", "0"), ("mn", "1")])},
+            id="issue-125-4-limits",
         ),
     ],
 )
