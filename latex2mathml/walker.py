@@ -91,7 +91,10 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                 children = children[::-1]
             node = Node(token=token, children=tuple(children))
         elif token in commands.COMMANDS_WITH_ONE_PARAMETER:
-            node = Node(token=token, children=tuple(_walk(tokens, terminator=terminator, limit=1)))
+            children = tuple(_walk(tokens, terminator=terminator, limit=1))
+            if children[0].token == commands.BRACES and token == commands.HSPACE:
+                children = children[0].children
+            node = Node(token=token, children=children)
         elif token == commands.TEXT:
             node = Node(token=token, text=next(tokens))
         elif token == commands.OVER:

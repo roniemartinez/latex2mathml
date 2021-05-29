@@ -1328,6 +1328,27 @@ from latex2mathml.converter import _convert, convert
             {"munderover": MultiDict([("mrow", {"mrow": {"mi": "x"}}), ("mn", "0"), ("mn", "1")])},
             id="issue-125-4-limits",
         ),
+        pytest.param(
+            r"|\quad|\quad|",
+            MultiDict(
+                [("mi", "|"), ("mspace", {"@width": "1em"}), ("mi", "|"), ("mspace", {"@width": "1em"}), ("mi", "|")]
+            ),
+            id="issue-129-quad",
+        ),
+        pytest.param(
+            r"|\qquad|\qquad|",
+            MultiDict(
+                [("mi", "|"), ("mspace", {"@width": "2em"}), ("mi", "|"), ("mspace", {"@width": "2em"}), ("mi", "|")]
+            ),
+            id="issue-129-quad",
+        ),
+        pytest.param(
+            r"|\hspace1em|\hspace{10ex}|",
+            MultiDict(
+                [("mi", "|"), ("mspace", {"@width": "1em"}), ("mi", "|"), ("mspace", {"@width": "10ex"}), ("mi", "|")]
+            ),
+            id="issue-129-hspace",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

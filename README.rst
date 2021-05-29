@@ -96,6 +96,7 @@ LaTeX
 * http://milde.users.sourceforge.net/LUCR/Math/
 * https://math-linux.com/latex-26/faq/latex-faq/article/latex-derivatives-limits-sums-products-and-integrals
 * https://www.tutorialspoint.com/tex_commands
+* https://www.giss.nasa.gov/tools/latex/ltx-86.html
 
 MathML
 ^^^^^^

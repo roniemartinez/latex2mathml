@@ -171,6 +171,8 @@ def _convert_command(node: Node, parent: Element) -> None:
             _convert_matrix(iter(node.children), _parent, alignment=alignment)
         elif command == commands.MATHOP:
             _convert_group(iter(node.children), _parent)
+        elif command == commands.HSPACE:
+            element.attrib["width"] = node.children[0].token
         else:
             _convert_group(iter(node.children), _parent)
 

@@ -28,8 +28,6 @@ SQRT = r"\sqrt"
 OVERSET = r"\overset"
 UNDERSET = r"\underset"
 
-COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET)
-
 OVERLINE = r"\overline"
 BAR = r"\bar"
 UNDERLINE = r"\underline"
@@ -38,8 +36,6 @@ VEC = r"\vec"
 DOT = r"\dot"
 TEXT = r"\text"
 MATHOP = r"\mathop"
-
-COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT, MATHOP)
 
 BEGIN = r"\begin"
 END = r"\end"
@@ -80,7 +76,14 @@ MATRICES = (
 BACKSLASH = "\\"
 DOUBLEBACKSLASH = r"\\"
 
-SPACES = (r"\,", r"\:", r"\;", r"\\", r"\quad", r"\qquad")
+QUAD = r"\quad"
+QQUAD = r"\qquad"
+HSPACE = r"\hspace"
+
+SPACES = (r"\,", r"\:", r"\;", r"\\")
+
+COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT, MATHOP, HSPACE)
+COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET)
 
 CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
@@ -104,6 +107,9 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     UNDERSET: ("munder", {}),
     TEXT: ("mtext", {}),
     MATHOP: ("mrow", {}),
+    QUAD: ("mspace", {"width": "1em"}),
+    QQUAD: ("mspace", {"width": "2em"}),
+    HSPACE: ("mspace", {}),
 }
 
 for space in SPACES:
