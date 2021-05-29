@@ -87,22 +87,27 @@ def _make_matrix_cell(row: Element, column_alignment: Optional[str]) -> Element:
     return SubElement(row, "mtd")
 
 
-def _convert_group(nodes: Iterable[Node], parent: Element, is_math_mode: bool = False) -> None:
+def _convert_group(
+    nodes: Iterable[Node], parent: Element, is_math_mode: bool = False, font: Optional[str] = None
+) -> None:
+    _font = font
     for node in nodes:
         token = node.token
         if token in commands.CONVERSION_MAP:
-            _convert_command(node, parent)
+            _convert_command(node, parent, is_math_mode, _font)
         elif token.startswith(r"\math"):
             is_math_mode = True
+        elif token in commands.OLD_STYLE_FONTS.keys():
+            _font = commands.OLD_STYLE_FONTS.get(token)
         elif node.children is None:
-            _convert_symbol(node, parent, is_math_mode)
+            _convert_symbol(node, parent, is_math_mode, _font)
         elif node.children is not None:
             _row = SubElement(parent, "mrow")
             if token == "()":  # TODO: other pairs
-                _convert_symbol(Node(token=token[0]), _row, is_math_mode)
+                _convert_symbol(Node(token=token[0]), _row, is_math_mode, _font)
             _convert_group(iter(node.children), _row, is_math_mode)
             if token == "()":  # TODO: other pairs
-                _convert_symbol(Node(token=token[1]), _row, is_math_mode)
+                _convert_symbol(Node(token=token[1]), _row, is_math_mode, _font)
 
 
 def _get_alignment_and_column_lines(alignment: Optional[str] = None) -> Tuple[Optional[str], Optional[str]]:
@@ -122,7 +127,7 @@ def _get_alignment_and_column_lines(alignment: Optional[str] = None) -> Tuple[Op
     return _alignment, " ".join(column_lines)
 
 
-def _convert_command(node: Node, parent: Element) -> None:
+def _convert_command(node: Node, parent: Element, is_math_mode: bool = False, font: Optional[str] = None) -> None:
     command = node.token
 
     if command == commands.SUBSTACK:
@@ -170,11 +175,11 @@ def _convert_command(node: Node, parent: Element) -> None:
                 alignment = "l"
             _convert_matrix(iter(node.children), _parent, alignment=alignment)
         elif command == commands.MATHOP:
-            _convert_group(iter(node.children), _parent)
+            _convert_group(iter(node.children), _parent, is_math_mode, font)
         elif command == commands.HSPACE:
             element.attrib["width"] = node.children[0].token
         else:
-            _convert_group(iter(node.children), _parent)
+            _convert_group(iter(node.children), _parent, is_math_mode, font)
 
     _append_postfix_element(command, parent)
 
@@ -224,7 +229,7 @@ def _append_postfix_element(command: str, parent: Element) -> None:
         _convert_and_append_command(r"\Vert", parent)
 
 
-def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False) -> None:
+def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False, font: Optional[str] = None) -> None:
     token = node.token
     symbol = convert_symbol(token)
     if re.match(r"\d+(.\d+)?", token):
@@ -249,21 +254,25 @@ def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False) -> 
         mo = SubElement(parent, "mo")
         mo.text = "&#x{};".format(symbol)
     elif token == r"\ ":
-        tag = SubElement(parent, "mtext")
-        tag.text = "&#x000A0;"
+        mtext = SubElement(parent, "mtext")
+        mtext.text = "&#x000A0;"
     elif token.startswith(commands.BACKSLASH):
-        tag = SubElement(parent, "mo" if is_math_mode else "mi")
+        element = SubElement(parent, "mo" if is_math_mode else "mi")
+        if element.tag == "mi" and font is not None:
+            element.attrib["mathvariant"] = font
         if symbol:
-            tag.text = "&#x{};".format(symbol)
+            element.text = "&#x{};".format(symbol)
         elif token in commands.FUNCTIONS:
-            tag.text = token[1:]
+            element.text = token[1:]
         elif token.startswith(commands.OPERATORNAME):
-            tag.text = token[14:-1]
+            element.text = token[14:-1]
         else:
-            tag.text = token
+            element.text = token
     else:
-        tag = SubElement(parent, "mo" if is_math_mode else "mi")
-        tag.text = token
+        element = SubElement(parent, "mo" if is_math_mode else "mi")
+        if element.tag == "mi" and font is not None:
+            element.attrib["mathvariant"] = font
+        element.text = token
 
 
 def main() -> None:  # pragma: no cover
