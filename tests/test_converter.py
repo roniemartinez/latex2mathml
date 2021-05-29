@@ -1404,6 +1404,11 @@ from latex2mathml.converter import _convert, convert
             ),
             id="prime",
         ),
+        pytest.param(
+            "'x",
+            MultiDict([("msup", MultiDict([("mi", ""), ("mi", "&#x02032;")])), ("mi", "x")]),
+            id="prime-no-base",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
