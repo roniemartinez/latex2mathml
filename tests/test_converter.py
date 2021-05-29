@@ -1244,6 +1244,90 @@ from latex2mathml.converter import _convert, convert
             ),
             id="issue-118",
         ),
+        pytest.param(
+            r"F(a,n)=\overset{a-a-a\cdots-a}{}ntext{个}a",
+            MultiDict(
+                [
+                    ("mi", "F"),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
+                                ("mi", "a"),
+                                ("mo", "&#x0002C;"),
+                                ("mi", "n"),
+                                ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
+                            ]
+                        ),
+                    ),
+                    ("mo", "&#x0003D;"),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                ("mrow", ""),
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "a"),
+                                            ("mo", "&#x02212;"),
+                                            ("mi", "a"),
+                                            ("mo", "&#x02212;"),
+                                            ("mi", "a"),
+                                            ("mo", "&#x022EF;"),
+                                            ("mo", "&#x02212;"),
+                                            ("mi", "a"),
+                                        ]
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                    ("mi", "n"),
+                    ("mi", "t"),
+                    ("mi", "e"),
+                    ("mi", "x"),
+                    ("mi", "t"),
+                    ("mrow", {"mi": "个"}),
+                    ("mi", "a"),
+                ]
+            ),
+            id="issue-125-1-overset",
+        ),
+        pytest.param(
+            r"a\,\overset{?}{=}\,b",
+            MultiDict(
+                [
+                    ("mi", "a"),
+                    ("mspace", {"@width": "0.167em"}),
+                    ("mover", MultiDict([("mrow", {"mo": "&#x0003D;"}), ("mrow", {"mo": "&#x0003F;"})])),
+                    ("mspace", {"@width": "0.167em"}),
+                    ("mi", "b"),
+                ]
+            ),
+            id="issue-125-2-overset",
+        ),
+        pytest.param(r"\underset ab", {"munder": MultiDict([("mi", "b"), ("mi", "a")])}, id="issue-125-3-underset"),
+        pytest.param(
+            r"a\mathop{t}b\mathop{t}c",
+            MultiDict(
+                [
+                    ("mi", "a"),
+                    ("mrow", {"mrow": {"mi": "t"}}),
+                    ("mi", "b"),
+                    ("mrow", {"mrow": {"mi": "t"}}),
+                    ("mi", "c"),
+                ]
+            ),
+            id="issue-125-4-mathop",
+        ),
+        pytest.param(
+            r"\mathop{x}\limits_0^1",
+            {"munderover": MultiDict([("mrow", {"mrow": {"mi": "x"}}), ("mn", "0"), ("mn", "1")])},
+            id="issue-125-4-limits",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

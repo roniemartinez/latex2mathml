@@ -76,7 +76,7 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                 token == commands.SUPERSCRIPT and previous.token == commands.SUBSCRIPT and previous.children is not None
             ):
                 next_nodes = _walk(tokens, terminator=terminator, limit=1)
-                if previous.children[0].token == commands.LIMITS and group[-1].token == commands.INTEGRAL:
+                if previous.children[0].token == commands.LIMITS:
                     node = Node(commands.LIMITS, children=(group.pop(), *previous.children[1:], *next_nodes))
                 else:
                     node = Node(token=commands.SUBSUP, children=(*previous.children, *next_nodes))
@@ -85,8 +85,11 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                 if len(next_nodes) == 0:
                     raise MissingSuperScriptOrSubscript
                 node = Node(token=token, children=(previous, *next_nodes))
-        elif token == commands.FRAC or token == commands.BINOM:
-            node = Node(token=token, children=tuple(_walk(tokens, terminator=terminator, limit=2)))
+        elif token in commands.COMMANDS_WITH_TWO_PARAMETERS:
+            children = _walk(tokens, terminator=terminator, limit=2)
+            if token in (commands.OVERSET, commands.UNDERSET):
+                children = children[::-1]
+            node = Node(token=token, children=tuple(children))
         elif token in commands.COMMANDS_WITH_ONE_PARAMETER:
             node = Node(token=token, children=tuple(_walk(tokens, terminator=terminator, limit=1)))
         elif token == commands.TEXT:
