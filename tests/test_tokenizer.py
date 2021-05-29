@@ -459,9 +459,12 @@ from latex2mathml.tokenizer import tokenize
             id="quadratic-equation",
         ),
         pytest.param(
-            r"a\,\overset{?}{=}\,b",
-            ["a", "\\,", r"\overset", "{", "?", "}", "{", "=", "}", "\\,", "b"],
-            id="issue-125-overset",
+            r"a\,\overset{?}{=}\,b", ["a", "\\,", r"\overset", "{", "?", "}", "{", "=", "}", "\\,", "b"], id="issue-125"
+        ),
+        pytest.param(
+            r"|\hspace1em|\hspace{10ex}|",
+            ["|", r"\hspace", "1em", "|", r"\hspace", "{", "10ex", "}", "|"],
+            id="issue-129",
         ),
     ],
 )

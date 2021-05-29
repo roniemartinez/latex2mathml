@@ -3,6 +3,20 @@ from typing import Iterator, Union
 from latex2mathml import commands
 from latex2mathml.symbols_parser import convert_symbol
 
+LENGTHS = (
+    "in",
+    "mm",
+    "cm",
+    "pt",
+    "em",
+    "ex",
+    "pc",
+    "bp",
+    "dd",
+    "cc",
+    "sp",
+)
+
 
 def tokenize(data: str) -> Iterator[Union[str, list]]:
     iterable = iter(data)
@@ -26,6 +40,13 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                 except StopIteration:
                     break
             elif char.isalpha():
+                if buffer.startswith(commands.HSPACE):
+                    buffer += char
+                    if "{" not in buffer and (buffer + char).endswith(LENGTHS):
+                        yield commands.HSPACE
+                        yield buffer[7:]
+                        buffer = ""
+                    continue
                 if len(buffer):
                     if buffer.endswith("}"):
                         yield buffer
@@ -36,6 +57,9 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                 else:
                     yield char
             elif char.isdigit():
+                if buffer.startswith(commands.HSPACE):
+                    buffer += char
+                    continue
                 if len(buffer):
                     yield buffer
                 buffer = char
@@ -72,7 +96,9 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
             elif char in "{}*":
                 # FIXME: Anything that starts with '\math' passes. There is a huge list of math symbols in
                 #  unimathsymbols.txt and hard-coding all of them is inefficient.
-                if buffer.startswith((commands.BEGIN, commands.END, commands.OPERATORNAME, commands.TEXT, r"\math")):
+                if buffer.startswith(
+                    (commands.BEGIN, commands.END, commands.OPERATORNAME, commands.TEXT, commands.HSPACE, r"\math")
+                ):
                     if buffer.endswith("}"):
                         yield buffer
                         yield char
@@ -92,9 +118,17 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                             yield char
                             buffer = ""
                             continue
-                    elif buffer.startswith(r"\text") and char == "}":
-                        yield buffer[0:5]
+                    elif buffer.startswith(commands.TEXT) and char == "}":
+                        yield buffer[:5]
                         yield buffer[6:]
+                        buffer = ""
+                        continue
+                    elif buffer.startswith(commands.HSPACE) and char == "}":
+                        index = buffer.index("{")
+                        yield buffer[:index]
+                        yield buffer[index]
+                        yield buffer[index + 1 :]
+                        yield char
                         buffer = ""
                         continue
                     buffer += char

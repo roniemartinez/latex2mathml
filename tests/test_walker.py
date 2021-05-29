@@ -1370,6 +1370,17 @@ from latex2mathml.walker import Node, walk
             ],
             id="issue-125-overset",
         ),
+        pytest.param(
+            r"|\hspace1em|\hspace{10ex}|",
+            [
+                Node(token="|"),
+                Node(token=r"\hspace", children=(Node(token="1em"),)),
+                Node(token="|"),
+                Node(token=r"\hspace", children=(Node(token="10ex"),)),
+                Node(token="|"),
+            ],
+            id="issue-129-hspace",
+        ),
     ],
 )
 def test_walk(latex: str, expected: list) -> None:
