@@ -1409,6 +1409,17 @@ from latex2mathml.converter import _convert, convert
             MultiDict([("msup", MultiDict([("mi", ""), ("mi", "&#x02032;")])), ("mi", "x")]),
             id="prime-no-base",
         ),
+        pytest.param(
+            r"\rm I\! R",
+            MultiDict(
+                [
+                    ("mi", {"@mathvariant": "normal", "$": "I"}),
+                    ("mspace", {"@width": "negativethinmathspace"}),
+                    ("mi", {"@mathvariant": "normal", "$": "R"}),
+                ]
+            ),
+            id="thin-space",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
