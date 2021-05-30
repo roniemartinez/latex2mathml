@@ -1381,6 +1381,22 @@ from latex2mathml.walker import Node, walk
             ],
             id="issue-129-hspace",
         ),
+        pytest.param(
+            "f'(x) = 2x, f''(x) = 2",
+            [
+                Node(token="^", children=(Node(token="f"), Node(token=r"\prime"))),
+                Node(token="()", children=(Node(token="x"),)),
+                Node(token="="),
+                Node(token="2"),
+                Node(token="x"),
+                Node(token=","),
+                Node(token="^", children=(Node(token="f"), Node(token=r"\dprime"))),
+                Node(token="()", children=(Node(token="x"),)),
+                Node(token="="),
+                Node(token="2"),
+            ],
+            id="prime",
+        ),
     ],
 )
 def test_walk(latex: str, expected: list) -> None:

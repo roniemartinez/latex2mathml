@@ -64,7 +64,7 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                     continue
             except NoAvailableTokensError:
                 node = Node(token=token)
-        elif token == commands.SUBSCRIPT or token == commands.SUPERSCRIPT:
+        elif token in (commands.SUBSCRIPT, commands.SUPERSCRIPT):
             try:
                 previous = group.pop()
             except IndexError:
@@ -83,7 +83,7 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             ):
                 next_nodes = _walk(tokens, terminator=terminator, limit=1)
                 if previous.children[0].token == commands.LIMITS:
-                    node = Node(commands.LIMITS, children=(group.pop(), *previous.children[1:], *next_nodes))
+                    node = Node(token=commands.LIMITS, children=(group.pop(), *previous.children[1:], *next_nodes))
                 else:
                     node = Node(token=commands.SUBSUP, children=(*previous.children, *next_nodes))
             else:
@@ -92,14 +92,29 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                 except NoAvailableTokensError:
                     raise MissingSuperScriptOrSubscriptError
                 node = Node(token=token, children=(previous, *next_nodes))
+        elif token == commands.APOSTROPHE:
+            try:
+                previous = group.pop()
+            except IndexError:
+                previous = Node(token="")  # left operand can be empty if not present
+
+            if (
+                previous.token == commands.SUPERSCRIPT
+                and previous.children is not None
+                and len(previous.children) >= 2
+                and previous.children[1].token == commands.PRIME
+            ):
+                node = Node(token=commands.SUPERSCRIPT, children=(previous.children[0], Node(token=commands.DPRIME)))
+            else:
+                node = Node(token=commands.SUPERSCRIPT, children=(previous, Node(token=commands.PRIME)))
         elif token in commands.COMMANDS_WITH_TWO_PARAMETERS:
-            children = _walk(tokens, terminator=terminator, limit=2)
+            children = tuple(_walk(tokens, terminator=terminator, limit=2))
             if token in (commands.OVERSET, commands.UNDERSET):
                 children = children[::-1]
-            node = Node(token=token, children=tuple(children))
+            node = Node(token=token, children=children)
         elif token in commands.COMMANDS_WITH_ONE_PARAMETER:
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
-            if children[0].token == commands.BRACES and token == commands.HSPACE:
+            if children[0].children is not None and children[0].token == commands.BRACES and token == commands.HSPACE:
                 children = children[0].children
             node = Node(token=token, children=children)
         elif token in commands.BIG.keys():

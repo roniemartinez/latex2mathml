@@ -614,13 +614,13 @@ from latex2mathml.converter import _convert, convert
                                                     MultiDict(
                                                         [
                                                             ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
-                                                            ("mo", {"$": "&#x02212;"}),
-                                                            ("mn", {"$": "25"}),
+                                                            ("mo", "&#x02212;"),
+                                                            ("mn", "25"),
                                                             ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
                                                         ]
                                                     ),
                                                 ),
-                                                ("mrow", {"mn": {"$": "2"}}),
+                                                ("mrow", {"mn": "2"}),
                                             ]
                                         ),
                                     ),
@@ -628,21 +628,15 @@ from latex2mathml.converter import _convert, convert
                             )
                         },
                     ),
-                    ("mo", {"$": "&#x0003D;"}),
-                    ("mi", {"$": "&#x000B1;"}),
-                    ("mn", {"$": "25"}),
+                    ("mo", "&#x0003D;"),
+                    ("mi", "&#x000B1;"),
+                    ("mn", "25"),
                 ]
             ),
             id="issue-42",
         ),
-        pytest.param(
-            "2 < 5", MultiDict([("mn", {"$": "2"}), ("mo", {"$": "&lt;"}), ("mn", {"$": "5"})]), id="issue-45-lt"
-        ),
-        pytest.param(
-            "2 > 5",
-            MultiDict([("mn", {"$": "2"}), ("mo", {"$": "&gt;"}), ("mn", {"$": "5"})]),
-            id="issue-45-gt",
-        ),
+        pytest.param("2 < 5", MultiDict([("mn", "2"), ("mo", "&lt;"), ("mn", "5")]), id="issue-45-lt"),
+        pytest.param("2 > 5", MultiDict([("mn", "2"), ("mo", "&gt;"), ("mn", "5")]), id="issue-45-gt"),
         pytest.param("&", {"mo": "&amp;"}, id="issue-45-amp"),
         pytest.param(
             r"\left(- x^{3} + 5\right)^{5}",
@@ -1373,6 +1367,47 @@ from latex2mathml.converter import _convert, convert
                 ]
             ),
             id="rm",
+        ),
+        pytest.param(
+            "f'(x) = 2x, f''(x) = 2",
+            MultiDict(
+                [
+                    ("msup", MultiDict([("mi", "f"), ("mi", "&#x02032;")])),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
+                                ("mi", "x"),
+                                ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
+                            ]
+                        ),
+                    ),
+                    ("mo", "&#x0003D;"),
+                    ("mn", "2"),
+                    ("mi", "x"),
+                    ("mo", "&#x0002C;"),
+                    ("msup", MultiDict([("mi", "f"), ("mi", "&#x02033;")])),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
+                                ("mi", "x"),
+                                ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
+                            ]
+                        ),
+                    ),
+                    ("mo", "&#x0003D;"),
+                    ("mn", "2"),
+                ]
+            ),
+            id="prime",
+        ),
+        pytest.param(
+            "'x",
+            MultiDict([("msup", MultiDict([("mi", ""), ("mi", "&#x02032;")])), ("mi", "x")]),
+            id="prime-no-base",
         ),
     ],
 )
