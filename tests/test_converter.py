@@ -1410,15 +1410,25 @@ from latex2mathml.converter import _convert, convert
             id="prime-no-base",
         ),
         pytest.param(
-            r"\rm I\! R",
+            r"a\,b\:a\>b\;a\\b\!a",
             MultiDict(
                 [
-                    ("mi", {"@mathvariant": "normal", "$": "I"}),
+                    ("mi", "a"),
+                    ("mspace", {"@width": "0.167em"}),
+                    ("mi", "b"),
+                    ("mspace", {"@width": "0.222em"}),
+                    ("mi", "a"),
+                    ("mspace", {"@width": "0.222em"}),
+                    ("mi", "b"),
+                    ("mspace", {"@width": "0.278em"}),
+                    ("mi", "a"),
+                    ("mspace", {"@linebreak": "newline"}),
+                    ("mi", "b"),
                     ("mspace", {"@width": "negativethinmathspace"}),
-                    ("mi", {"@mathvariant": "normal", "$": "R"}),
+                    ("mi", "a"),
                 ]
             ),
-            id="thin-space",
+            id="spaces",
         ),
     ],
 )
