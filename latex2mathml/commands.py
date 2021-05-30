@@ -82,6 +82,7 @@ DOUBLEBACKSLASH = r"\\"
 QUAD = r"\quad"
 QQUAD = r"\qquad"
 HSPACE = r"\hspace"
+EXCLAMATION = r"\!"
 
 SPACES = (r"\,", r"\:", r"\;", r"\\")
 
@@ -129,6 +130,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     QUAD: ("mspace", {"width": "1em"}),
     QQUAD: ("mspace", {"width": "2em"}),
     HSPACE: ("mspace", {}),
+    EXCLAMATION: ("mspace", {"width": "negativethinmathspace"}),
 }
 
 CONVERSION_MAP.update(BIG)
