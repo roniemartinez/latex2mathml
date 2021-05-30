@@ -83,8 +83,10 @@ QUAD = r"\quad"
 QQUAD = r"\qquad"
 HSPACE = r"\hspace"
 EXCLAMATION = r"\!"
-
-SPACES = (r"\,", r"\:", r"\;", r"\\")
+COMMA = r"\,"
+COLON = r"\:"
+GREATER_THAN = r"\>"
+SEMICOLON = r"\;"
 
 COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT, MATHOP, HSPACE)
 COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET)
@@ -131,12 +133,14 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     QQUAD: ("mspace", {"width": "2em"}),
     HSPACE: ("mspace", {}),
     EXCLAMATION: ("mspace", {"width": "negativethinmathspace"}),
+    COMMA: ("mspace", {"width": "0.167em"}),
+    COLON: ("mspace", {"width": "0.222em"}),
+    GREATER_THAN: ("mspace", {"width": "0.222em"}),
+    SEMICOLON: ("mspace", {"width": "0.278em"}),
+    DOUBLEBACKSLASH: ("mspace", {"linebreak": "newline"}),
 }
 
 CONVERSION_MAP.update(BIG)
-
-for space in SPACES:
-    CONVERSION_MAP[space] = ("mspace", {"width": "0.167em"})
 
 for matrix in MATRICES:
     CONVERSION_MAP[matrix] = ("mtable", {})
