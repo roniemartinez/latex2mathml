@@ -238,10 +238,12 @@ def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False, fon
     elif len(token) and token in "<>&":
         mo = SubElement(parent, "mo")
         mo.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;"}[token]
-    elif len(token) and token in "+-*/()=,?[]":
+    elif len(token) and token in ("+", "-", "*", "/", "(", ")", "=", ",", "?", "[", "]", "|", r"\|"):
         mo = SubElement(parent, "mo")
         mo.text = token if symbol is None else "&#x{};".format(symbol)
-        if token in "()[]":
+        if token == r"\|":
+            mo.attrib["fence"] = "false"
+        if token in ("(", ")", "[", "]", "|", r"\|"):
             mo.attrib["stretchy"] = "false"
     elif (
         symbol

@@ -1325,21 +1325,39 @@ from latex2mathml.converter import _convert, convert
         pytest.param(
             r"|\quad|\quad|",
             MultiDict(
-                [("mi", "|"), ("mspace", {"@width": "1em"}), ("mi", "|"), ("mspace", {"@width": "1em"}), ("mi", "|")]
+                [
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "1em"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "1em"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                ]
             ),
             id="issue-129-quad",
         ),
         pytest.param(
             r"|\qquad|\qquad|",
             MultiDict(
-                [("mi", "|"), ("mspace", {"@width": "2em"}), ("mi", "|"), ("mspace", {"@width": "2em"}), ("mi", "|")]
+                [
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "2em"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "2em"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                ]
             ),
             id="issue-129-quad",
         ),
         pytest.param(
             r"|\hspace1em|\hspace{10ex}|",
             MultiDict(
-                [("mi", "|"), ("mspace", {"@width": "1em"}), ("mi", "|"), ("mspace", {"@width": "10ex"}), ("mi", "|")]
+                [
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "1em"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "10ex"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                ]
             ),
             id="issue-129-hspace",
         ),
@@ -1429,6 +1447,28 @@ from latex2mathml.converter import _convert, convert
                 ]
             ),
             id="spaces",
+        ),
+        pytest.param(
+            r"|x|",
+            MultiDict(
+                [
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mi", "x"),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                ]
+            ),
+            id="pipe",
+        ),
+        pytest.param(
+            r"\|x\|",
+            MultiDict(
+                [
+                    ("mo", {"@fence": "false", "@stretchy": "false", "$": "&#x02016;"}),
+                    ("mi", "x"),
+                    ("mo", {"@fence": "false", "@stretchy": "false", "$": "&#x02016;"}),
+                ]
+            ),
+            id="double-pipe",
         ),
     ],
 )
