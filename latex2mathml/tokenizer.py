@@ -32,6 +32,7 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                 elif len(buffer):
                     yield buffer
                 buffer = char
+                print("here")
                 try:
                     buffer += next(iterable)
                     if buffer in (r"\\", r"\[", r"\]", r"\{", r"\}", r"\ ", r"\!", r"\,", r"\:", r"\>", r"\;", r"\|"):
@@ -39,6 +40,17 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                         buffer = ""
                 except StopIteration:
                     break
+            elif char == "%":
+                if buffer == commands.BACKSLASH:
+                    yield buffer + char
+                    buffer = ""
+                    continue
+                elif len(buffer):
+                    yield buffer
+                    buffer = ""
+                for char in iterable:
+                    if char == "\n":
+                        break
             elif char.isalpha():
                 if buffer.startswith(commands.HSPACE):
                     buffer += char
@@ -74,6 +86,10 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                         break
                     elif char.isdigit() or char == ".":
                         buffer += char
+                    elif char == "%":
+                        for char in iterable:
+                            if char == "\n":
+                                break
                     else:
                         if buffer.endswith("."):
                             yield buffer[:-1]

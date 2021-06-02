@@ -467,6 +467,13 @@ from latex2mathml.tokenizer import tokenize
             id="issue-129",
         ),
         pytest.param(r"\text{Hello~World}", [r"\text", "Hello~World"], id="tilde-in-text"),
+        pytest.param(
+            r"""% this is hidden
+            100\%! 100% this is hidden, too
+            \test% this is another hidden line""",
+            ["100", r"\%", "!", "100", r"\test"],
+            id="comments",
+        ),
     ],
 )
 def test_tokenize(latex: str, expected: list) -> None:
