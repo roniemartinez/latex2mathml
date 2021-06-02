@@ -86,6 +86,10 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                         break
                     elif char.isdigit() or char == ".":
                         buffer += char
+                    elif char == "%":
+                        for char in iterable:
+                            if char == "\n":
+                                break
                     else:
                         if buffer.endswith("."):
                             yield buffer[:-1]
