@@ -142,6 +142,9 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                     if buffer.startswith(r"\math"):
                         yield buffer[:-1]
                         yield buffer[-1]
+                    elif buffer.startswith(commands.TEXT):
+                        buffer += char
+                        continue
                     else:
                         yield buffer
                     buffer = ""

@@ -255,7 +255,7 @@ def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False, fon
     ):
         mo = SubElement(parent, "mo")
         mo.text = "&#x{};".format(symbol)
-    elif token == r"\ ":
+    elif token in (r"\ ", "~"):
         mtext = SubElement(parent, "mtext")
         mtext.text = "&#x000A0;"
     elif token.startswith(commands.BACKSLASH):

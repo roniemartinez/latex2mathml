@@ -466,6 +466,7 @@ from latex2mathml.tokenizer import tokenize
             ["|", r"\hspace", "1em", "|", r"\hspace", "{", "10ex", "}", "|"],
             id="issue-129",
         ),
+        pytest.param(r"\text{Hello~World}", [r"\text", "Hello~World"], id="tilde-in-text"),
     ],
 )
 def test_tokenize(latex: str, expected: list) -> None:
