@@ -1468,6 +1468,12 @@ from latex2mathml.converter import _convert, convert
             id="tilde",
         ),
         pytest.param(r"\text{Hello~World}", {"mtext": "Hello~World"}, id="tilde-in-text"),
+        pytest.param(
+            r"""% this is hidden
+            100\%!% this is hidden, too""",
+            MultiDict([("mn", "100"), ("mo", "&#x00025;"), ("mo", "&#x00021;")]),
+            id="comments",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
