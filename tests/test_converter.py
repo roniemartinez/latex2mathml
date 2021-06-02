@@ -1323,35 +1323,13 @@ from latex2mathml.converter import _convert, convert
             id="issue-125-4-limits",
         ),
         pytest.param(
-            r"|\quad|\quad|",
+            r"|\quad|\qquad|\hspace1em|\hspace{10ex}|",
             MultiDict(
                 [
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                     ("mspace", {"@width": "1em"}),
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
-                    ("mspace", {"@width": "1em"}),
-                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
-                ]
-            ),
-            id="issue-129-quad",
-        ),
-        pytest.param(
-            r"|\qquad|\qquad|",
-            MultiDict(
-                [
-                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                     ("mspace", {"@width": "2em"}),
-                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
-                    ("mspace", {"@width": "2em"}),
-                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
-                ]
-            ),
-            id="issue-129-quad",
-        ),
-        pytest.param(
-            r"|\hspace1em|\hspace{10ex}|",
-            MultiDict(
-                [
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                     ("mspace", {"@width": "1em"}),
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
@@ -1359,7 +1337,7 @@ from latex2mathml.converter import _convert, convert
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                 ]
             ),
-            id="issue-129-hspace",
+            id="issue-129",
         ),
         pytest.param(
             r"\Bigg[\bigg[\Big[\big[[",
@@ -1470,6 +1448,26 @@ from latex2mathml.converter import _convert, convert
             ),
             id="double-pipe",
         ),
+        pytest.param(
+            "Hello~World",
+            MultiDict(
+                [
+                    ("mi", "H"),
+                    ("mi", "e"),
+                    ("mi", "l"),
+                    ("mi", "l"),
+                    ("mi", "o"),
+                    ("mtext", "&#x000A0;"),
+                    ("mi", "W"),
+                    ("mi", "o"),
+                    ("mi", "r"),
+                    ("mi", "l"),
+                    ("mi", "d"),
+                ]
+            ),
+            id="tilde",
+        ),
+        pytest.param(r"\text{Hello~World}", {"mtext": "Hello~World"}, id="tilde-in-text"),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
