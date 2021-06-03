@@ -1232,7 +1232,7 @@ from latex2mathml.converter import _convert, convert
                     ("mtext", "&#x000A0;"),
                     ("mi", "x"),
                     ("mo", "&#x0003D;"),
-                    ("mtext", "number of cats"),
+                    ("mtext", "number&#x000A0;of&#x000A0;cats"),
                     ("mi", "."),
                 ]
             ),
@@ -1467,7 +1467,7 @@ from latex2mathml.converter import _convert, convert
             ),
             id="tilde",
         ),
-        pytest.param(r"\text{Hello~World}", {"mtext": "Hello~World"}, id="tilde-in-text"),
+        pytest.param(r"\text{ Hello~World }", {"mtext": "&#x000A0;Hello~World&#x000A0;"}, id="tilde-and-space-in-text"),
         pytest.param(
             r"""% this is hidden
             100\%!% this is hidden, too""",

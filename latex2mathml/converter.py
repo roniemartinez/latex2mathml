@@ -160,7 +160,7 @@ def _convert_command(node: Node, parent: Element, is_math_mode: bool = False, fo
     if command in commands.LIMIT:
         element.text = command[1:]
     elif node.text is not None:
-        element.text = node.text
+        element.text = node.text.replace(" ", "&#x000A0;")
     elif node.delimiter is not None:
         if node.delimiter != ".":
             symbol = convert_symbol(node.delimiter)
