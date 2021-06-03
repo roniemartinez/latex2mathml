@@ -1471,8 +1471,23 @@ from latex2mathml.converter import _convert, convert
         pytest.param(
             r"""% this is hidden
             100\%!% this is hidden, too""",
-            MultiDict([("mn", "100"), ("mo", "&#x00025;"), ("mo", "&#x00021;")]),
+            MultiDict([("mn", "100"), ("mi", "&#x00025;"), ("mo", "&#x00021;")]),
             id="comments",
+        ),
+        pytest.param(
+            r"\#\$\%\&\_\{\}",
+            MultiDict(
+                [
+                    ("mi", "&#x00023;"),
+                    ("mi", "&#x00024;"),
+                    ("mi", "&#x00025;"),
+                    ("mi", "&#x00026;"),
+                    ("mi", "&#x0005F;"),
+                    ("mi", "&#x0007B;"),
+                    ("mi", "&#x0007D;"),
+                ]
+            ),
+            id="escaped-characters",
         ),
     ],
 )
