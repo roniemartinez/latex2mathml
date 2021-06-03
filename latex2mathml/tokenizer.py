@@ -3,19 +3,8 @@ from typing import Iterator, Union
 from latex2mathml import commands
 from latex2mathml.symbols_parser import convert_symbol
 
-LENGTHS = (
-    "in",
-    "mm",
-    "cm",
-    "pt",
-    "em",
-    "ex",
-    "pc",
-    "bp",
-    "dd",
-    "cc",
-    "sp",
-)
+ESCAPED_CHARACTERS = (r"\\", r"\[", r"\]", r"\{", r"\}", r"\ ", r"\!", r"\,", r"\:", r"\>", r"\;", r"\|", r"\_")
+LENGTHS = ("in", "mm", "cm", "pt", "em", "ex", "pc", "bp", "dd", "cc", "sp")
 
 
 def tokenize(data: str) -> Iterator[Union[str, list]]:
@@ -32,10 +21,9 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                 elif len(buffer):
                     yield buffer
                 buffer = char
-                print("here")
                 try:
                     buffer += next(iterable)
-                    if buffer in (r"\\", r"\[", r"\]", r"\{", r"\}", r"\ ", r"\!", r"\,", r"\:", r"\>", r"\;", r"\|"):
+                    if buffer in ESCAPED_CHARACTERS:
                         yield buffer
                         buffer = ""
                 except StopIteration:
