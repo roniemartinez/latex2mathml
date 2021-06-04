@@ -7,6 +7,18 @@ ESCAPED_CHARACTERS = (r"\\", r"\[", r"\]", r"\{", r"\}", r"\ ", r"\!", r"\,", r"
 LENGTHS = ("in", "mm", "cm", "pt", "em", "ex", "pc", "bp", "dd", "cc", "sp")
 
 
+def dimension(iterable: Iterator[str]) -> str:
+    dim = ""
+    for char in iterable:
+        if char.isspace():
+            continue
+        elif char.isdigit() or char.isalpha() or char == ".":
+            dim += char
+        if dim.endswith(LENGTHS):
+            break
+    return dim.strip()
+
+
 def tokenize(data: str) -> Iterator[Union[str, list]]:
     iterable = iter(data)
     buffer = ""
@@ -40,15 +52,8 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                     if char == "\n":
                         break
             elif char.isalpha():
-                if buffer.startswith(commands.HSPACE):
-                    buffer += char
-                    if "{" not in buffer and (buffer + char).endswith(LENGTHS):
-                        yield commands.HSPACE
-                        yield buffer[7:]
-                        buffer = ""
-                    continue
                 if len(buffer):
-                    if buffer.endswith("}"):
+                    if buffer.endswith(commands.CLOSING_BRACE):
                         yield buffer
                         yield char
                         buffer = ""
@@ -57,8 +62,10 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                 else:
                     yield char
             elif char.isdigit():
-                if buffer.startswith(commands.HSPACE):
-                    buffer += char
+                if buffer.startswith((commands.HSPACE, commands.ABOVE)):
+                    yield buffer
+                    yield char + dimension(iterable)
+                    buffer = ""
                     continue
                 if len(buffer):
                     yield buffer
@@ -93,49 +100,59 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
             elif char.isspace():
                 if buffer.startswith(commands.TEXT):
                     buffer += char
-                    continue
-                if len(buffer):
+                elif buffer.startswith((commands.HSPACE, commands.ABOVE)):
+                    pass
+                elif len(buffer):
                     yield buffer
                     buffer = ""
             elif char in "{}*":
                 # FIXME: Anything that starts with '\math' passes. There is a huge list of math symbols in
                 #  unimathsymbols.txt and hard-coding all of them is inefficient.
                 if buffer.startswith(
-                    (commands.BEGIN, commands.END, commands.OPERATORNAME, commands.TEXT, commands.HSPACE, r"\math")
+                    (
+                        commands.BEGIN,
+                        commands.END,
+                        commands.OPERATORNAME,
+                        commands.TEXT,
+                        commands.HSPACE,
+                        commands.ABOVE,
+                        r"\math",
+                    )
                 ):
-                    if buffer.endswith("}"):
+                    if buffer.endswith(commands.CLOSING_BRACE):
                         yield buffer
                         yield char
                         buffer = ""
-                        continue
-                    elif buffer.startswith(r"\math") and char == "}":
+                    elif buffer.startswith(r"\math") and char == commands.CLOSING_BRACE:
                         symbol = convert_symbol(buffer + char)
                         if symbol:
                             yield "&#x{};".format(symbol)
                             buffer = ""
                             continue
-                        else:
-                            index = buffer.index("{")
-                            yield buffer[:index]
-                            yield buffer[index]
-                            yield from tokenize(buffer[index + 1 :])
-                            yield char
-                            buffer = ""
-                            continue
-                    elif buffer.startswith(commands.TEXT) and char == "}":
-                        yield buffer[:5]
+                        index = buffer.index(commands.OPENING_BRACE)
+                        yield buffer[:index]
+                        yield buffer[index]
+                        yield from tokenize(buffer[index + 1 :])
+                        yield char
+                        buffer = ""
+                    elif buffer.startswith(commands.TEXT) and char == commands.CLOSING_BRACE:
+                        yield commands.TEXT
                         yield buffer[6:]
                         buffer = ""
-                        continue
-                    elif buffer.startswith(commands.HSPACE) and char == "}":
-                        index = buffer.index("{")
+                    elif buffer.startswith((commands.HSPACE, commands.ABOVE)) and char == commands.CLOSING_BRACE:
+                        index = buffer.index(commands.OPENING_BRACE)
                         yield buffer[:index]
                         yield buffer[index]
                         yield buffer[index + 1 :]
                         yield char
                         buffer = ""
-                        continue
-                    buffer += char
+                    elif buffer in (commands.HSPACE, commands.ABOVE) and char == commands.OPENING_BRACE:
+                        yield buffer
+                        yield char
+                        yield dimension(iterable)
+                        buffer = ""
+                    else:
+                        buffer += char
                 else:
                     if len(buffer):
                         yield buffer
