@@ -1374,9 +1374,9 @@ from latex2mathml.walker import Node, walk
             r"|\hspace1em|\hspace{10ex}|",
             [
                 Node(token="|"),
-                Node(token=r"\hspace", children=(Node(token="1em"),)),
+                Node(token=r"\hspace", attributes={"width": "1em"}),
                 Node(token="|"),
-                Node(token=r"\hspace", children=(Node(token="10ex"),)),
+                Node(token=r"\hspace", attributes={"width": "10ex"}),
                 Node(token="|"),
             ],
             id="issue-129-hspace",
@@ -1396,6 +1396,33 @@ from latex2mathml.walker import Node, walk
                 Node(token="2"),
             ],
             id="prime",
+        ),
+        pytest.param(
+            r"{a \above 1pt b} + {c \above {1.5pt} d}",
+            [
+                Node(
+                    token="{}",
+                    children=(
+                        Node(
+                            token=r"\frac",
+                            children=(Node(token="a"), Node(token="b")),
+                            attributes={"linethickness": "1pt"},
+                        ),
+                        Node(token="+"),
+                        Node(
+                            token="{}",
+                            children=(
+                                Node(
+                                    token=r"\frac",
+                                    children=(Node(token="c"), Node(token="d")),
+                                    attributes={"linethickness": "{}"},
+                                ),
+                            ),
+                        ),
+                    ),
+                )
+            ],
+            id="above",
         ),
     ],
 )

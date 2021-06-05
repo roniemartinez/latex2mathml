@@ -95,7 +95,7 @@ def _convert_group(
         token = node.token
         if token in commands.CONVERSION_MAP:
             _convert_command(node, parent, is_math_mode, _font)
-        elif token.startswith(r"\math"):
+        elif token.startswith(commands.MATH):
             is_math_mode = True
         elif token in commands.OLD_STYLE_FONTS.keys():
             _font = commands.OLD_STYLE_FONTS.get(token)
@@ -138,6 +138,9 @@ def _convert_command(node: Node, parent: Element, is_math_mode: bool = False, fo
 
     tag, attributes = copy.deepcopy(commands.CONVERSION_MAP[command])
 
+    if node.attributes is not None:
+        attributes.update(node.attributes)
+
     if command == commands.LEFT:
         parent = SubElement(parent, "mrow")
 
@@ -176,8 +179,6 @@ def _convert_command(node: Node, parent: Element, is_math_mode: bool = False, fo
             _convert_matrix(iter(node.children), _parent, alignment=alignment)
         elif command == commands.MATHOP:
             _convert_group(iter(node.children), _parent, is_math_mode, font)
-        elif command == commands.HSPACE:
-            element.attrib["width"] = node.children[0].token
         else:
             _convert_group(iter(node.children), _parent, is_math_mode, font)
 

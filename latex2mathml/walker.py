@@ -1,4 +1,4 @@
-from typing import Any, Iterator, List, NamedTuple, Optional, Tuple
+from typing import Any, Dict, Iterator, List, NamedTuple, Optional, Tuple
 
 from latex2mathml import commands
 from latex2mathml.exceptions import (
@@ -19,6 +19,7 @@ class Node(NamedTuple):
     delimiter: Optional[str] = None
     alignment: Optional[str] = None
     text: Optional[str] = None
+    attributes: Optional[Dict[str, str]] = None
 
 
 def walk(data: str) -> List[Node]:
@@ -44,8 +45,8 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             if len(children) == 0 or children[-1].token != commands.RIGHT:
                 raise ExtraLeftOrMissingRightError
             node = Node(token=token, children=children if len(children) else None, delimiter=delimiter)
-        elif token == commands.OPENING_BRACES:
-            children = tuple(_walk(tokens, terminator=commands.CLOSING_BRACES))
+        elif token == commands.OPENING_BRACE:
+            children = tuple(_walk(tokens, terminator=commands.CLOSING_BRACE))
             node = Node(token=commands.BRACES, children=children)
         elif token == commands.OPENING_PARENTHESIS:
             children = tuple(_walk(tokens, terminator=commands.CLOSING_PARENTHESIS))
@@ -114,15 +115,24 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             node = Node(token=token, children=children)
         elif token in commands.COMMANDS_WITH_ONE_PARAMETER:
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
-            if children[0].children is not None and children[0].token == commands.BRACES and token == commands.HSPACE:
-                children = children[0].children
             node = Node(token=token, children=children)
+        elif token == commands.HSPACE:
+            children = tuple(_walk(tokens, terminator=terminator, limit=1))
+            if children[0].token == commands.BRACES and children[0].children is not None:
+                children = children[0].children
+            node = Node(token=token, attributes={"width": children[0].token})
         elif token in commands.BIG.keys():
             node = Node(token=token, text=next(tokens))
         elif token == commands.TEXT:
             node = Node(token=token, text=next(tokens))
-        elif token == commands.OVER:
+        elif token in (commands.OVER, commands.ABOVE):
+            attributes = None
             denominator = tuple(_walk(tokens, terminator=terminator))
+
+            if token == commands.ABOVE:
+                attributes = {"linethickness": denominator[0].token}
+                denominator = denominator[1:]
+
             if len(denominator) == 0:
                 raise DenominatorNotFoundError
             if len(group) == 0:
@@ -135,7 +145,7 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                 children = (*group, *denominator)
             else:
                 children = (Node(token=commands.BRACES, children=tuple(group)), *denominator)
-            group = [Node(token=commands.FRAC, children=children)]
+            group = [Node(token=commands.FRAC, children=children, attributes=attributes)]
             continue
         elif token == commands.SQRT:
             node = _get_root_node(token, tokens)
@@ -176,7 +186,8 @@ def _get_matrix_node(token: str, tokens: Iterator[str], terminator: Optional[str
 
 def _get_environment_node(token: str, tokens: Iterator[str]) -> Node:
     # TODO: support non-matrix environments
-    environment = token[token.index("{") + 1 : -1]
+    start_index = token.index("{") + 1
+    environment = token[start_index:-1]
     children = tuple(_walk(tokens, terminator=rf"{commands.END}{{{environment}}}"))
     alignment = ""
     if (

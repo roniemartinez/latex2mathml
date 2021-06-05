@@ -1489,6 +1489,11 @@ from latex2mathml.converter import _convert, convert
             ),
             id="escaped-characters",
         ),
+        pytest.param(
+            r"a \above 1pt b",
+            {"mfrac": MultiDict([("@linethickness", "1pt"), ("mi", "a"), ("mi", "b")])},
+            id="above",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

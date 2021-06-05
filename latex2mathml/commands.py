@@ -1,8 +1,8 @@
 from collections import OrderedDict
 from typing import Dict, Tuple
 
-OPENING_BRACES = "{"
-CLOSING_BRACES = "}"
+OPENING_BRACE = "{"
+CLOSING_BRACE = "}"
 BRACES = "{}"
 
 OPENING_BRACKET = "["
@@ -22,9 +22,12 @@ DPRIME = r"\dprime"
 
 LEFT = r"\left"
 RIGHT = r"\right"
+
 OVER = r"\over"
 FRAC = r"\frac"
 BINOM = r"\binom"
+ABOVE = r"\above"
+
 ROOT = r"\root"
 SQRT = r"\sqrt"
 
@@ -38,6 +41,8 @@ OVERRIGHTARROW = r"\overrightarrow"
 VEC = r"\vec"
 DOT = r"\dot"
 TEXT = r"\text"
+
+MATH = r"\math"
 MATHOP = r"\mathop"
 
 BEGIN = r"\begin"
@@ -88,7 +93,7 @@ COLON = r"\:"
 GREATER_THAN = r"\>"
 SEMICOLON = r"\;"
 
-COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT, MATHOP, HSPACE)
+COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT, MATHOP)
 COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET)
 
 OLD_STYLE_FONTS = {
