@@ -497,6 +497,11 @@ from latex2mathml.tokenizer import tokenize
             ["{", "a", r"\above", "1pt", "b", "}", "+", "{", "c", r"\above", "{", "1.5pt", "}", "d", "}"],
             id="above",
         ),
+        pytest.param(
+            r"\mathop{x}\limits_0^1",
+            [r"\mathop", "{", "x", "}", r"\limits", "_", "0", "^", "1"],
+            id="issue-125",
+        ),
     ],
 )
 def test_tokenize(latex: str, expected: list) -> None:
