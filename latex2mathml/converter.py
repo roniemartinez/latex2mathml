@@ -99,13 +99,15 @@ def _convert_group(
             is_math_mode = True
         elif token in commands.OLD_STYLE_FONTS.keys():
             _font = commands.OLD_STYLE_FONTS.get(token)
+        elif token == commands.BLACKBOARD_BOLD and node.children is not None:
+            _convert_group(iter(node.children), parent, is_math_mode, "double-struck")
         elif node.children is None:
             _convert_symbol(node, parent, is_math_mode, _font)
         elif node.children is not None:
             _row = SubElement(parent, "mrow")
             if token == "()":  # TODO: other pairs
                 _convert_symbol(Node(token=token[0]), _row, is_math_mode, _font)
-            _convert_group(iter(node.children), _row, is_math_mode)
+            _convert_group(iter(node.children), _row, is_math_mode, _font)
             if token == "()":  # TODO: other pairs
                 _convert_symbol(Node(token=token[1]), _row, is_math_mode, _font)
 

@@ -1609,6 +1609,27 @@ from latex2mathml.converter import _convert, convert
             ),
             id="abovewithdelims",
         ),
+        pytest.param(
+            r"\Bbb AB", MultiDict([("mi", {"@mathvariant": "double-struck", "$": "A"}), ("mi", "B")]), id="Bbb"
+        ),
+        pytest.param(
+            r"\Bbb{AB}C",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mi", {"@mathvariant": "double-struck", "$": "A"}),
+                                ("mi", {"@mathvariant": "double-struck", "$": "B"}),
+                            ]
+                        ),
+                    ),
+                    ("mi", "C"),
+                ]
+            ),
+            id="Bbb-group",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
