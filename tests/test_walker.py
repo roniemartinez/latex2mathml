@@ -1424,6 +1424,33 @@ from latex2mathml.walker import Node, walk
             ],
             id="above",
         ),
+        pytest.param(
+            r"a \atop {b \atopwithdelims | . c}",
+            [
+                Node(
+                    token=r"\frac",
+                    children=(
+                        Node(token="a"),
+                        Node(
+                            token="{}",
+                            children=(
+                                Node(
+                                    token=r"\frac",
+                                    children=(
+                                        Node(token="b"),
+                                        Node(token="c"),
+                                    ),
+                                    attributes={"linethickness": "0"},
+                                    delimiter="|.",
+                                ),
+                            ),
+                        ),
+                    ),
+                    attributes={"linethickness": "0"},
+                ),
+            ],
+            id="atop-and-atopwithdelims",
+        ),
     ],
 )
 def test_walk(latex: str, expected: list) -> None:

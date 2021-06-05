@@ -125,13 +125,21 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             node = Node(token=token, text=next(tokens))
         elif token == commands.TEXT:
             node = Node(token=token, text=next(tokens))
-        elif token in (commands.OVER, commands.ABOVE):
+        elif token in (commands.OVER, commands.ABOVE, commands.ATOP, commands.ATOPWITHDELIMS):
             attributes = None
+            delimiter = None
+
+            if token == commands.ATOPWITHDELIMS:
+                attributes = {"linethickness": "0"}
+                delimiter = next(tokens) + next(tokens)
+
             denominator = tuple(_walk(tokens, terminator=terminator))
 
             if token == commands.ABOVE:
                 attributes = {"linethickness": denominator[0].token}
                 denominator = denominator[1:]
+            elif token == commands.ATOP:
+                attributes = {"linethickness": "0"}
 
             if len(denominator) == 0:
                 raise DenominatorNotFoundError
@@ -145,7 +153,7 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                 children = (*group, *denominator)
             else:
                 children = (Node(token=commands.BRACES, children=tuple(group)), *denominator)
-            group = [Node(token=commands.FRAC, children=children, attributes=attributes)]
+            group = [Node(token=commands.FRAC, children=children, attributes=attributes, delimiter=delimiter)]
             continue
         elif token == commands.SQRT:
             node = _get_root_node(token, tokens)

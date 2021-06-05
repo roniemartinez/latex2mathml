@@ -1532,6 +1532,36 @@ from latex2mathml.converter import _convert, convert
             ),
             id="acute",
         ),
+        pytest.param(
+            r"a \atop {b \atopwithdelims | . c}",
+            {
+                "mfrac": MultiDict(
+                    [
+                        ("@linethickness", "0"),
+                        ("mi", "a"),
+                        (
+                            "mrow",
+                            MultiDict(
+                                [
+                                    ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "&#x0007C;"}),
+                                    (
+                                        "mfrac",
+                                        MultiDict(
+                                            [
+                                                ("@linethickness", "0"),
+                                                ("mi", "b"),
+                                                ("mi", "c"),
+                                            ]
+                                        ),
+                                    ),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="atop-and-atopwithdelims",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

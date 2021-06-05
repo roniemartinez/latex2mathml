@@ -27,6 +27,8 @@ OVER = r"\over"
 FRAC = r"\frac"
 BINOM = r"\binom"
 ABOVE = r"\above"
+ATOP = r"\atop"
+ATOPWITHDELIMS = r"\atopwithdelims"
 
 ROOT = r"\root"
 SQRT = r"\sqrt"
