@@ -1,7 +1,7 @@
 import copy
 import re
 from collections import OrderedDict
-from typing import Iterable, Iterator, Optional, Tuple
+from typing import Dict, Iterable, Iterator, Optional, Tuple
 from xml.etree.cElementTree import Element, SubElement, tostring
 from xml.sax.saxutils import unescape
 
@@ -144,7 +144,7 @@ def _convert_command(node: Node, parent: Element, is_math_mode: bool = False, fo
     if command == commands.LEFT:
         parent = SubElement(parent, "mrow")
 
-    _append_prefix_element(command, parent)
+    _append_prefix_element(node, parent)
 
     alignment, column_lines = _get_alignment_and_column_lines(node.alignment)
 
@@ -164,7 +164,7 @@ def _convert_command(node: Node, parent: Element, is_math_mode: bool = False, fo
         element.text = command[1:]
     elif node.text is not None:
         element.text = node.text.replace(" ", "&#x000A0;")
-    elif node.delimiter is not None:
+    elif node.delimiter is not None and command != commands.FRAC:
         if node.delimiter != ".":
             symbol = convert_symbol(node.delimiter)
             element.text = node.delimiter if symbol is None else "&#x{};".format(symbol)
@@ -182,7 +182,7 @@ def _convert_command(node: Node, parent: Element, is_math_mode: bool = False, fo
         else:
             _convert_group(iter(node.children), _parent, is_math_mode, font)
 
-    _append_postfix_element(command, parent)
+    _append_postfix_element(node, parent)
 
     if command in (commands.OVERLINE, commands.BAR):
         mo = SubElement(element, "mo", stretchy="true")
@@ -201,36 +201,40 @@ def _convert_command(node: Node, parent: Element, is_math_mode: bool = False, fo
         mo.text = "&#x000B4;"
 
 
-def _convert_and_append_command(command: str, parent: Element) -> None:
+def _convert_and_append_command(command: str, parent: Element, attributes: Optional[Dict[str, str]] = None) -> None:
     code_point = convert_symbol(command)
-    mo = SubElement(parent, "mo")
-    mo.text = "&#x{};".format(code_point)
+    mo = SubElement(parent, "mo", attributes if attributes is not None else {})
+    mo.text = "&#x{};".format(code_point) if code_point else command
 
 
-def _append_prefix_element(command: str, parent: Element) -> None:
-    if command in (commands.BINOM, r"\pmatrix"):
+def _append_prefix_element(node: Node, parent: Element) -> None:
+    if node.token in (commands.BINOM, r"\pmatrix"):
         _convert_and_append_command(r"\lparen", parent)
-    elif command == r"\bmatrix":
+    elif node.token == r"\bmatrix":
         _convert_and_append_command(r"\lbrack", parent)
-    elif command == r"\Bmatrix":
+    elif node.token == r"\Bmatrix":
         _convert_and_append_command(r"\lbrace", parent)
-    elif command == r"\vmatrix":
+    elif node.token == r"\vmatrix":
         _convert_and_append_command(r"\vert", parent)
-    elif command == r"\Vmatrix":
+    elif node.token == r"\Vmatrix":
         _convert_and_append_command(r"\Vert", parent)
+    elif node.token == r"\frac" and node.delimiter is not None and node.delimiter[0] != ".":
+        _convert_and_append_command(node.delimiter[0], parent, {"minsize": "1.2em", "maxsize": "1.2em"})
 
 
-def _append_postfix_element(command: str, parent: Element) -> None:
-    if command in (commands.BINOM, r"\pmatrix"):
+def _append_postfix_element(node: Node, parent: Element) -> None:
+    if node.token in (commands.BINOM, r"\pmatrix"):
         _convert_and_append_command(r"\rparen", parent)
-    elif command == r"\bmatrix":
+    elif node.token == r"\bmatrix":
         _convert_and_append_command(r"\rbrack", parent)
-    elif command == r"\Bmatrix":
+    elif node.token == r"\Bmatrix":
         _convert_and_append_command(r"\rbrace", parent)
-    elif command == r"\vmatrix":
+    elif node.token == r"\vmatrix":
         _convert_and_append_command(r"\vert", parent)
-    elif command == r"\Vmatrix":
+    elif node.token == r"\Vmatrix":
         _convert_and_append_command(r"\Vert", parent)
+    elif node.token == r"\frac" and node.delimiter is not None and node.delimiter[1] != ".":
+        _convert_and_append_command(node.delimiter[1], parent, {"minsize": "1.2em", "maxsize": "1.2em"})
 
 
 def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False, font: Optional[str] = None) -> None:
