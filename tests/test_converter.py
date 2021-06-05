@@ -1499,8 +1499,14 @@ from latex2mathml.converter import _convert, convert
             id="escaped-characters",
         ),
         pytest.param(
-            r"a \above 1pt b",
-            {"mfrac": MultiDict([("@linethickness", "1pt"), ("mi", "a"), ("mi", "b")])},
+            r"{a \above 1pt b} + {c \above {1.5pt} d}",
+            MultiDict(
+                [
+                    ("mrow", {"mfrac": MultiDict([("@linethickness", "1pt"), ("mi", "a"), ("mi", "b")])}),
+                    ("mo", "&#x0002B;"),
+                    ("mrow", {"mfrac": MultiDict([("@linethickness", "1.5pt"), ("mi", "c"), ("mi", "d")])}),
+                ]
+            ),
             id="above",
         ),
         pytest.param(
@@ -1562,6 +1568,46 @@ from latex2mathml.converter import _convert, convert
                 )
             },
             id="atop-and-atopwithdelims",
+        ),
+        pytest.param(
+            r"{a \abovewithdelims [ ] 1pt b} + {c \abovewithdelims . . {1.5pt} d}",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "["}),
+                                (
+                                    "mfrac",
+                                    MultiDict(
+                                        [
+                                            ("@linethickness", "1pt"),
+                                            ("mi", "a"),
+                                            ("mi", "b"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "]"}),
+                            ]
+                        ),
+                    ),
+                    ("mo", "&#x0002B;"),
+                    (
+                        "mrow",
+                        {
+                            "mfrac": MultiDict(
+                                [
+                                    ("@linethickness", "1.5pt"),
+                                    ("mi", "c"),
+                                    ("mi", "d"),
+                                ]
+                            ),
+                        },
+                    ),
+                ]
+            ),
+            id="abovewithdelims",
         ),
     ],
 )

@@ -125,21 +125,26 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             node = Node(token=token, text=next(tokens))
         elif token == commands.TEXT:
             node = Node(token=token, text=next(tokens))
-        elif token in (commands.OVER, commands.ABOVE, commands.ATOP, commands.ATOPWITHDELIMS):
+        elif token in (commands.OVER, commands.ABOVE, commands.ATOP, commands.ABOVEWITHDELIMS, commands.ATOPWITHDELIMS):
             attributes = None
             delimiter = None
 
-            if token == commands.ATOPWITHDELIMS:
+            if token == commands.ABOVEWITHDELIMS:
+                delimiter = next(tokens).lstrip("\\") + next(tokens).lstrip("\\")
+            elif token == commands.ATOPWITHDELIMS:
                 attributes = {"linethickness": "0"}
                 delimiter = next(tokens).lstrip("\\") + next(tokens).lstrip("\\")
 
-            denominator = tuple(_walk(tokens, terminator=terminator))
-
-            if token == commands.ABOVE:
-                attributes = {"linethickness": denominator[0].token}
-                denominator = denominator[1:]
+            if token in (commands.ABOVE, commands.ABOVEWITHDELIMS):
+                next_child = tuple(_walk(tokens, terminator=terminator, limit=1))[0]
+                dimension = next_child.token
+                if next_child.token == commands.BRACES:
+                    dimension = next_child.children[0].token
+                attributes = {"linethickness": dimension}
             elif token == commands.ATOP:
                 attributes = {"linethickness": "0"}
+
+            denominator = tuple(_walk(tokens, terminator=terminator))
 
             if len(denominator) == 0:
                 raise DenominatorNotFoundError
@@ -154,7 +159,7 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             else:
                 children = (Node(token=commands.BRACES, children=tuple(group)), *denominator)
             group = [Node(token=commands.FRAC, children=children, attributes=attributes, delimiter=delimiter)]
-            continue
+            break
         elif token == commands.SQRT:
             node = _get_root_node(token, tokens)
         elif token in commands.MATRICES:

@@ -1408,19 +1408,19 @@ from latex2mathml.walker import Node, walk
                             children=(Node(token="a"), Node(token="b")),
                             attributes={"linethickness": "1pt"},
                         ),
-                        Node(token="+"),
+                    ),
+                ),
+                Node(token="+"),
+                Node(
+                    token="{}",
+                    children=(
                         Node(
-                            token="{}",
-                            children=(
-                                Node(
-                                    token=r"\frac",
-                                    children=(Node(token="c"), Node(token="d")),
-                                    attributes={"linethickness": "{}"},
-                                ),
-                            ),
+                            token=r"\frac",
+                            children=(Node(token="c"), Node(token="d")),
+                            attributes={"linethickness": "1.5pt"},
                         ),
                     ),
-                )
+                ),
             ],
             id="above",
         ),
@@ -1450,6 +1450,41 @@ from latex2mathml.walker import Node, walk
                 ),
             ],
             id="atop-and-atopwithdelims",
+        ),
+        pytest.param(
+            r"{a \abovewithdelims [ ] 1pt b} + {c \abovewithdelims . . {1.5pt} d}",
+            [
+                Node(
+                    token="{}",
+                    children=(
+                        Node(
+                            token=r"\frac",
+                            children=(
+                                Node(token="a"),
+                                Node(token="b"),
+                            ),
+                            attributes={"linethickness": "1pt"},
+                            delimiter="[]",
+                        ),
+                    ),
+                ),
+                Node(token="+"),
+                Node(
+                    token="{}",
+                    children=(
+                        Node(
+                            token=r"\frac",
+                            children=(
+                                Node(token="c"),
+                                Node(token="d"),
+                            ),
+                            attributes={"linethickness": "1.5pt"},
+                            delimiter="..",
+                        ),
+                    ),
+                ),
+            ],
+            id="abovewithdelims",
         ),
     ],
 )
