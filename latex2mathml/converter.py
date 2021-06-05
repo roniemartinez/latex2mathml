@@ -196,6 +196,9 @@ def _convert_command(node: Node, parent: Element, is_math_mode: bool = False, fo
     elif command == commands.DOT:
         mo = SubElement(element, "mo")
         mo.text = "&#x002D9;"
+    elif command == commands.ACUTE:
+        mo = SubElement(element, "mo")
+        mo.text = "&#x000B4;"
 
 
 def _convert_and_append_command(command: str, parent: Element) -> None:

@@ -41,6 +41,7 @@ OVERRIGHTARROW = r"\overrightarrow"
 VEC = r"\vec"
 DOT = r"\dot"
 TEXT = r"\text"
+ACUTE = r"\acute"
 
 MATH = r"\math"
 MATHOP = r"\mathop"
@@ -93,7 +94,7 @@ COLON = r"\:"
 GREATER_THAN = r"\>"
 SEMICOLON = r"\;"
 
-COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT, MATHOP)
+COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT, MATHOP, ACUTE)
 COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET)
 
 OLD_STYLE_FONTS = {
@@ -123,17 +124,20 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     BINOM: ("mfrac", {"linethickness": "0"}),
     LEFT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")])),
     RIGHT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "postfix")])),
+    TEXT: ("mtext", {}),
+    MATHOP: ("mrow", {}),
+    # over/under
     OVERLINE: ("mover", {}),
     BAR: ("mover", {}),
-    UNDERLINE: ("munder", {}),
-    LIMITS: ("munderover", {}),
     OVERRIGHTARROW: ("mover", {}),
     VEC: ("mover", {}),
     DOT: ("mover", {}),
     OVERSET: ("mover", {}),
+    ACUTE: ("mover", {}),
+    UNDERLINE: ("munder", {}),
+    LIMITS: ("munderover", {}),
     UNDERSET: ("munder", {}),
-    TEXT: ("mtext", {}),
-    MATHOP: ("mrow", {}),
+    # spaces
     QUAD: ("mspace", {"width": "1em"}),
     QQUAD: ("mspace", {"width": "2em"}),
     HSPACE: ("mspace", {}),

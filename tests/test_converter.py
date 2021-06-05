@@ -1494,6 +1494,35 @@ from latex2mathml.converter import _convert, convert
             {"mfrac": MultiDict([("@linethickness", "1pt"), ("mi", "a"), ("mi", "b")])},
             id="above",
         ),
+        pytest.param(
+            r"\acute a \acute{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", "&#x000B4;")]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x000B4;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="acute",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
