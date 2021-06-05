@@ -131,7 +131,7 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
 
             if token == commands.ATOPWITHDELIMS:
                 attributes = {"linethickness": "0"}
-                delimiter = next(tokens) + next(tokens)
+                delimiter = next(tokens).lstrip("\\") + next(tokens).lstrip("\\")
 
             denominator = tuple(_walk(tokens, terminator=terminator))
 

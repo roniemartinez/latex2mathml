@@ -1533,7 +1533,7 @@ from latex2mathml.converter import _convert, convert
             id="acute",
         ),
         pytest.param(
-            r"a \atop {b \atopwithdelims | . c}",
+            r"a \atop {b \atopwithdelims | \} c}",
             {
                 "mfrac": MultiDict(
                     [
@@ -1554,6 +1554,7 @@ from latex2mathml.converter import _convert, convert
                                             ]
                                         ),
                                     ),
+                                    ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "}"}),
                                 ]
                             ),
                         ),

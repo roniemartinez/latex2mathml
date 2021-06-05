@@ -204,7 +204,7 @@ def _convert_command(node: Node, parent: Element, is_math_mode: bool = False, fo
 def _convert_and_append_command(command: str, parent: Element, attributes: Optional[Dict[str, str]] = None) -> None:
     code_point = convert_symbol(command)
     mo = SubElement(parent, "mo", attributes if attributes is not None else {})
-    mo.text = "&#x{};".format(code_point)
+    mo.text = "&#x{};".format(code_point) if code_point else command
 
 
 def _append_prefix_element(node: Node, parent: Element) -> None:

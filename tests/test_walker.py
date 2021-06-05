@@ -1425,7 +1425,7 @@ from latex2mathml.walker import Node, walk
             id="above",
         ),
         pytest.param(
-            r"a \atop {b \atopwithdelims | . c}",
+            r"a \atop {b \atopwithdelims \{ \} c}",
             [
                 Node(
                     token=r"\frac",
@@ -1441,7 +1441,7 @@ from latex2mathml.walker import Node, walk
                                         Node(token="c"),
                                     ),
                                     attributes={"linethickness": "0"},
-                                    delimiter="|.",
+                                    delimiter="{}",
                                 ),
                             ),
                         ),
