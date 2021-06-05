@@ -95,7 +95,7 @@ def _convert_group(
         token = node.token
         if token in commands.CONVERSION_MAP:
             _convert_command(node, parent, is_math_mode, _font)
-        elif token.startswith(r"\math"):
+        elif token.startswith(commands.MATH):
             is_math_mode = True
         elif token in commands.OLD_STYLE_FONTS.keys():
             _font = commands.OLD_STYLE_FONTS.get(token)

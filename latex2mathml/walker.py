@@ -118,7 +118,7 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             node = Node(token=token, children=children)
         elif token == commands.HSPACE:
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
-            if children[0].token == commands.BRACES:
+            if children[0].token == commands.BRACES and children[0].children is not None:
                 children = children[0].children
             node = Node(token=token, attributes={"width": children[0].token})
         elif token in commands.BIG.keys():
@@ -186,7 +186,8 @@ def _get_matrix_node(token: str, tokens: Iterator[str], terminator: Optional[str
 
 def _get_environment_node(token: str, tokens: Iterator[str]) -> Node:
     # TODO: support non-matrix environments
-    environment = token[token.index("{") + 1 : -1]
+    start_index = token.index("{") + 1
+    environment = token[start_index:-1]
     children = tuple(_walk(tokens, terminator=rf"{commands.END}{{{environment}}}"))
     alignment = ""
     if (

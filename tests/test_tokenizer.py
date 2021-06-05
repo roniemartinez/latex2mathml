@@ -493,7 +493,7 @@ from latex2mathml.tokenizer import tokenize
             id="comments",
         ),
         pytest.param(
-            r"{a \above 1pt b} + {c \above {1.5pt} d}",
+            r"{a \above 1pt b} + {c \above { 1.5 pt } d}",
             ["{", "a", r"\above", "1pt", "b", "}", "+", "{", "c", r"\above", "{", "1.5pt", "}", "d", "}"],
             id="above",
         ),

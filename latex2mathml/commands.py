@@ -41,6 +41,8 @@ OVERRIGHTARROW = r"\overrightarrow"
 VEC = r"\vec"
 DOT = r"\dot"
 TEXT = r"\text"
+
+MATH = r"\math"
 MATHOP = r"\mathop"
 
 BEGIN = r"\begin"

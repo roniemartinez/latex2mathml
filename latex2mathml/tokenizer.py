@@ -116,14 +116,14 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                         commands.TEXT,
                         commands.HSPACE,
                         commands.ABOVE,
-                        r"\math",
+                        commands.MATH,
                     )
                 ):
                     if buffer.endswith(commands.CLOSING_BRACE):
                         yield buffer
                         yield char
                         buffer = ""
-                    elif buffer.startswith(r"\math") and char == commands.CLOSING_BRACE:
+                    elif buffer.startswith(commands.MATH) and char == commands.CLOSING_BRACE:
                         symbol = convert_symbol(buffer + char)
                         if symbol:
                             yield "&#x{};".format(symbol)
@@ -139,13 +139,6 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                         yield commands.TEXT
                         yield buffer[6:]
                         buffer = ""
-                    elif buffer.startswith((commands.HSPACE, commands.ABOVE)) and char == commands.CLOSING_BRACE:
-                        index = buffer.index(commands.OPENING_BRACE)
-                        yield buffer[:index]
-                        yield buffer[index]
-                        yield buffer[index + 1 :]
-                        yield char
-                        buffer = ""
                     elif buffer in (commands.HSPACE, commands.ABOVE) and char == commands.OPENING_BRACE:
                         yield buffer
                         yield char
@@ -160,7 +153,7 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
                     yield char
             else:
                 if len(buffer):
-                    if buffer.startswith(r"\math"):
+                    if buffer.startswith(commands.MATH):
                         yield buffer[:-1]
                         yield buffer[-1]
                     elif buffer.startswith(commands.TEXT):
