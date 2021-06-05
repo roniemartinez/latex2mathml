@@ -637,7 +637,7 @@ from latex2mathml.converter import _convert, convert
         ),
         pytest.param("2 < 5", MultiDict([("mn", "2"), ("mo", "&lt;"), ("mn", "5")]), id="issue-45-lt"),
         pytest.param("2 > 5", MultiDict([("mn", "2"), ("mo", "&gt;"), ("mn", "5")]), id="issue-45-gt"),
-        pytest.param("&", {"mo": "&amp;"}, id="issue-45-amp"),
+        pytest.param(r"&\And", MultiDict([("mo", "&amp;"), ("mo", "&amp;")]), id="issue-45-amp"),
         pytest.param(
             r"\left(- x^{3} + 5\right)^{5}",
             MultiDict(
@@ -1069,7 +1069,7 @@ from latex2mathml.converter import _convert, convert
             id="issue-75-2-rows",
         ),
         pytest.param(
-            r"\tan x + \sec x + \cos x + \sin x + \cot x + \csc x",
+            r"\tan x + \sec x + \cos x + \sin x + \cot x + \csc x + \arccos x + \arcsin x + \arctan x",
             MultiDict(
                 [
                     ("mi", "tan"),
@@ -1088,6 +1088,15 @@ from latex2mathml.converter import _convert, convert
                     ("mi", "x"),
                     ("mo", "&#x0002B;"),
                     ("mi", "csc"),
+                    ("mi", "x"),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "arccos"),
+                    ("mi", "x"),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "arcsin"),
+                    ("mi", "x"),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "arctan"),
                     ("mi", "x"),
                 ]
             ),
