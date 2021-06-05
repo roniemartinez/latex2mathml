@@ -138,7 +138,7 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             if token in (commands.ABOVE, commands.ABOVEWITHDELIMS):
                 next_child = tuple(_walk(tokens, terminator=terminator, limit=1))[0]
                 dimension = next_child.token
-                if next_child.token == commands.BRACES:
+                if next_child.token == commands.BRACES and next_child.children is not None:
                     dimension = next_child.children[0].token
                 attributes = {"linethickness": dimension}
             elif token == commands.ATOP:
