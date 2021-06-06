@@ -100,6 +100,8 @@ SEMICOLON = r"\;"
 BLACKBOARD_BOLD = r"\Bbb"
 BOLD_SYMBOL = r"\boldsymbol"
 
+BOXED = r"\boxed"
+
 
 def font_factory(default: Optional[str], replacement: Dict[str, Optional[str]]) -> DefaultDict[str, Optional[str]]:
     fonts = defaultdict(lambda: default, replacement)
@@ -130,6 +132,7 @@ COMMANDS_WITH_ONE_PARAMETER = (
     ACUTE,
     BLACKBOARD_BOLD,
     BOLD_SYMBOL,
+    BOXED,
 )
 COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET)
 
@@ -175,6 +178,8 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     GREATER_THAN: ("mspace", {"width": "0.222em"}),
     SEMICOLON: ("mspace", {"width": "0.278em"}),
     DOUBLEBACKSLASH: ("mspace", {"linebreak": "newline"}),
+    # enclose
+    BOXED: ("menclose", {"notation": "box"}),
 }
 
 CONVERSION_MAP.update(BIG)
