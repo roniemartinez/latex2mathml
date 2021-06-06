@@ -125,7 +125,15 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             node = Node(token=token, text=next(tokens))
         elif token == commands.TEXT:
             node = Node(token=token, text=next(tokens))
-        elif token in (commands.OVER, commands.ABOVE, commands.ATOP, commands.ABOVEWITHDELIMS, commands.ATOPWITHDELIMS):
+        elif token in (
+            commands.OVER,
+            commands.ABOVE,
+            commands.ATOP,
+            commands.ABOVEWITHDELIMS,
+            commands.ATOPWITHDELIMS,
+            commands.BRACE,
+            commands.BRACK,
+        ):
             attributes = None
             delimiter = None
 
@@ -134,6 +142,10 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             elif token == commands.ATOPWITHDELIMS:
                 attributes = {"linethickness": "0"}
                 delimiter = next(tokens).lstrip("\\") + next(tokens).lstrip("\\")
+            elif token == commands.BRACE:
+                delimiter = "{}"
+            elif token == commands.BRACK:
+                delimiter = "[]"
 
             if token in (commands.ABOVE, commands.ABOVEWITHDELIMS):
                 next_child = tuple(_walk(tokens, terminator=terminator, limit=1))[0]
@@ -141,15 +153,21 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                 if next_child.token == commands.BRACES and next_child.children is not None:
                     dimension = next_child.children[0].token
                 attributes = {"linethickness": dimension}
-            elif token == commands.ATOP:
+            elif token in (commands.ATOP, commands.BRACE, commands.BRACK):
                 attributes = {"linethickness": "0"}
 
             denominator = tuple(_walk(tokens, terminator=terminator))
 
             if len(denominator) == 0:
-                raise DenominatorNotFoundError
+                if token in (commands.BRACE, commands.BRACK):
+                    denominator = (Node(token=commands.BRACES, children=()),)
+                else:
+                    raise DenominatorNotFoundError
             if len(group) == 0:
-                raise NumeratorNotFoundError
+                if token in (commands.BRACE, commands.BRACK):
+                    group = [Node(token=commands.BRACES, children=())]
+                else:
+                    raise NumeratorNotFoundError
 
             if len(denominator) > 1:
                 denominator = (Node(token=commands.BRACES, children=denominator),)

@@ -1561,7 +1561,7 @@ from latex2mathml.converter import _convert, convert
                             "mrow",
                             MultiDict(
                                 [
-                                    ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "&#x0007C;"}),
+                                    ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "&#x0007C;"}),
                                     (
                                         "mfrac",
                                         MultiDict(
@@ -1572,7 +1572,7 @@ from latex2mathml.converter import _convert, convert
                                             ]
                                         ),
                                     ),
-                                    ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "}"}),
+                                    ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "}"}),
                                 ]
                             ),
                         ),
@@ -1589,7 +1589,7 @@ from latex2mathml.converter import _convert, convert
                         "mrow",
                         MultiDict(
                             [
-                                ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "["}),
+                                ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "["}),
                                 (
                                     "mfrac",
                                     MultiDict(
@@ -1600,7 +1600,7 @@ from latex2mathml.converter import _convert, convert
                                         ]
                                     ),
                                 ),
-                                ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "]"}),
+                                ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "]"}),
                             ]
                         ),
                     ),
@@ -1703,6 +1703,64 @@ from latex2mathml.converter import _convert, convert
                 ]
             ),
             id="breve",
+        ),
+        pytest.param(
+            r"{\brace} + {a \brace b}",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "{"}),
+                                ("mfrac", MultiDict([("@linethickness", "0"), ("mrow", ""), ("mrow", "")])),
+                                ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "}"}),
+                            ]
+                        ),
+                    ),
+                    ("mo", "&#x0002B;"),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "{"}),
+                                ("mfrac", MultiDict([("@linethickness", "0"), ("mi", "a"), ("mi", "b")])),
+                                ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "}"}),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="brace",
+        ),
+        pytest.param(
+            r"{\brack} + {a \brack b}",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "["}),
+                                ("mfrac", MultiDict([("@linethickness", "0"), ("mrow", ""), ("mrow", "")])),
+                                ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "]"}),
+                            ]
+                        ),
+                    ),
+                    ("mo", "&#x0002B;"),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "["}),
+                                ("mfrac", MultiDict([("@linethickness", "0"), ("mi", "a"), ("mi", "b")])),
+                                ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "]"}),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="brace",
         ),
     ],
 )
