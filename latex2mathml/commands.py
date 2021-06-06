@@ -1,5 +1,5 @@
-from collections import OrderedDict
-from typing import Dict, Tuple
+from collections import OrderedDict, defaultdict
+from typing import DefaultDict, Dict, Optional, Tuple
 
 OPENING_BRACE = "{"
 CLOSING_BRACE = "}"
@@ -98,17 +98,40 @@ GREATER_THAN = r"\>"
 SEMICOLON = r"\;"
 
 BLACKBOARD_BOLD = r"\Bbb"
+BOLD_SYMBOL = r"\boldsymbol"
 
-COMMANDS_WITH_ONE_PARAMETER = (OVERLINE, BAR, UNDERLINE, OVERRIGHTARROW, VEC, DOT, MATHOP, ACUTE, BLACKBOARD_BOLD)
-COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET)
 
-OLD_STYLE_FONTS = {
-    r"\rm": "normal",
-    r"\bf": "bold",
-    r"\it": "italic",
-    r"\sf": "sans-serif",
-    r"\tt": "monospace",
+def font_factory(default: Optional[str], replacement: Dict[str, Optional[str]]) -> DefaultDict[str, Optional[str]]:
+    fonts = defaultdict(lambda: default, replacement)
+    return fonts
+
+
+LOCAL_FONTS: Dict[str, DefaultDict[str, Optional[str]]] = {
+    BLACKBOARD_BOLD: font_factory("double-struck", {"fence": None}),
+    BOLD_SYMBOL: font_factory("bold", {"mi": "bold-italic", "mtext": None}),
 }
+
+OLD_STYLE_FONTS: Dict[str, DefaultDict[str, Optional[str]]] = {
+    r"\rm": font_factory(None, {"mi": "normal"}),
+    r"\bf": font_factory(None, {"mi": "bold"}),
+    r"\it": font_factory(None, {"mi": "italic"}),
+    r"\sf": font_factory(None, {"mi": "sans-serif"}),
+    r"\tt": font_factory(None, {"mi": "monospace"}),
+}
+
+COMMANDS_WITH_ONE_PARAMETER = (
+    OVERLINE,
+    BAR,
+    UNDERLINE,
+    OVERRIGHTARROW,
+    VEC,
+    DOT,
+    MATHOP,
+    ACUTE,
+    BLACKBOARD_BOLD,
+    BOLD_SYMBOL,
+)
+COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET)
 
 BIG: Dict[str, Tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)

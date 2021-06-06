@@ -1,6 +1,6 @@
 import copy
 import re
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from typing import Dict, Iterable, Iterator, Optional, Tuple
 from xml.etree.cElementTree import Element, SubElement, tostring
 from xml.sax.saxutils import unescape
@@ -88,7 +88,7 @@ def _make_matrix_cell(row: Element, column_alignment: Optional[str]) -> Element:
 
 
 def _convert_group(
-    nodes: Iterable[Node], parent: Element, is_math_mode: bool = False, font: Optional[str] = None
+    nodes: Iterable[Node], parent: Element, is_math_mode: bool = False, font: Optional[Dict[str, Optional[str]]] = None
 ) -> None:
     _font = font
     for node in nodes:
@@ -99,8 +99,8 @@ def _convert_group(
             is_math_mode = True
         elif token in commands.OLD_STYLE_FONTS.keys():
             _font = commands.OLD_STYLE_FONTS.get(token)
-        elif token == commands.BLACKBOARD_BOLD and node.children is not None:
-            _convert_group(iter(node.children), parent, is_math_mode, "double-struck")
+        elif token in commands.LOCAL_FONTS and node.children is not None:
+            _convert_group(iter(node.children), parent, is_math_mode, commands.LOCAL_FONTS[token])
         elif node.children is None:
             _convert_symbol(node, parent, is_math_mode, _font)
         elif node.children is not None:
@@ -129,7 +129,9 @@ def _get_alignment_and_column_lines(alignment: Optional[str] = None) -> Tuple[Op
     return _alignment, " ".join(column_lines)
 
 
-def _convert_command(node: Node, parent: Element, is_math_mode: bool = False, font: Optional[str] = None) -> None:
+def _convert_command(
+    node: Node, parent: Element, is_math_mode: bool = False, font: Optional[Dict[str, Optional[str]]] = None
+) -> None:
     command = node.token
 
     if command == commands.SUBSTACK:
@@ -166,6 +168,7 @@ def _convert_command(node: Node, parent: Element, is_math_mode: bool = False, fo
         element.text = command[1:]
     elif node.text is not None:
         element.text = node.text.replace(" ", "&#x000A0;")
+        set_font(element, "mtext", font)
     elif node.delimiter is not None and command != commands.FRAC:
         if node.delimiter != ".":
             symbol = convert_symbol(node.delimiter)
@@ -201,6 +204,14 @@ def _convert_command(node: Node, parent: Element, is_math_mode: bool = False, fo
     elif command == commands.ACUTE:
         mo = SubElement(element, "mo")
         mo.text = "&#x000B4;"
+
+
+def set_font(element, key, font):
+    if font is None:
+        return
+    _font = font[key]
+    if _font is not None:
+        element.attrib["mathvariant"] = _font
 
 
 def _convert_and_append_command(command: str, parent: Element, attributes: Optional[Dict[str, str]] = None) -> None:
@@ -239,22 +250,29 @@ def _append_postfix_element(node: Node, parent: Element) -> None:
         _convert_and_append_command(node.delimiter[1], parent, {"minsize": "1.2em", "maxsize": "1.2em"})
 
 
-def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False, font: Optional[str] = None) -> None:
+def _convert_symbol(
+    node: Node, parent: Element, is_math_mode: bool = False, font: Optional[Dict[str, Optional[str]]] = None
+) -> None:
     token = node.token
     symbol = convert_symbol(token)
     if re.match(r"\d+(.\d+)?", token):
-        mn = SubElement(parent, "mn")
-        mn.text = token
+        element = SubElement(parent, "mn")
+        element.text = token
+        set_font(element, "mn", font)
     elif token in ("<", ">", "&", r"\And"):
-        mo = SubElement(parent, "mo")
-        mo.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;", r"\And": "&amp;"}[token]
-    elif token in ("+", "-", "*", "/", "(", ")", "=", ",", "?", "[", "]", "|", r"\|", "!"):
-        mo = SubElement(parent, "mo")
-        mo.text = token if symbol is None else "&#x{};".format(symbol)
+        element = SubElement(parent, "mo")
+        element.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;", r"\And": "&amp;"}[token]
+        set_font(element, "mo", font)
+    elif token in ("+", "-", "*", "/", "(", ")", "=", ",", "?", "[", "]", "|", r"\|", "!", r"\{", r"\}"):
+        element = SubElement(parent, "mo")
+        element.text = token if symbol is None else "&#x{};".format(symbol)
         if token == r"\|":
-            mo.attrib["fence"] = "false"
-        if token in ("(", ")", "[", "]", "|", r"\|"):
-            mo.attrib["stretchy"] = "false"
+            element.attrib["fence"] = "false"
+        if token in ("(", ")", "[", "]", "|", r"\|", r"\{", r"\}"):
+            element.attrib["stretchy"] = "false"
+            set_font(element, "fence", font)
+        else:
+            set_font(element, "mo", font)
     elif (
         symbol
         and (
@@ -263,15 +281,15 @@ def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False, fon
         )
         or symbol == "."
     ):
-        mo = SubElement(parent, "mo")
-        mo.text = "&#x{};".format(symbol)
+        element = SubElement(parent, "mo")
+        element.text = "&#x{};".format(symbol)
+        set_font(element, "mo", font)
     elif token in (r"\ ", "~"):
-        mtext = SubElement(parent, "mtext")
-        mtext.text = "&#x000A0;"
+        element = SubElement(parent, "mtext")
+        element.text = "&#x000A0;"
+        set_font(element, "mtext", font)
     elif token.startswith(commands.BACKSLASH):
         element = SubElement(parent, "mo" if is_math_mode else "mi")
-        if element.tag == "mi" and font is not None:
-            element.attrib["mathvariant"] = font
         if symbol:
             element.text = "&#x{};".format(symbol)
         elif token in commands.FUNCTIONS:
@@ -280,11 +298,11 @@ def _convert_symbol(node: Node, parent: Element, is_math_mode: bool = False, fon
             element.text = token[14:-1]
         else:
             element.text = token
+        set_font(element, element.tag, font)
     else:
         element = SubElement(parent, "mo" if is_math_mode else "mi")
-        if element.tag == "mi" and font is not None:
-            element.attrib["mathvariant"] = font
         element.text = token
+        set_font(element, element.tag, font)
 
 
 def main() -> None:  # pragma: no cover
