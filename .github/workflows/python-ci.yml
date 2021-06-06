@@ -14,15 +14,13 @@ on:
       - '!dependabot/pip'
 
 jobs:
-  build:
-
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
         python-version: [ 3.6, 3.7, 3.8, 3.9 ]
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -45,9 +43,9 @@ jobs:
           poetry run codecov
 
   deploy:
-
+    needs: [ test ]
+    if: always()
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
