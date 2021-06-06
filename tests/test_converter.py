@@ -1630,6 +1630,7 @@ from latex2mathml.converter import _convert, convert
             ),
             id="Bbb-group",
         ),
+        pytest.param(r"\bigcirc", {"mi": "&#x025EF;"}, id="bigcirc"),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
