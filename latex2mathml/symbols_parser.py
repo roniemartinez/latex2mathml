@@ -31,4 +31,5 @@ def parse_symbols() -> dict:
                     if equivalent not in _symbols:
                         _symbols[equivalent] = _unicode
     _symbols[r"\bigcirc"] = _symbols[r"\lgwhtcircle"]
+    _symbols[r"\Box"] = _symbols[r"\square"]
     return _symbols

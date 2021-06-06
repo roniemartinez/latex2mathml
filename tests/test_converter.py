@@ -1674,6 +1674,7 @@ from latex2mathml.converter import _convert, convert
             },
             id="boldsymbol",
         ),
+        pytest.param(r"\boxed \Box", {"menclose": {"@notation": "box", "mi": "&#x025FB;"}}, id="boxed-box"),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
