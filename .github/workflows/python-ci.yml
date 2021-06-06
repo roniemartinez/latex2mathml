@@ -61,6 +61,7 @@ jobs:
         run: |
           poetry config repositories.testpypi https://test.pypi.org/legacy/
           poetry config http-basic.testpypi ${{ secrets.TEST_PYPI_USER }} ${{ secrets.TEST_PYPI_PASS }}
+          poetry build
       - name: Publish package
         run: |
           poetry publish -r testpypi
