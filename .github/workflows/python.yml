@@ -1,4 +1,4 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions and deploy to TestPyPI
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions and deploy to TestPyPI/PyPI
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
 name: Python CI/CD
@@ -40,7 +40,7 @@ jobs:
         run: |
           poetry run codecov
 
-  publish:
+  testpypi:
     needs: [ test ]
     if: always() && !(github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dependabot/pip' )
     runs-on: ubuntu-latest
@@ -61,3 +61,24 @@ jobs:
       - name: Publish package
         run: |
           poetry publish -r testpypi
+
+  pypi:
+    needs: [ test ]
+    if: always() && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          make install-no-venv
+      - name: Build package
+        run: |
+          poetry config http-basic.pypi ${{ secrets.PYPI_USER }} ${{ secrets.PYPI_PASS }}
+          poetry build
+      - name: Publish package
+        run: |
+          poetry publish
