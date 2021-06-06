@@ -45,6 +45,7 @@ VEC = r"\vec"
 DOT = r"\dot"
 TEXT = r"\text"
 ACUTE = r"\acute"
+BREVE = r"\breve"
 
 MATH = r"\math"
 MATHOP = r"\mathop"
@@ -133,6 +134,7 @@ COMMANDS_WITH_ONE_PARAMETER = (
     BLACKBOARD_BOLD,
     BOLD_SYMBOL,
     BOXED,
+    BREVE,
 )
 COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET)
 
@@ -165,6 +167,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     DOT: ("mover", {}),
     OVERSET: ("mover", {}),
     ACUTE: ("mover", {}),
+    BREVE: ("mover", {}),
     UNDERLINE: ("munder", {}),
     LIMITS: ("munderover", {}),
     UNDERSET: ("munder", {}),
