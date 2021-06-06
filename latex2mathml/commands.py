@@ -30,6 +30,8 @@ ABOVE = r"\above"
 ABOVEWITHDELIMS = r"\abovewithdelims"
 ATOP = r"\atop"
 ATOPWITHDELIMS = r"\atopwithdelims"
+BRACE = r"\brace"
+BRACK = r"\brack"
 
 ROOT = r"\root"
 SQRT = r"\sqrt"

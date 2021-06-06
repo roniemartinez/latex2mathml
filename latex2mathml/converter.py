@@ -227,7 +227,8 @@ def _append_prefix_element(node: Node, parent: Element) -> None:
     elif node.token == r"\Vmatrix":
         _convert_and_append_command(r"\Vert", parent)
     elif node.token == r"\frac" and node.delimiter is not None and node.delimiter[0] != ".":
-        _convert_and_append_command(node.delimiter[0], parent, {"minsize": "1.2em", "maxsize": "1.2em"})
+        # TODO: use 1.2em if inline
+        _convert_and_append_command(node.delimiter[0], parent, {"minsize": "2.047em", "maxsize": "2.047em"})
 
 
 def _append_postfix_element(node: Node, parent: Element) -> None:
@@ -242,7 +243,8 @@ def _append_postfix_element(node: Node, parent: Element) -> None:
     elif node.token == r"\Vmatrix":
         _convert_and_append_command(r"\Vert", parent)
     elif node.token == r"\frac" and node.delimiter is not None and node.delimiter[1] != ".":
-        _convert_and_append_command(node.delimiter[1], parent, {"minsize": "1.2em", "maxsize": "1.2em"})
+        # TODO: use 1.2em if inline
+        _convert_and_append_command(node.delimiter[1], parent, {"minsize": "2.047em", "maxsize": "2.047em"})
 
 
 def _convert_symbol(
