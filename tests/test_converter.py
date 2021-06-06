@@ -1675,6 +1675,35 @@ from latex2mathml.converter import _convert, convert
             id="boldsymbol",
         ),
         pytest.param(r"\boxed \Box", {"menclose": {"@notation": "box", "mi": "&#x025FB;"}}, id="boxed-box"),
+        pytest.param(
+            r"\breve a \breve{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", "&#x002D8;")]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x002D8;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="breve",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
