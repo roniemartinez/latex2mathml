@@ -7,11 +7,9 @@ on:
   push:
     branches:
       - 'master'
-      - '!dependabot/pip'
   pull_request:
     branches:
       - 'master'
-      - '!dependabot/pip'
 
 jobs:
   test:
@@ -42,9 +40,9 @@ jobs:
         run: |
           poetry run codecov
 
-  deploy:
+  publish:
     needs: [ test ]
-    if: always()
+    if: always() && !(github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dependabot/pip' )
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
