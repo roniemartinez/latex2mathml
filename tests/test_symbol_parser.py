@@ -9,4 +9,3 @@ from latex2mathml.symbols_parser import convert_symbol
 )
 def test_convert_symbol(latex: str, expected: str) -> None:
     assert convert_symbol(latex) == expected
-    assert False  # make fail
