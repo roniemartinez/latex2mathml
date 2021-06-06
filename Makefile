@@ -1,11 +1,11 @@
 .PHONY: install
 install:
-	pip3 install -U pip setuptools poetry
+	pip3 install -U pip setuptools wheel poetry
 	poetry install
 
 .PHONY: install-no-venv
 install-no-venv:
-	pip3 install -U pip setuptools poetry
+	pip3 install -U pip setuptools wheel poetry
 	poetry config virtualenvs.create false
 	poetry install
 
