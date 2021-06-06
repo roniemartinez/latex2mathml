@@ -1,21 +1,30 @@
 .PHONY: install
 install:
-	pip3 install -U poetry
+	pip3 install -U pip setuptools poetry
+	poetry install
+
+.PHONY: install-no-venv
+install-no-venv:
+	pip3 install -U pip setuptools poetry
+	poetry config virtualenvs.create false
 	poetry install
 
 .PHONY: style
 style:
 	poetry run autoflake --remove-all-unused-imports --in-place -r --exclude __init__.py .
-	poetry run isort --atomic .
+	poetry run isort .
 	poetry run black .
-	poetry run flake8 .
 
 .PHONY: format
 format: style
 
-.PHONY: type
-type:
-	poetry run mypy --ignore-missing-imports tests latex2mathml
+.PHONY: lint
+lint:
+	poetry run autoflake --remove-all-unused-imports --in-place -r --exclude __init__.py --check .
+	poetry run isort --check-only .
+	poetry run black --check .
+	poetry run flake8 .
+	poetry run mypy tests latex2mathml
 
 .PHONY: test
 test:
