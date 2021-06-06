@@ -1171,13 +1171,13 @@ from latex2mathml.converter import _convert, convert
             MultiDict(
                 [
                     ("mo", "max"),
-                    ("mi", "&#x0007B;"),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
                     ("mi", "a"),
                     ("mo", "&#x0002C;"),
                     ("mi", "b"),
                     ("mo", "&#x0002C;"),
                     ("mi", "c"),
-                    ("mi", "&#x0007D;"),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
                 ]
             ),
             id="issue-108-2",
@@ -1362,16 +1362,28 @@ from latex2mathml.converter import _convert, convert
             id="big",
         ),
         pytest.param(
-            r"x\rm y2\sf \Delta",
+            r"x\rm {\text{var} = 1+\{b\}}\sf \Delta",
             MultiDict(
                 [
                     ("mi", "x"),
-                    ("mi", {"@mathvariant": "normal", "$": "y"}),
-                    ("mn", "2"),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mtext", "var"),
+                                ("mo", "&#x0003D;"),
+                                ("mn", "1"),
+                                ("mo", "&#x0002B;"),
+                                ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                ("mi", {"@mathvariant": "normal", "$": "b"}),
+                                ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                            ]
+                        ),
+                    ),
                     ("mi", {"@mathvariant": "sans-serif", "$": "&#x00394;"}),
                 ]
             ),
-            id="rm",
+            id="global-fonts",
         ),
         pytest.param(
             "f'(x) = 2x, f''(x) = 2",
@@ -1492,8 +1504,8 @@ from latex2mathml.converter import _convert, convert
                     ("mi", "&#x00025;"),
                     ("mi", "&#x00026;"),
                     ("mi", "&#x0005F;"),
-                    ("mi", "&#x0007B;"),
-                    ("mi", "&#x0007D;"),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
                 ]
             ),
             id="escaped-characters",
@@ -1610,7 +1622,21 @@ from latex2mathml.converter import _convert, convert
             id="abovewithdelims",
         ),
         pytest.param(
-            r"\Bbb AB", MultiDict([("mi", {"@mathvariant": "double-struck", "$": "A"}), ("mi", "B")]), id="Bbb"
+            r"\Bbb {\text{var} = 1+\{b\}}",
+            {
+                "mrow": MultiDict(
+                    [
+                        ("mtext", {"@mathvariant": "double-struck", "$": "var"}),
+                        ("mo", {"@mathvariant": "double-struck", "$": "&#x0003D;"}),
+                        ("mn", {"@mathvariant": "double-struck", "$": "1"}),
+                        ("mo", {"@mathvariant": "double-struck", "$": "&#x0002B;"}),
+                        ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                        ("mi", {"@mathvariant": "double-struck", "$": "b"}),
+                        ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                    ]
+                )
+            },
+            id="blackboard-bold",
         ),
         pytest.param(
             r"\Bbb{AB}C",
@@ -1631,6 +1657,23 @@ from latex2mathml.converter import _convert, convert
             id="Bbb-group",
         ),
         pytest.param(r"\bigcirc", {"mi": "&#x025EF;"}, id="bigcirc"),
+        pytest.param(
+            r"\boldsymbol {\text{var} = 1+\{b\}}",
+            {
+                "mrow": MultiDict(
+                    [
+                        ("mtext", "var"),
+                        ("mo", {"@mathvariant": "bold", "$": "&#x0003D;"}),
+                        ("mn", {"@mathvariant": "bold", "$": "1"}),
+                        ("mo", {"@mathvariant": "bold", "$": "&#x0002B;"}),
+                        ("mo", {"@stretchy": "false", "@mathvariant": "bold", "$": "&#x0007B;"}),
+                        ("mi", {"@mathvariant": "bold-italic", "$": "b"}),
+                        ("mo", {"@stretchy": "false", "@mathvariant": "bold", "$": "&#x0007D;"}),
+                    ]
+                )
+            },
+            id="boldsymbol",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
