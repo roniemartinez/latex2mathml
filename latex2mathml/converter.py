@@ -1,6 +1,6 @@
 import copy
 import re
-from collections import OrderedDict, defaultdict
+from collections import OrderedDict
 from typing import Dict, Iterable, Iterator, Optional, Tuple
 from xml.etree.cElementTree import Element, SubElement, tostring
 from xml.sax.saxutils import unescape
@@ -168,7 +168,7 @@ def _convert_command(
         element.text = command[1:]
     elif node.text is not None:
         element.text = node.text.replace(" ", "&#x000A0;")
-        set_font(element, "mtext", font)
+        _set_font(element, "mtext", font)
     elif node.delimiter is not None and command != commands.FRAC:
         if node.delimiter != ".":
             symbol = convert_symbol(node.delimiter)
@@ -204,14 +204,6 @@ def _convert_command(
     elif command == commands.ACUTE:
         mo = SubElement(element, "mo")
         mo.text = "&#x000B4;"
-
-
-def set_font(element, key, font):
-    if font is None:
-        return
-    _font = font[key]
-    if _font is not None:
-        element.attrib["mathvariant"] = _font
 
 
 def _convert_and_append_command(command: str, parent: Element, attributes: Optional[Dict[str, str]] = None) -> None:
@@ -258,11 +250,11 @@ def _convert_symbol(
     if re.match(r"\d+(.\d+)?", token):
         element = SubElement(parent, "mn")
         element.text = token
-        set_font(element, "mn", font)
+        _set_font(element, "mn", font)
     elif token in ("<", ">", "&", r"\And"):
         element = SubElement(parent, "mo")
         element.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;", r"\And": "&amp;"}[token]
-        set_font(element, "mo", font)
+        _set_font(element, "mo", font)
     elif token in ("+", "-", "*", "/", "(", ")", "=", ",", "?", "[", "]", "|", r"\|", "!", r"\{", r"\}"):
         element = SubElement(parent, "mo")
         element.text = token if symbol is None else "&#x{};".format(symbol)
@@ -270,9 +262,9 @@ def _convert_symbol(
             element.attrib["fence"] = "false"
         if token in ("(", ")", "[", "]", "|", r"\|", r"\{", r"\}"):
             element.attrib["stretchy"] = "false"
-            set_font(element, "fence", font)
+            _set_font(element, "fence", font)
         else:
-            set_font(element, "mo", font)
+            _set_font(element, "mo", font)
     elif (
         symbol
         and (
@@ -283,11 +275,11 @@ def _convert_symbol(
     ):
         element = SubElement(parent, "mo")
         element.text = "&#x{};".format(symbol)
-        set_font(element, "mo", font)
+        _set_font(element, "mo", font)
     elif token in (r"\ ", "~"):
         element = SubElement(parent, "mtext")
         element.text = "&#x000A0;"
-        set_font(element, "mtext", font)
+        _set_font(element, "mtext", font)
     elif token.startswith(commands.BACKSLASH):
         element = SubElement(parent, "mo" if is_math_mode else "mi")
         if symbol:
@@ -298,11 +290,19 @@ def _convert_symbol(
             element.text = token[14:-1]
         else:
             element.text = token
-        set_font(element, element.tag, font)
+        _set_font(element, element.tag, font)
     else:
         element = SubElement(parent, "mo" if is_math_mode else "mi")
         element.text = token
-        set_font(element, element.tag, font)
+        _set_font(element, element.tag, font)
+
+
+def _set_font(element: Element, key: str, font: Optional[Dict[str, Optional[str]]]) -> None:
+    if font is None:
+        return
+    _font = font[key]
+    if _font is not None:
+        element.attrib["mathvariant"] = _font
 
 
 def main() -> None:  # pragma: no cover
