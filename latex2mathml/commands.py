@@ -32,6 +32,7 @@ ATOP = r"\atop"
 ATOPWITHDELIMS = r"\atopwithdelims"
 BRACE = r"\brace"
 BRACK = r"\brack"
+CFRAC = r"\cfrac"
 
 ROOT = r"\root"
 SQRT = r"\sqrt"
@@ -143,7 +144,7 @@ COMMANDS_WITH_ONE_PARAMETER = (
     BOXED,
     BREVE,
 )
-COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET)
+COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET, CFRAC)
 
 BIG: Dict[str, Tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
@@ -158,14 +159,10 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     SUBSCRIPT: ("msub", {}),
     SUPERSCRIPT: ("msup", {}),
     SUBSUP: ("msubsup", {}),
+    # fractions
     FRAC: ("mfrac", {}),
-    SQRT: ("msqrt", {}),
-    ROOT: ("mroot", {}),
     BINOM: ("mfrac", {"linethickness": "0"}),
-    LEFT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")])),
-    RIGHT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "postfix")])),
-    TEXT: ("mtext", {}),
-    MATHOP: ("mrow", {}),
+    CFRAC: ("mfrac", {}),
     # over/under
     OVERLINE: ("mover", {}),
     BAR: ("mover", {}),
@@ -190,6 +187,13 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     DOUBLEBACKSLASH: ("mspace", {"linebreak": "newline"}),
     # enclose
     BOXED: ("menclose", {"notation": "box"}),
+    # others
+    SQRT: ("msqrt", {}),
+    ROOT: ("mroot", {}),
+    LEFT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")])),
+    RIGHT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "postfix")])),
+    TEXT: ("mtext", {}),
+    MATHOP: ("mrow", {}),
 }
 
 CONVERSION_MAP.update(BIG)
