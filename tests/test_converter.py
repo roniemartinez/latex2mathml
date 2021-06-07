@@ -1762,6 +1762,32 @@ from latex2mathml.converter import _convert, convert
             ),
             id="brace",
         ),
+        pytest.param(
+            r"{\cal {\text{var} = 1+\{b\}}} + B",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mrow": MultiDict(
+                                [
+                                    ("mtext", {"@mathvariant": "script", "$": "var"}),
+                                    ("mo", {"@mathvariant": "script", "$": "&#x0003D;"}),
+                                    ("mn", {"@mathvariant": "script", "$": "1"}),
+                                    ("mo", {"@mathvariant": "script", "$": "&#x0002B;"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                    ("mi", {"@mathvariant": "script", "$": "b"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "B"),
+                ]
+            ),
+            id="cal",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
