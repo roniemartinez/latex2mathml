@@ -12,7 +12,7 @@ PATTERN = re.compile(
     rf"\d+(\.\d+)?(\s*({'|'.join(UNITS)}))?|"  # integer/decimal/dimension
     r"\.|"  # dot
     r"\\([\\\[\]{} !,:>;|_%#$&]|"  # escaped character
-    r"(begin|end|operatorname){[a-zA-Z]+\*?}|text{([^{^}]+)}|math[a-z]+{[a-zA-Z]}|[a-zA-Z]+)?|"  # command
+    r"(begin|end|operatorname){[a-zA-Z]+\*?}|(text|color)\s*{([^{^}]*)}|math[a-z]+{[a-zA-Z]}|[a-zA-Z]+)?|"  # command
     r"\S"  # non-space character
 )
 
@@ -22,9 +22,10 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
         first_match = match.group(0)
         if first_match.startswith(commands.MATH):
             yield from _tokenize_math(first_match)
-        elif first_match.startswith(commands.TEXT):
-            yield commands.TEXT
-            yield match.group(6)
+        elif first_match.startswith((commands.COLOR, commands.TEXT)):
+            index = first_match.index(commands.OPENING_BRACE)
+            yield first_match[:index].strip()
+            yield match.group(7)
         elif first_match.startswith("%"):
             continue
         elif first_match[0].isdigit() and first_match.endswith(UNITS):
