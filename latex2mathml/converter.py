@@ -211,6 +211,9 @@ def _convert_command(
     elif command == commands.BREVE:
         mo = SubElement(element, "mo")
         mo.text = "&#x002D8;"
+    elif command == commands.CHECK:
+        mo = SubElement(element, "mo")
+        mo.text = "&#x002C7;"
 
 
 def _convert_and_append_command(command: str, parent: Element, attributes: Optional[Dict[str, str]] = None) -> None:
