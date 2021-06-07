@@ -1865,6 +1865,17 @@ from latex2mathml.converter import _convert, convert
             ),
             id="check",
         ),
+        pytest.param(
+            r"a \choose b",
+            MultiDict(
+                [
+                    ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "&#x00028;"}),
+                    ("mfrac", MultiDict([("@linethickness", "0"), ("mi", "a"), ("mi", "b")])),
+                    ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "&#x00029;"}),
+                ]
+            ),
+            id="choose",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
