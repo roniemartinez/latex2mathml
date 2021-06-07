@@ -67,7 +67,21 @@ OPERATORNAME = r"\operatorname"
 
 LBRACE = r"\{"
 
-FUNCTIONS = (r"\log", r"\ln", r"\tan", r"\sec", r"\cos", r"\sin", r"\cot", r"\csc", r"\arccos", r"\arcsin", r"\arctan")
+FUNCTIONS = (
+    r"\arccos",
+    r"\arcsin",
+    r"\arctan",
+    r"\cos",
+    r"\cosh",
+    r"\cot",
+    r"\coth",
+    r"\csc",
+    r"\ln",
+    r"\log",
+    r"\sec",
+    r"\sin",
+    r"\tan",
+)
 
 HLINE = r"\hline"
 
