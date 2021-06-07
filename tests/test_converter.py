@@ -1788,6 +1788,7 @@ from latex2mathml.converter import _convert, convert
             ),
             id="cal",
         ),
+        pytest.param(r"a\centerdot b", MultiDict([("mi", "a"), ("mo", "&#x022C5;"), ("mi", "b")]), id="centerdot"),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
