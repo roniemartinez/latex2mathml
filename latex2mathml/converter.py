@@ -97,8 +97,8 @@ def _convert_group(
             _convert_command(node, parent, is_math_mode, _font)
         elif token.startswith(commands.MATH):
             is_math_mode = True
-        elif token in commands.OLD_STYLE_FONTS.keys():
-            _font = commands.OLD_STYLE_FONTS.get(token)
+        elif token in commands.GLOBAL_FONTS.keys():
+            _font = commands.GLOBAL_FONTS.get(token)
         elif token in commands.LOCAL_FONTS and node.children is not None:
             _convert_group(iter(node.children), parent, is_math_mode, commands.LOCAL_FONTS[token])
         elif node.children is None:

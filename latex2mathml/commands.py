@@ -124,6 +124,11 @@ OLD_STYLE_FONTS: Dict[str, DefaultDict[str, Optional[str]]] = {
     r"\tt": font_factory(None, {"mi": "monospace"}),
 }
 
+GLOBAL_FONTS = {
+    **OLD_STYLE_FONTS,
+    r"\cal": font_factory("script", {"fence": None}),
+}
+
 COMMANDS_WITH_ONE_PARAMETER = (
     OVERLINE,
     BAR,
