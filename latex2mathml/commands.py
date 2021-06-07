@@ -122,6 +122,8 @@ BOLD_SYMBOL = r"\boldsymbol"
 
 BOXED = r"\boxed"
 
+COLOR = r"\color"
+
 
 def font_factory(default: Optional[str], replacement: Dict[str, Optional[str]]) -> DefaultDict[str, Optional[str]]:
     fonts = defaultdict(lambda: default, replacement)
@@ -161,7 +163,14 @@ COMMANDS_WITH_ONE_PARAMETER = (
     BREVE,
     CHECK,
 )
-COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET, CFRAC)
+COMMANDS_WITH_TWO_PARAMETERS = (
+    BINOM,
+    CFRAC,
+    COLOR,
+    FRAC,
+    OVERSET,
+    UNDERSET,
+)
 
 BIG: Dict[str, Tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
@@ -212,6 +221,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     RIGHT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "postfix")])),
     TEXT: ("mtext", {}),
     MATHOP: ("mrow", {}),
+    COLOR: ("mstyle", {}),
 }
 
 CONVERSION_MAP.update(BIG)

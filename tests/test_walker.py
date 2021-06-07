@@ -1507,4 +1507,4 @@ def test_walk(latex: str, expected: list) -> None:
 )
 def test_missing_right(latex: str, exception: Union[Tuple[Any, ...], Any]) -> None:
     with pytest.raises(exception):
-        print(walk(latex))
+        walk(latex)

@@ -1883,6 +1883,12 @@ from latex2mathml.converter import _convert, convert
             id="choose",
         ),
         pytest.param(r"\circledS", {"mi": "&#x024C8;"}, id="circledS"),
+        pytest.param(
+            r"\color{red}ab", MultiDict([("mstyle", {"@mathcolor": "red", "mi": "a"}), ("mi", "b")]), id="color"
+        ),
+        pytest.param(
+            r"\color{}ab", MultiDict([("mstyle", {"@mathcolor": "", "mi": "a"}), ("mi", "b")]), id="empty-color-works"
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

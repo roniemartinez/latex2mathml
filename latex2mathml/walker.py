@@ -109,10 +109,14 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             else:
                 node = Node(token=commands.SUPERSCRIPT, children=(previous, Node(token=commands.PRIME)))
         elif token in commands.COMMANDS_WITH_TWO_PARAMETERS:
+            attributes = None
             children = tuple(_walk(tokens, terminator=terminator, limit=2))
             if token in (commands.OVERSET, commands.UNDERSET):
                 children = children[::-1]
-            node = Node(token=token, children=children)
+            elif token == commands.COLOR:
+                attributes = {"mathcolor": children[0].token}
+                children = children[1:]
+            node = Node(token=token, children=children, attributes=attributes)
         elif token in commands.COMMANDS_WITH_ONE_PARAMETER:
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
             node = Node(token=token, children=children)
