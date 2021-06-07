@@ -30,6 +30,11 @@ def parse_symbols() -> dict:
                 for equivalent in re.findall(r"=\s+(\\[^,^ ]+),?", columns[-1]):
                     if equivalent not in _symbols:
                         _symbols[equivalent] = _unicode
-    _symbols[r"\bigcirc"] = _symbols[r"\lgwhtcircle"]
-    _symbols[r"\Box"] = _symbols[r"\square"]
+    _symbols.update(
+        {
+            r"\bigcirc": _symbols[r"\lgwhtcircle"],
+            r"\centerdot": _symbols[r"\cdot"],
+            r"\Box": _symbols[r"\square"],
+        }
+    )
     return _symbols
