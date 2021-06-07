@@ -1069,7 +1069,7 @@ from latex2mathml.converter import _convert, convert
             id="issue-75-2-rows",
         ),
         pytest.param(
-            r"\tan x + \sec x + \cos x + \sin x + \cot x + \csc x + \arccos x + \arcsin x + \arctan x",
+            r"\tan x+\sec x+\cos x+\sin x+\cot x+\csc x+\arccos x+\arcsin x+\arctan x +\cosh x+\coth x",
             MultiDict(
                 [
                     ("mi", "tan"),
@@ -1097,6 +1097,12 @@ from latex2mathml.converter import _convert, convert
                     ("mi", "x"),
                     ("mo", "&#x0002B;"),
                     ("mi", "arctan"),
+                    ("mi", "x"),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "cosh"),
+                    ("mi", "x"),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "coth"),
                     ("mi", "x"),
                 ]
             ),
@@ -1876,6 +1882,7 @@ from latex2mathml.converter import _convert, convert
             ),
             id="choose",
         ),
+        pytest.param(r"\circledS", {"mi": "&#x024C8;"}, id="circledS"),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

@@ -33,8 +33,9 @@ def parse_symbols() -> dict:
     _symbols.update(
         {
             r"\bigcirc": _symbols[r"\lgwhtcircle"],
-            r"\centerdot": _symbols[r"\cdot"],
             r"\Box": _symbols[r"\square"],
+            r"\centerdot": _symbols[r"\cdot"],
+            r"\circledS": "024C8",
         }
     )
     return _symbols
