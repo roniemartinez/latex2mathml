@@ -49,6 +49,7 @@ DOT = r"\dot"
 TEXT = r"\text"
 ACUTE = r"\acute"
 BREVE = r"\breve"
+CHECK = r"\check"
 
 MATH = r"\math"
 MATHOP = r"\mathop"
@@ -143,6 +144,7 @@ COMMANDS_WITH_ONE_PARAMETER = (
     BOLD_SYMBOL,
     BOXED,
     BREVE,
+    CHECK,
 )
 COMMANDS_WITH_TWO_PARAMETERS = (FRAC, BINOM, OVERSET, UNDERSET, CFRAC)
 
@@ -172,6 +174,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     OVERSET: ("mover", {}),
     ACUTE: ("mover", {}),
     BREVE: ("mover", {}),
+    CHECK: ("mover", {}),
     UNDERLINE: ("munder", {}),
     LIMITS: ("munderover", {}),
     UNDERSET: ("munder", {}),

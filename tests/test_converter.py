@@ -1836,6 +1836,35 @@ from latex2mathml.converter import _convert, convert
             },
             id="cfrac",
         ),
+        pytest.param(
+            r"\check a \check{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", "&#x002C7;")]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x002C7;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="check",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
