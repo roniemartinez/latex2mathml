@@ -184,6 +184,10 @@ def _convert_command(
             _convert_matrix(iter(node.children), _parent, alignment=alignment)
         elif command == commands.MATHOP:
             _convert_group(iter(node.children), _parent, is_math_mode, font)
+        elif command == commands.CFRAC:
+            for child in node.children:
+                p = SubElement(_parent, "mstyle", displaystyle="false", scriptlevel="0")
+                _convert_group(iter([child]), p, is_math_mode, font)
         else:
             _convert_group(iter(node.children), _parent, is_math_mode, font)
 

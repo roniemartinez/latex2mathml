@@ -1789,6 +1789,53 @@ from latex2mathml.converter import _convert, convert
             id="cal",
         ),
         pytest.param(r"a\centerdot b", MultiDict([("mi", "a"), ("mo", "&#x022C5;"), ("mi", "b")]), id="centerdot"),
+        pytest.param(
+            r"\cfrac{2}{1+ \cfrac{2}{1}}",
+            {
+                "mfrac": MultiDict(
+                    [
+                        ("mstyle", {"@displaystyle": "false", "@scriptlevel": "0", "mrow": {"mn": "2"}}),
+                        (
+                            "mstyle",
+                            {
+                                "@displaystyle": "false",
+                                "@scriptlevel": "0",
+                                "mrow": MultiDict(
+                                    [
+                                        ("mn", "1"),
+                                        ("mo", "&#x0002B;"),
+                                        (
+                                            "mfrac",
+                                            MultiDict(
+                                                [
+                                                    (
+                                                        "mstyle",
+                                                        {
+                                                            "@displaystyle": "false",
+                                                            "@scriptlevel": "0",
+                                                            "mrow": {"mn": "2"},
+                                                        },
+                                                    ),
+                                                    (
+                                                        "mstyle",
+                                                        {
+                                                            "@displaystyle": "false",
+                                                            "@scriptlevel": "0",
+                                                            "mrow": {"mn": "1"},
+                                                        },
+                                                    ),
+                                                ]
+                                            ),
+                                        ),
+                                    ]
+                                ),
+                            },
+                        ),
+                    ]
+                )
+            },
+            id="cfrac",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
