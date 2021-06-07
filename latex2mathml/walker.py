@@ -126,13 +126,14 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
         elif token == commands.TEXT:
             node = Node(token=token, text=next(tokens))
         elif token in (
-            commands.OVER,
             commands.ABOVE,
             commands.ATOP,
             commands.ABOVEWITHDELIMS,
             commands.ATOPWITHDELIMS,
             commands.BRACE,
             commands.BRACK,
+            commands.CHOOSE,
+            commands.OVER,
         ):
             attributes = None
             delimiter = None
@@ -146,6 +147,8 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                 delimiter = "{}"
             elif token == commands.BRACK:
                 delimiter = "[]"
+            elif token == commands.CHOOSE:
+                delimiter = "()"
 
             if token in (commands.ABOVE, commands.ABOVEWITHDELIMS):
                 next_child = tuple(_walk(tokens, terminator=terminator, limit=1))[0]
@@ -153,7 +156,7 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                 if next_child.token == commands.BRACES and next_child.children is not None:
                     dimension = next_child.children[0].token
                 attributes = {"linethickness": dimension}
-            elif token in (commands.ATOP, commands.BRACE, commands.BRACK):
+            elif token in (commands.ATOP, commands.BRACE, commands.BRACK, commands.CHOOSE):
                 attributes = {"linethickness": "0"}
 
             denominator = tuple(_walk(tokens, terminator=terminator))
