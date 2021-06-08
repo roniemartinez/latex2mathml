@@ -176,9 +176,9 @@ from latex2mathml.converter import _convert, convert
             r"\binom{2}{3}",
             MultiDict(
                 [
-                    ("mo", "&#x00028;"),
+                    ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "&#x00028;"}),
                     ("mfrac", MultiDict([("@linethickness", "0"), ("mrow", {"mn": "2"}), ("mrow", {"mn": "3"})])),
-                    ("mo", "&#x00029;"),
+                    ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "&#x00029;"}),
                 ]
             ),
             id="binomial",
@@ -1910,9 +1910,9 @@ from latex2mathml.converter import _convert, convert
                     [
                         ("@displaystyle", "true"),
                         ("@scriptlevel", "0"),
-                        ("mo", "&#x00028;"),
+                        ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "&#x00028;"}),
                         ("mfrac", MultiDict([("@linethickness", "0"), ("mi", "a"), ("mi", "b")])),
-                        ("mo", "&#x00029;"),
+                        ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "&#x00029;"}),
                     ]
                 )
             },
