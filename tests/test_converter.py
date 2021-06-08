@@ -1884,10 +1884,24 @@ from latex2mathml.converter import _convert, convert
         ),
         pytest.param(r"\circledS", {"mi": "&#x024C8;"}, id="circledS"),
         pytest.param(
-            r"\color{red}ab", MultiDict([("mstyle", {"@mathcolor": "red", "mi": "a"}), ("mi", "b")]), id="color"
+            r"{a\color{red}bc}d",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        MultiDict(
+                            [("mi", "a"), ("mstyle", MultiDict([("@mathcolor", "red"), ("mi", "b"), ("mi", "c")]))]
+                        ),
+                    ),
+                    ("mi", "d"),
+                ]
+            ),
+            id="color",
         ),
         pytest.param(
-            r"\color{}ab", MultiDict([("mstyle", {"@mathcolor": "", "mi": "a"}), ("mi", "b")]), id="empty-color-works"
+            r"\color{}ab",
+            MultiDict([("mstyle", MultiDict([("@mathcolor", ""), ("mi", "a"), ("mi", "b")]))]),
+            id="empty-color-works",
         ),
     ],
 )

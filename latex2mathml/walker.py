@@ -113,9 +113,6 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             children = tuple(_walk(tokens, terminator=terminator, limit=2))
             if token in (commands.OVERSET, commands.UNDERSET):
                 children = children[::-1]
-            elif token == commands.COLOR:
-                attributes = {"mathcolor": children[0].token}
-                children = children[1:]
             node = Node(token=token, children=children, attributes=attributes)
         elif token in commands.COMMANDS_WITH_ONE_PARAMETER:
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
@@ -125,6 +122,11 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             if children[0].token == commands.BRACES and children[0].children is not None:
                 children = children[0].children
             node = Node(token=token, attributes={"width": children[0].token})
+        elif token == commands.COLOR:
+            attributes = {"mathcolor": next(tokens)}
+            children = tuple(_walk(tokens, terminator=terminator))
+            group.append(Node(token=token, children=children, attributes=attributes))
+            break
         elif token in commands.BIG.keys():
             node = Node(token=token, text=next(tokens))
         elif token == commands.TEXT:
