@@ -1903,6 +1903,21 @@ from latex2mathml.converter import _convert, convert
             MultiDict([("mstyle", MultiDict([("@mathcolor", ""), ("mi", "a"), ("mi", "b")]))]),
             id="empty-color-works",
         ),
+        pytest.param(
+            r"\dbinom a b",
+            {
+                "mstyle": MultiDict(
+                    [
+                        ("@displaystyle", "true"),
+                        ("@scriptlevel", "0"),
+                        ("mo", "&#x00028;"),
+                        ("mfrac", MultiDict([("@linethickness", "0"), ("mi", "a"), ("mi", "b")])),
+                        ("mo", "&#x00029;"),
+                    ]
+                )
+            },
+            id="binomial-coefficients",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
