@@ -1918,6 +1918,17 @@ from latex2mathml.converter import _convert, convert
             },
             id="binomial-coefficients",
         ),
+        pytest.param(
+            r"\ddot a \dddot b \ddddot c",
+            MultiDict(
+                [
+                    ("mover", MultiDict([("mi", "a"), ("mo", "&#x000A8;")])),
+                    ("mover", MultiDict([("mi", "b"), ("mo", "&#x020DB;")])),
+                    ("mover", MultiDict([("mi", "c"), ("mo", "&#x020DC;")])),
+                ]
+            ),
+            id="ddot-dddot-ddddot",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
