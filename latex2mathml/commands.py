@@ -32,6 +32,7 @@ BRACE = r"\brace"
 BRACK = r"\brack"
 CFRAC = r"\cfrac"
 CHOOSE = r"\choose"
+DBINOM = r"\dbinom"
 FRAC = r"\frac"
 OVER = r"\over"
 
@@ -166,6 +167,7 @@ COMMANDS_WITH_ONE_PARAMETER = (
 COMMANDS_WITH_TWO_PARAMETERS = (
     BINOM,
     CFRAC,
+    DBINOM,
     FRAC,
     OVERSET,
     UNDERSET,
@@ -188,6 +190,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     FRAC: ("mfrac", {}),
     BINOM: ("mfrac", {"linethickness": "0"}),
     CFRAC: ("mfrac", {}),
+    DBINOM: ("mfrac", {"linethickness": "0"}),
     # over/under
     OVERLINE: ("mover", {}),
     BAR: ("mover", {}),

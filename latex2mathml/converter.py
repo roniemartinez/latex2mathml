@@ -139,6 +139,8 @@ def _convert_command(
     elif command == commands.CASES:
         lbrace = SubElement(parent, "mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")]))
         lbrace.text = "&#x{};".format(convert_symbol(commands.LBRACE))
+    elif command == commands.DBINOM:
+        parent = SubElement(parent, "mstyle", displaystyle="true", scriptlevel="0")
 
     tag, attributes = copy.deepcopy(commands.CONVERSION_MAP[command])
 
@@ -223,7 +225,7 @@ def _convert_and_append_command(command: str, parent: Element, attributes: Optio
 
 
 def _append_prefix_element(node: Node, parent: Element) -> None:
-    if node.token in (commands.BINOM, r"\pmatrix"):
+    if node.token in (commands.BINOM, commands.DBINOM, r"\pmatrix"):
         _convert_and_append_command(r"\lparen", parent)
     elif node.token == r"\bmatrix":
         _convert_and_append_command(r"\lbrack", parent)
@@ -239,7 +241,7 @@ def _append_prefix_element(node: Node, parent: Element) -> None:
 
 
 def _append_postfix_element(node: Node, parent: Element) -> None:
-    if node.token in (commands.BINOM, r"\pmatrix"):
+    if node.token in (commands.BINOM, commands.DBINOM, r"\pmatrix"):
         _convert_and_append_command(r"\rparen", parent)
     elif node.token == r"\bmatrix":
         _convert_and_append_command(r"\rbrack", parent)
