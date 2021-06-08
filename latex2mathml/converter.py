@@ -225,8 +225,10 @@ def _convert_and_append_command(command: str, parent: Element, attributes: Optio
 
 
 def _append_prefix_element(node: Node, parent: Element) -> None:
-    if node.token in (commands.BINOM, commands.DBINOM, r"\pmatrix"):
+    if node.token == r"\pmatrix":
         _convert_and_append_command(r"\lparen", parent)
+    elif node.token in (commands.BINOM, commands.DBINOM):
+        _convert_and_append_command(r"\lparen", parent, {"minsize": "2.047em", "maxsize": "2.047em"})
     elif node.token == r"\bmatrix":
         _convert_and_append_command(r"\lbrack", parent)
     elif node.token == r"\Bmatrix":
@@ -241,8 +243,10 @@ def _append_prefix_element(node: Node, parent: Element) -> None:
 
 
 def _append_postfix_element(node: Node, parent: Element) -> None:
-    if node.token in (commands.BINOM, commands.DBINOM, r"\pmatrix"):
+    if node.token == r"\pmatrix":
         _convert_and_append_command(r"\rparen", parent)
+    elif node.token in (commands.BINOM, commands.DBINOM):
+        _convert_and_append_command(r"\rparen", parent, {"minsize": "2.047em", "maxsize": "2.047em"})
     elif node.token == r"\bmatrix":
         _convert_and_append_command(r"\rbrack", parent)
     elif node.token == r"\Bmatrix":
