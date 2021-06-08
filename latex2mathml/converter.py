@@ -193,29 +193,16 @@ def _convert_command(
         else:
             _convert_group(iter(node.children), _parent, is_math_mode, font)
 
+    _add_diacritic(command, element)
+
     _append_postfix_element(node, parent)
 
-    if command in (commands.OVERLINE, commands.BAR):
-        mo = SubElement(element, "mo", stretchy="true")
-        mo.text = "&#x000AF;"
-    elif command == commands.UNDERLINE:
-        mo = SubElement(element, "mo", stretchy="true")
-        mo.text = "&#x00332;"
-    elif command in (commands.OVERRIGHTARROW, commands.VEC):
-        mo = SubElement(element, "mo", stretchy="true")
-        mo.text = "&#x02192;"
-    elif command == commands.DOT:
-        mo = SubElement(element, "mo")
-        mo.text = "&#x002D9;"
-    elif command == commands.ACUTE:
-        mo = SubElement(element, "mo")
-        mo.text = "&#x000B4;"
-    elif command == commands.BREVE:
-        mo = SubElement(element, "mo")
-        mo.text = "&#x002D8;"
-    elif command == commands.CHECK:
-        mo = SubElement(element, "mo")
-        mo.text = "&#x002C7;"
+
+def _add_diacritic(command: str, parent: Element) -> None:
+    if command in commands.DIACRITICS:
+        text, attributes = copy.deepcopy(commands.DIACRITICS[command])
+        element = SubElement(parent, "mo", attributes)
+        element.text = text
 
 
 def _convert_and_append_command(command: str, parent: Element, attributes: Optional[Dict[str, str]] = None) -> None:

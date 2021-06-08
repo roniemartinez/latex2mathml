@@ -42,16 +42,20 @@ SQRT = r"\sqrt"
 OVERSET = r"\overset"
 UNDERSET = r"\underset"
 
-OVERLINE = r"\overline"
-BAR = r"\bar"
-UNDERLINE = r"\underline"
-OVERRIGHTARROW = r"\overrightarrow"
-VEC = r"\vec"
-DOT = r"\dot"
-TEXT = r"\text"
 ACUTE = r"\acute"
+BAR = r"\bar"
 BREVE = r"\breve"
 CHECK = r"\check"
+DOT = r"\dot"
+DDOT = r"\ddot"
+DDDOT = r"\dddot"
+DDDDOT = r"\ddddot"
+OVERLINE = r"\overline"
+OVERRIGHTARROW = r"\overrightarrow"
+UNDERLINE = r"\underline"
+VEC = r"\vec"
+
+TEXT = r"\text"
 
 MATH = r"\math"
 MATHOP = r"\mathop"
@@ -150,19 +154,22 @@ GLOBAL_FONTS = {
 }
 
 COMMANDS_WITH_ONE_PARAMETER = (
-    OVERLINE,
-    BAR,
-    UNDERLINE,
-    OVERRIGHTARROW,
-    VEC,
-    DOT,
-    MATHOP,
     ACUTE,
+    BAR,
     BLACKBOARD_BOLD,
     BOLD_SYMBOL,
     BOXED,
     BREVE,
     CHECK,
+    DOT,
+    DDOT,
+    DDDOT,
+    DDDDOT,
+    MATHOP,
+    OVERLINE,
+    OVERRIGHTARROW,
+    UNDERLINE,
+    VEC,
 )
 COMMANDS_WITH_TWO_PARAMETERS = (
     BINOM,
@@ -192,18 +199,21 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     CFRAC: ("mfrac", {}),
     DBINOM: ("mfrac", {"linethickness": "0"}),
     # over/under
-    OVERLINE: ("mover", {}),
-    BAR: ("mover", {}),
-    OVERRIGHTARROW: ("mover", {}),
-    VEC: ("mover", {}),
-    DOT: ("mover", {}),
-    OVERSET: ("mover", {}),
     ACUTE: ("mover", {}),
+    BAR: ("mover", {}),
     BREVE: ("mover", {}),
     CHECK: ("mover", {}),
-    UNDERLINE: ("munder", {}),
+    DOT: ("mover", {}),
+    DDOT: ("mover", {}),
+    DDDOT: ("mover", {}),
+    DDDDOT: ("mover", {}),
     LIMITS: ("munderover", {}),
+    OVERLINE: ("mover", {}),
+    OVERRIGHTARROW: ("mover", {}),
+    OVERSET: ("mover", {}),
+    UNDERLINE: ("munder", {}),
     UNDERSET: ("munder", {}),
+    VEC: ("mover", {}),
     # spaces
     QUAD: ("mspace", {"width": "1em"}),
     QQUAD: ("mspace", {"width": "2em"}),
@@ -233,3 +243,18 @@ for matrix in MATRICES:
 
 for limit in LIMIT:
     CONVERSION_MAP[limit] = ("mo", {})
+
+DIACRITICS: Dict[str, Tuple[str, Dict[str, str]]] = {
+    OVERLINE: ("&#x000AF;", {"stretchy": "true"}),
+    BAR: ("&#x000AF;", {"stretchy": "true"}),
+    UNDERLINE: ("&#x00332;", {"stretchy": "true"}),
+    OVERRIGHTARROW: ("&#x02192;", {"stretchy": "true"}),
+    VEC: ("&#x02192;", {"stretchy": "true"}),
+    ACUTE: ("&#x000B4;", {}),
+    BREVE: ("&#x002D8;", {}),
+    CHECK: ("&#x002C7;", {}),
+    DOT: ("&#x002D9;", {}),
+    DDOT: ("&#x000A8;", {}),
+    DDDOT: ("&#x020DB;", {}),
+    DDDDOT: ("&#x020DC;", {}),
+}
