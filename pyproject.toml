@@ -45,7 +45,7 @@ pytest-cov = "^2.8.1"
 typing-extensions = "^3.7.4"  # prevent poetry from removing this
 xmljson = "^0.2.0"
 black = "^21.5b2"
-mypy = "^0.812"
+mypy = "^0.901"
 tomlkit = "0.7.0"  # dephell is broken on versions above 0.7.0
 
 [tool.isort]
