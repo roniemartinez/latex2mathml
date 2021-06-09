@@ -42,7 +42,7 @@ jobs:
 
   testpypi:
     needs: [ test ]
-    if: always() && !(github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dependabot/pip' )
+    if: always() && !(github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/dependabot/pip') )
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
