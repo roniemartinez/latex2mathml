@@ -1929,6 +1929,73 @@ from latex2mathml.converter import _convert, convert
             ),
             id="ddot-dddot-ddddot",
         ),
+        pytest.param(
+            r"\deg(f(x))",
+            MultiDict(
+                [
+                    ("mi", "deg"),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
+                                ("mi", "f"),
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
+                                            ("mi", "x"),
+                                            ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="degree-polynomial",
+        ),
+        pytest.param(
+            r"\det(A)",
+            MultiDict(
+                [
+                    ("mo", {"@movablelimits": "true", "$": "det"}),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
+                                ("mi", "A"),
+                                ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="determinant",
+        ),
+        pytest.param(
+            r"\dim(A)",
+            MultiDict(
+                [
+                    ("mi", "dim"),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
+                                ("mi", "A"),
+                                ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="dimension-vector-space",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

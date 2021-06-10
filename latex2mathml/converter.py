@@ -255,11 +255,11 @@ def _convert_symbol(
     if re.match(r"\d+(.\d+)?", token):
         element = SubElement(parent, "mn")
         element.text = token
-        _set_font(element, "mn", font)
+        _set_font(element, element.tag, font)
     elif token in ("<", ">", "&", r"\And"):
         element = SubElement(parent, "mo")
         element.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;", r"\And": "&amp;"}[token]
-        _set_font(element, "mo", font)
+        _set_font(element, element.tag, font)
     elif token in ("+", "-", "*", "/", "(", ")", "=", ",", "?", "[", "]", "|", r"\|", "!", r"\{", r"\}"):
         element = SubElement(parent, "mo")
         element.text = token if symbol is None else "&#x{};".format(symbol)
@@ -269,7 +269,7 @@ def _convert_symbol(
             element.attrib["stretchy"] = "false"
             _set_font(element, "fence", font)
         else:
-            _set_font(element, "mo", font)
+            _set_font(element, element.tag, font)
     elif (
         symbol
         and (
@@ -280,11 +280,15 @@ def _convert_symbol(
     ):
         element = SubElement(parent, "mo")
         element.text = "&#x{};".format(symbol)
-        _set_font(element, "mo", font)
+        _set_font(element, element.tag, font)
     elif token in (r"\ ", "~"):
         element = SubElement(parent, "mtext")
         element.text = "&#x000A0;"
         _set_font(element, "mtext", font)
+    elif token == commands.DETERMINANT:
+        element = SubElement(parent, "mo", movablelimits="true")
+        element.text = token[1:]
+        _set_font(element, element.tag, font)
     elif token.startswith(commands.BACKSLASH):
         element = SubElement(parent, "mo" if is_math_mode else "mi")
         if symbol:

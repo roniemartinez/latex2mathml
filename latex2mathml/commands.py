@@ -81,12 +81,15 @@ FUNCTIONS = (
     r"\cot",
     r"\coth",
     r"\csc",
+    r"\deg",
+    r"\dim",
     r"\ln",
     r"\log",
     r"\sec",
     r"\sin",
     r"\tan",
 )
+DETERMINANT = r"\det"
 
 HLINE = r"\hline"
 
