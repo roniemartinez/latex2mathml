@@ -829,17 +829,17 @@ from latex2mathml.converter import _convert, convert
         pytest.param(
             r"\begin{Bmatrix}\end{Bmatrix}",
             MultiDict([("mo", "&#x0007B;"), ("mtable", {}), ("mo", "&#x0007D;")]),
-            id=r"\Bmatrix",
+            id="Bmatrix",
         ),
         pytest.param(
             r"\begin{vmatrix}\end{vmatrix}",
             MultiDict([("mo", "&#x0007C;"), ("mtable", {}), ("mo", "&#x0007C;")]),
-            id=r"\vmatrix",
+            id="vmatrix",
         ),
         pytest.param(
             r"\begin{Vmatrix}\end{Vmatrix}",
             MultiDict([("mo", "&#x02016;"), ("mtable", {}), ("mo", "&#x02016;")]),
-            id=r"\Vmatrix",
+            id=r"Vmatrix",
         ),
         pytest.param(
             r"\begin{matrix}1^2\end{matrix}",
@@ -2001,6 +2001,7 @@ from latex2mathml.converter import _convert, convert
             {"mstyle": {"@displaystyle": "true", "@scriptlevel": "0", "mfrac": MultiDict([("mi", "a"), ("mi", "b")])}},
             id="dfrac",
         ),
+        pytest.param(r"\diagdown \diagup", MultiDict([("mi", "&#x02572;"), ("mi", "&#x02571;")]), id="diagdown-diagup"),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

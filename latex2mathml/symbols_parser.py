@@ -1,10 +1,10 @@
 import codecs
 import os
 import re
-from typing import Optional, Union
+from typing import Dict, Optional, Union
 
 SYMBOLS_FILE: str = os.path.join(os.path.dirname(os.path.realpath(__file__)), "unimathsymbols.txt")
-SYMBOLS: Optional[dict] = None
+SYMBOLS: Optional[Dict[str, str]] = None
 
 
 def convert_symbol(symbol: str) -> Union[str, None]:
@@ -14,8 +14,8 @@ def convert_symbol(symbol: str) -> Union[str, None]:
     return SYMBOLS.get(symbol, None)
 
 
-def parse_symbols() -> dict:
-    _symbols = {}
+def parse_symbols() -> Dict[str, str]:
+    _symbols: Dict[str, str] = {}
     with codecs.open(SYMBOLS_FILE, encoding="utf-8") as f:
         for line in f:
             if not line.startswith("#"):
@@ -36,6 +36,8 @@ def parse_symbols() -> dict:
             r"\Box": _symbols[r"\square"],
             r"\centerdot": _symbols[r"\cdot"],
             r"\circledS": "024C8",
+            r"\diagdown": "02572",
+            r"\diagup": "02571",
         }
     )
     return _symbols
