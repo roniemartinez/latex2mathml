@@ -38,6 +38,12 @@ def parse_symbols() -> Dict[str, str]:
             r"\circledS": "024C8",
             r"\diagdown": "02572",
             r"\diagup": "02571",
+            r"\dots": "02026",
+            r"\dotsb": "022EF",
+            r"\dotsc": "02026",
+            r"\dotsi": "022EF",
+            r"\dotsm": "022EF",
+            r"\dotso": "02026",
         }
     )
     return _symbols

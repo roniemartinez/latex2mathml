@@ -2002,6 +2002,80 @@ from latex2mathml.converter import _convert, convert
             id="dfrac",
         ),
         pytest.param(r"\diagdown \diagup", MultiDict([("mi", "&#x02572;"), ("mi", "&#x02571;")]), id="diagdown-diagup"),
+        pytest.param(
+            r"x_1, \dots, x_n",
+            MultiDict(
+                [
+                    ("msub", MultiDict([("mi", "x"), ("mn", "1")])),
+                    ("mo", "&#x0002C;"),
+                    ("mo", "&#x02026;"),
+                    ("mo", "&#x0002C;"),
+                    ("msub", MultiDict([("mi", "x"), ("mi", "n")])),
+                ]
+            ),
+            id="dots",
+        ),
+        pytest.param(
+            r"x_1 + \dotsb + x_n",
+            MultiDict(
+                [
+                    ("msub", MultiDict([("mi", "x"), ("mn", "1")])),
+                    ("mo", "&#x0002B;"),
+                    ("mo", "&#x022EF;"),
+                    ("mo", "&#x0002B;"),
+                    ("msub", MultiDict([("mi", "x"), ("mi", "n")])),
+                ]
+            ),
+            id="dotsb",
+        ),
+        pytest.param(
+            r"x_1, \dotsc, x_n",
+            MultiDict(
+                [
+                    ("msub", MultiDict([("mi", "x"), ("mn", "1")])),
+                    ("mo", "&#x0002C;"),
+                    ("mo", "&#x02026;"),
+                    ("mo", "&#x0002C;"),
+                    ("msub", MultiDict([("mi", "x"), ("mi", "n")])),
+                ]
+            ),
+            id="dotsc",
+        ),
+        pytest.param(
+            r"A_1 \dotsi A_n",
+            MultiDict(
+                [
+                    ("msub", MultiDict([("mi", "A"), ("mn", "1")])),
+                    ("mo", "&#x022EF;"),
+                    ("msub", MultiDict([("mi", "A"), ("mi", "n")])),
+                ]
+            ),
+            id="dotsi",
+        ),
+        pytest.param(
+            r"x_1 \dotsm x_n",
+            MultiDict(
+                [
+                    ("msub", MultiDict([("mi", "x"), ("mn", "1")])),
+                    ("mo", "&#x022EF;"),
+                    ("msub", MultiDict([("mi", "x"), ("mi", "n")])),
+                ]
+            ),
+            id="dotsm",
+        ),
+        pytest.param(
+            r"x_1, \dotso, x_n",
+            MultiDict(
+                [
+                    ("msub", MultiDict([("mi", "x"), ("mn", "1")])),
+                    ("mo", "&#x0002C;"),
+                    ("mo", "&#x02026;"),
+                    ("mo", "&#x0002C;"),
+                    ("msub", MultiDict([("mi", "x"), ("mi", "n")])),
+                ]
+            ),
+            id="dotso",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
