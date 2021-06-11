@@ -1996,6 +1996,11 @@ from latex2mathml.converter import _convert, convert
             ),
             id="dimension-vector-space",
         ),
+        pytest.param(
+            r"\dfrac a b",
+            {"mstyle": {"@displaystyle": "true", "@scriptlevel": "0", "mfrac": MultiDict([("mi", "a"), ("mi", "b")])}},
+            id="dfrac",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
