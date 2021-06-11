@@ -10,6 +10,27 @@ from latex2mathml.symbols_parser import convert_symbol
 from latex2mathml.walker import Node, walk
 
 COLUMN_ALIGNMENT_MAP = {"r": "right", "l": "left", "c": "center"}
+OPERATORS = (
+    "+",
+    "-",
+    "*",
+    "/",
+    "(",
+    ")",
+    "=",
+    ",",
+    "?",
+    "[",
+    "]",
+    "|",
+    r"\|",
+    "!",
+    r"\{",
+    r"\}",
+    r"\dots",
+    r"\dotsc",
+    r"\dotso",
+)
 
 
 def convert(latex: str, xmlns: str = "http://www.w3.org/1998/Math/MathML", display: str = "inline") -> str:
@@ -260,7 +281,7 @@ def _convert_symbol(
         element = SubElement(parent, "mo")
         element.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;", r"\And": "&amp;"}[token]
         _set_font(element, element.tag, font)
-    elif token in ("+", "-", "*", "/", "(", ")", "=", ",", "?", "[", "]", "|", r"\|", "!", r"\{", r"\}"):
+    elif token in OPERATORS:
         element = SubElement(parent, "mo")
         element.text = token if symbol is None else "&#x{};".format(symbol)
         if token == r"\|":
