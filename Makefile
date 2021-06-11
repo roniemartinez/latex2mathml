@@ -23,7 +23,7 @@ lint:
 	poetry run autoflake --remove-all-unused-imports --in-place -r --exclude __init__.py --check .
 	poetry run isort --check-only .
 	poetry run black --check .
-	poetry run flake8 .
+	poetry run pflake8 .
 	poetry run mypy tests latex2mathml
 
 .PHONY: test
