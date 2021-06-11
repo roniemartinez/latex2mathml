@@ -2064,14 +2064,12 @@ from latex2mathml.converter import _convert, convert
             id="dotsm",
         ),
         pytest.param(
-            r"x_1, \dotso, x_n",
+            r"A_1 \dotso A_n",
             MultiDict(
                 [
-                    ("msub", MultiDict([("mi", "x"), ("mn", "1")])),
-                    ("mo", "&#x0002C;"),
+                    ("msub", MultiDict([("mi", "A"), ("mn", "1")])),
                     ("mo", "&#x02026;"),
-                    ("mo", "&#x0002C;"),
-                    ("msub", MultiDict([("mi", "x"), ("mi", "n")])),
+                    ("msub", MultiDict([("mi", "A"), ("mi", "n")])),
                 ]
             ),
             id="dotso",
