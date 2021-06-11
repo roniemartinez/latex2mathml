@@ -2074,6 +2074,32 @@ from latex2mathml.converter import _convert, convert
             ),
             id="dotso",
         ),
+        pytest.param(
+            r"\frac ab + {\displaystyle \frac cd + \frac ef} + \frac gh",
+            MultiDict(
+                [
+                    ("mfrac", MultiDict([("mi", "a"), ("mi", "b")])),
+                    ("mo", "&#x0002B;"),
+                    (
+                        "mrow",
+                        {
+                            "mstyle": MultiDict(
+                                [
+                                    ("@displaystyle", "true"),
+                                    ("@scriptlevel", "0"),
+                                    ("mfrac", MultiDict([("mi", "c"), ("mi", "d")])),
+                                    ("mo", "&#x0002B;"),
+                                    ("mfrac", MultiDict([("mi", "e"), ("mi", "f")])),
+                                ]
+                            )
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mfrac", MultiDict([("mi", "g"), ("mi", "h")])),
+                ]
+            ),
+            id="displaystyle",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

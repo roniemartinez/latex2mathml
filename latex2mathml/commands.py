@@ -132,6 +132,7 @@ BOLD_SYMBOL = r"\boldsymbol"
 BOXED = r"\boxed"
 
 COLOR = r"\color"
+DISPLAYSTYLE = r"\displaystyle"
 
 
 def font_factory(default: Optional[str], replacement: Dict[str, Optional[str]]) -> DefaultDict[str, Optional[str]]:
@@ -240,6 +241,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     TEXT: ("mtext", {}),
     MATHOP: ("mrow", {}),
     COLOR: ("mstyle", {}),
+    DISPLAYSTYLE: ("mstyle", {"displaystyle": "true", "scriptlevel": "0"}),
 }
 
 CONVERSION_MAP.update(BIG)

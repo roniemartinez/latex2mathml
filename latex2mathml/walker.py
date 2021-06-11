@@ -127,6 +127,9 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             children = tuple(_walk(tokens, terminator=terminator))
             group.append(Node(token=token, children=children, attributes=attributes))
             break
+        elif token == commands.DISPLAYSTYLE:
+            group.append(Node(token=token, children=tuple(_walk(tokens, terminator=terminator))))
+            break
         elif token in commands.BIG.keys():
             node = Node(token=token, text=next(tokens))
         elif token == commands.TEXT:
