@@ -95,6 +95,7 @@ DETERMINANT = r"\det"
 HLINE = r"\hline"
 
 CASES = r"\cases"
+DISPLAYLINES = r"\displaylines"
 SUBSTACK = r"\substack"
 MATRICES = (
     r"\matrix",
@@ -112,10 +113,12 @@ MATRICES = (
     r"\array",
     SUBSTACK,
     CASES,
+    DISPLAYLINES,
 )
 
 BACKSLASH = "\\"
 DOUBLEBACKSLASH = r"\\"
+CARRIAGE_RETURN = r"\cr"
 
 QUAD = r"\quad"
 QQUAD = r"\qquad"
@@ -196,6 +199,10 @@ BIG: Dict[str, Tuple[str, dict]] = {
 
 CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
+    # tables
+    **{matrix: ("mtable", {}) for matrix in MATRICES},
+    DISPLAYLINES: ("mtable", {"rowspacing": "0.5em", "columnspacing": "1em", "displaystyle": "true"}),
+    # subscripts/superscripts
     SUBSCRIPT: ("msub", {}),
     SUPERSCRIPT: ("msup", {}),
     SUBSUP: ("msubsup", {}),
@@ -233,24 +240,20 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     DOUBLEBACKSLASH: ("mspace", {"linebreak": "newline"}),
     # enclose
     BOXED: ("menclose", {"notation": "box"}),
+    # operators
+    **BIG,
+    **{limit: ("mo", {}) for limit in LIMIT},
+    LEFT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")])),
+    RIGHT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "postfix")])),
+    # styles
+    COLOR: ("mstyle", {}),
+    DISPLAYSTYLE: ("mstyle", {"displaystyle": "true", "scriptlevel": "0"}),
     # others
     SQRT: ("msqrt", {}),
     ROOT: ("mroot", {}),
-    LEFT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")])),
-    RIGHT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "postfix")])),
     TEXT: ("mtext", {}),
     MATHOP: ("mrow", {}),
-    COLOR: ("mstyle", {}),
-    DISPLAYSTYLE: ("mstyle", {"displaystyle": "true", "scriptlevel": "0"}),
 }
-
-CONVERSION_MAP.update(BIG)
-
-for matrix in MATRICES:
-    CONVERSION_MAP[matrix] = ("mtable", {})
-
-for limit in LIMIT:
-    CONVERSION_MAP[limit] = ("mo", {})
 
 DIACRITICS: Dict[str, Tuple[str, Dict[str, str]]] = {
     OVERLINE: ("&#x000AF;", {"stretchy": "true"}),

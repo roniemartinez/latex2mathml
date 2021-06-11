@@ -2100,6 +2100,64 @@ from latex2mathml.converter import _convert, convert
             ),
             id="displaystyle",
         ),
+        pytest.param(
+            r"""
+            \displaylines{
+                a = a\cr
+                \text{if } a=b \text{ then } b=a\\
+                \text{if } a=b \text{ and } b=c \text{ then } a=c
+            }
+            """,
+            {
+                "mtable": MultiDict(
+                    [
+                        ("@rowspacing", "0.5em"),
+                        ("@columnspacing", "1em"),
+                        ("@displaystyle", "true"),
+                        ("mtr", {"mtd": MultiDict([("mi", "a"), ("mo", "&#x0003D;"), ("mi", "a")])}),
+                        (
+                            "mtr",
+                            {
+                                "mtd": MultiDict(
+                                    [
+                                        ("mtext", "if&#x000A0;"),
+                                        ("mi", "a"),
+                                        ("mo", "&#x0003D;"),
+                                        ("mi", "b"),
+                                        ("mtext", "&#x000A0;then&#x000A0;"),
+                                        ("mi", "b"),
+                                        ("mo", "&#x0003D;"),
+                                        ("mi", "a"),
+                                    ]
+                                )
+                            },
+                        ),
+                        (
+                            "mtr",
+                            {
+                                "mtd": MultiDict(
+                                    [
+                                        ("mtext", "if&#x000A0;"),
+                                        ("mi", "a"),
+                                        ("mo", "&#x0003D;"),
+                                        ("mi", "b"),
+                                        ("mtext", "&#x000A0;and&#x000A0;"),
+                                        ("mi", "b"),
+                                        ("mo", "&#x0003D;"),
+                                        ("mi", "c"),
+                                        ("mtext", "&#x000A0;then&#x000A0;"),
+                                        ("mi", "a"),
+                                        ("mo", "&#x0003D;"),
+                                        ("mi", "c"),
+                                    ]
+                                )
+                            },
+                        ),
+                    ]
+                )
+            },
+            id="displaylines",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

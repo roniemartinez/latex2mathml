@@ -70,7 +70,7 @@ def _convert_matrix(nodes: Iterator[Node], parent: Element, alignment: Optional[
             col_alignment, col_index = _get_column_alignment(alignment, col_alignment, col_index)
             cell = _make_matrix_cell(row, col_alignment)
             continue
-        elif node.token == commands.DOUBLEBACKSLASH:
+        elif node.token in (commands.DOUBLEBACKSLASH, commands.CARRIAGE_RETURN):
             row_index += 1
             col_index = 0
             col_alignment, col_index = _get_column_alignment(alignment, col_alignment, col_index)
