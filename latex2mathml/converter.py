@@ -139,7 +139,7 @@ def _convert_command(
     elif command == commands.CASES:
         lbrace = SubElement(parent, "mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")]))
         lbrace.text = "&#x{};".format(convert_symbol(commands.LBRACE))
-    elif command == commands.DBINOM:
+    elif command in (commands.DBINOM, commands.DFRAC):
         parent = SubElement(parent, "mstyle", displaystyle="true", scriptlevel="0")
 
     tag, attributes = copy.deepcopy(commands.CONVERSION_MAP[command])
