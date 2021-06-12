@@ -52,6 +52,8 @@ DOT = r"\dot"
 DDOT = r"\ddot"
 DDDOT = r"\dddot"
 DDDDOT = r"\ddddot"
+GRAVE = r"\grave"
+HAT = r"\hat"
 OVERLINE = r"\overline"
 OVERRIGHTARROW = r"\overrightarrow"
 UNDERLINE = r"\underline"
@@ -182,6 +184,8 @@ COMMANDS_WITH_ONE_PARAMETER = (
     DDOT,
     DDDOT,
     DDDDOT,
+    GRAVE,
+    HAT,
     MATHOP,
     OVERLINE,
     OVERRIGHTARROW,
@@ -231,6 +235,8 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     DDOT: ("mover", {}),
     DDDOT: ("mover", {}),
     DDDDOT: ("mover", {}),
+    GRAVE: ("mover", {}),
+    HAT: ("mover", {}),
     LIMITS: ("munderover", {}),
     OVERLINE: ("mover", {}),
     OVERRIGHTARROW: ("mover", {}),
@@ -283,4 +289,6 @@ DIACRITICS: Dict[str, Tuple[str, Dict[str, str]]] = {
     DDOT: ("&#x000A8;", {}),
     DDDOT: ("&#x020DB;", {}),
     DDDDOT: ("&#x020DC;", {}),
+    GRAVE: ("&#x00060;", {}),
+    HAT: ("&#x0005E;", {}),
 }
