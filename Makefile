@@ -36,5 +36,5 @@ setup:
 
 .PHONY: tag
 tag:
-	VERSION=`poetry version | grep -o -E "\d+\.\d+.\d+"`; \
+	VERSION=`poetry version | grep -o -E "\d+\.\d+\.\d+"`; \
 	git tag -s -a $$VERSION -m "Release $$VERSION"

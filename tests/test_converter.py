@@ -1785,7 +1785,7 @@ from latex2mathml.converter import _convert, convert
                     ("mi", "B"),
                 ]
             ),
-            id="cal",
+            id="calligraphic-mode",
         ),
         pytest.param(r"a\centerdot b", MultiDict([("mi", "a"), ("mo", "&#x022C5;"), ("mi", "b")]), id="centerdot"),
         pytest.param(
@@ -2155,6 +2155,32 @@ from latex2mathml.converter import _convert, convert
         pytest.param(r"\exp x", MultiDict([("mi", "exp"), ("mi", "x")]), id="exponential-function"),
         pytest.param(
             r"\fbox{ Hello! }", {"menclose": {"@notation": "box", "mtext": "&#x000A0;Hello!&#x000A0;"}}, id="fbox"
+        ),
+        pytest.param(
+            r"{\frak {\text{var} = 1+\{b\}}} + B",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mrow": MultiDict(
+                                [
+                                    ("mtext", {"@mathvariant": "fraktur", "$": "var"}),
+                                    ("mo", {"@mathvariant": "fraktur", "$": "&#x0003D;"}),
+                                    ("mn", {"@mathvariant": "fraktur", "$": "1"}),
+                                    ("mo", {"@mathvariant": "fraktur", "$": "&#x0002B;"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                    ("mi", {"@mathvariant": "fraktur", "$": "b"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "B"),
+                ]
+            ),
+            id="fraktur",
         ),
     ],
 )
