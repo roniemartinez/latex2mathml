@@ -2313,6 +2313,64 @@ from latex2mathml.converter import _convert, convert
         pytest.param(r"\gggtr", {"mo": "&#x022D9;"}, id="gggtr"),
         pytest.param(r"\gvertneqq", {"mo": "&#x02269;"}, id="gvertneqq"),
         pytest.param(r"\gt", {"mo": "&#x0003E;"}, id="gt"),
+        pytest.param(
+            r"\grave a \grave{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", "&#x00060;")]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x00060;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="grave",
+        ),
+        pytest.param(
+            r"\hat a \hat{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", "&#x0005E;")]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x0005E;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="hat",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
