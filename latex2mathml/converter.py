@@ -84,6 +84,9 @@ def _convert_matrix(nodes: Iterator[Node], parent: Element, alignment: Optional[
         elif node.token == commands.HLINE:
             row_lines.append("solid")
             continue
+        elif node.token == commands.HDASHLINE:
+            row_lines.append("dashed")
+            continue
 
         if row_index > len(row_lines):
             row_lines.append("none")

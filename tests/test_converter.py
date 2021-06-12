@@ -358,11 +358,11 @@ from latex2mathml.converter import _convert, convert
             id="array-with-vertical-bar",
         ),
         pytest.param(
-            r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \end{array}",
+            r"\begin{array}{cr} 1 & 2 \\ 3 & 4 \\ \hline 5 & 6 \\ \hdashline 7 & 8 \end{array}",
             {
                 "mtable": MultiDict(
                     [
-                        ("@rowlines", "none solid"),
+                        ("@rowlines", "none solid dashed"),
                         (
                             "mtr",
                             MultiDict(
@@ -387,6 +387,15 @@ from latex2mathml.converter import _convert, convert
                                 [
                                     ("mtd", {"@columnalign": "center", "mn": "5"}),
                                     ("mtd", {"@columnalign": "right", "mn": "6"}),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", {"@columnalign": "center", "mn": "7"}),
+                                    ("mtd", {"@columnalign": "right", "mn": "8"}),
                                 ]
                             ),
                         ),
