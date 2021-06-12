@@ -6,6 +6,7 @@ from latex2mathml.exceptions import (
     DoubleSubscriptsError,
     DoubleSuperscriptsError,
     ExtraLeftOrMissingRightError,
+    InvalidStyleForGenfracError,
     MissingSuperScriptOrSubscriptError,
     NoAvailableTokensError,
     NumeratorNotFoundError,
@@ -158,10 +159,8 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                 delimiter = "()"
 
             if token in (commands.ABOVE, commands.ABOVEWITHDELIMS):
-                next_child = tuple(_walk(tokens, terminator=terminator, limit=1))[0]
-                dimension = next_child.token
-                if next_child.token == commands.BRACES and next_child.children is not None:
-                    dimension = next_child.children[0].token
+                dimension_node = tuple(_walk(tokens, terminator=terminator, limit=1))[0]
+                dimension = _get_dimension(dimension_node)
                 attributes = {"linethickness": dimension}
             elif token in (commands.ATOP, commands.BRACE, commands.BRACK, commands.CHOOSE):
                 attributes = {"linethickness": "0"}
@@ -192,6 +191,15 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             node = _get_root_node(token, tokens)
         elif token in commands.MATRICES:
             node = _get_matrix_node(token, tokens, terminator)
+        elif token == commands.GENFRAC:
+            delimiter = next(tokens).lstrip("\\") + next(tokens).lstrip("\\")
+            dimension_node, style_node = tuple(_walk(tokens, terminator=terminator, limit=2))
+            dimension = _get_dimension(dimension_node)
+            style = _get_style(style_node)
+            attributes = {"linethickness": dimension}
+            children = tuple(_walk(tokens, terminator=terminator, limit=2))
+            child = Node(token=token, children=children, delimiter=delimiter, attributes=attributes)
+            node = Node(token=style, children=(child,))
         elif token.startswith(commands.BEGIN):
             node = _get_environment_node(token, tokens)
         else:
@@ -204,6 +212,28 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
     if not has_available_tokens:
         raise NoAvailableTokensError
     return group
+
+
+def _get_dimension(node: Node) -> str:
+    dimension = node.token
+    if node.token == commands.BRACES and node.children is not None:
+        dimension = node.children[0].token
+    return dimension
+
+
+def _get_style(node: Node) -> str:
+    style = node.token
+    if node.token == commands.BRACES and node.children is not None:
+        style = node.children[0].token
+    if style == "0":
+        return commands.DISPLAYSTYLE
+    if style == "1":
+        return commands.TEXTSTYLE
+    if style == "2":
+        return commands.SCRIPTSTYLE
+    if style == "3":
+        return commands.SCRIPTSCRIPTSTYLE
+    raise InvalidStyleForGenfracError
 
 
 def _get_root_node(token: str, tokens: Iterator[str]) -> Node:

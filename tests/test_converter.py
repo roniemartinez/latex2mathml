@@ -2213,6 +2213,101 @@ from latex2mathml.converter import _convert, convert
             },
             id="greatest-common-divisor",
         ),
+        pytest.param(
+            r"\genfrac\{]{1pt}{0}{a+b}{c+d}",
+            {
+                "mstyle": MultiDict(
+                    [
+                        ("@displaystyle", "true"),
+                        ("@scriptlevel", "0"),
+                        ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "{"}),
+                        (
+                            "mfrac",
+                            MultiDict(
+                                [
+                                    ("@linethickness", "1pt"),
+                                    ("mrow", MultiDict([("mi", "a"), ("mo", "&#x0002B;"), ("mi", "b")])),
+                                    ("mrow", MultiDict([("mi", "c"), ("mo", "&#x0002B;"), ("mi", "d")])),
+                                ]
+                            ),
+                        ),
+                        ("mo", {"@minsize": "2.047em", "@maxsize": "2.047em", "$": "]"}),
+                    ]
+                ),
+            },
+            id="genfrac-displaystyle",
+        ),
+        pytest.param(
+            r"\genfrac(|{1pt}{1}{a+b}{c+d}",
+            {
+                "mstyle": MultiDict(
+                    [
+                        ("@displaystyle", "false"),
+                        ("@scriptlevel", "0"),
+                        ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "&#x00028;"}),
+                        (
+                            "mfrac",
+                            MultiDict(
+                                [
+                                    ("@linethickness", "1pt"),
+                                    ("mrow", MultiDict([("mi", "a"), ("mo", "&#x0002B;"), ("mi", "b")])),
+                                    ("mrow", MultiDict([("mi", "c"), ("mo", "&#x0002B;"), ("mi", "d")])),
+                                ]
+                            ),
+                        ),
+                        ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "&#x0007C;"}),
+                    ]
+                ),
+            },
+            id="genfrac-textstyle",
+        ),
+        pytest.param(
+            r"\genfrac(.{1pt}{2}{a+b}{c+d}",
+            {
+                "mstyle": MultiDict(
+                    [
+                        ("@displaystyle", "false"),
+                        ("@scriptlevel", "1"),
+                        ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "&#x00028;"}),
+                        (
+                            "mfrac",
+                            MultiDict(
+                                [
+                                    ("@linethickness", "1pt"),
+                                    ("mrow", MultiDict([("mi", "a"), ("mo", "&#x0002B;"), ("mi", "b")])),
+                                    ("mrow", MultiDict([("mi", "c"), ("mo", "&#x0002B;"), ("mi", "d")])),
+                                ]
+                            ),
+                        ),
+                    ]
+                ),
+            },
+            id="genfrac-scriptstyle",
+        ),
+        pytest.param(
+            r"\genfrac\{\}{1pt}{3}{a+b}{c+d}",
+            {
+                "mstyle": MultiDict(
+                    [
+                        ("@displaystyle", "false"),
+                        ("@scriptlevel", "2"),
+                        ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "{"}),
+                        (
+                            "mfrac",
+                            MultiDict(
+                                [
+                                    ("@linethickness", "1pt"),
+                                    ("mrow", MultiDict([("mi", "a"), ("mo", "&#x0002B;"), ("mi", "b")])),
+                                    ("mrow", MultiDict([("mi", "c"), ("mo", "&#x0002B;"), ("mi", "d")])),
+                                ]
+                            ),
+                        ),
+                        ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "}"}),
+                    ]
+                ),
+            },
+            id="genfrac-scriptscriptstyle",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
