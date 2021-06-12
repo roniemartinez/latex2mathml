@@ -2158,6 +2158,8 @@ from latex2mathml.converter import _convert, convert
             },
             id="displaylines",
         ),
+        pytest.param(r"\emptyset", {"mo": "&#x02205;"}, id="emptyset"),
+        pytest.param(r"\exp x", MultiDict([("mi", "exp"), ("mi", "x")]), id="exponential-function"),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
