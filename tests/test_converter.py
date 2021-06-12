@@ -2182,6 +2182,37 @@ from latex2mathml.converter import _convert, convert
             ),
             id="fraktur",
         ),
+        pytest.param(
+            r"\gcd_{\rm sub}^{\rm sup}",
+            {
+                "munderover": MultiDict(
+                    [
+                        ("mo", {"@movablelimits": "true", "$": "gcd"}),
+                        (
+                            "mrow",
+                            MultiDict(
+                                [
+                                    ("mi", {"@mathvariant": "normal", "$": "s"}),
+                                    ("mi", {"@mathvariant": "normal", "$": "u"}),
+                                    ("mi", {"@mathvariant": "normal", "$": "b"}),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mrow",
+                            MultiDict(
+                                [
+                                    ("mi", {"@mathvariant": "normal", "$": "s"}),
+                                    ("mi", {"@mathvariant": "normal", "$": "u"}),
+                                    ("mi", {"@mathvariant": "normal", "$": "p"}),
+                                ]
+                            ),
+                        ),
+                    ]
+                ),
+            },
+            id="greatest-common-divisor",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

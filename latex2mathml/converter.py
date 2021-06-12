@@ -177,6 +177,7 @@ def _convert_command(
 
     if column_lines:
         attributes["columnlines"] = column_lines
+
     if (
         command == commands.SUBSCRIPT
         and node.children is not None
@@ -184,6 +185,8 @@ def _convert_command(
         and node.children[0].token in (*commands.LIMIT, commands.SUMMATION)
     ):
         tag = "munder"
+    elif command == commands.SUBSUP and node.children is not None and node.children[0].token == commands.GCD:
+        tag = "munderover"
 
     element = SubElement(parent, tag, attributes)
 
@@ -308,7 +311,7 @@ def _convert_symbol(
         element = SubElement(parent, "mtext")
         element.text = "&#x000A0;"
         _set_font(element, "mtext", font)
-    elif token == commands.DETERMINANT:
+    elif token in (commands.DETERMINANT, commands.GCD):
         element = SubElement(parent, "mo", movablelimits="true")
         element.text = token[1:]
         _set_font(element, element.tag, font)
