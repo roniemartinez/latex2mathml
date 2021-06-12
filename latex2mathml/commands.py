@@ -92,6 +92,7 @@ FUNCTIONS = (
     r"\tan",
 )
 DETERMINANT = r"\det"
+GCD = r"\gcd"
 
 HLINE = r"\hline"
 
