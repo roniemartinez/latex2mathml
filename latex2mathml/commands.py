@@ -135,6 +135,7 @@ BLACKBOARD_BOLD = r"\Bbb"
 BOLD_SYMBOL = r"\boldsymbol"
 
 BOXED = r"\boxed"
+FBOX = r"\fbox"
 
 COLOR = r"\color"
 DISPLAYSTYLE = r"\displaystyle"
@@ -243,6 +244,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     SEMICOLON: ("mspace", {"width": "0.278em"}),
     # enclose
     BOXED: ("menclose", {"notation": "box"}),
+    FBOX: ("menclose", {"notation": "box"}),
     # operators
     **BIG,
     **{limit: ("mo", {}) for limit in LIMIT},
