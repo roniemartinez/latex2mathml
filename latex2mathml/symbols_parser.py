@@ -44,6 +44,7 @@ def parse_symbols() -> Dict[str, str]:
             r"\dotsi": "022EF",
             r"\dotsm": "022EF",
             r"\dotso": "02026",
+            r"\emptyset": "02205",
         }
     )
     return _symbols

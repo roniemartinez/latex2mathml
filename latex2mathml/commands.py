@@ -84,6 +84,7 @@ FUNCTIONS = (
     r"\csc",
     r"\deg",
     r"\dim",
+    r"\exp",
     r"\ln",
     r"\log",
     r"\sec",
