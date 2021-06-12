@@ -98,6 +98,7 @@ DETERMINANT = r"\det"
 GCD = r"\gcd"
 
 HLINE = r"\hline"
+HDASHLINE = r"\hdashline"
 
 CASES = r"\cases"
 DISPLAYLINES = r"\displaylines"
