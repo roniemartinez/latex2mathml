@@ -1787,7 +1787,7 @@ from latex2mathml.converter import _convert, convert
             ),
             id="calligraphic-mode",
         ),
-        pytest.param(r"a\centerdot b", MultiDict([("mi", "a"), ("mo", "&#x022C5;"), ("mi", "b")]), id="centerdot"),
+        pytest.param(r"a\centerdot b", MultiDict([("mi", "a"), ("mo", "&#x02B1D;"), ("mi", "b")]), id="centerdot"),
         pytest.param(
             r"\cfrac{2}{1+ \cfrac{2}{1}}",
             {

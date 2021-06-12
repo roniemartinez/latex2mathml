@@ -27,6 +27,7 @@ OPERATORS = (
     "!",
     r"\{",
     r"\}",
+    r"\centerdot",
     r"\dots",
     r"\dotsc",
     r"\dotso",
