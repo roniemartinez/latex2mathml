@@ -1338,23 +1338,6 @@ from latex2mathml.converter import _convert, convert
             id="issue-125-4-limits",
         ),
         pytest.param(
-            r"|\quad|\qquad|\hspace1em|\hspace{10ex}|",
-            MultiDict(
-                [
-                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
-                    ("mspace", {"@width": "1em"}),
-                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
-                    ("mspace", {"@width": "2em"}),
-                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
-                    ("mspace", {"@width": "1em"}),
-                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
-                    ("mspace", {"@width": "10ex"}),
-                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
-                ]
-            ),
-            id="issue-129",
-        ),
-        pytest.param(
             r"\Bigg[\bigg[\Big[\big[[",
             MultiDict(
                 [
@@ -1433,22 +1416,32 @@ from latex2mathml.converter import _convert, convert
             id="prime-no-base",
         ),
         pytest.param(
-            r"a\,b\:a\>b\;a\\b\!a",
+            r"|\,|\:|\>|\;|\\|\!|\quad|\qquad|\hspace1em|\hspace{10ex}|\enspace|",
             MultiDict(
                 [
-                    ("mi", "a"),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                     ("mspace", {"@width": "0.167em"}),
-                    ("mi", "b"),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                     ("mspace", {"@width": "0.222em"}),
-                    ("mi", "a"),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                     ("mspace", {"@width": "0.222em"}),
-                    ("mi", "b"),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                     ("mspace", {"@width": "0.278em"}),
-                    ("mi", "a"),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                     ("mspace", {"@linebreak": "newline"}),
-                    ("mi", "b"),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                     ("mspace", {"@width": "negativethinmathspace"}),
-                    ("mi", "a"),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "1em"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "2em"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "1em"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "10ex"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "0.5em"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                 ]
             ),
             id="spaces",
