@@ -197,7 +197,7 @@ def _convert_command(
             element = SubElement(element, "mtext")
         element.text = node.text.replace(" ", "&#x000A0;")
         _set_font(element, "mtext", font)
-    elif node.delimiter is not None and command != commands.FRAC:
+    elif node.delimiter is not None and command not in (commands.FRAC, commands.GENFRAC):
         if node.delimiter != ".":
             symbol = convert_symbol(node.delimiter)
             element.text = node.delimiter if symbol is None else "&#x{};".format(symbol)
@@ -238,10 +238,13 @@ def _convert_and_append_command(command: str, parent: Element, attributes: Optio
 
 
 def _append_prefix_element(node: Node, parent: Element) -> None:
+    size = "2.047em"
+    if parent.attrib.get("displaystyle") == "false":
+        size = "1.2em"
     if node.token == r"\pmatrix":
         _convert_and_append_command(r"\lparen", parent)
     elif node.token in (commands.BINOM, commands.DBINOM):
-        _convert_and_append_command(r"\lparen", parent, {"minsize": "2.047em", "maxsize": "2.047em"})
+        _convert_and_append_command(r"\lparen", parent, {"minsize": size, "maxsize": size})
     elif node.token == r"\bmatrix":
         _convert_and_append_command(r"\lbrack", parent)
     elif node.token == r"\Bmatrix":
@@ -250,16 +253,19 @@ def _append_prefix_element(node: Node, parent: Element) -> None:
         _convert_and_append_command(r"\vert", parent)
     elif node.token == r"\Vmatrix":
         _convert_and_append_command(r"\Vert", parent)
-    elif node.token == r"\frac" and node.delimiter is not None and node.delimiter[0] != ".":
+    elif node.token in (commands.FRAC, commands.GENFRAC) and node.delimiter is not None and node.delimiter[0] != ".":
         # TODO: use 1.2em if inline
-        _convert_and_append_command(node.delimiter[0], parent, {"minsize": "2.047em", "maxsize": "2.047em"})
+        _convert_and_append_command(node.delimiter[0], parent, {"minsize": size, "maxsize": size})
 
 
 def _append_postfix_element(node: Node, parent: Element) -> None:
+    size = "2.047em"
+    if parent.attrib.get("displaystyle") == "false":
+        size = "1.2em"
     if node.token == r"\pmatrix":
         _convert_and_append_command(r"\rparen", parent)
     elif node.token in (commands.BINOM, commands.DBINOM):
-        _convert_and_append_command(r"\rparen", parent, {"minsize": "2.047em", "maxsize": "2.047em"})
+        _convert_and_append_command(r"\rparen", parent, {"minsize": size, "maxsize": size})
     elif node.token == r"\bmatrix":
         _convert_and_append_command(r"\rbrack", parent)
     elif node.token == r"\Bmatrix":
@@ -268,9 +274,9 @@ def _append_postfix_element(node: Node, parent: Element) -> None:
         _convert_and_append_command(r"\vert", parent)
     elif node.token == r"\Vmatrix":
         _convert_and_append_command(r"\Vert", parent)
-    elif node.token == r"\frac" and node.delimiter is not None and node.delimiter[1] != ".":
+    elif node.token in (commands.FRAC, commands.GENFRAC) and node.delimiter is not None and node.delimiter[1] != ".":
         # TODO: use 1.2em if inline
-        _convert_and_append_command(node.delimiter[1], parent, {"minsize": "2.047em", "maxsize": "2.047em"})
+        _convert_and_append_command(node.delimiter[1], parent, {"minsize": size, "maxsize": size})
 
 
 def _convert_symbol(

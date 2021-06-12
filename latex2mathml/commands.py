@@ -35,6 +35,7 @@ CHOOSE = r"\choose"
 DBINOM = r"\dbinom"
 DFRAC = r"\dfrac"
 FRAC = r"\frac"
+GENFRAC = r"\genfrac"
 OVER = r"\over"
 
 ROOT = r"\root"
@@ -140,6 +141,9 @@ FBOX = r"\fbox"
 
 COLOR = r"\color"
 DISPLAYSTYLE = r"\displaystyle"
+TEXTSTYLE = r"\textstyle"
+SCRIPTSTYLE = r"\scriptstyle"
+SCRIPTSCRIPTSTYLE = r"\scriptscriptstyle"
 
 
 def font_factory(default: Optional[str], replacement: Dict[str, Optional[str]]) -> DefaultDict[str, Optional[str]]:
@@ -217,6 +221,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     CFRAC: ("mfrac", {}),
     DBINOM: ("mfrac", {"linethickness": "0"}),
     DFRAC: ("mfrac", {}),
+    GENFRAC: ("mfrac", {}),
     # over/under
     ACUTE: ("mover", {}),
     BAR: ("mover", {}),
@@ -255,6 +260,9 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     # styles
     COLOR: ("mstyle", {}),
     DISPLAYSTYLE: ("mstyle", {"displaystyle": "true", "scriptlevel": "0"}),
+    TEXTSTYLE: ("mstyle", {"displaystyle": "false", "scriptlevel": "0"}),
+    SCRIPTSTYLE: ("mstyle", {"displaystyle": "false", "scriptlevel": "1"}),
+    SCRIPTSCRIPTSTYLE: ("mstyle", {"displaystyle": "false", "scriptlevel": "2"}),
     # others
     SQRT: ("msqrt", {}),
     ROOT: ("mroot", {}),

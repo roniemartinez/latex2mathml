@@ -24,3 +24,7 @@ class DoubleSuperscriptsError(Exception):
 
 class NoAvailableTokensError(Exception):
     pass
+
+
+class InvalidStyleForGenfracError(Exception):
+    pass
