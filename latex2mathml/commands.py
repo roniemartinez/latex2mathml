@@ -118,16 +118,17 @@ MATRICES = (
 )
 
 BACKSLASH = "\\"
-DOUBLEBACKSLASH = r"\\"
 CARRIAGE_RETURN = r"\cr"
 
-QUAD = r"\quad"
-QQUAD = r"\qquad"
-HSPACE = r"\hspace"
-EXCLAMATION = r"\!"
-COMMA = r"\,"
 COLON = r"\:"
+COMMA = r"\,"
+DOUBLEBACKSLASH = r"\\"
+ENSPACE = r"\enspace"
+EXCLAMATION = r"\!"
 GREATER_THAN = r"\>"
+HSPACE = r"\hspace"
+QQUAD = r"\qquad"
+QUAD = r"\quad"
 SEMICOLON = r"\;"
 
 BLACKBOARD_BOLD = r"\Bbb"
@@ -230,15 +231,16 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     UNDERSET: ("munder", {}),
     VEC: ("mover", {}),
     # spaces
-    QUAD: ("mspace", {"width": "1em"}),
-    QQUAD: ("mspace", {"width": "2em"}),
-    HSPACE: ("mspace", {}),
-    EXCLAMATION: ("mspace", {"width": "negativethinmathspace"}),
-    COMMA: ("mspace", {"width": "0.167em"}),
     COLON: ("mspace", {"width": "0.222em"}),
-    GREATER_THAN: ("mspace", {"width": "0.222em"}),
-    SEMICOLON: ("mspace", {"width": "0.278em"}),
+    COMMA: ("mspace", {"width": "0.167em"}),
     DOUBLEBACKSLASH: ("mspace", {"linebreak": "newline"}),
+    ENSPACE: ("mspace", {"width": "0.5em"}),
+    EXCLAMATION: ("mspace", {"width": "negativethinmathspace"}),
+    GREATER_THAN: ("mspace", {"width": "0.222em"}),
+    HSPACE: ("mspace", {}),
+    QQUAD: ("mspace", {"width": "2em"}),
+    QUAD: ("mspace", {"width": "1em"}),
+    SEMICOLON: ("mspace", {"width": "0.278em"}),
     # enclose
     BOXED: ("menclose", {"notation": "box"}),
     # operators
