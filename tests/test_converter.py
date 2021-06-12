@@ -1427,7 +1427,7 @@ from latex2mathml.converter import _convert, convert
             id="prime-no-base",
         ),
         pytest.param(
-            r"|\,|\:|\>|\;|\\|\!|\quad|\qquad|\hspace1em|\hspace{10ex}|\enspace|",
+            r"|\,|\:|\>|\;|\\|\!|\quad|\qquad|\hspace1em|\hspace{10ex}|\enspace|\hskip1em|",
             MultiDict(
                 [
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
@@ -1452,6 +1452,8 @@ from latex2mathml.converter import _convert, convert
                     ("mspace", {"@width": "10ex"}),
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                     ("mspace", {"@width": "0.5em"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "1em"}),
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                 ]
             ),
@@ -2379,6 +2381,12 @@ from latex2mathml.converter import _convert, convert
                 ]
             ),
             id="hat",
+        ),
+        pytest.param(r"\hom", {"mi": "hom"}, id="hom"),
+        pytest.param(
+            r"\href{https://github.com/roniemartinez/latex2mathml}{\text{latex2mathml}}",
+            {"mtext": {"@href": "https://github.com/roniemartinez/latex2mathml", "mrow": {"mtext": "latex2mathml"}}},
+            id="href",
         ),
     ],
 )

@@ -118,7 +118,7 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
         elif token in commands.COMMANDS_WITH_ONE_PARAMETER:
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
             node = Node(token=token, children=children)
-        elif token == commands.HSPACE:
+        elif token in (commands.HSKIP, commands.HSPACE):
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
             if children[0].token == commands.BRACES and children[0].children is not None:
                 children = children[0].children
@@ -133,6 +133,10 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             break
         elif token in (*commands.BIG.keys(), commands.TEXT, commands.FBOX):
             node = Node(token=token, text=next(tokens))
+        elif token == commands.HREF:
+            attributes = {"href": next(tokens)}
+            children = tuple(_walk(tokens, terminator=terminator, limit=1))
+            node = Node(token=token, children=children, attributes=attributes)
         elif token in (
             commands.ABOVE,
             commands.ATOP,

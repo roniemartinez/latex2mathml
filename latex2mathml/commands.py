@@ -59,6 +59,7 @@ OVERRIGHTARROW = r"\overrightarrow"
 UNDERLINE = r"\underline"
 VEC = r"\vec"
 
+HREF = r"\href"
 TEXT = r"\text"
 
 MATH = r"\math"
@@ -88,6 +89,7 @@ FUNCTIONS = (
     r"\deg",
     r"\dim",
     r"\exp",
+    r"\hom",
     r"\ln",
     r"\log",
     r"\sec",
@@ -131,6 +133,7 @@ DOUBLEBACKSLASH = r"\\"
 ENSPACE = r"\enspace"
 EXCLAMATION = r"\!"
 GREATER_THAN = r"\>"
+HSKIP = r"\hskip"
 HSPACE = r"\hspace"
 QQUAD = r"\qquad"
 QUAD = r"\quad"
@@ -252,6 +255,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     ENSPACE: ("mspace", {"width": "0.5em"}),
     EXCLAMATION: ("mspace", {"width": "negativethinmathspace"}),
     GREATER_THAN: ("mspace", {"width": "0.222em"}),
+    HSKIP: ("mspace", {}),
     HSPACE: ("mspace", {}),
     QQUAD: ("mspace", {"width": "2em"}),
     QUAD: ("mspace", {"width": "1em"}),
@@ -273,6 +277,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     # others
     SQRT: ("msqrt", {}),
     ROOT: ("mroot", {}),
+    HREF: ("mtext", {}),
     TEXT: ("mtext", {}),
     MATHOP: ("mrow", {}),
 }
