@@ -9,6 +9,7 @@ from latex2mathml.exceptions import (
     DoubleSuperscriptsError,
     ExtraLeftOrMissingRightError,
     InvalidStyleForGenfracError,
+    MissingEndError,
     MissingSuperScriptOrSubscriptError,
     NumeratorNotFoundError,
 )
@@ -1505,6 +1506,7 @@ def test_walk(latex: str, expected: list) -> None:
         pytest.param(r"1_2_3", DoubleSubscriptsError, id="double-subscript"),
         pytest.param(r"1^2^3", DoubleSuperscriptsError, id="double-superscript"),
         pytest.param(r"\genfrac(){1pt}4ab", InvalidStyleForGenfracError, id="invalid-style-for-genfrac"),
+        pytest.param(r"\begin{array}\end{array1}", MissingEndError, id="missing-end"),
     ],
 )
 def test_missing_right(latex: str, exception: Union[Tuple[Any, ...], Any]) -> None:

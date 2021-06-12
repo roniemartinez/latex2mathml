@@ -1,5 +1,5 @@
 import re
-from typing import Iterator, Union
+from typing import Iterator
 
 from latex2mathml import commands
 from latex2mathml.symbols_parser import convert_symbol
@@ -26,7 +26,7 @@ PATTERN = re.compile(
 )
 
 
-def tokenize(data: str) -> Iterator[Union[str, list]]:
+def tokenize(data: str) -> Iterator[str]:
     for match in PATTERN.finditer(data):
         first_match = match.group(0)
         if first_match.startswith(commands.MATH):

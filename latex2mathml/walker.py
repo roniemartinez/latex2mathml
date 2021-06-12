@@ -7,6 +7,7 @@ from latex2mathml.exceptions import (
     DoubleSuperscriptsError,
     ExtraLeftOrMissingRightError,
     InvalidStyleForGenfracError,
+    MissingEndError,
     MissingSuperScriptOrSubscriptError,
     NoAvailableTokensError,
     NumeratorNotFoundError,
@@ -28,7 +29,7 @@ def walk(data: str) -> List[Node]:
     return _walk(tokens)
 
 
-def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node]:
+def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List[Node]:
     group: List[Node] = []
     token: str
     has_available_tokens = False
@@ -52,6 +53,12 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             children = tuple(_walk(tokens, terminator=commands.CLOSING_BRACE))
             if len(children) and children[-1].token == commands.CLOSING_BRACE:
                 node = Node(token=commands.BRACES, children=children[:-1])
+            elif len(children) and any(c.token == commands.CLOSING_BRACE for c in children):
+                index = [i for i, c in enumerate(children) if c.token == commands.CLOSING_BRACE][0]
+                sibling_start = index + 1
+                children, siblings = children[:index], children[sibling_start:]
+                group.extend([Node(token=commands.BRACES, children=tuple(_walk(c.token for c in children))), *siblings])
+                continue
         elif token == commands.OPENING_PARENTHESIS:
             children = tuple(_walk(tokens, terminator=commands.CLOSING_PARENTHESIS))
             if len(children) > 1 and children[-1].token == commands.CLOSING_PARENTHESIS:
@@ -81,19 +88,19 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                 raise DoubleSuperscriptsError
 
             if token == commands.SUBSCRIPT and previous.token == commands.SUPERSCRIPT and previous.children is not None:
-                children = _walk(tokens, terminator=terminator, limit=1)
+                children = tuple(_walk(tokens, terminator=terminator, limit=1))
                 node = Node(token=commands.SUBSUP, children=(previous.children[0], *children, previous.children[1]))
             elif (
                 token == commands.SUPERSCRIPT and previous.token == commands.SUBSCRIPT and previous.children is not None
             ):
-                children = _walk(tokens, terminator=terminator, limit=1)
+                children = tuple(_walk(tokens, terminator=terminator, limit=1))
                 if previous.children[0].token == commands.LIMITS:
                     node = Node(token=commands.LIMITS, children=(group.pop(), *previous.children[1:], *children))
                 else:
                     node = Node(token=commands.SUBSUP, children=(*previous.children, *children))
             else:
                 try:
-                    children = _walk(tokens, terminator=terminator, limit=1)
+                    children = tuple(_walk(tokens, terminator=terminator, limit=1))
                 except NoAvailableTokensError:
                     raise MissingSuperScriptOrSubscriptError
                 node = Node(token=token, children=(previous, *children))
@@ -283,7 +290,7 @@ def _get_environment_node(token: str, tokens: Iterator[str]) -> Node:
     terminator = rf"{commands.END}{{{environment}}}"
     children = tuple(_walk(tokens, terminator=terminator))
     if len(children) and children[-1].token != terminator:
-        pass  # TODO: raise error
+        raise MissingEndError
     children = children[:-1]
     alignment = ""
     if (

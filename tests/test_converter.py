@@ -2388,6 +2388,43 @@ from latex2mathml.converter import _convert, convert
             {"mtext": {"@href": "https://github.com/roniemartinez/latex2mathml", "mrow": {"mtext": "latex2mathml"}}},
             id="href",
         ),
+        pytest.param(
+            r"[{[\Huge[\huge[[}[",
+            MultiDict(
+                [
+                    ("mo", {"@stretchy": "false", "$": "["}),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"@stretchy": "false", "$": "["}),
+                                (
+                                    "mstyle",
+                                    MultiDict(
+                                        [
+                                            ("@mathsize", "2.49em"),
+                                            ("mo", {"@stretchy": "false", "$": "["}),
+                                            (
+                                                "mstyle",
+                                                MultiDict(
+                                                    [
+                                                        ("@mathsize", "2.07em"),
+                                                        ("mo", {"@stretchy": "false", "$": "["}),
+                                                        ("mo", {"@stretchy": "false", "$": "["}),
+                                                    ]
+                                                ),
+                                            ),
+                                        ]
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                    ("mo", {"@stretchy": "false", "$": "["}),
+                ]
+            ),
+            id="huge",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
