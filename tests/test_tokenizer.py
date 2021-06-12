@@ -502,6 +502,7 @@ from latex2mathml.tokenizer import tokenize
             [r"\mathop", "{", "x", "}", r"\limits", "_", "0", "^", "1"],
             id="issue-125",
         ),
+        pytest.param(r"\fbox{E=mc^2}", [r"\fbox", "E=mc^2"], id="fbox"),
     ],
 )
 def test_tokenize(latex: str, expected: list) -> None:

@@ -15,7 +15,7 @@ PATTERN = re.compile(
     \\(
         [\\\[\]{{}}\s!,:>;|_%#$&] |  # escaped characters
         (begin|end|operatorname){{[a-zA-Z]+\*?}} |  # begin, end or operatorname
-        (text|color|fbox)\s*{{([^{{^}}]*)}} |  # text, color or fbox
+        (text|color|fbox)\s*{{([^}}]*)}} |  # text, color or fbox  # FIXME: curly braces is tricky on these commands
         math[a-z]+{{[a-zA-Z]}} |  # commands starting with math
         [a-zA-Z]+  # other commands
     )? |
