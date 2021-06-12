@@ -162,6 +162,7 @@ OLD_STYLE_FONTS: Dict[str, DefaultDict[str, Optional[str]]] = {
 GLOBAL_FONTS = {
     **OLD_STYLE_FONTS,
     r"\cal": font_factory("script", {"fence": None}),
+    r"\frak": font_factory("fraktur", {"fence": None}),
 }
 
 COMMANDS_WITH_ONE_PARAMETER = (
