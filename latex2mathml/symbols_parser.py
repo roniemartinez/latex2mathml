@@ -33,6 +33,7 @@ def parse_symbols() -> Dict[str, str]:
                     _symbols[equivalent] = _unicode
     _symbols.update(
         {
+            r"\And": _symbols[r"\ampersand"],
             r"\bigcirc": _symbols[r"\lgwhtcircle"],
             r"\Box": _symbols[r"\square"],
             r"\circledS": "024C8",
@@ -45,6 +46,9 @@ def parse_symbols() -> Dict[str, str]:
             r"\dotsm": "022EF",
             r"\dotso": "02026",
             r"\emptyset": "02205",
+            r"\gggtr": "022D9",
+            r"\gvertneqq": "02269",
+            r"\gt": _symbols[r"\greater"],
         }
     )
     return _symbols

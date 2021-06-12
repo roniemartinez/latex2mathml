@@ -635,9 +635,9 @@ from latex2mathml.converter import _convert, convert
             ),
             id="issue-42",
         ),
-        pytest.param("2 < 5", MultiDict([("mn", "2"), ("mo", "&lt;"), ("mn", "5")]), id="issue-45-lt"),
-        pytest.param("2 > 5", MultiDict([("mn", "2"), ("mo", "&gt;"), ("mn", "5")]), id="issue-45-gt"),
-        pytest.param(r"&\And", MultiDict([("mo", "&amp;"), ("mo", "&amp;")]), id="issue-45-amp"),
+        pytest.param("2 < 5", MultiDict([("mn", "2"), ("mo", "&#x0003C;"), ("mn", "5")]), id="issue-45-lt"),
+        pytest.param("2 > 5", MultiDict([("mn", "2"), ("mo", "&#x0003E;"), ("mn", "5")]), id="issue-45-gt"),
+        pytest.param(r"\And", MultiDict([("mi", "&#x00026;")]), id="And"),
         pytest.param(
             r"\left(- x^{3} + 5\right)^{5}",
             MultiDict(
@@ -956,7 +956,9 @@ from latex2mathml.converter import _convert, convert
                 [
                     (
                         "munder",
-                        MultiDict([("mo", "inf"), ("mrow", MultiDict([("mi", "x"), ("mo", "&gt;"), ("mi", "s")]))]),
+                        MultiDict(
+                            [("mo", "inf"), ("mrow", MultiDict([("mi", "x"), ("mo", "&#x0003E;"), ("mi", "s")]))]
+                        ),
                     ),
                     ("mi", "f"),
                     (
@@ -2308,6 +2310,9 @@ from latex2mathml.converter import _convert, convert
             },
             id="genfrac-scriptscriptstyle",
         ),
+        pytest.param(r"\gggtr", {"mo": "&#x022D9;"}, id="gggtr"),
+        pytest.param(r"\gvertneqq", {"mo": "&#x02269;"}, id="gvertneqq"),
+        pytest.param(r"\gt", {"mo": "&#x0003E;"}, id="gt"),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

@@ -27,10 +27,13 @@ OPERATORS = (
     "!",
     r"\{",
     r"\}",
+    r">",
+    r"<",
     r"\centerdot",
     r"\dots",
     r"\dotsc",
     r"\dotso",
+    r"\gt",
 )
 
 
@@ -288,10 +291,6 @@ def _convert_symbol(
     if re.match(r"\d+(.\d+)?", token):
         element = SubElement(parent, "mn")
         element.text = token
-        _set_font(element, element.tag, font)
-    elif token in ("<", ">", "&", r"\And"):
-        element = SubElement(parent, "mo")
-        element.text = {"<": "&lt;", ">": "&gt;", "&": "&amp;", r"\And": "&amp;"}[token]
         _set_font(element, element.tag, font)
     elif token in OPERATORS:
         element = SubElement(parent, "mo")
