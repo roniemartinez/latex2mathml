@@ -28,3 +28,7 @@ class NoAvailableTokensError(Exception):
 
 class InvalidStyleForGenfracError(Exception):
     pass
+
+
+class MissingEndError(Exception):
+    pass

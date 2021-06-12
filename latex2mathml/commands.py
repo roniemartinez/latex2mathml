@@ -214,6 +214,12 @@ BIG: Dict[str, Tuple[str, dict]] = {
     r"\big": ("mo", OrderedDict([("minsize", "1.2em"), ("maxsize", "1.2em")])),
 }
 
+HUGE: Dict[str, Tuple[str, dict]] = {
+    # command: (mathml_equivalent, attributes)
+    r"\Huge": ("mstyle", {"mathsize": "2.49em"}),
+    r"\huge": ("mstyle", {"mathsize": "2.07em"}),
+}
+
 CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
     # tables
@@ -265,6 +271,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     FBOX: ("menclose", {"notation": "box"}),
     # operators
     **BIG,
+    **HUGE,
     **{limit: ("mo", {}) for limit in LIMIT},
     LEFT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")])),
     RIGHT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "postfix")])),
