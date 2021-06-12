@@ -25,7 +25,7 @@ from latex2mathml.walker import Node, walk
         pytest.param("5x", [Node(token="5"), Node(token="x")], id="numbers-and-alphabets"),
         pytest.param("5.8x", [Node(token="5.8"), Node(token="x")], id="decimals-and-alphabets"),
         pytest.param("3 x", [Node(token="3"), Node(token="x")], id="string-with-space"),
-        pytest.param("+-*/=()[]", [Node(token=c) for c in "+-*/=()[]"], id="operators"),
+        pytest.param("+-*/=()[])]([", [Node(token=c) for c in "+-*/=()[])](["], id="operators"),
         pytest.param("3 + 5x - 5y = 7", [Node(token=c) for c in "3+5x-5y=7"], id="numbers-alphabets-and-operators"),
         pytest.param(r"\alpha\beta", [Node(token=r"\alpha"), Node(token=r"\beta")], id="symbols"),
         pytest.param(

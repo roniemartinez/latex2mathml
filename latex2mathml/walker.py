@@ -35,8 +35,10 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
     for token in tokens:
         has_available_tokens = True
         if token == terminator:
+            delimiter = None
             if terminator == commands.RIGHT:
-                group.append(Node(token=token, delimiter=next(tokens)))
+                delimiter = next(tokens)
+            group.append(Node(token=token, delimiter=delimiter))
             break
         elif token == commands.RIGHT != terminator:
             raise ExtraLeftOrMissingRightError
@@ -48,21 +50,22 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             node = Node(token=token, children=children if len(children) else None, delimiter=delimiter)
         elif token == commands.OPENING_BRACE:
             children = tuple(_walk(tokens, terminator=commands.CLOSING_BRACE))
-            node = Node(token=commands.BRACES, children=children)
+            if len(children) and children[-1].token == commands.CLOSING_BRACE:
+                node = Node(token=commands.BRACES, children=children[:-1])
         elif token == commands.OPENING_PARENTHESIS:
             children = tuple(_walk(tokens, terminator=commands.CLOSING_PARENTHESIS))
-            if len(children):
-                node = Node(token=commands.PARENTHESES, children=children)
+            if len(children) > 1 and children[-1].token == commands.CLOSING_PARENTHESIS:
+                node = Node(token=commands.PARENTHESES, children=children[:-1])
             else:
-                group.extend([Node(token=token), Node(token=commands.CLOSING_PARENTHESIS)])
+                group.extend([Node(token=token), *children])
                 continue
         elif token == commands.OPENING_BRACKET:
             try:
                 children = tuple(_walk(tokens, terminator=commands.CLOSING_BRACKET))
-                if len(children) or (terminator is not None and terminator.startswith(commands.END)):
-                    node = Node(token=commands.BRACKETS, children=children)
+                if len(children) > 1 and children[-1].token == commands.CLOSING_BRACKET:
+                    node = Node(token=commands.BRACKETS, children=children[:-1])
                 else:
-                    group.extend([Node(token=token), Node(token=commands.CLOSING_BRACKET)])
+                    group.extend([Node(token=token), *children])
                     continue
             except NoAvailableTokensError:
                 node = Node(token=token)
@@ -78,22 +81,22 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                 raise DoubleSuperscriptsError
 
             if token == commands.SUBSCRIPT and previous.token == commands.SUPERSCRIPT and previous.children is not None:
-                next_nodes = _walk(tokens, terminator=terminator, limit=1)
-                node = Node(token=commands.SUBSUP, children=(previous.children[0], *next_nodes, previous.children[1]))
+                children = _walk(tokens, terminator=terminator, limit=1)
+                node = Node(token=commands.SUBSUP, children=(previous.children[0], *children, previous.children[1]))
             elif (
                 token == commands.SUPERSCRIPT and previous.token == commands.SUBSCRIPT and previous.children is not None
             ):
-                next_nodes = _walk(tokens, terminator=terminator, limit=1)
+                children = _walk(tokens, terminator=terminator, limit=1)
                 if previous.children[0].token == commands.LIMITS:
-                    node = Node(token=commands.LIMITS, children=(group.pop(), *previous.children[1:], *next_nodes))
+                    node = Node(token=commands.LIMITS, children=(group.pop(), *previous.children[1:], *children))
                 else:
-                    node = Node(token=commands.SUBSUP, children=(*previous.children, *next_nodes))
+                    node = Node(token=commands.SUBSUP, children=(*previous.children, *children))
             else:
                 try:
-                    next_nodes = _walk(tokens, terminator=terminator, limit=1)
+                    children = _walk(tokens, terminator=terminator, limit=1)
                 except NoAvailableTokensError:
                     raise MissingSuperScriptOrSubscriptError
-                node = Node(token=token, children=(previous, *next_nodes))
+                node = Node(token=token, children=(previous, *children))
         elif token == commands.APOSTROPHE:
             try:
                 previous = group.pop()
@@ -126,10 +129,16 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
         elif token == commands.COLOR:
             attributes = {"mathcolor": next(tokens)}
             children = tuple(_walk(tokens, terminator=terminator))
+            sibling = None
+            if len(children) and children[-1].token == terminator:
+                children, sibling = children[:-1], children[-1]
             group.append(Node(token=token, children=children, attributes=attributes))
+            if sibling:
+                group.append(sibling)
             break
         elif token == commands.DISPLAYSTYLE:
-            group.append(Node(token=token, children=tuple(_walk(tokens, terminator=terminator))))
+            children = tuple(_walk(tokens, terminator=terminator))
+            group.extend([Node(token=token, children=children[:-1]), children[-1]])
             break
         elif token in (*commands.BIG.keys(), commands.TEXT, commands.FBOX):
             node = Node(token=token, text=next(tokens))
@@ -171,6 +180,10 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
 
             denominator = tuple(_walk(tokens, terminator=terminator))
 
+            sibling = None
+            if len(denominator) and denominator[-1].token == terminator:
+                denominator, sibling = denominator[:-1], denominator[-1]
+
             if len(denominator) == 0:
                 if token in (commands.BRACE, commands.BRACK):
                     denominator = (Node(token=commands.BRACES, children=()),)
@@ -181,7 +194,6 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
                     group = [Node(token=commands.BRACES, children=())]
                 else:
                     raise NumeratorNotFoundError
-
             if len(denominator) > 1:
                 denominator = (Node(token=commands.BRACES, children=denominator),)
 
@@ -190,11 +202,23 @@ def _walk(tokens: Iterator, terminator: str = None, limit: int = 0) -> List[Node
             else:
                 children = (Node(token=commands.BRACES, children=tuple(group)), *denominator)
             group = [Node(token=commands.FRAC, children=children, attributes=attributes, delimiter=delimiter)]
+            if sibling is not None:
+                group.append(sibling)
             break
         elif token == commands.SQRT:
             node = _get_root_node(token, tokens)
         elif token in commands.MATRICES:
-            node = _get_matrix_node(token, tokens, terminator)
+            children = tuple(_walk(tokens, terminator=terminator))
+            sibling = None
+            if len(children) and children[-1].token == terminator:
+                children, sibling = children[:-1], children[-1]
+            if len(children) == 1 and children[0].token == commands.BRACES and children[0].children:
+                children = children[0].children
+            if sibling is not None:
+                group.extend([Node(token=token, children=children, alignment=""), sibling])
+                break
+            else:
+                node = Node(token=token, children=children, alignment="")
         elif token == commands.GENFRAC:
             delimiter = next(tokens).lstrip("\\") + next(tokens).lstrip("\\")
             dimension_node, style_node = tuple(_walk(tokens, terminator=terminator, limit=2))
@@ -252,22 +276,18 @@ def _get_root_node(token: str, tokens: Iterator[str]) -> Node:
     return Node(token=token, children=next_nodes[-1:])
 
 
-def _get_matrix_node(token: str, tokens: Iterator[str], terminator: Optional[str]) -> Node:
-    next_nodes = tuple(_walk(tokens, terminator=terminator))
-    if len(next_nodes) == 1 and next_nodes[0].token == commands.BRACES and next_nodes[0].children:
-        next_nodes = next_nodes[0].children
-    return Node(token=token, children=next_nodes, alignment="")
-
-
 def _get_environment_node(token: str, tokens: Iterator[str]) -> Node:
     # TODO: support non-matrix environments
     start_index = token.index("{") + 1
     environment = token[start_index:-1]
-    children = tuple(_walk(tokens, terminator=rf"{commands.END}{{{environment}}}"))
+    terminator = rf"{commands.END}{{{environment}}}"
+    children = tuple(_walk(tokens, terminator=terminator))
+    if len(children) and children[-1].token != terminator:
+        pass  # TODO: raise error
+    children = children[:-1]
     alignment = ""
     if (
         len(children) > 1
-        and children[0] is not None
         and children[0].children is not None
         and (
             children[0].token == commands.BRACES
@@ -277,5 +297,11 @@ def _get_environment_node(token: str, tokens: Iterator[str]) -> Node:
     ):
         alignment = "".join(c.token for c in children[0].children)
         children = children[1:]
+    elif (
+        len(children) > 1
+        and children[0].token == commands.OPENING_BRACKET
+        and children[1].token == commands.CLOSING_BRACKET
+    ):
+        children = children[2:]
 
     return Node(token=rf"\{environment}", children=children, alignment=alignment)
