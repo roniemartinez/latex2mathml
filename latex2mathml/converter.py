@@ -190,6 +190,8 @@ def _convert_command(
     if command in commands.LIMIT:
         element.text = command[1:]
     elif node.text is not None:
+        if command == commands.FBOX:
+            element = SubElement(element, "mtext")
         element.text = node.text.replace(" ", "&#x000A0;")
         _set_font(element, "mtext", font)
     elif node.delimiter is not None and command != commands.FRAC:

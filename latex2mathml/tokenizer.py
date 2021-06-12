@@ -7,13 +7,21 @@ from latex2mathml.symbols_parser import convert_symbol
 UNITS = ("in", "mm", "cm", "pt", "em", "ex", "pc", "bp", "dd", "cc", "sp")
 
 PATTERN = re.compile(
-    r"%[^\n]+|"  # comment
-    r"[a-zA-Z]|"  # letter
-    rf"\d+(\.\d+)?(\s*({'|'.join(UNITS)}))?|"  # integer/decimal/dimension
-    r"\.|"  # dot
-    r"\\([\\\[\]{} !,:>;|_%#$&]|"  # escaped character
-    r"(begin|end|operatorname){[a-zA-Z]+\*?}|(text|color)\s*{([^{^}]*)}|math[a-z]+{[a-zA-Z]}|[a-zA-Z]+)?|"  # command
-    r"\S"  # non-space character
+    rf"""
+    %[^\n]+ |  # comment
+    [a-zA-Z] |  # letter
+    \d+(\.\d+)?(\s*({'|'.join(UNITS)}))? |  # integer/decimal/dimension
+    \. |  # dot
+    \\(
+        [\\\[\]{{}}\s!,:>;|_%#$&] |  # escaped characters
+        (begin|end|operatorname){{[a-zA-Z]+\*?}} |  # begin, end or operatorname
+        (text|color|fbox)\s*{{([^{{^}}]*)}} |  # text, color or fbox
+        math[a-z]+{{[a-zA-Z]}} |  # commands starting with math
+        [a-zA-Z]+  # other commands
+    )? |
+    \S  # non-space character
+    """,
+    re.VERBOSE,
 )
 
 
@@ -22,7 +30,7 @@ def tokenize(data: str) -> Iterator[Union[str, list]]:
         first_match = match.group(0)
         if first_match.startswith(commands.MATH):
             yield from _tokenize_math(first_match)
-        elif first_match.startswith((commands.COLOR, commands.TEXT)):
+        elif first_match.startswith((commands.COLOR, commands.TEXT, commands.FBOX)):
             index = first_match.index(commands.OPENING_BRACE)
             yield first_match[:index].strip()
             yield match.group(7)
