@@ -47,6 +47,12 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.python-version }}-poetry-${{ hashFiles('**/poetry.lock') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.python-version }}-poetry-
+      - uses: actions/cache@v2
+        with:
+          path: .mypy_cache
+          key: ${{ runner.os }}-${{ matrix.python-version }}-mypy-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.python-version }}-mypy-
       - name: Install dependencies
         run: |
           make install-no-venv
