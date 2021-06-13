@@ -59,23 +59,23 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
                 children, siblings = children[:index], children[sibling_start:]
                 group.extend([Node(token=commands.BRACES, children=tuple(_walk(c.token for c in children))), *siblings])
                 continue
-        elif token == commands.OPENING_PARENTHESIS:
-            children = tuple(_walk(tokens, terminator=commands.CLOSING_PARENTHESIS))
-            if len(children) > 1 and children[-1].token == commands.CLOSING_PARENTHESIS:
-                node = Node(token=commands.PARENTHESES, children=children[:-1])
-            else:
-                group.extend([Node(token=token), *children])
-                continue
-        elif token == commands.OPENING_BRACKET:
-            try:
-                children = tuple(_walk(tokens, terminator=commands.CLOSING_BRACKET))
-                if len(children) > 1 and children[-1].token == commands.CLOSING_BRACKET:
-                    node = Node(token=commands.BRACKETS, children=children[:-1])
-                else:
-                    group.extend([Node(token=token), *children])
-                    continue
-            except NoAvailableTokensError:
-                node = Node(token=token)
+        # elif token == commands.OPENING_PARENTHESIS:
+        #     children = tuple(_walk(tokens, terminator=commands.CLOSING_PARENTHESIS))
+        #     if len(children) > 1 and children[-1].token == commands.CLOSING_PARENTHESIS:
+        #         node = Node(token=commands.PARENTHESES, children=children[:-1])
+        #     else:
+        #         group.extend([Node(token=token), *children])
+        #         continue
+        # elif token == commands.OPENING_BRACKET:
+        #     try:
+        #         children = tuple(_walk(tokens, terminator=commands.CLOSING_BRACKET))
+        #         if len(children) > 1 and children[-1].token == commands.CLOSING_BRACKET:
+        #             node = Node(token=commands.BRACKETS, children=children[:-1])
+        #         else:
+        #             group.extend([Node(token=token), *children])
+        #             continue
+        #     except NoAvailableTokensError:
+        #         node = Node(token=token)
         elif token in (commands.SUBSCRIPT, commands.SUPERSCRIPT):
             try:
                 previous = group.pop()

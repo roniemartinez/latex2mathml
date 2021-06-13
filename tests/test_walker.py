@@ -435,10 +435,13 @@ from latex2mathml.walker import Node, walk
                         Node(
                             token="{}",
                             children=(
+                                Node(token="("),
+                                Node(token="-"),
+                                Node(token="25"),
                                 Node(
                                     token="^",
                                     children=(
-                                        Node(token="()", children=(Node(token="-"), Node(token="25"))),
+                                        Node(token=")"),
                                         Node(token="{}", children=(Node(token="2"),)),
                                     ),
                                 ),
@@ -969,7 +972,16 @@ from latex2mathml.walker import Node, walk
         ),
         pytest.param(
             r"\sqrt[]{3}",
-            [Node(token=r"\sqrt", children=(Node(token="{}", children=(Node(token="3"),)),))],
+            [
+                Node(
+                    token=r"\sqrt",
+                    children=(
+                        Node(token="["),
+                        Node(token="]"),
+                        Node(token="{}", children=(Node(token="3"),)),
+                    ),
+                )
+            ],
             id="issue-79-empty-root",
         ),
         pytest.param(
@@ -1037,7 +1049,11 @@ from latex2mathml.walker import Node, walk
                                                 Node(token="3"),
                                                 Node(
                                                     token=r"\sqrt",
-                                                    children=(Node(token="{}", children=(Node(token="3"),)),),
+                                                    children=(
+                                                        Node(token="["),
+                                                        Node(token="]"),
+                                                        Node(token="{}", children=(Node(token="3"),)),
+                                                    ),
                                                 ),
                                             ),
                                         ),
@@ -1074,7 +1090,9 @@ from latex2mathml.walker import Node, walk
                     ),
                 ),
                 Node(token="f"),
-                Node(token="()", children=(Node(token="x"),)),
+                Node(token="("),
+                Node(token="x"),
+                Node(token=")"),
             ],
             id="limit-at-plus-infinity",
         ),
@@ -1089,7 +1107,9 @@ from latex2mathml.walker import Node, walk
                     ),
                 ),
                 Node(token="f"),
-                Node(token="()", children=(Node(token="x"),)),
+                Node(token="("),
+                Node(token="x"),
+                Node(token=")"),
             ],
             id="inf",
         ),
@@ -1104,7 +1124,9 @@ from latex2mathml.walker import Node, walk
                     ),
                 ),
                 Node(token="f"),
-                Node(token="()", children=(Node(token="x"),)),
+                Node(token="("),
+                Node(token="x"),
+                Node(token=")"),
             ],
             id="sup",
         ),
@@ -1120,13 +1142,19 @@ from latex2mathml.walker import Node, walk
                             children=(
                                 Node(token="x"),
                                 Node(token=r"\in"),
-                                Node(token="[]", children=(Node(token="a"), Node(token=","), Node(token="b"))),
+                                Node(token="["),
+                                Node(token="a"),
+                                Node(token=","),
+                                Node(token="b"),
+                                Node(token="]"),
                             ),
                         ),
                     ),
                 ),
                 Node(token="f"),
-                Node(token="()", children=(Node(token="x"),)),
+                Node(token="("),
+                Node(token="x"),
+                Node(token=")"),
             ],
             id="max",
         ),
@@ -1142,15 +1170,19 @@ from latex2mathml.walker import Node, walk
                             children=(
                                 Node(token="x"),
                                 Node(token=r"\in"),
-                                Node(
-                                    token="[]", children=(Node(token=r"\alpha"), Node(token=","), Node(token=r"\beta"))
-                                ),
+                                Node(token="["),
+                                Node(token=r"\alpha"),
+                                Node(token=","),
+                                Node(token=r"\beta"),
+                                Node(token="]"),
                             ),
                         ),
                     ),
                 ),
                 Node(token="f"),
-                Node(token="()", children=(Node(token="x"),)),
+                Node(token="("),
+                Node(token="x"),
+                Node(token=")"),
             ],
             id="min",
         ),
@@ -1208,20 +1240,15 @@ from latex2mathml.walker import Node, walk
         pytest.param(
             r"(1+(x-y)^{2})",
             [
-                Node(
-                    token="()",
-                    children=(
-                        Node(token="1"),
-                        Node(token="+"),
-                        Node(
-                            token="^",
-                            children=(
-                                Node(token="()", children=(Node(token="x"), Node(token="-"), Node(token="y"))),
-                                Node(token="{}", children=(Node(token="2"),)),
-                            ),
-                        ),
-                    ),
-                )
+                Node(token="("),
+                Node(token="1"),
+                Node(token="+"),
+                Node(token="("),
+                Node(token="x"),
+                Node(token="-"),
+                Node(token="y"),
+                Node(token="^", children=(Node(token=")"), Node(token="{}", children=(Node(token="2"),)))),
+                Node(token=")"),
             ],
             id="issue-96",
         ),
@@ -1256,7 +1283,7 @@ from latex2mathml.walker import Node, walk
                 Node(token=r"\min"),
                 Node(
                     token="{}",
-                    children=(Node(token="()", children=(Node(token="x"), Node(token=","), Node(token="y"))),),
+                    children=(Node(token="("), Node(token="x"), Node(token=","), Node(token="y"), Node(token=")")),
                 ),
             ],
             id="issue-108-3",
@@ -1341,7 +1368,11 @@ from latex2mathml.walker import Node, walk
             r"F(a,n)=\overset{a-a-a\cdots-a}{}ntext{个}a",
             [
                 Node(token="F"),
-                Node(token="()", children=(Node(token="a"), Node(token=","), Node(token="n"))),
+                Node(token="("),
+                Node(token="a"),
+                Node(token=","),
+                Node(token="n"),
+                Node(token=")"),
                 Node(token="="),
                 Node(
                     token=r"\overset",
@@ -1387,13 +1418,17 @@ from latex2mathml.walker import Node, walk
             "f'(x) = 2x, f''(x) = 2",
             [
                 Node(token="^", children=(Node(token="f"), Node(token=r"\prime"))),
-                Node(token="()", children=(Node(token="x"),)),
+                Node(token="("),
+                Node(token="x"),
+                Node(token=")"),
                 Node(token="="),
                 Node(token="2"),
                 Node(token="x"),
                 Node(token=","),
                 Node(token="^", children=(Node(token="f"), Node(token=r"\dprime"))),
-                Node(token="()", children=(Node(token="x"),)),
+                Node(token="("),
+                Node(token="x"),
+                Node(token=")"),
                 Node(token="="),
                 Node(token="2"),
             ],
