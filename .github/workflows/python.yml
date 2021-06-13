@@ -21,11 +21,14 @@ jobs:
         python-version: [ 3.6, 3.7, 3.8, 3.9 ]
         include:
           - os: ubuntu-latest
-            path: ~/.cache/pypoetry
+            pip-cache: ~/.cache/pip
+            poetry-cache: ~/.cache/pypoetry
           - os: macos-latest
-            path: ~/Library/Caches/pypoetry
+            pip-cache: ~/Library/Caches/pip
+            poetry-cache: ~/Library/Caches/pypoetry
           - os: windows-latest
-            path: ~\AppData\Local\pypoetry\Cache
+            pip-cache: ~\AppData\Local\pip\Cache
+            poetry-cache: ~\AppData\Local\pypoetry\Cache
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -34,10 +37,16 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - uses: actions/cache@v2
         with:
-          path: ${{ matrix.path }}
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          path: ${{ matrix.pip-cache }}
+          key: ${{ runner.os }}-${{ matrix.python-version }}-pip-${{ hashFiles('**/poetry.lock') }}
           restore-keys: |
-            ${{ runner.os }}-poetry-
+            ${{ runner.os }}-${{ matrix.python-version }}-pip-
+      - uses: actions/cache@v2
+        with:
+          path: ${{ matrix.poetry-cache }}
+          key: ${{ runner.os }}-${{ matrix.python-version }}-poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.python-version }}-poetry-
       - name: Install dependencies
         run: |
           make install-no-venv
