@@ -2355,6 +2355,52 @@ from latex2mathml.converter import _convert, convert
             },
             id="sqrt-with-multiple-root-nodes",
         ),
+        pytest.param(
+            r"\begin{array}{l} \text{Side Angle Side}\\ \text{S}\hphantom{\text{ide }}\text{A}\hphantom{\text{ngle }}"
+            r"\text{S} \end{array}",
+            {
+                "mtable": MultiDict(
+                    [
+                        (
+                            "mtr",
+                            {
+                                "mtd": {"@columnalign": "left", "mtext": "Side&#x000A0;Angle&#x000A0;Side"},
+                            },
+                        ),
+                        (
+                            "mtr",
+                            {
+                                "mtd": MultiDict(
+                                    [
+                                        ("@columnalign", "left"),
+                                        ("mtext", "S"),
+                                        (
+                                            "mpadded",
+                                            {
+                                                "@height": "0",
+                                                "@depth": "0",
+                                                "mphantom": {"mrow": {"mtext": "ide&#x000A0;"}},
+                                            },
+                                        ),
+                                        ("mtext", "A"),
+                                        (
+                                            "mpadded",
+                                            {
+                                                "@height": "0",
+                                                "@depth": "0",
+                                                "mphantom": {"mrow": {"mtext": "ngle&#x000A0;"}},
+                                            },
+                                        ),
+                                        ("mtext", "S"),
+                                    ]
+                                )
+                            },
+                        ),
+                    ]
+                )
+            },
+            id="hphantom",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
