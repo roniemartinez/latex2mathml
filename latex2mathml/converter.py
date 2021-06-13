@@ -168,6 +168,8 @@ def _convert_command(
         lbrace.text = "&#x{};".format(convert_symbol(commands.LBRACE))
     elif command in (commands.DBINOM, commands.DFRAC):
         parent = SubElement(parent, "mstyle", displaystyle="true", scriptlevel="0")
+    elif command == commands.HPHANTOM:
+        parent = SubElement(parent, "mpadded", height="0", depth="0")
 
     tag, attributes = copy.deepcopy(commands.CONVERSION_MAP[command])
 

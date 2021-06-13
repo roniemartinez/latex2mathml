@@ -151,6 +151,8 @@ TEXTSTYLE = r"\textstyle"
 SCRIPTSTYLE = r"\scriptstyle"
 SCRIPTSCRIPTSTYLE = r"\scriptscriptstyle"
 
+HPHANTOM = r"\hphantom"
+
 
 def font_factory(default: Optional[str], replacement: Dict[str, Optional[str]]) -> DefaultDict[str, Optional[str]]:
     fonts = defaultdict(lambda: default, replacement)
@@ -190,6 +192,7 @@ COMMANDS_WITH_ONE_PARAMETER = (
     DDDDOT,
     GRAVE,
     HAT,
+    HPHANTOM,
     MATHOP,
     OVERLINE,
     OVERRIGHTARROW,
@@ -287,6 +290,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     HREF: ("mtext", {}),
     TEXT: ("mtext", {}),
     MATHOP: ("mrow", {}),
+    HPHANTOM: ("mphantom", {}),
 }
 
 DIACRITICS: Dict[str, Tuple[str, Dict[str, str]]] = {
