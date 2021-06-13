@@ -2401,6 +2401,12 @@ from latex2mathml.converter import _convert, convert
             },
             id="hphantom",
         ),
+        pytest.param(
+            r"\idotsint", MultiDict([("mo", "&#x0222B;"), ("mo", "&#x022EF;"), ("mo", "&#x0222B;")]), id="idotsint"
+        ),
+        pytest.param(r"\intop", {"mo": {"@movablelimits": "true", "$": "&#x0222B;"}}, id="intop"),
+        pytest.param(r"\injlim", {"mo": {"@movablelimits": "true", "$": "inj&#x02006;lim"}}, id="injlim"),
+        pytest.param(r"\ker", {"mi": "ker"}, id="ker"),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
