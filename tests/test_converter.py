@@ -614,21 +614,14 @@ from latex2mathml.converter import _convert, convert
                         {
                             "mrow": MultiDict(
                                 [
+                                    ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
+                                    ("mo", "&#x02212;"),
+                                    ("mn", "25"),
                                     (
                                         "msup",
                                         MultiDict(
                                             [
-                                                (
-                                                    "mrow",
-                                                    MultiDict(
-                                                        [
-                                                            ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
-                                                            ("mo", "&#x02212;"),
-                                                            ("mn", "25"),
-                                                            ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
-                                                        ]
-                                                    ),
-                                                ),
+                                                ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
                                                 ("mrow", {"mn": "2"}),
                                             ]
                                         ),
@@ -945,16 +938,9 @@ from latex2mathml.converter import _convert, convert
                         ),
                     ),
                     ("mi", "f"),
-                    (
-                        "mrow",
-                        MultiDict(
-                            [
-                                ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
-                                ("mi", "x"),
-                                ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
-                            ]
-                        ),
-                    ),
+                    ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
+                    ("mi", "x"),
+                    ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
                 ]
             ),
             id="limit-at-plus-infinity",
@@ -970,16 +956,9 @@ from latex2mathml.converter import _convert, convert
                         ),
                     ),
                     ("mi", "f"),
-                    (
-                        "mrow",
-                        MultiDict(
-                            [
-                                ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
-                                ("mi", "x"),
-                                ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
-                            ]
-                        ),
-                    ),
+                    ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
+                    ("mi", "x"),
+                    ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
                 ]
             ),
             id="inf",
@@ -1206,17 +1185,15 @@ from latex2mathml.converter import _convert, convert
                     ("mo", "min"),
                     (
                         "mrow",
-                        {
-                            "mrow": MultiDict(
-                                [
-                                    ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
-                                    ("mi", "x"),
-                                    ("mo", "&#x0002C;"),
-                                    ("mi", "y"),
-                                    ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
-                                ]
-                            )
-                        },
+                        MultiDict(
+                            [
+                                ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
+                                ("mi", "x"),
+                                ("mo", "&#x0002C;"),
+                                ("mi", "y"),
+                                ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
+                            ]
+                        ),
                     ),
                 ]
             ),
@@ -1234,18 +1211,11 @@ from latex2mathml.converter import _convert, convert
             MultiDict(
                 [
                     ("mi", "sn"),
-                    (
-                        "mrow",
-                        MultiDict(
-                            [
-                                ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
-                                ("mi", "x"),
-                                ("mo", "&#x0002B;"),
-                                ("mi", "y"),
-                                ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
-                            ]
-                        ),
-                    ),
+                    ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
+                    ("mi", "x"),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "y"),
+                    ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
                 ]
             ),
             id="issue-109-2",
@@ -1269,18 +1239,11 @@ from latex2mathml.converter import _convert, convert
             MultiDict(
                 [
                     ("mi", "F"),
-                    (
-                        "mrow",
-                        MultiDict(
-                            [
-                                ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
-                                ("mi", "a"),
-                                ("mo", "&#x0002C;"),
-                                ("mi", "n"),
-                                ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
-                            ]
-                        ),
-                    ),
+                    ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
+                    ("mi", "a"),
+                    ("mo", "&#x0002C;"),
+                    ("mi", "n"),
+                    ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
                     ("mo", "&#x0003D;"),
                     (
                         "mover",
@@ -1390,31 +1353,17 @@ from latex2mathml.converter import _convert, convert
             MultiDict(
                 [
                     ("msup", MultiDict([("mi", "f"), ("mi", "&#x02032;")])),
-                    (
-                        "mrow",
-                        MultiDict(
-                            [
-                                ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
-                                ("mi", "x"),
-                                ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
-                            ]
-                        ),
-                    ),
+                    ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
+                    ("mi", "x"),
+                    ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
                     ("mo", "&#x0003D;"),
                     ("mn", "2"),
                     ("mi", "x"),
                     ("mo", "&#x0002C;"),
                     ("msup", MultiDict([("mi", "f"), ("mi", "&#x02033;")])),
-                    (
-                        "mrow",
-                        MultiDict(
-                            [
-                                ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
-                                ("mi", "x"),
-                                ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
-                            ]
-                        ),
-                    ),
+                    ("mo", {"$": "&#x00028;", "@stretchy": "false"}),
+                    ("mi", "x"),
+                    ("mo", {"$": "&#x00029;", "@stretchy": "false"}),
                     ("mo", "&#x0003D;"),
                     ("mn", "2"),
                 ]
@@ -1940,26 +1889,12 @@ from latex2mathml.converter import _convert, convert
             MultiDict(
                 [
                     ("mi", "deg"),
-                    (
-                        "mrow",
-                        MultiDict(
-                            [
-                                ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
-                                ("mi", "f"),
-                                (
-                                    "mrow",
-                                    MultiDict(
-                                        [
-                                            ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
-                                            ("mi", "x"),
-                                            ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
-                                        ]
-                                    ),
-                                ),
-                                ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
-                            ]
-                        ),
-                    ),
+                    ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
+                    ("mi", "f"),
+                    ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
+                    ("mi", "x"),
+                    ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
                 ]
             ),
             id="degree-polynomial",
@@ -1969,16 +1904,9 @@ from latex2mathml.converter import _convert, convert
             MultiDict(
                 [
                     ("mo", {"@movablelimits": "true", "$": "det"}),
-                    (
-                        "mrow",
-                        MultiDict(
-                            [
-                                ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
-                                ("mi", "A"),
-                                ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
-                            ]
-                        ),
-                    ),
+                    ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
+                    ("mi", "A"),
+                    ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
                 ]
             ),
             id="determinant",
@@ -1988,16 +1916,9 @@ from latex2mathml.converter import _convert, convert
             MultiDict(
                 [
                     ("mi", "dim"),
-                    (
-                        "mrow",
-                        MultiDict(
-                            [
-                                ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
-                                ("mi", "A"),
-                                ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
-                            ]
-                        ),
-                    ),
+                    ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
+                    ("mi", "A"),
+                    ("mo", {"@stretchy": "false", "$": "&#x00029;"}),
                 ]
             ),
             id="dimension-vector-space",
@@ -2424,6 +2345,15 @@ from latex2mathml.converter import _convert, convert
                 ]
             ),
             id="huge",
+        ),
+        pytest.param(
+            r"\sqrt[abc]{123}",
+            {
+                "mroot": MultiDict(
+                    [("mrow", {"mn": "123"}), ("mrow", MultiDict([("mi", "a"), ("mi", "b"), ("mi", "c")]))]
+                )
+            },
+            id="sqrt-with-multiple-root-nodes",
         ),
     ],
 )

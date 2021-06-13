@@ -28,7 +28,7 @@ lint:
 
 .PHONY: test
 test:
-	poetry run pytest --cov=latex2mathml --cov-report=xml --cov-report=html -vv
+	poetry run pytest
 
 .PHONY: setup
 setup:

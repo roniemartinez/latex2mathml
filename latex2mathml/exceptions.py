@@ -32,3 +32,7 @@ class InvalidStyleForGenfracError(Exception):
 
 class MissingEndError(Exception):
     pass
+
+
+class InvalidAlignmentError(Exception):
+    pass

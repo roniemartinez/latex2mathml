@@ -8,6 +8,7 @@ from latex2mathml.exceptions import (
     DoubleSubscriptsError,
     DoubleSuperscriptsError,
     ExtraLeftOrMissingRightError,
+    InvalidAlignmentError,
     InvalidStyleForGenfracError,
     MissingEndError,
     MissingSuperScriptOrSubscriptError,
@@ -439,11 +440,7 @@ from latex2mathml.walker import Node, walk
                                 Node(token="-"),
                                 Node(token="25"),
                                 Node(
-                                    token="^",
-                                    children=(
-                                        Node(token=")"),
-                                        Node(token="{}", children=(Node(token="2"),)),
-                                    ),
+                                    token="^", children=(Node(token=")"), Node(token="{}", children=(Node(token="2"),)))
                                 ),
                             ),
                         ),
@@ -972,16 +969,7 @@ from latex2mathml.walker import Node, walk
         ),
         pytest.param(
             r"\sqrt[]{3}",
-            [
-                Node(
-                    token=r"\sqrt",
-                    children=(
-                        Node(token="["),
-                        Node(token="]"),
-                        Node(token="{}", children=(Node(token="3"),)),
-                    ),
-                )
-            ],
+            [Node(token=r"\sqrt", children=(Node(token="{}", children=(Node(token="3"),)),))],
             id="issue-79-empty-root",
         ),
         pytest.param(
@@ -1049,11 +1037,7 @@ from latex2mathml.walker import Node, walk
                                                 Node(token="3"),
                                                 Node(
                                                     token=r"\sqrt",
-                                                    children=(
-                                                        Node(token="["),
-                                                        Node(token="]"),
-                                                        Node(token="{}", children=(Node(token="3"),)),
-                                                    ),
+                                                    children=(Node(token="{}", children=(Node(token="3"),)),),
                                                 ),
                                             ),
                                         ),
@@ -1523,6 +1507,26 @@ from latex2mathml.walker import Node, walk
             ],
             id="abovewithdelims",
         ),
+        # We don't want \Huge or \huge to make its siblings as children as it breaks groupings on deep-nesting
+        pytest.param(
+            r"[{[\Huge[\huge[[}[",
+            [
+                Node(token="["),
+                Node(
+                    token="{}",
+                    children=(
+                        Node(token="["),
+                        Node(token=r"\Huge"),
+                        Node(token="["),
+                        Node(token=r"\huge"),
+                        Node(token="["),
+                        Node(token="["),
+                    ),
+                ),
+                Node(token="["),
+            ],
+            id="huge",
+        ),
     ],
 )
 def test_walk(latex: str, expected: list) -> None:
@@ -1542,6 +1546,7 @@ def test_walk(latex: str, expected: list) -> None:
         pytest.param(r"1^2^3", DoubleSuperscriptsError, id="double-superscript"),
         pytest.param(r"\genfrac(){1pt}4ab", InvalidStyleForGenfracError, id="invalid-style-for-genfrac"),
         pytest.param(r"\begin{array}\end{array1}", MissingEndError, id="missing-end"),
+        pytest.param(r"\begin{matrix*}[xxx]\end{matrix*}", InvalidAlignmentError, id="invalid-alignment"),
     ],
 )
 def test_missing_right(latex: str, exception: Union[Tuple[Any, ...], Any]) -> None:

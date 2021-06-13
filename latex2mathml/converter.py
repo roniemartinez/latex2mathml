@@ -136,11 +136,7 @@ def _convert_group(
             _convert_symbol(node, parent, is_math_mode, _font)
         elif node.children is not None:
             _row = SubElement(parent, "mrow")
-            if token == "()":  # TODO: other pairs
-                _convert_symbol(Node(token=token[0]), _row, is_math_mode, _font)
             _convert_group(iter(node.children), _row, is_math_mode, _font)
-            if token == "()":  # TODO: other pairs
-                _convert_symbol(Node(token=token[1]), _row, is_math_mode, _font)
 
 
 def _get_alignment_and_column_lines(alignment: Optional[str] = None) -> Tuple[Optional[str], Optional[str]]:

@@ -6,6 +6,7 @@ from latex2mathml.exceptions import (
     DoubleSubscriptsError,
     DoubleSuperscriptsError,
     ExtraLeftOrMissingRightError,
+    InvalidAlignmentError,
     InvalidStyleForGenfracError,
     MissingEndError,
     MissingSuperScriptOrSubscriptError,
@@ -52,30 +53,8 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
         elif token == commands.OPENING_BRACE:
             children = tuple(_walk(tokens, terminator=commands.CLOSING_BRACE))
             if len(children) and children[-1].token == commands.CLOSING_BRACE:
-                node = Node(token=commands.BRACES, children=children[:-1])
-            elif len(children) and any(c.token == commands.CLOSING_BRACE for c in children):
-                index = [i for i, c in enumerate(children) if c.token == commands.CLOSING_BRACE][0]
-                sibling_start = index + 1
-                children, siblings = children[:index], children[sibling_start:]
-                group.extend([Node(token=commands.BRACES, children=tuple(_walk(c.token for c in children))), *siblings])
-                continue
-        # elif token == commands.OPENING_PARENTHESIS:
-        #     children = tuple(_walk(tokens, terminator=commands.CLOSING_PARENTHESIS))
-        #     if len(children) > 1 and children[-1].token == commands.CLOSING_PARENTHESIS:
-        #         node = Node(token=commands.PARENTHESES, children=children[:-1])
-        #     else:
-        #         group.extend([Node(token=token), *children])
-        #         continue
-        # elif token == commands.OPENING_BRACKET:
-        #     try:
-        #         children = tuple(_walk(tokens, terminator=commands.CLOSING_BRACKET))
-        #         if len(children) > 1 and children[-1].token == commands.CLOSING_BRACKET:
-        #             node = Node(token=commands.BRACKETS, children=children[:-1])
-        #         else:
-        #             group.extend([Node(token=token), *children])
-        #             continue
-        #     except NoAvailableTokensError:
-        #         node = Node(token=token)
+                children = children[:-1]
+            node = Node(token=commands.BRACES, children=children)
         elif token in (commands.SUBSCRIPT, commands.SUPERSCRIPT):
             try:
                 previous = group.pop()
@@ -213,7 +192,18 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
                 group.append(sibling)
             break
         elif token == commands.SQRT:
-            node = _get_root_node(token, tokens)
+            root_nodes = None
+            next_node = tuple(_walk(tokens, limit=1))[0]
+            if next_node.token == commands.OPENING_BRACKET:
+                root_nodes = tuple(_walk(tokens, terminator=commands.CLOSING_BRACKET))[:-1]
+                next_node = tuple(_walk(tokens, limit=1))[0]
+                if len(root_nodes) > 1:
+                    root_nodes = (Node(token=commands.BRACES, children=root_nodes),)
+
+            if root_nodes:
+                node = Node(token=commands.ROOT, children=(next_node, *root_nodes))
+            else:
+                node = Node(token=token, children=(next_node,))
         elif token in commands.MATRICES:
             children = tuple(_walk(tokens, terminator=terminator))
             sibling = None
@@ -271,18 +261,6 @@ def _get_style(node: Node) -> str:
     raise InvalidStyleForGenfracError
 
 
-def _get_root_node(token: str, tokens: Iterator[str]) -> Node:
-    root = None
-    next_nodes = tuple(_walk(tokens, limit=1))
-    if next_nodes[0].token == commands.BRACKETS and next_nodes[0].children is not None:
-        root = next_nodes[0].children[0]
-        next_nodes = tuple(_walk(tokens, limit=1))
-
-    if root:
-        return Node(token=commands.ROOT, children=(*next_nodes[-1:], root))
-    return Node(token=token, children=next_nodes[-1:])
-
-
 def _get_environment_node(token: str, tokens: Iterator[str]) -> Node:
     # TODO: support non-matrix environments
     start_index = token.index("{") + 1
@@ -293,8 +271,19 @@ def _get_environment_node(token: str, tokens: Iterator[str]) -> Node:
         raise MissingEndError
     children = children[:-1]
     alignment = ""
-    if (
-        len(children) > 1
+
+    if len(children) and children[0].token == commands.OPENING_BRACKET:
+        children_iter = iter(children)
+        next(children_iter)  # remove BRACKET
+        for c in children_iter:
+            if c.token == commands.CLOSING_BRACKET:
+                break
+            elif c.token not in "lcr|":
+                raise InvalidAlignmentError
+            alignment += c.token
+        children = tuple(children_iter)
+    elif (
+        len(children)
         and children[0].children is not None
         and (
             children[0].token == commands.BRACES
@@ -304,11 +293,5 @@ def _get_environment_node(token: str, tokens: Iterator[str]) -> Node:
     ):
         alignment = "".join(c.token for c in children[0].children)
         children = children[1:]
-    elif (
-        len(children) > 1
-        and children[0].token == commands.OPENING_BRACKET
-        and children[1].token == commands.CLOSING_BRACKET
-    ):
-        children = children[2:]
 
     return Node(token=rf"\{environment}", children=children, alignment=alignment)
