@@ -321,10 +321,15 @@ def _convert_symbol(
         element = SubElement(parent, "mtext")
         element.text = "&#x000A0;"
         _set_font(element, "mtext", font)
-    elif token in (commands.DETERMINANT, commands.GCD):
+    elif token in (commands.DETERMINANT, commands.GCD, commands.INTOP, commands.INJLIM):
         element = SubElement(parent, "mo", movablelimits="true")
-        element.text = token[1:]
+        texts = {commands.INJLIM: "inj&#x02006;lim", commands.INTOP: "&#x0222B;"}
+        element.text = texts.get(token, token[1:])
         _set_font(element, element.tag, font)
+    elif token == commands.IDOTSINT:
+        for s in ("&#x0222B;", "&#x022EF;", "&#x0222B;"):
+            element = SubElement(parent, "mo")
+            element.text = s
     elif token.startswith(commands.BACKSLASH):
         element = SubElement(parent, "mo" if is_math_mode else "mi")
         if symbol:

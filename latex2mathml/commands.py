@@ -90,6 +90,7 @@ FUNCTIONS = (
     r"\dim",
     r"\exp",
     r"\hom",
+    r"\ker",
     r"\ln",
     r"\log",
     r"\sec",
@@ -98,6 +99,8 @@ FUNCTIONS = (
 )
 DETERMINANT = r"\det"
 GCD = r"\gcd"
+INTOP = r"\intop"
+INJLIM = r"\injlim"
 
 HLINE = r"\hline"
 HDASHLINE = r"\hdashline"
@@ -152,6 +155,8 @@ SCRIPTSTYLE = r"\scriptstyle"
 SCRIPTSCRIPTSTYLE = r"\scriptscriptstyle"
 
 HPHANTOM = r"\hphantom"
+
+IDOTSINT = r"\idotsint"
 
 
 def font_factory(default: Optional[str], replacement: Dict[str, Optional[str]]) -> DefaultDict[str, Optional[str]]:
