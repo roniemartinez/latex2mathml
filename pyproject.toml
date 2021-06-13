@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "latex2mathml"
-version = "3.45.0"
+version = "3.45.1"
 repository = "https://github.com/roniemartinez/latex2mathml"
 description = "Pure Python library for LaTeX to MathML conversion"
 authors = ["Ronie Martinez <ronmarti18@gmail.com>"]
@@ -83,6 +83,9 @@ extend-ignore = "E203"
 extend-exclude = """
 setup.py,
 """
+
+[tool.pytest.ini_options]
+addopts = "--cov=latex2mathml --cov-report term-missing --cov-report=xml --cov-report=html -vv"
 
 [tool.dephell.main]
 from = { format = "poetry", path = "pyproject.toml" }
