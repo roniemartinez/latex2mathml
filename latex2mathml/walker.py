@@ -122,10 +122,6 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
             if sibling:
                 group.append(sibling)
             break
-        elif token == commands.DISPLAYSTYLE:
-            children = tuple(_walk(tokens, terminator=terminator))
-            group.extend([Node(token=token, children=children[:-1]), children[-1]])
-            break
         elif token in (*commands.BIG.keys(), commands.TEXT, commands.FBOX):
             node = Node(token=token, text=next(tokens))
         elif token == commands.HREF:
@@ -224,7 +220,8 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
             attributes = {"linethickness": dimension}
             children = tuple(_walk(tokens, terminator=terminator, limit=2))
             child = Node(token=token, children=children, delimiter=delimiter, attributes=attributes)
-            node = Node(token=style, children=(child,))
+            group.extend([Node(token=style), child])
+            break
         elif token.startswith(commands.BEGIN):
             node = _get_environment_node(token, tokens)
         else:

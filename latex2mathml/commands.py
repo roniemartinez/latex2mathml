@@ -231,10 +231,22 @@ BIG: Dict[str, Tuple[str, dict]] = {
     r"\big": ("mo", OrderedDict([("minsize", "1.2em"), ("maxsize", "1.2em")])),
 }
 
-HUGE: Dict[str, Tuple[str, dict]] = {
+MSTYLE_SIZES: Dict[str, Tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
     r"\Huge": ("mstyle", {"mathsize": "2.49em"}),
     r"\huge": ("mstyle", {"mathsize": "2.07em"}),
+    r"\LARGE": ("mstyle", {"mathsize": "1.73em"}),
+    r"\Large": ("mstyle", {"mathsize": "1.44em"}),
+    r"\large": ("mstyle", {"mathsize": "1.2em"}),
+    r"\normalsize": ("mstyle", {"mathsize": "1em"}),
+    r"\scriptsize": ("mstyle", {"mathsize": "0.7em"}),
+}
+
+STYLES: Dict[str, Tuple[str, dict]] = {
+    DISPLAYSTYLE: ("mstyle", {"displaystyle": "true", "scriptlevel": "0"}),
+    TEXTSTYLE: ("mstyle", {"displaystyle": "false", "scriptlevel": "0"}),
+    SCRIPTSTYLE: ("mstyle", {"displaystyle": "false", "scriptlevel": "1"}),
+    SCRIPTSCRIPTSTYLE: ("mstyle", {"displaystyle": "false", "scriptlevel": "2"}),
 }
 
 CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
@@ -295,16 +307,13 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     FBOX: ("menclose", {"notation": "box"}),
     # operators
     **BIG,
-    **HUGE,
+    **MSTYLE_SIZES,
     **{limit: ("mo", {}) for limit in LIMIT},
     LEFT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")])),
     RIGHT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "postfix")])),
     # styles
     COLOR: ("mstyle", {}),
-    DISPLAYSTYLE: ("mstyle", {"displaystyle": "true", "scriptlevel": "0"}),
-    TEXTSTYLE: ("mstyle", {"displaystyle": "false", "scriptlevel": "0"}),
-    SCRIPTSTYLE: ("mstyle", {"displaystyle": "false", "scriptlevel": "1"}),
-    SCRIPTSCRIPTSTYLE: ("mstyle", {"displaystyle": "false", "scriptlevel": "2"}),
+    **STYLES,
     # others
     SQRT: ("msqrt", {}),
     ROOT: ("mroot", {}),
