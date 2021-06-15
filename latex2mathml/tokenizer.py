@@ -4,13 +4,14 @@ from typing import Iterator
 from latex2mathml import commands
 from latex2mathml.symbols_parser import convert_symbol
 
-UNITS = ("in", "mm", "cm", "pt", "em", "ex", "pc", "bp", "dd", "cc", "sp")
+UNITS = ("in", "mm", "cm", "pt", "em", "ex", "pc", "bp", "dd", "cc", "sp", "mu")
 
 PATTERN = re.compile(
     rf"""
     %[^\n]+ |  # comment
     [a-zA-Z] |  # letter
-    \d+(\.\d+)?(\s*({'|'.join(UNITS)}))? |  # integer/decimal/dimension
+    -?\d+(\.\d+)?(\s*({'|'.join(UNITS)})) |  # dimension
+    \d+(\.\d+)? |  # integer/decimal
     \. |  # dot
     \\(
         [\\\[\]{{}}\s!,:>;|_%#$&] |  # escaped characters
@@ -34,7 +35,7 @@ def tokenize(data: str) -> Iterator[str]:
         elif first_match.startswith((commands.COLOR, commands.FBOX, commands.HREF, commands.TEXT)):
             index = first_match.index(commands.OPENING_BRACE)
             yield first_match[:index].strip()
-            yield match.group(7)
+            yield match.group(8)
         elif first_match.startswith("%"):
             continue
         elif first_match[0].isdigit() and first_match.endswith(UNITS):

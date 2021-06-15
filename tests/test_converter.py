@@ -1376,7 +1376,8 @@ from latex2mathml.converter import _convert, convert
             id="prime-no-base",
         ),
         pytest.param(
-            r"|\,|\:|\>|\;|\\|\!|\quad|\qquad|\hspace1em|\hspace{10ex}|\enspace|\hskip1em|",
+            r"""|\,|\:|\>|\;|\\|\!|\quad|\qquad|\hspace1em|\hspace{10ex}|\enspace|\hskip1em|\kern-1.5pt|\mskip18mu|
+            \mspace18mu|\negthinspace|\negmedspace|\negthickspace|\nobreakspace|\space|\thinspace|""",
             MultiDict(
                 [
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
@@ -1403,6 +1404,24 @@ from latex2mathml.converter import _convert, convert
                     ("mspace", {"@width": "0.5em"}),
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                     ("mspace", {"@width": "1em"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "-1.5pt"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "18mu"}),  # TODO: convert to em?
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "18mu"}),  # TODO: convert to em?
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "negativethinmathspace"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "negativemediummathspace"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "negativethickmathspace"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mtext", "&#x000A0;"),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mtext", "&#x000A0;"),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "thinmathspace"}),
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                 ]
             ),

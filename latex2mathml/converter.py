@@ -317,7 +317,7 @@ def _convert_symbol(
         element = SubElement(parent, "mo")
         element.text = "&#x{};".format(symbol)
         _set_font(element, element.tag, font)
-    elif token in (r"\ ", "~"):
+    elif token in (r"\ ", "~", commands.NOBREAKSPACE, commands.SPACE):
         element = SubElement(parent, "mtext")
         element.text = "&#x000A0;"
         _set_font(element, "mtext", font)
