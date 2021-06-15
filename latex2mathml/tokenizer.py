@@ -32,6 +32,8 @@ def tokenize(data: str) -> Iterator[str]:
         first_match = match.group(0)
         if first_match.startswith(commands.MATH):
             yield from _tokenize_math(first_match)
+        elif first_match == commands.TEXTSTYLE:
+            yield first_match  # prevent the next line (commands.TEXT)
         elif first_match.startswith((commands.COLOR, commands.FBOX, commands.HREF, commands.TEXT)):
             index = first_match.index(commands.OPENING_BRACE)
             yield first_match[:index].strip()

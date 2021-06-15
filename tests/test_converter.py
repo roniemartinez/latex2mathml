@@ -2047,6 +2047,59 @@ from latex2mathml.converter import _convert, convert
             id="displaystyle",
         ),
         pytest.param(
+            r"\frac ab+\displaystyle\frac cd+\textstyle\frac ef+\scriptstyle\frac gh+\scriptscriptstyle\frac ij",
+            MultiDict(
+                [
+                    ("mfrac", MultiDict([("mi", "a"), ("mi", "b")])),
+                    ("mo", "&#x0002B;"),
+                    (
+                        "mstyle",
+                        MultiDict(
+                            [
+                                ("@displaystyle", "true"),
+                                ("@scriptlevel", "0"),
+                                ("mfrac", MultiDict([("mi", "c"), ("mi", "d")])),
+                                ("mo", "&#x0002B;"),
+                                (
+                                    "mstyle",
+                                    MultiDict(
+                                        [
+                                            ("@displaystyle", "false"),
+                                            ("@scriptlevel", "0"),
+                                            ("mfrac", MultiDict([("mi", "e"), ("mi", "f")])),
+                                            ("mo", "&#x0002B;"),
+                                            (
+                                                "mstyle",
+                                                MultiDict(
+                                                    [
+                                                        ("@displaystyle", "false"),
+                                                        ("@scriptlevel", "1"),
+                                                        ("mfrac", MultiDict([("mi", "g"), ("mi", "h")])),
+                                                        ("mo", "&#x0002B;"),
+                                                        (
+                                                            "mstyle",
+                                                            MultiDict(
+                                                                [
+                                                                    ("@displaystyle", "false"),
+                                                                    ("@scriptlevel", "2"),
+                                                                    ("mfrac", MultiDict([("mi", "i"), ("mi", "j")])),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                ),
+                                            ),
+                                        ]
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="styles",
+        ),
+        pytest.param(
             r"""
             \displaylines{
                 a = a\cr
@@ -2426,6 +2479,89 @@ from latex2mathml.converter import _convert, convert
         pytest.param(r"\intop", {"mo": {"@movablelimits": "true", "$": "&#x0222B;"}}, id="intop"),
         pytest.param(r"\injlim", {"mo": {"@movablelimits": "true", "$": "inj&#x02006;lim"}}, id="injlim"),
         pytest.param(r"\ker", {"mi": "ker"}, id="ker"),
+        pytest.param(
+            r"[{[\LARGE[\Large[\large[[}[",
+            MultiDict(
+                [
+                    ("mo", {"@stretchy": "false", "$": "["}),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"@stretchy": "false", "$": "["}),
+                                (
+                                    "mstyle",
+                                    MultiDict(
+                                        [
+                                            ("@mathsize", "1.73em"),
+                                            ("mo", {"@stretchy": "false", "$": "["}),
+                                            (
+                                                "mstyle",
+                                                MultiDict(
+                                                    [
+                                                        ("@mathsize", "1.44em"),
+                                                        ("mo", {"@stretchy": "false", "$": "["}),
+                                                        (
+                                                            "mstyle",
+                                                            MultiDict(
+                                                                [
+                                                                    ("@mathsize", "1.2em"),
+                                                                    ("mo", {"@stretchy": "false", "$": "["}),
+                                                                    ("mo", {"@stretchy": "false", "$": "["}),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                ),
+                                            ),
+                                        ]
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                    ("mo", {"@stretchy": "false", "$": "["}),
+                ]
+            ),
+            id="large",
+        ),
+        pytest.param(
+            r"[{[\normalsize[\scriptsize[[}[",
+            MultiDict(
+                [
+                    ("mo", {"@stretchy": "false", "$": "["}),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"@stretchy": "false", "$": "["}),
+                                (
+                                    "mstyle",
+                                    MultiDict(
+                                        [
+                                            ("@mathsize", "1em"),
+                                            ("mo", {"@stretchy": "false", "$": "["}),
+                                            (
+                                                "mstyle",
+                                                MultiDict(
+                                                    [
+                                                        ("@mathsize", "0.7em"),
+                                                        ("mo", {"@stretchy": "false", "$": "["}),
+                                                        ("mo", {"@stretchy": "false", "$": "["}),
+                                                    ]
+                                                ),
+                                            ),
+                                        ]
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                    ("mo", {"@stretchy": "false", "$": "["}),
+                ]
+            ),
+            id="normalsize-scriptsize",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

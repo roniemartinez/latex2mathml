@@ -121,7 +121,7 @@ def _convert_group(
     _font = font
     for node in nodes:
         token = node.token
-        if token in commands.HUGE:
+        if token in (*commands.MSTYLE_SIZES, *commands.STYLES):
             node = Node(token=token, children=tuple(n for n in nodes))
             _convert_command(node, parent, is_math_mode, _font)
         elif token in commands.CONVERSION_MAP:
