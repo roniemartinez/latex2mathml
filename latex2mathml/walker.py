@@ -219,8 +219,9 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
             style = _get_style(style_node)
             attributes = {"linethickness": dimension}
             children = tuple(_walk(tokens, terminator=terminator, limit=2))
-            child = Node(token=token, children=children, delimiter=delimiter, attributes=attributes)
-            group.extend([Node(token=style), child])
+            group.extend(
+                [Node(token=style), Node(token=token, children=children, delimiter=delimiter, attributes=attributes)]
+            )
             break
         elif token.startswith(commands.BEGIN):
             node = _get_environment_node(token, tokens)
