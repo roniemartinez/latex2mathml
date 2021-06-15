@@ -138,6 +138,15 @@ EXCLAMATION = r"\!"
 GREATER_THAN = r"\>"
 HSKIP = r"\hskip"
 HSPACE = r"\hspace"
+KERN = r"\kern"
+MSKIP = r"\mskip"
+MSPACE = r"\mspace"
+NEGTHINSPACE = r"\negthinspace"
+NEGMEDSPACE = r"\negmedspace"
+NEGTHICKSPACE = r"\negthickspace"
+NOBREAKSPACE = r"\nobreakspace"
+SPACE = r"\space"
+THINSPACE = r"\thinspace"
 QQUAD = r"\qquad"
 QUAD = r"\quad"
 SEMICOLON = r"\;"
@@ -271,6 +280,13 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     GREATER_THAN: ("mspace", {"width": "0.222em"}),
     HSKIP: ("mspace", {}),
     HSPACE: ("mspace", {}),
+    KERN: ("mspace", {}),
+    MSKIP: ("mspace", {}),
+    MSPACE: ("mspace", {}),
+    NEGTHINSPACE: ("mspace", {"width": "negativethinmathspace"}),
+    NEGMEDSPACE: ("mspace", {"width": "negativemediummathspace"}),
+    NEGTHICKSPACE: ("mspace", {"width": "negativethickmathspace"}),
+    THINSPACE: ("mspace", {"width": "thinmathspace"}),
     QQUAD: ("mspace", {"width": "2em"}),
     QUAD: ("mspace", {"width": "1em"}),
     SEMICOLON: ("mspace", {"width": "0.278em"}),
