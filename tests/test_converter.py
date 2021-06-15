@@ -2047,6 +2047,59 @@ from latex2mathml.converter import _convert, convert
             id="displaystyle",
         ),
         pytest.param(
+            r"\frac ab+\displaystyle\frac cd+\textstyle\frac ef+\scriptstyle\frac gh+\scriptscriptstyle\frac ij",
+            MultiDict(
+                [
+                    ("mfrac", MultiDict([("mi", "a"), ("mi", "b")])),
+                    ("mo", "&#x0002B;"),
+                    (
+                        "mstyle",
+                        MultiDict(
+                            [
+                                ("@displaystyle", "true"),
+                                ("@scriptlevel", "0"),
+                                ("mfrac", MultiDict([("mi", "c"), ("mi", "d")])),
+                                ("mo", "&#x0002B;"),
+                                (
+                                    "mstyle",
+                                    MultiDict(
+                                        [
+                                            ("@displaystyle", "false"),
+                                            ("@scriptlevel", "0"),
+                                            ("mfrac", MultiDict([("mi", "e"), ("mi", "f")])),
+                                            ("mo", "&#x0002B;"),
+                                            (
+                                                "mstyle",
+                                                MultiDict(
+                                                    [
+                                                        ("@displaystyle", "false"),
+                                                        ("@scriptlevel", "1"),
+                                                        ("mfrac", MultiDict([("mi", "g"), ("mi", "h")])),
+                                                        ("mo", "&#x0002B;"),
+                                                        (
+                                                            "mstyle",
+                                                            MultiDict(
+                                                                [
+                                                                    ("@displaystyle", "false"),
+                                                                    ("@scriptlevel", "2"),
+                                                                    ("mfrac", MultiDict([("mi", "i"), ("mi", "j")])),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                ),
+                                            ),
+                                        ]
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="styles",
+        ),
+        pytest.param(
             r"""
             \displaylines{
                 a = a\cr
