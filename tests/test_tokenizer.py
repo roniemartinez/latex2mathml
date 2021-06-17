@@ -503,6 +503,11 @@ from latex2mathml.tokenizer import tokenize
             id="issue-125",
         ),
         pytest.param(r"\fbox{E=mc^2}", [r"\fbox", "E=mc^2"], id="fbox"),
+        pytest.param("X_123", ["X", "_", "1", "23"], id="issue-203-1"),
+        pytest.param("X_1.23", ["X", "_", "1", ".23"], id="issue-203-2"),
+        pytest.param("X^123", ["X", "^", "1", "23"], id="issue-203-3"),
+        pytest.param("X^1.23", ["X", "^", "1", ".23"], id="issue-203-4"),
+        pytest.param(r"X_\mathrm{min}", ["X", "_", r"\mathrm", "{", "m", "i", "n", "}"], id="issue-203-5"),
     ],
 )
 def test_tokenize(latex: str, expected: list) -> None:

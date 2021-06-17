@@ -555,7 +555,12 @@ from latex2mathml.walker import Node, walk
         ),
         pytest.param(
             r"\mathrm{...}",
-            [Node(token=r"\mathrm"), Node(token="{}", children=(Node(token="."), Node(token="."), Node(token=".")))],
+            [
+                Node(
+                    token=r"\mathrm",
+                    children=(Node(token="{}", children=(Node(token="."), Node(token="."), Node(token="."))),),
+                )
+            ],
             id="issue-60",
         ),
         pytest.param(
@@ -1218,7 +1223,7 @@ from latex2mathml.walker import Node, walk
         ),
         pytest.param(
             r"\mathrm{AA}",
-            [Node(token=r"\mathrm"), Node(token="{}", children=(Node(token="A"), Node(token="A")))],
+            [Node(token=r"\mathrm", children=(Node(token="{}", children=(Node(token="A"), Node(token="A"))),))],
             id="issue-94",
         ),
         pytest.param(
@@ -1526,6 +1531,33 @@ from latex2mathml.walker import Node, walk
                 Node(token="["),
             ],
             id="huge",
+        ),
+        pytest.param(
+            r"X_\mathrm{min}",
+            [
+                Node(
+                    token="_",
+                    children=(
+                        Node(token="X"),
+                        Node(
+                            token=r"\mathrm",
+                            children=(Node(token="{}", children=(Node(token="m"), Node(token="i"), Node(token="n"))),),
+                        ),
+                    ),
+                )
+            ],
+            id="issue-203-1",
+        ),
+        pytest.param(
+            r"a\mathop{t}b\mathop{t}c",
+            [
+                Node(token="a"),
+                Node(token=r"\mathop", children=(Node(token="{}", children=(Node(token="t"),)),)),
+                Node(token="b"),
+                Node(token=r"\mathop", children=(Node(token="{}", children=(Node(token="t"),)),)),
+                Node(token="c"),
+            ],
+            id="issue-203-2",
         ),
     ],
 )

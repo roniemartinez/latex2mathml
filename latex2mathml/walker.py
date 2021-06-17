@@ -104,7 +104,7 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
             if token in (commands.OVERSET, commands.UNDERSET):
                 children = children[::-1]
             node = Node(token=token, children=children, attributes=attributes)
-        elif token in commands.COMMANDS_WITH_ONE_PARAMETER:
+        elif token in commands.COMMANDS_WITH_ONE_PARAMETER or token.startswith(commands.MATH):
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
             node = Node(token=token, children=children)
         elif token in (commands.HSKIP, commands.HSPACE, commands.KERN, commands.MSKIP, commands.MSPACE):

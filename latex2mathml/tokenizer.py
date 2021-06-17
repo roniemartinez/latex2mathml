@@ -10,8 +10,10 @@ PATTERN = re.compile(
     rf"""
     %[^\n]+ |  # comment
     [a-zA-Z] |  # letter
+    [_^]\d |  # number succeeding a underscore or caret
     -?\d+(\.\d+)?(\s*({'|'.join(UNITS)})) |  # dimension
     \d+(\.\d+)? |  # integer/decimal
+    \.\d+ |  # decimal can start with just a dot (.)
     \. |  # dot
     \\(
         [\\\[\]{{}}\s!,:>;|_%#$&] |  # escaped characters
@@ -42,6 +44,8 @@ def tokenize(data: str) -> Iterator[str]:
             continue
         elif first_match[0].isdigit() and first_match.endswith(UNITS):
             yield first_match.replace(" ", "")
+        elif len(first_match) == 2 and first_match[0] in commands.SUBSUP:
+            yield from first_match
         else:
             yield first_match
 
