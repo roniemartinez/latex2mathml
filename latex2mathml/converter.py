@@ -29,6 +29,7 @@ OPERATORS = (
     r"\}",
     r">",
     r"<",
+    r".",
     r"\centerdot",
     r"\dots",
     r"\dotsc",
@@ -115,28 +116,26 @@ def _make_matrix_cell(row: Element, column_alignment: Optional[str]) -> Element:
     return SubElement(row, "mtd")
 
 
-def _convert_group(
-    nodes: Iterable[Node], parent: Element, is_math_mode: bool = False, font: Optional[Dict[str, Optional[str]]] = None
-) -> None:
+def _convert_group(nodes: Iterable[Node], parent: Element, font: Optional[Dict[str, Optional[str]]] = None) -> None:
     _font = font
     for node in nodes:
         token = node.token
         if token in (*commands.MSTYLE_SIZES, *commands.STYLES):
             node = Node(token=token, children=tuple(n for n in nodes))
-            _convert_command(node, parent, is_math_mode, _font)
+            _convert_command(node, parent, _font)
         elif token in commands.CONVERSION_MAP:
-            _convert_command(node, parent, is_math_mode, _font)
+            _convert_command(node, parent, _font)
+        elif token in commands.LOCAL_FONTS and node.children is not None:
+            _convert_group(iter(node.children), parent, commands.LOCAL_FONTS[token])
         elif token.startswith(commands.MATH) and node.children is not None:
-            _convert_group(iter(node.children), parent, True, _font)
+            _convert_group(iter(node.children), parent, _font)
         elif token in commands.GLOBAL_FONTS.keys():
             _font = commands.GLOBAL_FONTS.get(token)
-        elif token in commands.LOCAL_FONTS and node.children is not None:
-            _convert_group(iter(node.children), parent, is_math_mode, commands.LOCAL_FONTS[token])
         elif node.children is None:
-            _convert_symbol(node, parent, is_math_mode, _font)
+            _convert_symbol(node, parent, _font)
         elif node.children is not None:
             _row = SubElement(parent, "mrow")
-            _convert_group(iter(node.children), _row, is_math_mode, _font)
+            _convert_group(iter(node.children), _row, _font)
 
 
 def _get_alignment_and_column_lines(alignment: Optional[str] = None) -> Tuple[Optional[str], Optional[str]]:
@@ -156,9 +155,7 @@ def _get_alignment_and_column_lines(alignment: Optional[str] = None) -> Tuple[Op
     return _alignment, " ".join(column_lines)
 
 
-def _convert_command(
-    node: Node, parent: Element, is_math_mode: bool = False, font: Optional[Dict[str, Optional[str]]] = None
-) -> None:
+def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optional[str]]] = None) -> None:
     command = node.token
 
     if command == commands.SUBSTACK:
@@ -218,14 +215,12 @@ def _convert_command(
             if command == commands.CASES:
                 alignment = "l"
             _convert_matrix(iter(node.children), _parent, alignment=alignment)
-        elif command == commands.MATHOP:
-            _convert_group(iter(node.children), _parent, is_math_mode, font)
         elif command == commands.CFRAC:
             for child in node.children:
                 p = SubElement(_parent, "mstyle", displaystyle="false", scriptlevel="0")
-                _convert_group(iter([child]), p, is_math_mode, font)
+                _convert_group(iter([child]), p, font)
         else:
-            _convert_group(iter(node.children), _parent, is_math_mode, font)
+            _convert_group(iter(node.children), _parent, font)
 
     _add_diacritic(command, element)
 
@@ -287,9 +282,7 @@ def _append_postfix_element(node: Node, parent: Element) -> None:
         _convert_and_append_command(node.delimiter[1], parent, {"minsize": size, "maxsize": size})
 
 
-def _convert_symbol(
-    node: Node, parent: Element, is_math_mode: bool = False, font: Optional[Dict[str, Optional[str]]] = None
-) -> None:
+def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Optional[str]]] = None) -> None:
     token = node.token
     symbol = convert_symbol(token)
     if re.match(r"\d+(.\d+)?", token):
@@ -331,7 +324,7 @@ def _convert_symbol(
             element = SubElement(parent, "mo")
             element.text = s
     elif token.startswith(commands.BACKSLASH):
-        element = SubElement(parent, "mo" if is_math_mode else "mi")
+        element = SubElement(parent, "mi")
         if symbol:
             element.text = "&#x{};".format(symbol)
         elif token in commands.FUNCTIONS:
@@ -342,7 +335,7 @@ def _convert_symbol(
             element.text = token
         _set_font(element, element.tag, font)
     else:
-        element = SubElement(parent, "mo" if is_math_mode else "mi")
+        element = SubElement(parent, "mi")
         element.text = token
         _set_font(element, element.tag, font)
 
