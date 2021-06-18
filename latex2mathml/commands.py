@@ -62,9 +62,6 @@ VEC = r"\vec"
 HREF = r"\href"
 TEXT = r"\text"
 
-MATH = r"\math"
-MATHOP = r"\mathop"
-
 BEGIN = r"\begin"
 END = r"\end"
 
@@ -154,6 +151,17 @@ SEMICOLON = r"\;"
 BLACKBOARD_BOLD = r"\Bbb"
 BOLD_SYMBOL = r"\boldsymbol"
 
+MATH = r"\math"
+MATHBB = r"\mathbb"
+MATHBF = r"\mathbf"
+MATHCAL = r"\mathcal"
+MATHFRAK = r"\mathfrak"
+MATHIT = r"\mathit"
+MATHRM = r"\mathrm"
+MATHSCR = r"\mathscr"
+MATHSF = r"\mathsf"
+MATHTT = r"\mathtt"
+
 BOXED = r"\boxed"
 FBOX = r"\fbox"
 
@@ -176,6 +184,15 @@ def font_factory(default: Optional[str], replacement: Dict[str, Optional[str]]) 
 LOCAL_FONTS: Dict[str, DefaultDict[str, Optional[str]]] = {
     BLACKBOARD_BOLD: font_factory("double-struck", {"fence": None}),
     BOLD_SYMBOL: font_factory("bold", {"mi": "bold-italic", "mtext": None}),
+    MATHBB: font_factory("double-struck", {"fence": None}),
+    MATHBF: font_factory("bold", {"fence": None}),
+    MATHCAL: font_factory("script", {"fence": None}),
+    MATHFRAK: font_factory("fraktur", {"fence": None}),
+    MATHIT: font_factory("italic", {"fence": None}),
+    MATHRM: font_factory(None, {"mi": "normal"}),
+    MATHSCR: font_factory("script", {"fence": None}),
+    MATHSF: font_factory(None, {"mi": "sans-serif"}),
+    MATHTT: font_factory("monospace", {"fence": None}),
 }
 
 OLD_STYLE_FONTS: Dict[str, DefaultDict[str, Optional[str]]] = {
@@ -207,7 +224,6 @@ COMMANDS_WITH_ONE_PARAMETER = (
     GRAVE,
     HAT,
     HPHANTOM,
-    MATHOP,
     OVERLINE,
     OVERRIGHTARROW,
     UNDERLINE,
@@ -319,7 +335,6 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     ROOT: ("mroot", {}),
     HREF: ("mtext", {}),
     TEXT: ("mtext", {}),
-    MATHOP: ("mrow", {}),
     HPHANTOM: ("mphantom", {}),
 }
 

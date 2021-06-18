@@ -705,14 +705,18 @@ from latex2mathml.converter import _convert, convert
             ),
             id="issue-52",
         ),
-        pytest.param(r"\mathrm{...}", {"mrow": MultiDict([("mo", "."), ("mo", "."), ("mo", ".")])}, id="issue-60-1"),
+        pytest.param(
+            r"\mathrm{...}",
+            {"mrow": MultiDict([("mo", "&#x0002E;"), ("mo", "&#x0002E;"), ("mo", "&#x0002E;")])},
+            id="issue-60-1",
+        ),
         pytest.param(
             r"\mathrm{...}+\mathrm{...}",
             MultiDict(
                 [
-                    ("mrow", MultiDict([("mo", "."), ("mo", "."), ("mo", ".")])),
+                    ("mrow", MultiDict([("mo", "&#x0002E;"), ("mo", "&#x0002E;"), ("mo", "&#x0002E;")])),
                     ("mo", "&#x0002B;"),
-                    ("mrow", MultiDict([("mo", "."), ("mo", "."), ("mo", ".")])),
+                    ("mrow", MultiDict([("mo", "&#x0002E;"), ("mo", "&#x0002E;"), ("mo", "&#x0002E;")])),
                 ]
             ),
             id="issue-60-2",
@@ -1229,7 +1233,7 @@ from latex2mathml.converter import _convert, convert
                     ("mi", "x"),
                     ("mo", "&#x0003D;"),
                     ("mtext", "number&#x000A0;of&#x000A0;cats"),
-                    ("mi", "."),
+                    ("mo", "&#x0002E;"),
                 ]
             ),
             id="issue-118",
@@ -1295,20 +1299,12 @@ from latex2mathml.converter import _convert, convert
         pytest.param(r"\underset ab", {"munder": MultiDict([("mi", "b"), ("mi", "a")])}, id="issue-125-3-underset"),
         pytest.param(
             r"a\mathop{t}b\mathop{t}c",
-            MultiDict(
-                [
-                    ("mi", "a"),
-                    ("mrow", {"mrow": {"mi": "t"}}),
-                    ("mi", "b"),
-                    ("mrow", {"mrow": {"mi": "t"}}),
-                    ("mi", "c"),
-                ]
-            ),
+            MultiDict([("mi", "a"), ("mrow", {"mi": "t"}), ("mi", "b"), ("mrow", {"mi": "t"}), ("mi", "c")]),
             id="issue-125-4-mathop",
         ),
         pytest.param(
             r"\mathop{x}\limits_0^1",
-            {"munderover": MultiDict([("mrow", {"mrow": {"mi": "x"}}), ("mn", "0"), ("mn", "1")])},
+            {"munderover": MultiDict([("mrow", {"mi": "x"}), ("mn", "0"), ("mn", "1")])},
             id="issue-125-4-limits",
         ),
         pytest.param(
@@ -2561,6 +2557,238 @@ from latex2mathml.converter import _convert, convert
                 ]
             ),
             id="normalsize-scriptsize",
+        ),
+        pytest.param(
+            r"\mathbb{AB}C",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mi", {"@mathvariant": "double-struck", "$": "A"}),
+                                ("mi", {"@mathvariant": "double-struck", "$": "B"}),
+                            ]
+                        ),
+                    ),
+                    ("mi", "C"),
+                ]
+            ),
+            id="mathbb",
+        ),
+        pytest.param(
+            r"\mathbf {\text{var} = 1+\{b\}}",
+            {
+                "mrow": MultiDict(
+                    [
+                        ("mtext", {"@mathvariant": "bold", "$": "var"}),
+                        ("mo", {"@mathvariant": "bold", "$": "&#x0003D;"}),
+                        ("mn", {"@mathvariant": "bold", "$": "1"}),
+                        ("mo", {"@mathvariant": "bold", "$": "&#x0002B;"}),
+                        ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                        ("mi", {"@mathvariant": "bold", "$": "b"}),
+                        ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                    ]
+                )
+            },
+            id="mathbf",
+        ),
+        pytest.param(
+            r"{\mathcal {\text{var} = 1+\{b\}}} + B",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mrow": MultiDict(
+                                [
+                                    ("mtext", {"@mathvariant": "script", "$": "var"}),
+                                    ("mo", {"@mathvariant": "script", "$": "&#x0003D;"}),
+                                    ("mn", {"@mathvariant": "script", "$": "1"}),
+                                    ("mo", {"@mathvariant": "script", "$": "&#x0002B;"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                    ("mi", {"@mathvariant": "script", "$": "b"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "B"),
+                ]
+            ),
+            id="mathcal",
+        ),
+        pytest.param(
+            r"{\mathfrak {\text{var} = 1+\{b\}}} + B",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mrow": MultiDict(
+                                [
+                                    ("mtext", {"@mathvariant": "fraktur", "$": "var"}),
+                                    ("mo", {"@mathvariant": "fraktur", "$": "&#x0003D;"}),
+                                    ("mn", {"@mathvariant": "fraktur", "$": "1"}),
+                                    ("mo", {"@mathvariant": "fraktur", "$": "&#x0002B;"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                    ("mi", {"@mathvariant": "fraktur", "$": "b"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "B"),
+                ]
+            ),
+            id="mathfrak",
+        ),
+        pytest.param(
+            r"{\mathit {\text{var} = 1+\{b\}}} + B",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mrow": MultiDict(
+                                [
+                                    ("mtext", {"@mathvariant": "italic", "$": "var"}),
+                                    ("mo", {"@mathvariant": "italic", "$": "&#x0003D;"}),
+                                    ("mn", {"@mathvariant": "italic", "$": "1"}),
+                                    ("mo", {"@mathvariant": "italic", "$": "&#x0002B;"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                    ("mi", {"@mathvariant": "italic", "$": "b"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "B"),
+                ]
+            ),
+            id="mathit",
+        ),
+        pytest.param(
+            r"{\mathrm {\text{var} = 1+\{b\}}} + B",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mrow": MultiDict(
+                                [
+                                    ("mtext", "var"),
+                                    ("mo", "&#x0003D;"),
+                                    ("mn", "1"),
+                                    ("mo", "&#x0002B;"),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                    ("mi", {"@mathvariant": "normal", "$": "b"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "B"),
+                ]
+            ),
+            id="mathrm",
+        ),
+        # FIXME: no way to distinguish \mathcal and \mathscr for now
+        pytest.param(
+            r"{\mathscr {\text{var} = 1+\{b\}}} + B",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mrow": MultiDict(
+                                [
+                                    ("mtext", {"@mathvariant": "script", "$": "var"}),
+                                    ("mo", {"@mathvariant": "script", "$": "&#x0003D;"}),
+                                    ("mn", {"@mathvariant": "script", "$": "1"}),
+                                    ("mo", {"@mathvariant": "script", "$": "&#x0002B;"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                    ("mi", {"@mathvariant": "script", "$": "b"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "B"),
+                ]
+            ),
+            id="mathscr",
+        ),
+        pytest.param(
+            r"{\mathsf {\text{var} = 1+\{b\}}} + B",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mrow": MultiDict(
+                                [
+                                    ("mtext", "var"),
+                                    ("mo", "&#x0003D;"),
+                                    ("mn", "1"),
+                                    ("mo", "&#x0002B;"),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                    ("mi", {"@mathvariant": "sans-serif", "$": "b"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "B"),
+                ]
+            ),
+            id="mathsf",
+        ),
+        pytest.param(
+            r"{\mathtt {\text{var} = 1+\{b\}}} + B",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mrow": MultiDict(
+                                [
+                                    ("mtext", {"@mathvariant": "monospace", "$": "var"}),
+                                    ("mo", {"@mathvariant": "monospace", "$": "&#x0003D;"}),
+                                    ("mn", {"@mathvariant": "monospace", "$": "1"}),
+                                    ("mo", {"@mathvariant": "monospace", "$": "&#x0002B;"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                    ("mi", {"@mathvariant": "monospace", "$": "b"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "B"),
+                ]
+            ),
+            id="mathtt",
+        ),
+        # FIXME: convert with correct spacing
+        pytest.param(
+            r"\mathop{a}\mathord{b}\mathpunct{c}\mathbin{d}\mathrel{e}",
+            MultiDict(
+                [
+                    ("mrow", {"mi": "a"}),
+                    ("mrow", {"mi": "b"}),
+                    ("mrow", {"mi": "c"}),
+                    ("mrow", {"mi": "d"}),
+                    ("mrow", {"mi": "e"}),
+                ]
+            ),
+            id="math-commands-that-currently-does-nothing",
         ),
     ],
 )
