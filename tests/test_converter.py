@@ -2816,6 +2816,20 @@ from latex2mathml.converter import _convert, convert
             },
             id="hbox-with-math-mode",
         ),
+        pytest.param(
+            r"\hbox{\alpha $\alpha$}",
+            {
+                "mstyle": MultiDict(
+                    [
+                        ("@displaystyle", "false"),
+                        ("@scriptlevel", "0"),
+                        ("mtext", r"\alpha&#x000A0;"),
+                        ("mrow", {"mi": "&#x003B1;"}),
+                    ]
+                )
+            },
+            id="hbox-with-backslash-in-text",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
