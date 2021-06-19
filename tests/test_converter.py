@@ -2790,6 +2790,32 @@ from latex2mathml.converter import _convert, convert
             ),
             id="math-commands-that-currently-does-nothing",
         ),
+        pytest.param(
+            r"\hbox{This is a sentence.}",
+            {
+                "mstyle": {
+                    "@displaystyle": "false",
+                    "@scriptlevel": "0",
+                    "mtext": "This&#x000A0;is&#x000A0;a&#x000A0;sentence.",
+                }
+            },
+            id="hbox",
+        ),
+        pytest.param(
+            r"\hbox{left $x > 0$ center \$x > 0\$ right}",
+            {
+                "mstyle": MultiDict(
+                    [
+                        ("@displaystyle", "false"),
+                        ("@scriptlevel", "0"),
+                        ("mtext", "left&#x000A0;"),
+                        ("mrow", MultiDict([("mi", "x"), ("mo", "&#x0003E;"), ("mn", "0")])),
+                        ("mtext", r"&#x000A0;center&#x000A0;\$x&#x000A0;>&#x000A0;0\$&#x000A0;right"),
+                    ]
+                )
+            },
+            id="hbox-with-math-mode",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

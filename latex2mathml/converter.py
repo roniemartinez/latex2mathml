@@ -1,4 +1,5 @@
 import copy
+import enum
 import re
 from collections import OrderedDict
 from typing import Dict, Iterable, Iterator, Optional, Tuple
@@ -36,6 +37,12 @@ OPERATORS = (
     r"\dotso",
     r"\gt",
 )
+MATH_MODE_PATTERN = re.compile(r"\\\$|\$|[^\\$]+")
+
+
+class Mode(enum.Enum):
+    TEXT = enum.auto()
+    MATH = enum.auto()
 
 
 def convert(latex: str, xmlns: str = "http://www.w3.org/1998/Math/MathML", display: str = "inline") -> str:
@@ -155,6 +162,21 @@ def _get_alignment_and_column_lines(alignment: Optional[str] = None) -> Tuple[Op
     return _alignment, " ".join(column_lines)
 
 
+def separate_by_mode(text: str) -> Iterator[Tuple[str, Mode]]:
+    string = ""
+    is_math_mode = False
+    for match in MATH_MODE_PATTERN.findall(text):
+        if match == "$":  # should match both $ and  $$
+            yield string, Mode.MATH if is_math_mode else Mode.TEXT
+            string = ""
+            is_math_mode = not is_math_mode
+        else:
+            string += match
+    if len(string):
+        yield string, Mode.MATH if is_math_mode else Mode.TEXT
+    # TODO: if stays in math mode, means not terminated properly, raise error
+
+
 def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optional[str]]] = None) -> None:
     command = node.token
 
@@ -167,6 +189,8 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
         parent = SubElement(parent, "mstyle", displaystyle="true", scriptlevel="0")
     elif command == commands.HPHANTOM:
         parent = SubElement(parent, "mpadded", height="0", depth="0")
+    elif command == commands.HBOX:
+        parent = SubElement(parent, "mstyle", displaystyle="false", scriptlevel="0")
 
     tag, attributes = copy.deepcopy(commands.CONVERSION_MAP[command])
 
@@ -198,10 +222,23 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
     if command in commands.LIMIT:
         element.text = command[1:]
     elif node.text is not None:
-        if command == commands.FBOX:
-            element = SubElement(element, "mtext")
-        element.text = node.text.replace(" ", "&#x000A0;")
-        _set_font(element, "mtext", font)
+        if command == commands.HBOX:
+            mtext: Optional[Element] = element
+            for text, mode in separate_by_mode(node.text):
+                if mode == Mode.TEXT:
+                    if mtext is None:
+                        mtext = SubElement(parent, tag, attributes)
+                    mtext.text = text.replace(" ", "&#x000A0;")
+                    _set_font(mtext, "mtext", font)
+                    mtext = None
+                else:
+                    _row = SubElement(parent, "mrow")
+                    _convert_group(iter(walk(text)), _row)
+        else:
+            if command == commands.FBOX:
+                element = SubElement(element, "mtext")
+            element.text = node.text.replace(" ", "&#x000A0;")
+            _set_font(element, "mtext", font)
     elif node.delimiter is not None and command not in (commands.FRAC, commands.GENFRAC):
         if node.delimiter != ".":
             symbol = convert_symbol(node.delimiter)

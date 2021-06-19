@@ -164,6 +164,7 @@ MATHTT = r"\mathtt"
 
 BOXED = r"\boxed"
 FBOX = r"\fbox"
+HBOX = r"\hbox"
 
 COLOR = r"\color"
 DISPLAYSTYLE = r"\displaystyle"
@@ -335,6 +336,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     ROOT: ("mroot", {}),
     HREF: ("mtext", {}),
     TEXT: ("mtext", {}),
+    HBOX: ("mtext", {}),
     HPHANTOM: ("mphantom", {}),
 }
 
