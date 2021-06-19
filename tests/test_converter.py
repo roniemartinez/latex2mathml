@@ -2830,6 +2830,72 @@ from latex2mathml.converter import _convert, convert
             },
             id="hbox-with-backslash-in-text",
         ),
+        pytest.param(
+            r"\begin{matrix} xxxxxx & xxxxxx & xxxxxx \cr ab & \hfil ab & ab\hfil\cr \end{matrix}",
+            {
+                "mtable": MultiDict(
+                    [
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    (
+                                        "mtd",
+                                        MultiDict(
+                                            [
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                            ]
+                                        ),
+                                    ),
+                                    (
+                                        "mtd",
+                                        MultiDict(
+                                            [
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                            ]
+                                        ),
+                                    ),
+                                    (
+                                        "mtd",
+                                        MultiDict(
+                                            [
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                                ("mi", "x"),
+                                            ]
+                                        ),
+                                    ),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", MultiDict([("mi", "a"), ("mi", "b")])),
+                                    ("mtd", MultiDict([("@columnalign", "right"), ("mi", "a"), ("mi", "b")])),
+                                    ("mtd", MultiDict([("@columnalign", "left"), ("mi", "a"), ("mi", "b")])),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="hfil",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
