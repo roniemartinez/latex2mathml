@@ -37,7 +37,7 @@ OPERATORS = (
     r"\dotso",
     r"\gt",
 )
-MATH_MODE_PATTERN = re.compile(r"""\\\$|\$|\\?[^\\$]+""")
+MATH_MODE_PATTERN = re.compile(r"\\\$|\$|\\?[^\\$]+")
 
 
 class Mode(enum.Enum):
