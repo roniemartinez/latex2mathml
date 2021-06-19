@@ -1559,6 +1559,7 @@ from latex2mathml.walker import Node, walk
             ],
             id="issue-203-2",
         ),
+        pytest.param(r"\hbox{E=mc^2}", [Node(token=r"\hbox", text="E=mc^2")], id="hbox"),
     ],
 )
 def test_walk(latex: str, expected: list) -> None:

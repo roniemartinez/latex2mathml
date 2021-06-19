@@ -122,7 +122,7 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
             if sibling:
                 group.append(sibling)
             break
-        elif token in (*commands.BIG.keys(), commands.TEXT, commands.FBOX):
+        elif token in (*commands.BIG.keys(), commands.FBOX, commands.HBOX, commands.TEXT):
             node = Node(token=token, text=next(tokens))
         elif token == commands.HREF:
             attributes = {"href": next(tokens)}
