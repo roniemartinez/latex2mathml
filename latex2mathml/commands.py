@@ -99,8 +99,9 @@ GCD = r"\gcd"
 INTOP = r"\intop"
 INJLIM = r"\injlim"
 
-HLINE = r"\hline"
 HDASHLINE = r"\hdashline"
+HLINE = r"\hline"
+HFIL = r"\hfil"
 
 CASES = r"\cases"
 DISPLAYLINES = r"\displaylines"

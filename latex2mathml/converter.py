@@ -2,7 +2,7 @@ import copy
 import enum
 import re
 from collections import OrderedDict
-from typing import Dict, Iterable, Iterator, Optional, Tuple
+from typing import Dict, Iterable, Iterator, List, Optional, Tuple
 from xml.etree.cElementTree import Element, SubElement, tostring
 from xml.sax.saxutils import unescape
 
@@ -66,6 +66,8 @@ def _convert_matrix(nodes: Iterator[Node], parent: Element, alignment: Optional[
     row_index = 0
     row_lines = []
 
+    hfil_indexes: List[bool] = []
+
     for node in nodes:
         if row is None:
             row = SubElement(parent, "mtr")
@@ -76,33 +78,45 @@ def _convert_matrix(nodes: Iterator[Node], parent: Element, alignment: Optional[
 
         if node.token == commands.BRACES:
             _convert_group(iter([node]), cell)
-            continue
-
-        if node.token == "&":
+        elif node.token == "&":
+            _set_cell_alignment(cell, hfil_indexes)
+            hfil_indexes = []
             col_alignment, col_index = _get_column_alignment(alignment, col_alignment, col_index)
             cell = _make_matrix_cell(row, col_alignment)
-            continue
         elif node.token in (commands.DOUBLEBACKSLASH, commands.CARRIAGE_RETURN):
+            _set_cell_alignment(cell, hfil_indexes)
+            hfil_indexes = []
             row_index += 1
             col_index = 0
             col_alignment, col_index = _get_column_alignment(alignment, col_alignment, col_index)
             row = SubElement(parent, "mtr")
             cell = _make_matrix_cell(row, col_alignment)
-            continue
         elif node.token == commands.HLINE:
             row_lines.append("solid")
-            continue
         elif node.token == commands.HDASHLINE:
             row_lines.append("dashed")
-            continue
-
-        if row_index > len(row_lines):
-            row_lines.append("none")
-
-        _convert_group(iter([node]), cell)
+        elif node.token == commands.HFIL:
+            hfil_indexes.append(True)
+        else:
+            if row_index > len(row_lines):
+                row_lines.append("none")
+            hfil_indexes.append(False)
+            _convert_group(iter([node]), cell)
 
     if any(r == "solid" for r in row_lines):
         parent.set("rowlines", " ".join(row_lines))
+
+    if row is not None and cell is not None and len(cell) == 0:
+        # Remove last row if it does not contain anything
+        parent.remove(row)
+
+
+def _set_cell_alignment(cell: Element, hfil_indexes: List[bool]) -> None:
+    if cell is not None and any(hfil_indexes) and len(hfil_indexes) > 1:
+        if hfil_indexes[0] and not hfil_indexes[-1]:
+            cell.attrib["columnalign"] = "right"
+        elif not hfil_indexes[0] and hfil_indexes[-1]:
+            cell.attrib["columnalign"] = "left"
 
 
 def _get_column_alignment(
