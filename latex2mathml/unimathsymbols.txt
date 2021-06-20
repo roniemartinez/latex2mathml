@@ -205,7 +205,7 @@
 000A4^¤^^^N^mathord^^t \currency (wasysym), curren
 000A5^¥^\yen^\yen^N^mathord^amsfonts^YEN SIGN
 000A6^¦^^^N^mathord^^brvbar (vertical)
-000A7^§^^^N^mathord^^sect
+000A7^§^\S^^N^mathord^^sect
 000A8^¨^\spddot^^D^mathord^amsxtra^Dot /die, alias for 0308
 000AC^¬^\neg^\neg^U^mathord^^= \lnot, NOT SIGN
 000AE^®^\circledR^^X^mathord^amsfonts^REGISTERED SIGN

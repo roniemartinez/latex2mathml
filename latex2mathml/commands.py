@@ -89,15 +89,22 @@ FUNCTIONS = (
     r"\hom",
     r"\ker",
     r"\ln",
+    r"\lg",
     r"\log",
     r"\sec",
     r"\sin",
+    r"\sinh",
     r"\tan",
+    r"\tanh",
 )
 DETERMINANT = r"\det"
 GCD = r"\gcd"
 INTOP = r"\intop"
 INJLIM = r"\injlim"
+LIMINF = r"\liminf"
+LIMSUP = r"\limsup"
+PR = r"\Pr"
+PROJLIM = r"\projlim"
 
 HDASHLINE = r"\hdashline"
 HLINE = r"\hline"
