@@ -19,7 +19,7 @@ PATTERN = re.compile(
         [\\\[\]{{}}\s!,:>;|_%#$&] |  # escaped characters
         (begin|end|operatorname){{[a-zA-Z]+\*?}} |  # begin, end or operatorname
         # FIXME: curly braces is tricky on these commands
-        (color|fbox|href|hbox|text)\s*{{([^}}]*)}} |  # color, fbox, href, text
+        (color|fbox|hbox|href|mbox|style|text)\s*{{([^}}]*)}} |  # color, fbox, href, hbox, mbox, style, text
         math[a-z]+{{[a-zA-Z]}} |  # commands starting with math
         [a-zA-Z]+  # other commands
     )? |
@@ -36,7 +36,9 @@ def tokenize(data: str) -> Iterator[str]:
             yield from _tokenize_math(first_match)
         elif first_match == commands.TEXTSTYLE:
             yield first_match  # prevent the next line (commands.TEXT)
-        elif first_match.startswith((commands.COLOR, commands.FBOX, commands.HREF, commands.HBOX, commands.TEXT)):
+        elif first_match.startswith(
+            (commands.COLOR, commands.FBOX, commands.HREF, commands.HBOX, commands.MBOX, commands.STYLE, commands.TEXT)
+        ):
             index = first_match.index(commands.OPENING_BRACE)
             yield first_match[:index].strip()
             yield match.group(8)

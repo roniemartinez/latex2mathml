@@ -144,6 +144,7 @@ GREATER_THAN = r"\>"
 HSKIP = r"\hskip"
 HSPACE = r"\hspace"
 KERN = r"\kern"
+MKERN = r"\mkern"
 MSKIP = r"\mskip"
 MSPACE = r"\mspace"
 NEGTHINSPACE = r"\negthinspace"
@@ -173,12 +174,14 @@ MATHTT = r"\mathtt"
 BOXED = r"\boxed"
 FBOX = r"\fbox"
 HBOX = r"\hbox"
+MBOX = r"\mbox"
 
 COLOR = r"\color"
 DISPLAYSTYLE = r"\displaystyle"
 TEXTSTYLE = r"\textstyle"
 SCRIPTSTYLE = r"\scriptstyle"
 SCRIPTSCRIPTSTYLE = r"\scriptscriptstyle"
+STYLE = r"\style"
 
 HPHANTOM = r"\hphantom"
 
@@ -265,6 +268,9 @@ MSTYLE_SIZES: Dict[str, Tuple[str, dict]] = {
     r"\large": ("mstyle", {"mathsize": "1.2em"}),
     r"\normalsize": ("mstyle", {"mathsize": "1em"}),
     r"\scriptsize": ("mstyle", {"mathsize": "0.7em"}),
+    r"\small": ("mstyle", {"mathsize": "0.85em"}),
+    r"\tiny": ("mstyle", {"mathsize": "0.5em"}),
+    r"\Tiny": ("mstyle", {"mathsize": "0.6em"}),
 }
 
 STYLES: Dict[str, Tuple[str, dict]] = {
@@ -318,6 +324,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     HSKIP: ("mspace", {}),
     HSPACE: ("mspace", {}),
     KERN: ("mspace", {}),
+    MKERN: ("mspace", {}),
     MSKIP: ("mspace", {}),
     MSPACE: ("mspace", {}),
     NEGTHINSPACE: ("mspace", {"width": "negativethinmathspace"}),
@@ -345,6 +352,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     HREF: ("mtext", {}),
     TEXT: ("mtext", {}),
     HBOX: ("mtext", {}),
+    MBOX: ("mtext", {}),
     HPHANTOM: ("mphantom", {}),
 }
 

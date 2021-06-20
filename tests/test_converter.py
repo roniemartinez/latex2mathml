@@ -1378,8 +1378,8 @@ from latex2mathml.converter import _convert, convert
             id="prime-no-base",
         ),
         pytest.param(
-            r"""|\,|\:|\>|\;|\\|\!|\quad|\qquad|\hspace1em|\hspace{10ex}|\enspace|\hskip1em|\kern-1.5pt|\mskip18mu|
-            \mspace18mu|\negthinspace|\negmedspace|\negthickspace|\nobreakspace|\space|\thinspace|""",
+            r"""|\,|\:|\>|\;|\\|\!|\quad|\qquad|\hspace1em|\hspace{10ex}|\enspace|\hskip1em|\kern-1.5pt|\mkern10mu|
+            \mskip18mu|\mspace18mu|\negthinspace|\negmedspace|\negthickspace|\nobreakspace|\space|\thinspace|""",
             MultiDict(
                 [
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
@@ -1408,6 +1408,8 @@ from latex2mathml.converter import _convert, convert
                     ("mspace", {"@width": "1em"}),
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                     ("mspace", {"@width": "-1.5pt"}),
+                    ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
+                    ("mspace", {"@width": "10mu"}),  # TODO: convert to em?
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
                     ("mspace", {"@width": "18mu"}),  # TODO: convert to em?
                     ("mo", {"@stretchy": "false", "$": "&#x0007C;"}),
@@ -2476,7 +2478,9 @@ from latex2mathml.converter import _convert, convert
             id="hphantom",
         ),
         pytest.param(
-            r"\idotsint", MultiDict([("mo", "&#x0222B;"), ("mo", "&#x022EF;"), ("mo", "&#x0222B;")]), id="idotsint"
+            r"\idotsint",
+            {"mrow": MultiDict([("mo", "&#x0222B;"), ("mo", "&#x022EF;"), ("mo", "&#x0222B;")])},
+            id="idotsint",
         ),
         pytest.param(r"\intop", {"mo": {"@movablelimits": "true", "$": "&#x0222B;"}}, id="intop"),
         pytest.param(r"\injlim", {"mo": {"@movablelimits": "true", "$": "inj&#x02006;lim"}}, id="injlim"),
@@ -2931,6 +2935,85 @@ from latex2mathml.converter import _convert, convert
         pytest.param(r"\varsubsetneqq", {"mo": "&#x02ACB;"}, id="varsubsetneqq"),
         pytest.param(r"\varsupsetneq", {"mo": "&#x0228B;"}, id="varsupsetneq"),
         pytest.param(r"\varsupsetneqq", {"mo": "&#x02ACC;"}, id="varsupsetneqq"),
+        pytest.param(
+            r"[{[\small[\tiny[\Tiny[[}[",
+            MultiDict(
+                [
+                    ("mo", {"@stretchy": "false", "$": "["}),
+                    (
+                        "mrow",
+                        MultiDict(
+                            [
+                                ("mo", {"@stretchy": "false", "$": "["}),
+                                (
+                                    "mstyle",
+                                    MultiDict(
+                                        [
+                                            ("@mathsize", "0.85em"),
+                                            ("mo", {"@stretchy": "false", "$": "["}),
+                                            (
+                                                "mstyle",
+                                                MultiDict(
+                                                    [
+                                                        ("@mathsize", "0.5em"),
+                                                        ("mo", {"@stretchy": "false", "$": "["}),
+                                                        (
+                                                            "mstyle",
+                                                            MultiDict(
+                                                                [
+                                                                    ("@mathsize", "0.6em"),
+                                                                    ("mo", {"@stretchy": "false", "$": "["}),
+                                                                    ("mo", {"@stretchy": "false", "$": "["}),
+                                                                ]
+                                                            ),
+                                                        ),
+                                                    ]
+                                                ),
+                                            ),
+                                        ]
+                                    ),
+                                ),
+                            ]
+                        ),
+                    ),
+                    ("mo", {"@stretchy": "false", "$": "["}),
+                ]
+            ),
+            id="small-tiny",
+        ),
+        pytest.param(
+            r"\mbox{This is a sentence.}",
+            {
+                "mstyle": {
+                    "@displaystyle": "false",
+                    "@scriptlevel": "0",
+                    "mtext": "This&#x000A0;is&#x000A0;a&#x000A0;sentence.",
+                }
+            },
+            id="mbox",
+        ),
+        pytest.param(
+            r"\frac{\style{color:red}{x+1}}{\style{color:green}y+2}",
+            {
+                "mfrac": MultiDict(
+                    [
+                        (
+                            "mrow",
+                            {
+                                "mrow": MultiDict(
+                                    [("@style", "color:red"), ("mi", "x"), ("mo", "&#x0002B;"), ("mn", "1")]
+                                )
+                            },
+                        ),
+                        (
+                            "mrow",
+                            MultiDict([("mi", {"@style": "color:green", "$": "y"}), ("mo", "&#x0002B;"), ("mn", "2")]),
+                        ),
+                    ]
+                )
+            },
+            id="style",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

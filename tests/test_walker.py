@@ -1560,6 +1560,17 @@ from latex2mathml.walker import Node, walk
             id="issue-203-2",
         ),
         pytest.param(r"\hbox{E=mc^2}", [Node(token=r"\hbox", text="E=mc^2")], id="hbox"),
+        pytest.param(
+            r"\style{color:red}{x+1}",
+            [
+                Node(
+                    token="{}",
+                    children=(Node(token="x"), Node(token="+"), Node(token="1")),
+                    attributes={"style": "color:red"},
+                )
+            ],
+            id="style",
+        ),
     ],
 )
 def test_walk(latex: str, expected: list) -> None:
