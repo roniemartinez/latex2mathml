@@ -171,7 +171,8 @@ def _convert_group(nodes: Iterable[Node], parent: Element, font: Optional[Dict[s
         elif node.children is None:
             _convert_symbol(node, parent, _font)
         elif node.children is not None:
-            _row = SubElement(parent, "mrow")
+            attributes = node.attributes or {}
+            _row = SubElement(parent, "mrow", attrib=attributes)
             _convert_group(iter(node.children), _row, _font)
 
 
@@ -219,7 +220,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
         parent = SubElement(parent, "mstyle", displaystyle="true", scriptlevel="0")
     elif command == commands.HPHANTOM:
         parent = SubElement(parent, "mpadded", height="0", depth="0")
-    elif command == commands.HBOX:
+    elif command in (commands.HBOX, commands.MBOX):
         parent = SubElement(parent, "mstyle", displaystyle="false", scriptlevel="0")
 
     tag, attributes = copy.deepcopy(commands.CONVERSION_MAP[command])
@@ -351,13 +352,14 @@ def _append_postfix_element(node: Node, parent: Element) -> None:
 
 def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Optional[str]]] = None) -> None:
     token = node.token
+    attributes = node.attributes or {}
     symbol = convert_symbol(token)
     if re.match(r"\d+(.\d+)?", token):
-        element = SubElement(parent, "mn")
+        element = SubElement(parent, "mn", attrib=attributes)
         element.text = token
         _set_font(element, element.tag, font)
     elif token in OPERATORS:
-        element = SubElement(parent, "mo")
+        element = SubElement(parent, "mo", attrib=attributes)
         element.text = token if symbol is None else "&#x{};".format(symbol)
         if token == r"\|":
             element.attrib["fence"] = "false"
@@ -376,11 +378,11 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Option
         )
         or symbol == "."
     ):
-        element = SubElement(parent, "mo")
+        element = SubElement(parent, "mo", attrib=attributes)
         element.text = "&#x{};".format(symbol)
         _set_font(element, element.tag, font)
     elif token in (r"\ ", "~", commands.NOBREAKSPACE, commands.SPACE):
-        element = SubElement(parent, "mtext")
+        element = SubElement(parent, "mtext", attrib=attributes)
         element.text = "&#x000A0;"
         _set_font(element, "mtext", font)
     elif token in (
@@ -393,7 +395,7 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Option
         commands.PR,
         commands.PROJLIM,
     ):
-        element = SubElement(parent, "mo", movablelimits="true")
+        element = SubElement(parent, "mo", attrib={"movablelimits": "true", **attributes})
         texts = {
             commands.INJLIM: "inj&#x02006;lim",
             commands.INTOP: "&#x0222B;",
@@ -404,11 +406,12 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Option
         element.text = texts.get(token, token[1:])
         _set_font(element, element.tag, font)
     elif token == commands.IDOTSINT:
+        _parent = SubElement(parent, "mrow", attrib=attributes)
         for s in ("&#x0222B;", "&#x022EF;", "&#x0222B;"):
-            element = SubElement(parent, "mo")
+            element = SubElement(_parent, "mo")
             element.text = s
     elif token.startswith(commands.BACKSLASH):
-        element = SubElement(parent, "mi")
+        element = SubElement(parent, "mi", attrib=attributes)
         if symbol:
             element.text = "&#x{};".format(symbol)
         elif token in commands.FUNCTIONS:
@@ -419,7 +422,7 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Option
             element.text = token
         _set_font(element, element.tag, font)
     else:
-        element = SubElement(parent, "mi")
+        element = SubElement(parent, "mi", attrib=attributes)
         element.text = token
         _set_font(element, element.tag, font)
 

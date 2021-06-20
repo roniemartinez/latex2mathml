@@ -509,6 +509,7 @@ from latex2mathml.tokenizer import tokenize
         pytest.param("X^1.23", ["X", "^", "1", ".23"], id="issue-203-4"),
         pytest.param(r"X_\mathrm{min}", ["X", "_", r"\mathrm", "{", "m", "i", "n", "}"], id="issue-203-5"),
         pytest.param(r"\hbox{E=mc^2}", [r"\hbox", "E=mc^2"], id="hbox"),
+        pytest.param(r"\style{color:red}", [r"\style", "color:red"], id="style"),
     ],
 )
 def test_tokenize(latex: str, expected: list) -> None:

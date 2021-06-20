@@ -107,7 +107,7 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
         elif token in commands.COMMANDS_WITH_ONE_PARAMETER or token.startswith(commands.MATH):
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
             node = Node(token=token, children=children)
-        elif token in (commands.HSKIP, commands.HSPACE, commands.KERN, commands.MSKIP, commands.MSPACE):
+        elif token in (commands.HSKIP, commands.HSPACE, commands.KERN, commands.MKERN, commands.MSKIP, commands.MSPACE):
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
             if children[0].token == commands.BRACES and children[0].children is not None:
                 children = children[0].children
@@ -122,7 +122,11 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
             if sibling:
                 group.append(sibling)
             break
-        elif token in (*commands.BIG.keys(), commands.FBOX, commands.HBOX, commands.TEXT):
+        elif token == commands.STYLE:
+            attributes = {"style": next(tokens)}
+            next_node = tuple(_walk(tokens, terminator=terminator, limit=1))[0]
+            node = next_node._replace(attributes=attributes)
+        elif token in (*commands.BIG.keys(), commands.FBOX, commands.HBOX, commands.MBOX, commands.TEXT):
             node = Node(token=token, text=next(tokens))
         elif token == commands.HREF:
             attributes = {"href": next(tokens)}
