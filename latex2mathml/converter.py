@@ -36,6 +36,22 @@ OPERATORS = (
     r"\dotsc",
     r"\dotso",
     r"\gt",
+    r"\ldotp",
+    r"\lt",
+    r"\lvert",
+    r"\lVert",
+    r"\lvertneqq",
+    r"\ngeqq",
+    r"\omicron",
+    r"\rvert",
+    r"\rVert",
+    r"\S",
+    r"\smallfrown",
+    r"\smallint",
+    r"\smallsmile",
+    r"\surd",
+    r"\varsubsetneqq",
+    r"\varsupsetneqq",
 )
 MATH_MODE_PATTERN = re.compile(r"\\\$|\$|\\?[^\\$]+")
 
@@ -345,7 +361,9 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Option
         element.text = token if symbol is None else "&#x{};".format(symbol)
         if token == r"\|":
             element.attrib["fence"] = "false"
-        if token in ("(", ")", "[", "]", "|", r"\|", r"\{", r"\}"):
+        if token == r"\smallint":
+            element.attrib["largeop"] = "false"
+        if token in ("(", ")", "[", "]", "|", r"\|", r"\{", r"\}", r"\surd"):
             element.attrib["stretchy"] = "false"
             _set_font(element, "fence", font)
         else:
@@ -365,9 +383,24 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Option
         element = SubElement(parent, "mtext")
         element.text = "&#x000A0;"
         _set_font(element, "mtext", font)
-    elif token in (commands.DETERMINANT, commands.GCD, commands.INTOP, commands.INJLIM):
+    elif token in (
+        commands.DETERMINANT,
+        commands.GCD,
+        commands.INTOP,
+        commands.INJLIM,
+        commands.LIMINF,
+        commands.LIMSUP,
+        commands.PR,
+        commands.PROJLIM,
+    ):
         element = SubElement(parent, "mo", movablelimits="true")
-        texts = {commands.INJLIM: "inj&#x02006;lim", commands.INTOP: "&#x0222B;"}
+        texts = {
+            commands.INJLIM: "inj&#x02006;lim",
+            commands.INTOP: "&#x0222B;",
+            commands.LIMINF: "lim&#x02006;inf",
+            commands.LIMSUP: "lim&#x02006;sup",
+            commands.PROJLIM: "proj&#x02006;lim",
+        }
         element.text = texts.get(token, token[1:])
         _set_font(element, element.tag, font)
     elif token == commands.IDOTSINT:
