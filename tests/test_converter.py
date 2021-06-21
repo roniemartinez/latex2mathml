@@ -203,16 +203,6 @@ from latex2mathml.converter import _convert, convert
         ),
         pytest.param(r"\,", {"mspace": {"@width": "0.167em"}}, id="space"),
         pytest.param(
-            r"\overline{a}",
-            {"mover": MultiDict([("mrow", {"mi": "a"}), ("mo", {"@stretchy": "true", "$": "&#x000AF;"})])},
-            id="overline",
-        ),
-        pytest.param(
-            r"\underline{a}",
-            {"munder": MultiDict([("mrow", {"mi": "a"}), ("mo", {"@stretchy": "true", "$": "&#x00332;"})])},
-            id="underline",
-        ),
-        pytest.param(
             r"\begin{matrix}a & b \\ c & d \end{matrix}",
             {
                 "mtable": MultiDict(
@@ -1109,11 +1099,6 @@ from latex2mathml.converter import _convert, convert
             id="issue-91",
         ),
         pytest.param(r"p_{\max}", {"msub": MultiDict([("mi", "p"), ("mrow", {"mo": "max"})])}, id="issue-98"),
-        pytest.param(
-            r"\overrightarrow {a}",
-            {"mover": MultiDict([("mrow", {"mi": "a"}), ("mo", {"@stretchy": "true", "$": "&#x02192;"})])},
-            id="issue-100",
-        ),
         pytest.param(
             r"\vec{AB}",
             {
@@ -3013,6 +2998,383 @@ from latex2mathml.converter import _convert, convert
                 )
             },
             id="style",
+        ),
+        pytest.param(
+            r"\mathring a \mathring{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", "&#x002DA;")]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x002DA;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="mathring",
+        ),
+        pytest.param(
+            r"\overleftarrow a \overleftarrow{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", "&#x02190;")]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x02190;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="overleftarrow",
+        ),
+        pytest.param(
+            r"\overleftrightarrow a \overleftrightarrow{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", "&#x02194;")]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x02194;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="overleftrightarrow",
+        ),
+        pytest.param(
+            r"\overline a \overline{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", {"@accent": "true", "$": "&#x02015;"})]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", {"@accent": "true", "$": "&#x02015;"}),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="overline",
+        ),
+        pytest.param(
+            r"\overparen a \overparen{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", "&#x023DC;")]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x023DC;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="overparen",
+        ),
+        pytest.param(
+            r"\overrightarrow a \overrightarrow{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", "&#x02192;")]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x02192;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="overrightarrow",
+        ),
+        pytest.param(
+            r"\underleftarrow a \underleftarrow{bc}",
+            MultiDict(
+                [
+                    (
+                        "munder",
+                        MultiDict([("mi", "a"), ("mo", "&#x02190;")]),
+                    ),
+                    (
+                        "munder",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x02190;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="underleftarrow",
+        ),
+        pytest.param(
+            r"\underrightarrow a \underrightarrow{bc}",
+            MultiDict(
+                [
+                    (
+                        "munder",
+                        MultiDict([("mi", "a"), ("mo", "&#x02192;")]),
+                    ),
+                    (
+                        "munder",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x02192;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="underrightarrow",
+        ),
+        pytest.param(
+            r"\underleftrightarrow a \underleftrightarrow{bc}",
+            MultiDict(
+                [
+                    (
+                        "munder",
+                        MultiDict([("mi", "a"), ("mo", "&#x02194;")]),
+                    ),
+                    (
+                        "munder",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x02194;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="underleftrightarrow",
+        ),
+        pytest.param(
+            r"\underline a \underline{bc}",
+            MultiDict(
+                [
+                    (
+                        "munder",
+                        MultiDict([("mi", "a"), ("mo", {"@accent": "true", "$": "&#x02015;"})]),
+                    ),
+                    (
+                        "munder",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", {"@accent": "true", "$": "&#x02015;"}),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="underline",
+        ),
+        pytest.param(
+            r"\underparen a \underparen{bc}",
+            MultiDict(
+                [
+                    (
+                        "munder",
+                        MultiDict([("mi", "a"), ("mo", "&#x023DD;")]),
+                    ),
+                    (
+                        "munder",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x023DD;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="underparen",
+        ),
+        pytest.param(
+            r"\widehat a \widehat{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", "&#x0005E;")]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x0005E;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="widehat",
+        ),
+        pytest.param(
+            r"\widetilde a \widetilde{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", "&#x0007E;")]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", "&#x0007E;"),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="widetilde",
         ),
     ],
 )

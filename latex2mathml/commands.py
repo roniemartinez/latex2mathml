@@ -54,10 +54,20 @@ DDDOT = r"\dddot"
 DDDDOT = r"\ddddot"
 GRAVE = r"\grave"
 HAT = r"\hat"
+MATHRING = r"\mathring"
+OVERLEFTARROW = r"\overleftarrow"
+OVERLEFTRIGHTARROW = r"\overleftrightarrow"
 OVERLINE = r"\overline"
+OVERPAREN = r"\overparen"
 OVERRIGHTARROW = r"\overrightarrow"
+UNDERLEFTARROW = r"\underleftarrow"
 UNDERLINE = r"\underline"
+UNDERPAREN = r"\underparen"
+UNDERRIGHTARROW = r"\underrightarrow"
+UNDERLEFTRIGHTARROW = r"\underleftrightarrow"
 VEC = r"\vec"
+WIDEHAT = r"\widehat"
+WIDETILDE = r"\widetilde"
 
 HREF = r"\href"
 TEXT = r"\text"
@@ -236,10 +246,20 @@ COMMANDS_WITH_ONE_PARAMETER = (
     GRAVE,
     HAT,
     HPHANTOM,
+    MATHRING,
+    OVERLEFTARROW,
+    OVERLEFTRIGHTARROW,
     OVERLINE,
+    OVERPAREN,
     OVERRIGHTARROW,
+    UNDERLEFTARROW,
     UNDERLINE,
+    UNDERPAREN,
+    UNDERRIGHTARROW,
+    UNDERLEFTRIGHTARROW,
     VEC,
+    WIDEHAT,
+    WIDETILDE,
 )
 COMMANDS_WITH_TWO_PARAMETERS = (
     BINOM,
@@ -308,12 +328,22 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     GRAVE: ("mover", {}),
     HAT: ("mover", {}),
     LIMITS: ("munderover", {}),
+    MATHRING: ("mover", {}),
+    OVERLEFTARROW: ("mover", {}),
+    OVERLEFTRIGHTARROW: ("mover", {}),
     OVERLINE: ("mover", {}),
+    OVERPAREN: ("mover", {}),
     OVERRIGHTARROW: ("mover", {}),
     OVERSET: ("mover", {}),
+    UNDERLEFTARROW: ("munder", {}),
     UNDERLINE: ("munder", {}),
+    UNDERPAREN: ("munder", {}),
+    UNDERRIGHTARROW: ("munder", {}),
+    UNDERLEFTRIGHTARROW: ("munder", {}),
     UNDERSET: ("munder", {}),
     VEC: ("mover", {}),
+    WIDEHAT: ("mover", {}),
+    WIDETILDE: ("mover", {}),
     # spaces
     COLON: ("mspace", {"width": "0.222em"}),
     COMMA: ("mspace", {"width": "0.167em"}),
@@ -356,13 +386,10 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     HPHANTOM: ("mphantom", {}),
 }
 
+
 DIACRITICS: Dict[str, Tuple[str, Dict[str, str]]] = {
-    OVERLINE: ("&#x000AF;", {"stretchy": "true"}),
-    BAR: ("&#x000AF;", {"stretchy": "true"}),
-    UNDERLINE: ("&#x00332;", {"stretchy": "true"}),
-    OVERRIGHTARROW: ("&#x02192;", {"stretchy": "true"}),
-    VEC: ("&#x02192;", {"stretchy": "true"}),
     ACUTE: ("&#x000B4;", {}),
+    BAR: ("&#x000AF;", {"stretchy": "true"}),
     BREVE: ("&#x002D8;", {}),
     CHECK: ("&#x002C7;", {}),
     DOT: ("&#x002D9;", {}),
@@ -371,4 +398,18 @@ DIACRITICS: Dict[str, Tuple[str, Dict[str, str]]] = {
     DDDDOT: ("&#x020DC;", {}),
     GRAVE: ("&#x00060;", {}),
     HAT: ("&#x0005E;", {}),
+    MATHRING: ("&#x002DA;", {}),
+    OVERLEFTARROW: ("&#x02190;", {}),
+    OVERLEFTRIGHTARROW: ("&#x02194;", {}),
+    OVERLINE: ("&#x02015;", {"accent": "true"}),
+    OVERPAREN: ("&#x023DC;", {}),
+    OVERRIGHTARROW: ("&#x02192;", {}),
+    UNDERLEFTARROW: ("&#x02190;", {}),
+    UNDERLEFTRIGHTARROW: ("&#x02194;", {}),
+    UNDERLINE: ("&#x02015;", {"accent": "true"}),
+    UNDERPAREN: ("&#x023DD;", {}),
+    UNDERRIGHTARROW: ("&#x02192;", {}),
+    VEC: ("&#x02192;", {"stretchy": "true"}),
+    WIDEHAT: ("&#x0005E;", {}),
+    WIDETILDE: ("&#x0007E;", {}),
 }
