@@ -60,6 +60,7 @@ OVERLEFTRIGHTARROW = r"\overleftrightarrow"
 OVERLINE = r"\overline"
 OVERPAREN = r"\overparen"
 OVERRIGHTARROW = r"\overrightarrow"
+TILDE = r"\tilde"
 UNDERLEFTARROW = r"\underleftarrow"
 UNDERLINE = r"\underline"
 UNDERPAREN = r"\underparen"
@@ -252,6 +253,7 @@ COMMANDS_WITH_ONE_PARAMETER = (
     OVERLINE,
     OVERPAREN,
     OVERRIGHTARROW,
+    TILDE,
     UNDERLEFTARROW,
     UNDERLINE,
     UNDERPAREN,
@@ -334,6 +336,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     OVERLINE: ("mover", {}),
     OVERPAREN: ("mover", {}),
     OVERRIGHTARROW: ("mover", {}),
+    TILDE: ("mover", {}),
     OVERSET: ("mover", {}),
     UNDERLEFTARROW: ("munder", {}),
     UNDERLINE: ("munder", {}),
@@ -404,6 +407,7 @@ DIACRITICS: Dict[str, Tuple[str, Dict[str, str]]] = {
     OVERLINE: ("&#x02015;", {"accent": "true"}),
     OVERPAREN: ("&#x023DC;", {}),
     OVERRIGHTARROW: ("&#x02192;", {}),
+    TILDE: ("&#x0007E;", {"stretchy": "false"}),
     UNDERLEFTARROW: ("&#x02190;", {}),
     UNDERLEFTRIGHTARROW: ("&#x02194;", {}),
     UNDERLINE: ("&#x02015;", {"accent": "true"}),

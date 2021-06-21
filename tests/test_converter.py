@@ -3174,6 +3174,35 @@ from latex2mathml.converter import _convert, convert
             id="overrightarrow",
         ),
         pytest.param(
+            r"\tilde a \tilde{bc}",
+            MultiDict(
+                [
+                    (
+                        "mover",
+                        MultiDict([("mi", "a"), ("mo", {"@stretchy": "false", "$": "&#x0007E;"})]),
+                    ),
+                    (
+                        "mover",
+                        MultiDict(
+                            [
+                                (
+                                    "mrow",
+                                    MultiDict(
+                                        [
+                                            ("mi", "b"),
+                                            ("mi", "c"),
+                                        ]
+                                    ),
+                                ),
+                                ("mo", {"@stretchy": "false", "$": "&#x0007E;"}),
+                            ]
+                        ),
+                    ),
+                ]
+            ),
+            id="tilde",
+        ),
+        pytest.param(
             r"\underleftarrow a \underleftarrow{bc}",
             MultiDict(
                 [
