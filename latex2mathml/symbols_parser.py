@@ -74,4 +74,5 @@ def parse_symbols() -> Dict[str, str]:
             r"\varsupsetneqq": _symbols[r"\supsetneqq"],
         }
     )
+    del _symbols[r"\mathring"]  # FIXME: improve tokenizer without removing this
     return _symbols
