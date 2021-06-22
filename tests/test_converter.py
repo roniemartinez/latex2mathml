@@ -3405,6 +3405,41 @@ from latex2mathml.converter import _convert, convert
             ),
             id="widetilde",
         ),
+        pytest.param(r"\phantom a", {"mphantom": {"mi": "a"}}, id="phantom"),
+        pytest.param(r"\vphantom a", {"mpadded": {"@width": "0", "mphantom": {"mi": "a"}}}, id="vphantom"),
+        pytest.param(
+            r"\sideset{_1^2}{_3^4}\sum",
+            {
+                "mrow": MultiDict(
+                    [
+                        (
+                            "msubsup",
+                            MultiDict(
+                                [
+                                    (
+                                        "mpadded",
+                                        {
+                                            "@width": "0",
+                                            "mphantom": {"mo": {"@movablelimits": "false", "$": "&#x02211;"}},
+                                        },
+                                    ),
+                                    ("mn", "1"),
+                                    ("mn", "2"),
+                                ]
+                            ),
+                        ),
+                        ("mstyle", {"@scriptlevel": "0", "mspace": {"@width": "-0.167em"}}),
+                        (
+                            "msubsup",
+                            MultiDict(
+                                [("mo", {"@movablelimits": "false", "$": "&#x02211;"}), ("mn", "3"), ("mn", "4")]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="sideset",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
