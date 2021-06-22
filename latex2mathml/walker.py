@@ -227,6 +227,29 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
                 [Node(token=style), Node(token=token, children=children, delimiter=delimiter, attributes=attributes)]
             )
             break
+        elif token == commands.SIDESET:
+            left, right, operator = tuple(_walk(tokens, terminator=terminator, limit=3))
+            left_token, left_children = _make_subsup(left)
+            right_token, right_children = _make_subsup(right)
+            attributes = {"movablelimits": "false"}
+            node = Node(
+                token=token,
+                children=(
+                    Node(
+                        token=left_token,
+                        children=(
+                            Node(
+                                token=commands.VPHANTOM,
+                                children=(Node(token=operator.token, attributes=attributes),),
+                            ),
+                            *left_children,
+                        ),
+                    ),
+                    Node(
+                        token=right_token, children=(Node(token=operator.token, attributes=attributes), *right_children)
+                    ),
+                ),
+            )
         elif token.startswith(commands.BEGIN):
             node = _get_environment_node(token, tokens)
         else:
@@ -239,6 +262,30 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
     if not has_available_tokens:
         raise NoAvailableTokensError
     return group
+
+
+def _make_subsup(node: Node) -> Tuple[str, Tuple[Node, ...]]:
+    # TODO: raise error instead of assertion
+    assert node.token == commands.BRACES
+    assert (
+        node.children is not None
+        and 2 <= len(node.children[0].children) <= 3
+        and node.children[0].token
+        in (
+            commands.SUBSUP,
+            commands.SUBSCRIPT,
+            commands.SUPERSCRIPT,
+        )
+    )
+    token = node.children[0].token
+    children = node.children[0].children[1:]
+    if token == commands.SUBSCRIPT:
+        token = commands.SUBSUP
+        children = (*children, Node(token=""))
+    elif token == commands.SUPERSCRIPT:
+        token = commands.SUBSUP
+        children = (Node(token=""), *children)
+    return token, children
 
 
 def _get_dimension(node: Node) -> str:

@@ -195,8 +195,12 @@ SCRIPTSCRIPTSTYLE = r"\scriptscriptstyle"
 STYLE = r"\style"
 
 HPHANTOM = r"\hphantom"
+PHANTOM = r"\phantom"
+VPHANTOM = r"\vphantom"
 
 IDOTSINT = r"\idotsint"
+
+SIDESET = r"\sideset"
 
 
 def font_factory(default: Optional[str], replacement: Dict[str, Optional[str]]) -> DefaultDict[str, Optional[str]]:
@@ -253,6 +257,7 @@ COMMANDS_WITH_ONE_PARAMETER = (
     OVERLINE,
     OVERPAREN,
     OVERRIGHTARROW,
+    PHANTOM,
     TILDE,
     UNDERLEFTARROW,
     UNDERLINE,
@@ -260,6 +265,7 @@ COMMANDS_WITH_ONE_PARAMETER = (
     UNDERRIGHTARROW,
     UNDERLEFTRIGHTARROW,
     VEC,
+    VPHANTOM,
     WIDEHAT,
     WIDETILDE,
 )
@@ -387,6 +393,9 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     HBOX: ("mtext", {}),
     MBOX: ("mtext", {}),
     HPHANTOM: ("mphantom", {}),
+    PHANTOM: ("mphantom", {}),
+    VPHANTOM: ("mphantom", {}),
+    SIDESET: ("mrow", {}),
 }
 
 

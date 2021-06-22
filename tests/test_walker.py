@@ -1571,6 +1571,66 @@ from latex2mathml.walker import Node, walk
             ],
             id="style",
         ),
+        pytest.param(
+            r"\sideset{_1^2}{_3^4}\sum",
+            [
+                Node(
+                    token=r"\sideset",
+                    children=(
+                        Node(
+                            token="_^",
+                            children=(
+                                Node(
+                                    token=r"\vphantom",
+                                    children=(Node(token=r"\sum", attributes={"movablelimits": "false"}),),
+                                ),
+                                Node(token="1"),
+                                Node(token="2"),
+                            ),
+                        ),
+                        Node(
+                            token="_^",
+                            children=(
+                                Node(token=r"\sum", attributes={"movablelimits": "false"}),
+                                Node(token="3"),
+                                Node(token="4"),
+                            ),
+                        ),
+                    ),
+                )
+            ],
+            id="sideset",
+        ),
+        pytest.param(
+            r"\sideset{^2}{_3}\sum",
+            [
+                Node(
+                    token=r"\sideset",
+                    children=(
+                        Node(
+                            token="_^",
+                            children=(
+                                Node(
+                                    token=r"\vphantom",
+                                    children=(Node(token=r"\sum", attributes={"movablelimits": "false"}),),
+                                ),
+                                Node(token=""),
+                                Node(token="2"),
+                            ),
+                        ),
+                        Node(
+                            token="_^",
+                            children=(
+                                Node(token=r"\sum", attributes={"movablelimits": "false"}),
+                                Node(token="3"),
+                                Node(token=""),
+                            ),
+                        ),
+                    ),
+                )
+            ],
+            id="sideset-2",
+        ),
     ],
 )
 def test_walk(latex: str, expected: list) -> None:

@@ -31,6 +31,7 @@ OPERATORS = (
     r">",
     r"<",
     r".",
+    r"\bigotimes",
     r"\centerdot",
     r"\dots",
     r"\dotsc",
@@ -220,6 +221,8 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
         parent = SubElement(parent, "mstyle", displaystyle="true", scriptlevel="0")
     elif command == commands.HPHANTOM:
         parent = SubElement(parent, "mpadded", height="0", depth="0")
+    elif command == commands.VPHANTOM:
+        parent = SubElement(parent, "mpadded", width="0")
     elif command in (commands.HBOX, commands.MBOX):
         parent = SubElement(parent, "mstyle", displaystyle="false", scriptlevel="0")
 
@@ -287,6 +290,17 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
             for child in node.children:
                 p = SubElement(_parent, "mstyle", displaystyle="false", scriptlevel="0")
                 _convert_group(iter([child]), p, font)
+        elif command == commands.SIDESET:
+            Node(
+                r"\style",
+                children=(Node(r"\mspace", attributes={"width": "-0.167em"}),),
+                attributes={"scriptlevel": "0"},
+            ),
+            left, right = node.children
+            _convert_group(iter([left]), _parent, font)
+            fill = SubElement(_parent, "mstyle", scriptlevel="0")
+            SubElement(fill, "mspace", width="-0.167em")
+            _convert_group(iter([right]), _parent, font)
         else:
             _convert_group(iter(node.children), _parent, font)
 
