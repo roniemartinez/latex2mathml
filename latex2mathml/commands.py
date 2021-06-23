@@ -74,6 +74,11 @@ WIDETILDE = r"\widetilde"
 
 HREF = r"\href"
 TEXT = r"\text"
+TEXTBF = r"\textbf"
+TEXTIT = r"\textit"
+TEXTRM = r"\textrm"
+TEXTSF = r"\textsf"
+TEXTTT = r"\texttt"
 
 BEGIN = r"\begin"
 END = r"\end"
@@ -172,6 +177,10 @@ SEMICOLON = r"\;"
 
 BLACKBOARD_BOLD = r"\Bbb"
 BOLD_SYMBOL = r"\boldsymbol"
+MIT = r"\mit"
+OLDSTYLE = r"\oldstyle"
+SCR = r"\scr"
+TT = r"\tt"
 
 MATH = r"\math"
 MATHBB = r"\mathbb"
@@ -222,6 +231,10 @@ LOCAL_FONTS: Dict[str, DefaultDict[str, Optional[str]]] = {
     MATHSCR: font_factory("script", {"fence": None}),
     MATHSF: font_factory(None, {"mi": "sans-serif"}),
     MATHTT: font_factory("monospace", {"fence": None}),
+    MIT: font_factory("italic", {"fence": None, "mi": None}),
+    OLDSTYLE: font_factory("normal", {"fence": None}),
+    SCR: font_factory("script", {"fence": None}),
+    TT: font_factory("monospace", {"fence": None}),
 }
 
 OLD_STYLE_FONTS: Dict[str, DefaultDict[str, Optional[str]]] = {
@@ -254,13 +267,17 @@ COMMANDS_WITH_ONE_PARAMETER = (
     HAT,
     HPHANTOM,
     MATHRING,
+    MIT,
+    OLDSTYLE,
     OVERLEFTARROW,
     OVERLEFTRIGHTARROW,
     OVERLINE,
     OVERPAREN,
     OVERRIGHTARROW,
     PHANTOM,
+    SCR,
     TILDE,
+    TT,
     UNDERLEFTARROW,
     UNDERLINE,
     UNDERPAREN,
@@ -396,6 +413,11 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     ROOT: ("mroot", {}),
     HREF: ("mtext", {}),
     TEXT: ("mtext", {}),
+    TEXTBF: ("mtext", {"mathvariant": "bold"}),
+    TEXTIT: ("mtext", {"mathvariant": "italic"}),
+    TEXTRM: ("mtext", {}),
+    TEXTSF: ("mtext", {"mathvariant": "sans-serif"}),
+    TEXTTT: ("mtext", {"mathvariant": "monospace"}),
     HBOX: ("mtext", {}),
     MBOX: ("mtext", {}),
     HPHANTOM: ("mphantom", {}),

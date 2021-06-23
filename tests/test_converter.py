@@ -3466,6 +3466,131 @@ from latex2mathml.converter import _convert, convert
             },
             id="tfrac",
         ),
+        pytest.param(
+            r"{\mit {\text{var} = 1+\{b\}}} + B",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mrow": MultiDict(
+                                [
+                                    ("mtext", {"@mathvariant": "italic", "$": "var"}),
+                                    ("mo", {"@mathvariant": "italic", "$": "&#x0003D;"}),
+                                    ("mn", {"@mathvariant": "italic", "$": "1"}),
+                                    ("mo", {"@mathvariant": "italic", "$": "&#x0002B;"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                    ("mi", "b"),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "B"),
+                ]
+            ),
+            id="mit",
+        ),
+        pytest.param(
+            r"{\oldstyle {\text{var} = 1+\{b\}}} + B",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mrow": MultiDict(
+                                [
+                                    ("mtext", {"@mathvariant": "normal", "$": "var"}),
+                                    ("mo", {"@mathvariant": "normal", "$": "&#x0003D;"}),
+                                    ("mn", {"@mathvariant": "normal", "$": "1"}),
+                                    ("mo", {"@mathvariant": "normal", "$": "&#x0002B;"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                    ("mi", {"@mathvariant": "normal", "$": "b"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "B"),
+                ]
+            ),
+            id="oldstyle",
+        ),
+        pytest.param(
+            r"{\scr {\text{var} = 1+\{b\}}} + B",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mrow": MultiDict(
+                                [
+                                    ("mtext", {"@mathvariant": "script", "$": "var"}),
+                                    ("mo", {"@mathvariant": "script", "$": "&#x0003D;"}),
+                                    ("mn", {"@mathvariant": "script", "$": "1"}),
+                                    ("mo", {"@mathvariant": "script", "$": "&#x0002B;"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                    ("mi", {"@mathvariant": "script", "$": "b"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "B"),
+                ]
+            ),
+            id="scr",
+        ),
+        pytest.param(
+            r"{\tt {\text{var} = 1+\{b\}}} + B",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mrow": MultiDict(
+                                [
+                                    ("mtext", {"@mathvariant": "monospace", "$": "var"}),
+                                    ("mo", {"@mathvariant": "monospace", "$": "&#x0003D;"}),
+                                    ("mn", {"@mathvariant": "monospace", "$": "1"}),
+                                    ("mo", {"@mathvariant": "monospace", "$": "&#x0002B;"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007B;"}),
+                                    ("mi", {"@mathvariant": "monospace", "$": "b"}),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007D;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mo", "&#x0002B;"),
+                    ("mi", "B"),
+                ]
+            ),
+            id="tt",
+        ),
+        pytest.param(
+            r"\textbf{ Hello~World }",
+            {"mtext": {"@mathvariant": "bold", "$": "&#x000A0;Hello~World&#x000A0;"}},
+            id="textbf",
+        ),
+        pytest.param(
+            r"\textit{ Hello~World }",
+            {"mtext": {"@mathvariant": "italic", "$": "&#x000A0;Hello~World&#x000A0;"}},
+            id="textit",
+        ),
+        pytest.param(r"\textrm{ Hello~World }", {"mtext": "&#x000A0;Hello~World&#x000A0;"}, id="textrm"),
+        pytest.param(
+            r"\textsf{ Hello~World }",
+            {"mtext": {"@mathvariant": "sans-serif", "$": "&#x000A0;Hello~World&#x000A0;"}},
+            id="textsf",
+        ),
+        pytest.param(
+            r"\texttt{ Hello~World }",
+            {"mtext": {"@mathvariant": "monospace", "$": "&#x000A0;Hello~World&#x000A0;"}},
+            id="texttt",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
