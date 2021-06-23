@@ -223,7 +223,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
         parent = SubElement(parent, "mpadded", height="0", depth="0")
     elif command == commands.VPHANTOM:
         parent = SubElement(parent, "mpadded", width="0")
-    elif command in (commands.HBOX, commands.MBOX):
+    elif command in (commands.TBINOM, commands.HBOX, commands.MBOX, commands.TFRAC):
         parent = SubElement(parent, "mstyle", displaystyle="false", scriptlevel="0")
 
     tag, attributes = copy.deepcopy(commands.CONVERSION_MAP[command])
@@ -324,11 +324,11 @@ def _convert_and_append_command(command: str, parent: Element, attributes: Optio
 
 def _append_prefix_element(node: Node, parent: Element) -> None:
     size = "2.047em"
-    if parent.attrib.get("displaystyle") == "false":
+    if parent.attrib.get("displaystyle") == "false" or node.token == commands.TBINOM:
         size = "1.2em"
     if node.token == r"\pmatrix":
         _convert_and_append_command(r"\lparen", parent)
-    elif node.token in (commands.BINOM, commands.DBINOM):
+    elif node.token in (commands.BINOM, commands.DBINOM, commands.TBINOM):
         _convert_and_append_command(r"\lparen", parent, {"minsize": size, "maxsize": size})
     elif node.token == r"\bmatrix":
         _convert_and_append_command(r"\lbrack", parent)
@@ -345,11 +345,11 @@ def _append_prefix_element(node: Node, parent: Element) -> None:
 
 def _append_postfix_element(node: Node, parent: Element) -> None:
     size = "2.047em"
-    if parent.attrib.get("displaystyle") == "false":
+    if parent.attrib.get("displaystyle") == "false" or node.token == commands.TBINOM:
         size = "1.2em"
     if node.token == r"\pmatrix":
         _convert_and_append_command(r"\rparen", parent)
-    elif node.token in (commands.BINOM, commands.DBINOM):
+    elif node.token in (commands.BINOM, commands.DBINOM, commands.TBINOM):
         _convert_and_append_command(r"\rparen", parent, {"minsize": size, "maxsize": size})
     elif node.token == r"\bmatrix":
         _convert_and_append_command(r"\rbrack", parent)
