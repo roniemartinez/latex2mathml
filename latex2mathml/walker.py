@@ -126,7 +126,18 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
             attributes = {"style": next(tokens)}
             next_node = tuple(_walk(tokens, terminator=terminator, limit=1))[0]
             node = next_node._replace(attributes=attributes)
-        elif token in (*commands.BIG.keys(), commands.FBOX, commands.HBOX, commands.MBOX, commands.TEXT):
+        elif token in (
+            *commands.BIG.keys(),
+            commands.FBOX,
+            commands.HBOX,
+            commands.MBOX,
+            commands.TEXT,
+            commands.TEXTBF,
+            commands.TEXTIT,
+            commands.TEXTRM,
+            commands.TEXTSF,
+            commands.TEXTTT,
+        ):
             node = Node(token=token, text=next(tokens))
         elif token == commands.HREF:
             attributes = {"href": next(tokens)}
