@@ -37,6 +37,8 @@ DFRAC = r"\dfrac"
 FRAC = r"\frac"
 GENFRAC = r"\genfrac"
 OVER = r"\over"
+TBINOM = r"\tbinom"
+TFRAC = r"\tfrac"
 
 ROOT = r"\root"
 SQRT = r"\sqrt"
@@ -276,6 +278,8 @@ COMMANDS_WITH_TWO_PARAMETERS = (
     DFRAC,
     FRAC,
     OVERSET,
+    TBINOM,
+    TFRAC,
     UNDERSET,
 )
 
@@ -318,12 +322,14 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     SUPERSCRIPT: ("msup", {}),
     SUBSUP: ("msubsup", {}),
     # fractions
-    FRAC: ("mfrac", {}),
     BINOM: ("mfrac", {"linethickness": "0"}),
     CFRAC: ("mfrac", {}),
     DBINOM: ("mfrac", {"linethickness": "0"}),
     DFRAC: ("mfrac", {}),
+    FRAC: ("mfrac", {}),
     GENFRAC: ("mfrac", {}),
+    TBINOM: ("mfrac", {"linethickness": "0"}),
+    TFRAC: ("mfrac", {}),
     # over/under
     ACUTE: ("mover", {}),
     BAR: ("mover", {}),

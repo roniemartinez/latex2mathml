@@ -3440,6 +3440,32 @@ from latex2mathml.converter import _convert, convert
             },
             id="sideset",
         ),
+        pytest.param(
+            r"\tbinom{2}{3}",
+            {
+                "mstyle": MultiDict(
+                    [
+                        ("@displaystyle", "false"),
+                        ("@scriptlevel", "0"),
+                        ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "&#x00028;"}),
+                        ("mfrac", MultiDict([("@linethickness", "0"), ("mrow", {"mn": "2"}), ("mrow", {"mn": "3"})])),
+                        ("mo", {"@minsize": "1.2em", "@maxsize": "1.2em", "$": "&#x00029;"}),
+                    ]
+                )
+            },
+            id="tbinom",
+        ),
+        pytest.param(
+            r"\tfrac{1}{2}",
+            {
+                "mstyle": {
+                    "@displaystyle": "false",
+                    "@scriptlevel": "0",
+                    "mfrac": MultiDict([("mrow", {"mn": "1"}), ("mrow", {"mn": "2"})]),
+                }
+            },
+            id="tfrac",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
