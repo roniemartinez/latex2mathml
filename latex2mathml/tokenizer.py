@@ -20,7 +20,7 @@ PATTERN = re.compile(
         (begin|end|operatorname){{[a-zA-Z]+\*?}} |  # begin, end or operatorname
         # FIXME: curly braces is tricky on these commands
         # color, fbox, href, hbox, mbox, style, text, textbf, textit, textrm, textsf, texttt
-        (color|fbox|hbox|href|mbox|style|text|textbf|textit|textrm|textsf|texttt)\s*{{([^}}]*)}} |  
+        (color|fbox|hbox|href|mbox|style|text|textbf|textit|textrm|textsf|texttt)\s*{{([^}}]*)}} |
         math[a-z]+{{[a-zA-Z]}} |  # commands starting with math
         [a-zA-Z]+  # other commands
     )? |
