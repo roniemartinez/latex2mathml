@@ -215,6 +215,15 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
                 node = Node(token=commands.ROOT, children=(next_node, *root_nodes))
             else:
                 node = Node(token=token, children=(next_node,))
+        elif token == commands.ROOT:
+            root_nodes = tuple(_walk(tokens, terminator=r"\of"))[:-1]
+            next_node = tuple(_walk(tokens, limit=1))[0]
+            if len(root_nodes) > 1:
+                root_nodes = (Node(token=commands.BRACES, children=root_nodes),)
+            if root_nodes:
+                node = Node(token=token, children=(next_node, *root_nodes))
+            else:
+                node = Node(token=token, children=(next_node, Node(token=commands.BRACES, children=())))
         elif token in commands.MATRICES:
             children = tuple(_walk(tokens, terminator=terminator))
             sibling = None
