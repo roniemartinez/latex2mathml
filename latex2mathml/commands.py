@@ -210,6 +210,8 @@ PHANTOM = r"\phantom"
 VPHANTOM = r"\vphantom"
 
 IDOTSINT = r"\idotsint"
+LATEX = r"\LaTeX"
+TEX = r"\TeX"
 
 SIDESET = r"\sideset"
 

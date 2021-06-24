@@ -3591,6 +3591,141 @@ from latex2mathml.converter import _convert, convert
             {"mtext": {"@mathvariant": "monospace", "$": "&#x000A0;Hello~World&#x000A0;"}},
             id="texttt",
         ),
+        pytest.param(
+            r"\LaTeX",
+            {
+                "mrow": MultiDict(
+                    [
+                        ("mi", "L"),
+                        ("mspace", {"@width": "-.325em"}),
+                        (
+                            "mpadded",
+                            MultiDict(
+                                [
+                                    ("@height", "+.21ex"),
+                                    ("@depth", "-.21ex"),
+                                    ("@voffset", "+.21ex"),
+                                    ("mstyle", {"@displaystyle": "false", "@scriptlevel": "1", "mrow": {"mi": "A"}}),
+                                ]
+                            ),
+                        ),
+                        ("mspace", {"@width": "-.17em"}),
+                        ("mi", "T"),
+                        ("mspace", {"@width": "-.14em"}),
+                        (
+                            "mpadded",
+                            MultiDict(
+                                [
+                                    ("@height", "-.5ex"),
+                                    ("@depth", "+.5ex"),
+                                    ("@voffset", "-.5ex"),
+                                    ("mrow", {"mi": "E"}),
+                                ]
+                            ),
+                        ),
+                        ("mspace", {"@width": "-.115em"}),
+                        ("mi", "X"),
+                    ]
+                )
+            },
+            id="LaTeX",
+        ),
+        pytest.param(
+            r"\Bbb \LaTeX",
+            {
+                "mrow": MultiDict(
+                    [
+                        ("mi", {"@mathvariant": "double-struck", "$": "L"}),
+                        ("mspace", {"@width": "-.325em"}),
+                        (
+                            "mpadded",
+                            MultiDict(
+                                [
+                                    ("@height", "+.21ex"),
+                                    ("@depth", "-.21ex"),
+                                    ("@voffset", "+.21ex"),
+                                    (
+                                        "mstyle",
+                                        {
+                                            "@displaystyle": "false",
+                                            "@scriptlevel": "1",
+                                            "mrow": {"mi": {"@mathvariant": "double-struck", "$": "A"}},
+                                        },
+                                    ),
+                                ]
+                            ),
+                        ),
+                        ("mspace", {"@width": "-.17em"}),
+                        ("mi", {"@mathvariant": "double-struck", "$": "T"}),
+                        ("mspace", {"@width": "-.14em"}),
+                        (
+                            "mpadded",
+                            MultiDict(
+                                [
+                                    ("@height", "-.5ex"),
+                                    ("@depth", "+.5ex"),
+                                    ("@voffset", "-.5ex"),
+                                    ("mrow", {"mi": {"@mathvariant": "double-struck", "$": "E"}}),
+                                ]
+                            ),
+                        ),
+                        ("mspace", {"@width": "-.115em"}),
+                        ("mi", {"@mathvariant": "double-struck", "$": "X"}),
+                    ]
+                )
+            },
+            id="LaTeX-with-style",
+        ),
+        pytest.param(
+            r"\TeX",
+            {
+                "mrow": MultiDict(
+                    [
+                        ("mi", "T"),
+                        ("mspace", {"@width": "-.14em"}),
+                        (
+                            "mpadded",
+                            MultiDict(
+                                [
+                                    ("@height", "-.5ex"),
+                                    ("@depth", "+.5ex"),
+                                    ("@voffset", "-.5ex"),
+                                    ("mrow", {"mi": "E"}),
+                                ]
+                            ),
+                        ),
+                        ("mspace", {"@width": "-.115em"}),
+                        ("mi", "X"),
+                    ]
+                )
+            },
+            id="TeX",
+        ),
+        pytest.param(
+            r"\rm \TeX",
+            {
+                "mrow": MultiDict(
+                    [
+                        ("mi", {"@mathvariant": "normal", "$": "T"}),
+                        ("mspace", {"@width": "-.14em"}),
+                        (
+                            "mpadded",
+                            MultiDict(
+                                [
+                                    ("@height", "-.5ex"),
+                                    ("@depth", "+.5ex"),
+                                    ("@voffset", "-.5ex"),
+                                    ("mrow", {"mi": {"@mathvariant": "normal", "$": "E"}}),
+                                ]
+                            ),
+                        ),
+                        ("mspace", {"@width": "-.115em"}),
+                        ("mi", {"@mathvariant": "normal", "$": "X"}),
+                    ]
+                )
+            },
+            id="TeX-with-style",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

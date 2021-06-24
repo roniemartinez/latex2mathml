@@ -424,6 +424,33 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Option
         for s in ("&#x0222B;", "&#x022EF;", "&#x0222B;"):
             element = SubElement(_parent, "mo")
             element.text = s
+    elif token in (commands.LATEX, commands.TEX):
+        _parent = SubElement(parent, "mrow", attrib=attributes)
+        if token == commands.LATEX:
+            mi_l = SubElement(_parent, "mi")
+            mi_l.text = "L"
+            SubElement(_parent, "mspace", width="-.325em")
+            mpadded = SubElement(_parent, "mpadded", height="+.21ex", depth="-.21ex", voffset="+.21ex")
+            mstyle = SubElement(mpadded, "mstyle", displaystyle="false", scriptlevel="1")
+            mrow = SubElement(mstyle, "mrow")
+            mi_a = SubElement(mrow, "mi")
+            mi_a.text = "A"
+            SubElement(_parent, "mspace", width="-.17em")
+            _set_font(mi_l, mi_l.tag, font)
+            _set_font(mi_a, mi_a.tag, font)
+        mi_t = SubElement(_parent, "mi")
+        mi_t.text = "T"
+        SubElement(_parent, "mspace", width="-.14em")
+        mpadded = SubElement(_parent, "mpadded", height="-.5ex", depth="+.5ex", voffset="-.5ex")
+        mrow = SubElement(mpadded, "mrow")
+        mi_e = SubElement(mrow, "mi")
+        mi_e.text = "E"
+        SubElement(_parent, "mspace", width="-.115em")
+        mi_x = SubElement(_parent, "mi")
+        mi_x.text = "X"
+        _set_font(mi_t, mi_t.tag, font)
+        _set_font(mi_e, mi_e.tag, font)
+        _set_font(mi_x, mi_x.tag, font)
     elif token.startswith(commands.BACKSLASH):
         element = SubElement(parent, "mi", attrib=attributes)
         if symbol:
