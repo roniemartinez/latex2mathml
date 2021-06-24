@@ -1631,6 +1631,29 @@ from latex2mathml.walker import Node, walk
             ],
             id="sideset-2",
         ),
+        pytest.param(
+            r"\root 3 \of x", [Node(token=r"\root", children=(Node(token="x"), Node(token="3")))], id="root-of"
+        ),
+        pytest.param(
+            r"\root n+1 \of x + 2",
+            [
+                Node(
+                    token=r"\root",
+                    children=(
+                        Node(token="x"),
+                        Node(token="{}", children=(Node(token="n"), Node(token="+"), Node(token="1"))),
+                    ),
+                ),
+                Node(token="+"),
+                Node(token="2"),
+            ],
+            id="root-of-multiple",
+        ),
+        pytest.param(
+            r"\root \of x",
+            [Node(token=r"\root", children=(Node(token="x"), Node(token="{}", children=())))],
+            id="root-of-without-root",
+        ),
     ],
 )
 def test_walk(latex: str, expected: list) -> None:
