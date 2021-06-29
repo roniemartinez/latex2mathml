@@ -36,3 +36,7 @@ class MissingEndError(Exception):
 
 class InvalidAlignmentError(Exception):
     pass
+
+
+class InvalidWidthError(Exception):
+    pass

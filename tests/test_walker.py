@@ -10,6 +10,7 @@ from latex2mathml.exceptions import (
     ExtraLeftOrMissingRightError,
     InvalidAlignmentError,
     InvalidStyleForGenfracError,
+    InvalidWidthError,
     MissingEndError,
     MissingSuperScriptOrSubscriptError,
     NumeratorNotFoundError,
@@ -1654,6 +1655,21 @@ from latex2mathml.walker import Node, walk
             [Node(token=r"\root", children=(Node(token="x"), Node(token="{}", children=())))],
             id="root-of-without-root",
         ),
+        pytest.param(
+            r"\skew7\hat a\skew{8}\hat b",
+            [
+                Node(
+                    token=r"\skew",
+                    children=(Node(token=r"\hat", children=(Node(token="a"),)),),
+                    attributes={"width": "0.389em"},
+                ),
+                Node(
+                    token=r"\skew",
+                    children=(Node(token=r"\hat", children=(Node(token="b"),)),),
+                    attributes={"width": "0.444em"},
+                ),
+            ],
+        ),
     ],
 )
 def test_walk(latex: str, expected: list) -> None:
@@ -1674,6 +1690,8 @@ def test_walk(latex: str, expected: list) -> None:
         pytest.param(r"\genfrac(){1pt}4ab", InvalidStyleForGenfracError, id="invalid-style-for-genfrac"),
         pytest.param(r"\begin{array}\end{array1}", MissingEndError, id="missing-end"),
         pytest.param(r"\begin{matrix*}[xxx]\end{matrix*}", InvalidAlignmentError, id="invalid-alignment"),
+        pytest.param(r"\skew{}\hat b", InvalidWidthError, id="invalid-width"),
+        pytest.param(r"\skew{X}\hat b", InvalidWidthError, id="invalid-width-not-number"),
     ],
 )
 def test_missing_right(latex: str, exception: Union[Tuple[Any, ...], Any]) -> None:

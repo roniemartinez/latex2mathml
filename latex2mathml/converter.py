@@ -228,7 +228,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
 
     tag, attributes = copy.deepcopy(commands.CONVERSION_MAP[command])
 
-    if node.attributes is not None:
+    if node.attributes is not None and node.token != commands.SKEW:
         attributes.update(node.attributes)
 
     if command == commands.LEFT:
@@ -301,6 +301,18 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
             fill = SubElement(_parent, "mstyle", scriptlevel="0")
             SubElement(fill, "mspace", width="-0.167em")
             _convert_group(iter([right]), _parent, font)
+        elif command == commands.SKEW:
+            child = node.children[0]
+            new_node = Node(
+                token=child.token,
+                children=(
+                    Node(
+                        token=commands.BRACES,
+                        children=(*child.children, Node(token=commands.MKERN, attributes=node.attributes)),
+                    ),
+                ),
+            )
+            _convert_group(iter([new_node]), _parent, font)
         else:
             _convert_group(iter(node.children), _parent, font)
 
@@ -362,6 +374,8 @@ def _append_postfix_element(node: Node, parent: Element) -> None:
     elif node.token in (commands.FRAC, commands.GENFRAC) and node.delimiter is not None and node.delimiter[1] != ".":
         # TODO: use 1.2em if inline
         _convert_and_append_command(node.delimiter[1], parent, {"minsize": size, "maxsize": size})
+    elif node.token == commands.SKEW and node.attributes is not None:
+        SubElement(parent, "mspace", width="-" + node.attributes["width"])
 
 
 def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Optional[str]]] = None) -> None:
