@@ -8,6 +8,7 @@ from latex2mathml.exceptions import (
     ExtraLeftOrMissingRightError,
     InvalidAlignmentError,
     InvalidStyleForGenfracError,
+    InvalidWidthError,
     MissingEndError,
     MissingSuperScriptOrSubscriptError,
     NoAvailableTokensError,
@@ -270,6 +271,16 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
                     ),
                 ),
             )
+        elif token == commands.SKEW:
+            width_node, child = tuple(_walk(tokens, terminator=terminator, limit=2))
+            width = width_node.token
+            if width == commands.BRACES:
+                if width_node.children is None or len(width_node.children) == 0:
+                    raise InvalidWidthError
+                width = width_node.children[0].token
+            if not width.isdigit():
+                raise InvalidWidthError
+            node = Node(token=token, children=(child,), attributes={"width": f"{0.0555*int(width):.3f}em"})
         elif token.startswith(commands.BEGIN):
             node = _get_environment_node(token, tokens)
         else:

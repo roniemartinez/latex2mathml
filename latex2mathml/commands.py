@@ -215,6 +215,8 @@ TEX = r"\TeX"
 
 SIDESET = r"\sideset"
 
+SKEW = r"\skew"
+
 
 def font_factory(default: Optional[str], replacement: Dict[str, Optional[str]]) -> DefaultDict[str, Optional[str]]:
     fonts = defaultdict(lambda: default, replacement)
@@ -426,6 +428,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     PHANTOM: ("mphantom", {}),
     VPHANTOM: ("mphantom", {}),
     SIDESET: ("mrow", {}),
+    SKEW: ("mrow", {}),
 }
 
 
@@ -439,7 +442,7 @@ DIACRITICS: Dict[str, Tuple[str, Dict[str, str]]] = {
     DDDOT: ("&#x020DB;", {}),
     DDDDOT: ("&#x020DC;", {}),
     GRAVE: ("&#x00060;", {}),
-    HAT: ("&#x0005E;", {}),
+    HAT: ("&#x0005E;", {"stretchy": "false"}),
     MATHRING: ("&#x002DA;", {}),
     OVERLEFTARROW: ("&#x02190;", {}),
     OVERLEFTRIGHTARROW: ("&#x02194;", {}),

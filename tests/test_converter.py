@@ -2341,7 +2341,7 @@ from latex2mathml.converter import _convert, convert
                 [
                     (
                         "mover",
-                        MultiDict([("mi", "a"), ("mo", "&#x0005E;")]),
+                        MultiDict([("mi", "a"), ("mo", {"@stretchy": "false", "$": "&#x0005E;"})]),
                     ),
                     (
                         "mover",
@@ -2356,7 +2356,7 @@ from latex2mathml.converter import _convert, convert
                                         ]
                                     ),
                                 ),
-                                ("mo", "&#x0005E;"),
+                                ("mo", {"@stretchy": "false", "$": "&#x0005E;"}),
                             ]
                         ),
                     ),
@@ -3725,6 +3725,46 @@ from latex2mathml.converter import _convert, convert
                 )
             },
             id="TeX-with-style",
+        ),
+        pytest.param(
+            r"\skew7\hat A",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mover": MultiDict(
+                                [
+                                    ("mrow", MultiDict([("mi", "A"), ("mspace", {"@width": "0.389em"})])),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0005E;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mspace", {"@width": "-0.389em"}),
+                ]
+            ),
+            id="skew",
+        ),
+        pytest.param(
+            r"\skew{8}\tilde M",
+            MultiDict(
+                [
+                    (
+                        "mrow",
+                        {
+                            "mover": MultiDict(
+                                [
+                                    ("mrow", MultiDict([("mi", "M"), ("mspace", {"@width": "0.444em"})])),
+                                    ("mo", {"@stretchy": "false", "$": "&#x0007E;"}),
+                                ]
+                            ),
+                        },
+                    ),
+                    ("mspace", {"@width": "-0.444em"}),
+                ]
+            ),
+            id="skew-with-braces",
         ),
     ],
 )
