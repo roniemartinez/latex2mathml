@@ -44,7 +44,7 @@ multidict = "^5.1.0"
 mypy = "^0.910"
 pyproject-flake8 = "^0.0.1-alpha.2"
 pytest = "^6.2.5"
-pytest-cov = "^2.8.1"
+pytest-cov = "^3.0.0"
 tomlkit = "0.7.0"  # dephell is broken on versions above 0.7.0
 xmljson = "^0.2.0"
 
