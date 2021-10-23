@@ -24,7 +24,7 @@ if os.path.exists(readme_path):
 setup(
     long_description=readme,
     name='latex2mathml',
-    version='3.61.0',
+    version='3.62.0',
     description='Pure Python library for LaTeX to MathML conversion',
     python_requires='<4,>=3.6.2',
     project_urls={"repository": "https://github.com/roniemartinez/latex2mathml"},
@@ -32,11 +32,11 @@ setup(
     author_email='ronmarti18@gmail.com',
     license='MIT',
     keywords='latex mathml',
-    classifiers=['Development Status :: 5 - Production/Stable', 'License :: OSI Approved :: MIT License', 'Topic :: Scientific/Engineering :: Mathematics', 'Topic :: Software Development :: Libraries :: Python Modules', 'Topic :: Text Processing :: Markup :: HTML', 'Topic :: Text Processing :: Markup :: LaTeX', 'Programming Language :: Python :: 3', 'Programming Language :: Python :: 3.6', 'Programming Language :: Python :: 3.7', 'Programming Language :: Python :: 3.8', 'Programming Language :: Python :: 3.9', 'Programming Language :: Python :: Implementation :: CPython'],
+    classifiers=['Development Status :: 5 - Production/Stable', 'License :: OSI Approved :: MIT License', 'Topic :: Scientific/Engineering :: Mathematics', 'Topic :: Software Development :: Libraries :: Python Modules', 'Topic :: Text Processing :: Markup :: HTML', 'Topic :: Text Processing :: Markup :: LaTeX', 'Programming Language :: Python :: 3', 'Programming Language :: Python :: 3.6', 'Programming Language :: Python :: 3.7', 'Programming Language :: Python :: 3.8', 'Programming Language :: Python :: 3.9', 'Programming Language :: Python :: 3.10', 'Programming Language :: Python :: Implementation :: CPython'],
     entry_points={"console_scripts": ["latex2mathml = latex2mathml.converter:main", "l2m = latex2mathml.converter:main"]},
     packages=['latex2mathml'],
     package_dir={"": "."},
     package_data={"latex2mathml": ["*.txt"]},
     install_requires=[],
-    extras_require={"dev": ["autoflake==1.*,>=1.3.1", "black==21.*,>=21.6.0.b0", "codecov==2.*,>=2.0.16", "dephell==0.*,>=0.8.3", "flake8==3.*,>=3.7.9", "isort==5.*,>=5.9.1", "multidict==5.*,>=5.1.0", "mypy==0.*,>=0.910.0", "pyproject-flake8==0.*,>=0.0.1.a2", "pytest==6.*,>=6.0.1", "pytest-cov==2.*,>=2.8.1", "tomlkit==0.7.0", "xmljson==0.*,>=0.2.0"]},
+    extras_require={"dev": ["autoflake==1.*,>=1.3.1", "black==21.*,>=21.9.0.b0", "codecov==2.*,>=2.1.12", "dephell==0.*,>=0.8.3", "flake8==4.*,>=4.0.1", "isort==5.*,>=5.9.3", "multidict==5.*,>=5.2.0", "mypy==0.*,>=0.910.0", "pyproject-flake8==0.*,>=0.0.1.a2", "pytest==6.*,>=6.2.5", "pytest-cov==3.*,>=3.0.0", "tomlkit==0.7.0", "xmljson==0.*,>=0.2.0"]},
 )
