@@ -123,6 +123,8 @@ LIMINF = r"\liminf"
 LIMSUP = r"\limsup"
 PR = r"\Pr"
 PROJLIM = r"\projlim"
+MOD = r"\mod"
+PMOD = r"\pmod"
 
 HDASHLINE = r"\hdashline"
 HLINE = r"\hline"
@@ -272,6 +274,7 @@ COMMANDS_WITH_ONE_PARAMETER = (
     HPHANTOM,
     MATHRING,
     MIT,
+    MOD,
     OLDSTYLE,
     OVERLEFTARROW,
     OVERLEFTRIGHTARROW,
@@ -279,6 +282,7 @@ COMMANDS_WITH_ONE_PARAMETER = (
     OVERPAREN,
     OVERRIGHTARROW,
     PHANTOM,
+    PMOD,
     SCR,
     TILDE,
     TT,
