@@ -3766,6 +3766,32 @@ from latex2mathml.converter import _convert, convert
             ),
             id="skew-with-braces",
         ),
+        pytest.param(
+            r"\mod 5",
+            MultiDict(
+                [
+                    ("mspace", {"@width": "1em"}),
+                    ("mi", "mod"),
+                    ("mspace", {"@width": "0.333em"}),
+                    ("mn", "5"),
+                ]
+            ),
+            id="mod",
+        ),
+        pytest.param(
+            r"\pmod 5",
+            MultiDict(
+                [
+                    ("mspace", {"@width": "1em"}),
+                    ("mo", "&#x00028;"),
+                    ("mi", "mod"),
+                    ("mspace", {"@width": "0.333em"}),
+                    ("mn", "5"),
+                    ("mo", "&#x00029;"),
+                ]
+            ),
+            id="pmod",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

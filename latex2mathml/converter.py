@@ -169,7 +169,7 @@ def _convert_group(nodes: Iterable[Node], parent: Element, font: Optional[Dict[s
             _convert_group(iter(node.children), parent, _font)
         elif token in commands.GLOBAL_FONTS.keys():
             _font = commands.GLOBAL_FONTS.get(token)
-        elif node.children is None:
+        elif node.children is None or token in (commands.MOD, commands.PMOD):
             _convert_symbol(node, parent, _font)
         elif node.children is not None:
             attributes = node.attributes or {}
@@ -338,7 +338,7 @@ def _append_prefix_element(node: Node, parent: Element) -> None:
     size = "2.047em"
     if parent.attrib.get("displaystyle") == "false" or node.token == commands.TBINOM:
         size = "1.2em"
-    if node.token == r"\pmatrix":
+    if node.token in (r"\pmatrix", commands.PMOD):
         _convert_and_append_command(r"\lparen", parent)
     elif node.token in (commands.BINOM, commands.DBINOM, commands.TBINOM):
         _convert_and_append_command(r"\lparen", parent, {"minsize": size, "maxsize": size})
@@ -359,7 +359,7 @@ def _append_postfix_element(node: Node, parent: Element) -> None:
     size = "2.047em"
     if parent.attrib.get("displaystyle") == "false" or node.token == commands.TBINOM:
         size = "1.2em"
-    if node.token == r"\pmatrix":
+    if node.token in (r"\pmatrix", commands.PMOD):
         _convert_and_append_command(r"\rparen", parent)
     elif node.token in (commands.BINOM, commands.DBINOM, commands.TBINOM):
         _convert_and_append_command(r"\rparen", parent, {"minsize": size, "maxsize": size})
@@ -465,6 +465,16 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Option
         _set_font(mi_t, mi_t.tag, font)
         _set_font(mi_e, mi_e.tag, font)
         _set_font(mi_x, mi_x.tag, font)
+    elif token in (commands.MOD, commands.PMOD):
+        SubElement(parent, "mspace", width="1em")
+        _append_prefix_element(node, parent)
+        element = SubElement(parent, "mi", attrib=attributes)
+        element.text = "mod"
+        _set_font(element, element.tag, font)
+        SubElement(parent, "mspace", width="0.333em")
+        if node.children:
+            _convert_group(iter(node.children), parent, font)
+        _append_postfix_element(node, parent)
     elif token.startswith(commands.BACKSLASH):
         element = SubElement(parent, "mi", attrib=attributes)
         if symbol:
