@@ -433,6 +433,8 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     VPHANTOM: ("mphantom", {}),
     SIDESET: ("mrow", {}),
     SKEW: ("mrow", {}),
+    MOD: ("mi", {}),
+    PMOD: ("mi", {}),
 }
 
 

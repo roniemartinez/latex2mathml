@@ -161,7 +161,7 @@ def _convert_group(nodes: Iterable[Node], parent: Element, font: Optional[Dict[s
         if token in (*commands.MSTYLE_SIZES, *commands.STYLES):
             node = Node(token=token, children=tuple(n for n in nodes))
             _convert_command(node, parent, _font)
-        elif token in commands.CONVERSION_MAP:
+        elif token in commands.CONVERSION_MAP or token in (commands.MOD, commands.PMOD):
             _convert_command(node, parent, _font)
         elif token in commands.LOCAL_FONTS and node.children is not None:
             _convert_group(iter(node.children), parent, commands.LOCAL_FONTS[token])
@@ -169,7 +169,7 @@ def _convert_group(nodes: Iterable[Node], parent: Element, font: Optional[Dict[s
             _convert_group(iter(node.children), parent, _font)
         elif token in commands.GLOBAL_FONTS.keys():
             _font = commands.GLOBAL_FONTS.get(token)
-        elif node.children is None or token in (commands.MOD, commands.PMOD):
+        elif node.children is None:
             _convert_symbol(node, parent, _font)
         elif node.children is not None:
             attributes = node.attributes or {}
@@ -225,6 +225,8 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
         parent = SubElement(parent, "mpadded", width="0")
     elif command in (commands.TBINOM, commands.HBOX, commands.MBOX, commands.TFRAC):
         parent = SubElement(parent, "mstyle", displaystyle="false", scriptlevel="0")
+    elif command in (commands.MOD, commands.PMOD):
+        SubElement(parent, "mspace", width="1em")
 
     tag, attributes = copy.deepcopy(commands.CONVERSION_MAP[command])
 
@@ -255,6 +257,9 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
 
     if command in commands.LIMIT:
         element.text = command[1:]
+    elif command in (commands.MOD, commands.PMOD):
+        element.text = "mod"
+        SubElement(parent, "mspace", width="0.333em")
     elif node.text is not None:
         if command == commands.HBOX:
             mtext: Optional[Element] = element
@@ -280,7 +285,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
 
     if node.children is not None:
         _parent = element
-        if command == commands.LEFT:
+        if command in (commands.LEFT, commands.MOD, commands.PMOD):
             _parent = parent
         if command in commands.MATRICES:
             if command == commands.CASES:
@@ -465,16 +470,6 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Option
         _set_font(mi_t, mi_t.tag, font)
         _set_font(mi_e, mi_e.tag, font)
         _set_font(mi_x, mi_x.tag, font)
-    elif token in (commands.MOD, commands.PMOD):
-        SubElement(parent, "mspace", width="1em")
-        _append_prefix_element(node, parent)
-        element = SubElement(parent, "mi", attrib=attributes)
-        element.text = "mod"
-        _set_font(element, element.tag, font)
-        SubElement(parent, "mspace", width="0.333em")
-        if node.children:
-            _convert_group(iter(node.children), parent, font)
-        _append_postfix_element(node, parent)
     elif token.startswith(commands.BACKSLASH):
         element = SubElement(parent, "mi", attrib=attributes)
         if symbol:
