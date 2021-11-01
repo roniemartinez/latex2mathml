@@ -18,8 +18,8 @@ Pure Python library for LaTeX to MathML conversion
            <td><img src='https://img.shields.io/pypi/v/latex2mathml.svg' alt="Version"></td>
        </tr>
        <tr>
-           <td>Travis CI</td>
-           <td><img src='https://www.travis-ci.com/roniemartinez/latex2mathml.svg?branch=master' alt="Travis CI"></td>
+           <td>Github Actions</td>
+           <td><img src='https://github.com/roniemartinez/latex2mathml/actions/workflows/python.yml/badge.svg' alt="Github Actions"></td>
            <td>Coverage</td>
            <td><img src='https://codecov.io/gh/roniemartinez/latex2mathml/branch/master/graph/badge.svg' alt="CodeCov"></td>
        </tr>
