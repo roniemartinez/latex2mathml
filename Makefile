@@ -7,6 +7,7 @@ install:
 install-actions:
 	pip3 install pip setuptools wheel poetry
 	poetry config virtualenvs.create false
+	poetry config experimental.new-installer false
 	poetry install
 
 .PHONY: style
