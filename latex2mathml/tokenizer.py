@@ -36,8 +36,8 @@ DIGITS = re.compile("^([.0-9])([.0-9])([.0-9]*)$")
 def tokenize(data: str) -> Iterator[str]:
     tokens = _tokenize(data)
     for token in tokens:
+        yield token
         if token in (commands.CFRAC, commands.DFRAC, commands.FRAC, commands.TFRAC):
-            yield token
             numerator = next(tokens)
             matches = DIGITS.match(numerator)
             if matches:
@@ -48,8 +48,6 @@ def tokenize(data: str) -> Iterator[str]:
                     yield extra
             else:
                 yield numerator
-        else:
-            yield token
 
 
 def _tokenize(data: str) -> Iterator[str]:
