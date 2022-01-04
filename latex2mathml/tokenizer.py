@@ -30,7 +30,29 @@ PATTERN = re.compile(
 )
 
 
+DIGITS = re.compile("^([.0-9])([.0-9])([.0-9]*)$")
+
+
 def tokenize(data: str) -> Iterator[str]:
+    tokens = _tokenize(data)
+    for token in tokens:
+        if token in (commands.CFRAC, commands.DFRAC, commands.FRAC, commands.TFRAC):
+            yield token
+            numerator = next(tokens)
+            matches = DIGITS.match(numerator)
+            if matches:
+                numerator, denominator, extra = matches.groups()
+                yield numerator
+                yield denominator
+                if extra:
+                    yield extra
+            else:
+                yield numerator
+        else:
+            yield token
+
+
+def _tokenize(data: str) -> Iterator[str]:
     for match in PATTERN.finditer(data):
         first_match = match.group(0)
         if first_match.startswith(commands.MATH):
