@@ -5,34 +5,34 @@ Pure Python library for LaTeX to MathML conversion
 <table>
     <tr>
         <td>License</td>
-        <td><img src='https://img.shields.io/pypi/l/latex2mathml.svg' alt="License"></td>
+        <td><img src='https://img.shields.io/pypi/l/latex2mathml.svg?style=for-the-badge' alt="License"></td>
         <td>Version</td>
-        <td><img src='https://img.shields.io/pypi/v/latex2mathml.svg' alt="Version"></td>
+        <td><img src='https://img.shields.io/pypi/v/latex2mathml.svg?logo=pypi&style=for-the-badge' alt="Version"></td>
     </tr>
     <tr>
         <td>Github Actions</td>
-        <td><img src='https://github.com/roniemartinez/latex2mathml/actions/workflows/python.yml/badge.svg' alt="Github Actions"></td>
+        <td><img src='https://img.shields.io/github/workflow/status/roniemartinez/latex2mathml/Python?label=actions&logo=github%20actions&style=for-the-badge' alt="Github Actions"></td>
         <td>Coverage</td>
-        <td><img src='https://codecov.io/gh/roniemartinez/latex2mathml/branch/master/graph/badge.svg' alt="CodeCov"></td>
+        <td><img src='https://img.shields.io/codecov/c/github/roniemartinez/latex2mathml/branch?label=codecov&logo=codecov&style=for-the-badge' alt="CodeCov"></td>
     </tr>
     <tr>
         <td>Supported versions</td>
-        <td><img src='https://img.shields.io/pypi/pyversions/latex2mathml.svg' alt="Python Versions"></td>
+        <td><img src='https://img.shields.io/pypi/pyversions/latex2mathml.svg?logo=python&style=for-the-badge' alt="Python Versions"></td>
         <td>Wheel</td>
-        <td><img src='https://img.shields.io/pypi/wheel/latex2mathml.svg' alt="Wheel"></td>
+        <td><img src='https://img.shields.io/pypi/wheel/latex2mathml.svg?style=for-the-badge' alt="Wheel"></td>
     </tr>
     <tr>
         <td>Status</td>
-        <td><img src='https://img.shields.io/pypi/status/latex2mathml.svg' alt="Status"></td>
+        <td><img src='https://img.shields.io/pypi/status/latex2mathml.svg?style=for-the-badge' alt="Status"></td>
         <td>Downloads</td>
-        <td><img src='https://img.shields.io/pypi/dm/latex2mathml.svg' alt="Downloads"></td>
+        <td><img src='https://img.shields.io/pypi/dm/latex2mathml.svg?style=for-the-badge' alt="Downloads"></td>
     </tr>
 </table>
 
 ## Support
-If you like `latex2mathml` or if it is useful to you, show your support by buying me a coffee.
+If you like `latex2mathml` or if it is useful to you, show your support by sponsoring my projects.
 
-<a href="https://www.buymeacoffee.com/roniemartinez" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+[![Github Sponsors](https://img.shields.io/github/sponsors/roniemartinez?label=github%20sponsors&logo=github%20sponsors&style=for-the-badge)](https://github.com/sponsors/roniemartinez)
 
 ## Installation
 
