@@ -10,14 +10,11 @@ install-actions:
 	poetry config experimental.new-installer false
 	poetry install
 
-.PHONY: style
-style:
+.PHONY: format
+format:
 	poetry run autoflake --remove-all-unused-imports --in-place -r --exclude __init__.py .
 	poetry run isort .
 	poetry run black .
-
-.PHONY: format
-format: style
 
 .PHONY: lint
 lint:
@@ -33,7 +30,8 @@ test:
 
 .PHONY: setup
 setup:
-	poetry run dephell deps convert
+	# https://github.com/pypa/setuptools/issues/2993#issuecomment-1003765389
+	SETUPTOOLS_USE_DISTUTILS=stdlib poetry run dephell deps convert
 
 .PHONY: tag
 tag:

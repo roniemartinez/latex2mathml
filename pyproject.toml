@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "latex2mathml"
-version = "3.63.3"
+version = "3.64.0"
 repository = "https://github.com/roniemartinez/latex2mathml"
 description = "Pure Python library for LaTeX to MathML conversion"
 authors = ["Ronie Martinez <ronmarti18@gmail.com>"]
@@ -27,6 +27,9 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
 ]
 
+[tool.poetry.urls]
+"Donate" = "https://github.com/sponsors/roniemartinez"
+
 [tool.poetry.scripts]
 latex2mathml = "latex2mathml.converter:main"
 l2m = "latex2mathml.converter:main"
@@ -39,8 +42,8 @@ autoflake = "^1.3.1"
 black = "^22.1"
 codecov = "^2.1.12"
 dephell = "^0.8.3"
-flake8 = "^4.0.1"
 isort = "^5.10.1"
+mistune = "<2.0.0"  # not compatible with m2r
 multidict = "^5.2.0"
 mypy = "^0.931"
 pyproject-flake8 = "^0.0.1-alpha.2"
