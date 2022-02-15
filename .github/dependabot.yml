@@ -10,4 +10,5 @@ updates:
     schedule:
       interval: "daily"
     ignore:
+      - dependency-name: "mistune"
       - dependency-name: "tomlkit"
