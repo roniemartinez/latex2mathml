@@ -1,7 +1,3 @@
-# latex2mathml
-
-Pure Python library for LaTeX to MathML conversion
-
 <table>
     <tr>
         <td>License</td>
@@ -29,10 +25,9 @@ Pure Python library for LaTeX to MathML conversion
     </tr>
 </table>
 
-## Support
-If you like `latex2mathml` or if it is useful to you, show your support by sponsoring my projects.
+# latex2mathml
 
-[![Github Sponsors](https://img.shields.io/github/sponsors/roniemartinez?label=github%20sponsors&logo=github%20sponsors&style=for-the-badge)](https://github.com/sponsors/roniemartinez)
+Pure Python library for LaTeX to MathML conversion
 
 ## Installation
 
@@ -55,7 +50,7 @@ mathml_output = latex2mathml.converter.convert(latex_input)
 
 ```shell
 % latex2mathml -h
-usage: l2m [-h] [-V] [-b] [-t TEXT | -f FILE]
+usage: latex2mathml [-h] [-V] [-b] [-t TEXT | -f FILE]
 
 Pure Python library for LaTeX to MathML conversion
 
@@ -86,4 +81,5 @@ required arguments:
 
 
 ## Author
+
 - [Ronie Martinez](mailto:ronmarti18@gmail.com)

@@ -1,4 +1,4 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions and deploy to TestPyPI/PyPI
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
 name: Python
@@ -6,19 +6,23 @@ name: Python
 on:
   push:
     branches:
-      - 'master'
+      - master
   pull_request:
     branches:
-      - 'master'
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
-        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
+        python-version: [ '3.7', '3.8', '3.9', '3.10' ]
         include:
           - os: ubuntu-latest
             pip-cache: ~/.cache/pip
@@ -62,51 +66,6 @@ jobs:
       - name: Test
         run: |
           make test
-      - name: Upload Code Coverage
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        run: |
-          poetry run codecov
-
-  testpypi:
-    needs: [ test ]
-    if: always() && !(github.ref == 'refs/heads/master' || startsWith(github.head_ref, 'dependabot/pip/') )
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-      - name: Install dependencies
-        run: |
-          make install-actions
-      - name: Build package
-        run: |
-          poetry config repositories.testpypi https://test.pypi.org/legacy/
-          poetry config http-basic.testpypi ${{ secrets.TEST_PYPI_USER }} ${{ secrets.TEST_PYPI_PASS }}
-          poetry build
-      - name: Publish package
-        run: |
-          poetry publish -r testpypi
-
-  pypi:
-    needs: [ test ]
-    if: always() && github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-      - name: Install dependencies
-        run: |
-          make install-actions
-      - name: Build package
-        run: |
-          poetry config http-basic.pypi ${{ secrets.PYPI_USER }} ${{ secrets.PYPI_PASS }}
-          poetry build
-      - name: Publish package
-        run: |
-          poetry publish
+      - name: Code Coverage
+        uses: codecov/codecov-action@v2.1.0
+        if: ${{ success() }}
