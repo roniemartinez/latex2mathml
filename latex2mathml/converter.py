@@ -260,6 +260,8 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
     elif command in (commands.MOD, commands.PMOD):
         element.text = "mod"
         SubElement(parent, "mspace", width="0.333em")
+    elif command == commands.MIDDLE:
+        element.text = "&#x{};".format(convert_symbol(node.text))
     elif node.text is not None:
         if command == commands.HBOX:
             mtext: Optional[Element] = element

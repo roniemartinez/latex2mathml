@@ -3792,6 +3792,28 @@ from latex2mathml.converter import _convert, convert
             ),
             id="pmod",
         ),
+        pytest.param(
+            r"\left\{\middle|\right\}",
+            {
+                "mrow": MultiDict(
+                    [
+                        ("mo", {"@stretchy": "true", "@fence": "true", "@form": "prefix", "$": "&#x0007B;"}),
+                        (
+                            "mo",
+                            {
+                                "@stretchy": "true",
+                                "@fence": "true",
+                                "@lspace": "0.05em",
+                                "@rspace": "0.05em",
+                                "$": "&#x0007C;",
+                            },
+                        ),
+                        ("mo", {"@stretchy": "true", "@fence": "true", "@form": "postfix", "$": "&#x0007D;"}),
+                    ]
+                )
+            },
+            id="middle",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

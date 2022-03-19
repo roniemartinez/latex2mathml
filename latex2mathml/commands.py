@@ -21,6 +21,7 @@ PRIME = r"\prime"
 DPRIME = r"\dprime"
 
 LEFT = r"\left"
+MIDDLE = r"\middle"
 RIGHT = r"\right"
 
 ABOVE = r"\above"
@@ -412,6 +413,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     **MSTYLE_SIZES,
     **{limit: ("mo", {}) for limit in LIMIT},
     LEFT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")])),
+    MIDDLE: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("lspace", "0.05em"), ("rspace", "0.05em")])),
     RIGHT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "postfix")])),
     # styles
     COLOR: ("mstyle", {}),

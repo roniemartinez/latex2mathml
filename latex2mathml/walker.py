@@ -132,6 +132,7 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
             commands.FBOX,
             commands.HBOX,
             commands.MBOX,
+            commands.MIDDLE,
             commands.TEXT,
             commands.TEXTBF,
             commands.TEXTIT,
