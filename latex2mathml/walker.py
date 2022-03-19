@@ -43,7 +43,7 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
                 delimiter = next(tokens)
             group.append(Node(token=token, delimiter=delimiter))
             break
-        elif token == commands.RIGHT != terminator:
+        elif (token == commands.RIGHT != terminator) or (token == commands.MIDDLE and terminator != commands.RIGHT):
             raise ExtraLeftOrMissingRightError
         elif token == commands.LEFT:
             delimiter = next(tokens)
@@ -132,6 +132,7 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
             commands.FBOX,
             commands.HBOX,
             commands.MBOX,
+            commands.MIDDLE,
             commands.TEXT,
             commands.TEXTBF,
             commands.TEXTIT,

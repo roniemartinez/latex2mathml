@@ -1681,6 +1681,7 @@ def test_walk(latex: str, expected: list) -> None:
     [
         pytest.param(r"\right)", ExtraLeftOrMissingRightError, id=r"missing-\left"),
         pytest.param(r"\left(x", ExtraLeftOrMissingRightError, id=r"missing-\right"),
+        pytest.param(r"\middle|", ExtraLeftOrMissingRightError, id=r"missing-\left"),
         pytest.param(r"{ \over 2}", NumeratorNotFoundError, id="fraction-without-numerator"),
         pytest.param(r"{1 \over }", DenominatorNotFoundError, id="fraction-without-denominator"),
         pytest.param(r"1_", MissingSuperScriptOrSubscriptError, id="missing-subscript"),

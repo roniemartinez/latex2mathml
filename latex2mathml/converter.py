@@ -261,7 +261,9 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
         element.text = "mod"
         SubElement(parent, "mspace", width="0.333em")
     elif node.text is not None:
-        if command == commands.HBOX:
+        if command == commands.MIDDLE:
+            element.text = "&#x{};".format(convert_symbol(node.text))
+        elif command == commands.HBOX:
             mtext: Optional[Element] = element
             for text, mode in separate_by_mode(node.text):
                 if mode == Mode.TEXT:
