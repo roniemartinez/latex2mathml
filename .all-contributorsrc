@@ -25,6 +25,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "huangradio",
+      "name": "HQY",
+      "avatar_url": "https://avatars.githubusercontent.com/u/63624395?v=4",
+      "profile": "https://github.com/huangradio",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
