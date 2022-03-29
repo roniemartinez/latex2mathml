@@ -25,6 +25,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "abhisheksia",
+      "name": "abhisheksia",
+      "avatar_url": "https://avatars.githubusercontent.com/u/68808662?v=4",
+      "profile": "https://github.com/abhisheksia",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
