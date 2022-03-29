@@ -119,6 +119,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://clontz.org"><img src="https://avatars.githubusercontent.com/u/1559632?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Steven Clontz</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3AStevenClontz" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/yuwenjun1"><img src="https://avatars.githubusercontent.com/u/43265090?v=4?s=100" width="100px;" alt=""/><br /><sub><b>空白</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Ayuwenjun1" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/amuramatsu"><img src="https://avatars.githubusercontent.com/u/6500918?v=4?s=100" width="100px;" alt=""/><br /><sub><b>MURAMATSU Atshshi</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Aamuramatsu" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/leingang"><img src="https://avatars.githubusercontent.com/u/570942?v=4?s=100" width="100px;" alt=""/><br /><sub><b>leingang</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Aleingang" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
