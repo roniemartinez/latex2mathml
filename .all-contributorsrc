@@ -25,6 +25,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "redboxup",
+      "name": "redboxup",
+      "avatar_url": "https://avatars.githubusercontent.com/u/60307796?v=4",
+      "profile": "https://github.com/redboxup",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
