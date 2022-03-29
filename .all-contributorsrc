@@ -25,6 +25,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "Nigel-Amers",
+      "name": "Nigel Amers",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14248498?v=4",
+      "profile": "https://github.com/Nigel-Amers",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
