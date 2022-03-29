@@ -107,6 +107,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/ghost"><img src="https://avatars.githubusercontent.com/u/10137?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Deleted user</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Aghost" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/cesaryuan"><img src="https://avatars.githubusercontent.com/u/35998162?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Cesaryuan</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Acesaryuan" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/tonystank3000"><img src="https://avatars.githubusercontent.com/u/6315974?v=4?s=100" width="100px;" alt=""/><br /><sub><b>TonyStank</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Atonystank3000" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://polarwinkel.de"><img src="https://avatars.githubusercontent.com/u/1512713?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dirk Winkel</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Apolarwinkel" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
