@@ -25,6 +25,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "polarwinkel",
+      "name": "Dirk Winkel",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1512713?v=4",
+      "profile": "https://polarwinkel.de",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
