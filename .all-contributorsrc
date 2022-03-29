@@ -25,6 +25,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "oliverstefanov",
+      "name": "oliverstefanov",
+      "avatar_url": "https://avatars.githubusercontent.com/u/33491656?v=4",
+      "profile": "https://github.com/oliverstefanov",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
