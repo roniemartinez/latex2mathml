@@ -115,6 +115,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "ubavic",
+      "name": "Nikola Ubavić",
+      "avatar_url": "https://avatars.githubusercontent.com/u/53820106?v=4",
+      "profile": "https://ubavic.rs",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,

@@ -109,6 +109,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/tonystank3000"><img src="https://avatars.githubusercontent.com/u/6315974?v=4?s=100" width="100px;" alt=""/><br /><sub><b>TonyStank</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Atonystank3000" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://polarwinkel.de"><img src="https://avatars.githubusercontent.com/u/1512713?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dirk Winkel</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Apolarwinkel" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/sinslu"><img src="https://avatars.githubusercontent.com/u/12248270?v=4?s=100" width="100px;" alt=""/><br /><sub><b>sinslu</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Asinslu" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://ubavic.rs"><img src="https://avatars.githubusercontent.com/u/53820106?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nikola Ubavić</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Aubavic" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
