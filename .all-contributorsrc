@@ -25,6 +25,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "ghost",
+      "name": "Deleted user",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10137?v=4",
+      "profile": "https://github.com/ghost",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
