@@ -114,6 +114,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://ubavic.rs"><img src="https://avatars.githubusercontent.com/u/53820106?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nikola Ubavić</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Aubavic" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/abhisheksia"><img src="https://avatars.githubusercontent.com/u/68808662?v=4?s=100" width="100px;" alt=""/><br /><sub><b>abhisheksia</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Aabhisheksia" title="Bug reports">🐛</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="http://denissalem.tuxfamily.org"><img src="https://avatars.githubusercontent.com/u/4476506?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Denis Salem</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3ADenisSalem" title="Bug reports">🐛</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
