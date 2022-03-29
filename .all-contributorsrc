@@ -11,7 +11,9 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/2573537?v=4",
       "profile": "https://ron.sh",
       "contributions": [
-        "maintenance"
+        "maintenance",
+        "code",
+        "infra"
       ]
     }
   ],
