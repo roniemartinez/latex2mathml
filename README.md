@@ -117,6 +117,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="http://denissalem.tuxfamily.org"><img src="https://avatars.githubusercontent.com/u/4476506?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Denis Salem</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3ADenisSalem" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://clontz.org"><img src="https://avatars.githubusercontent.com/u/1559632?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Steven Clontz</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3AStevenClontz" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/yuwenjun1"><img src="https://avatars.githubusercontent.com/u/43265090?v=4?s=100" width="100px;" alt=""/><br /><sub><b>空白</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Ayuwenjun1" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
