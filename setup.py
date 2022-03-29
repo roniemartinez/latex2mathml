@@ -38,5 +38,5 @@ setup(
     package_dir={"": "."},
     package_data={"latex2mathml": ["*.txt"]},
     install_requires=[],
-    extras_require={"dev": ["autoflake==1.*,>=1.3.1", "black==22.*,>=22.1.0", "dephell==0.*,>=0.8.3", "isort==5.*,>=5.10.1", "mistune<2.0.0", "multidict==5.*,>=5.2.0", "mypy==0.*,>=0.941.0", "pyproject-flake8==0.*,>=0.0.1.a2", "pytest==7.*,>=7.0.0", "pytest-clarity==1.*,>=1.0.1", "pytest-cov==3.*,>=3.0.0", "tomlkit==0.7.0", "xmljson==0.*,>=0.2.0"]},
+    extras_require={"dev": ["autoflake==1.*,>=1.3.1", "black==22.*,>=22.3.0", "dephell==0.*,>=0.8.3", "isort==5.*,>=5.10.1", "mistune<2.0.0", "multidict==6.*,>=6.0.2", "mypy==0.*,>=0.942.0", "pyproject-flake8==0.*,>=0.0.1.a3", "pytest==7.*,>=7.1.1", "pytest-clarity==1.*,>=1.0.1", "pytest-cov==3.*,>=3.0.0", "tomlkit==0.7.0", "xmljson==0.*,>=0.2.0"]},
 )
