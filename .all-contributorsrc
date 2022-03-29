@@ -4,6 +4,7 @@
   ],
   "imageSize": 100,
   "commit": false,
+  "commitConvention": "atom",
   "contributors": [
     {
       "login": "roniemartinez",
@@ -18,9 +19,10 @@
     }
   ],
   "contributorsPerLine": 7,
+  "contributorsSortAlphabetically": "true",
   "projectName": "latex2mathml",
   "projectOwner": "roniemartinez",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": false
 }
