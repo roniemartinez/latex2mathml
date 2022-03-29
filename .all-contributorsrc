@@ -25,6 +25,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "sinslu",
+      "name": "sinslu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12248270?v=4",
+      "profile": "https://github.com/sinslu",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
