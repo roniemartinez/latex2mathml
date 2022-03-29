@@ -103,6 +103,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/chaihahaha"><img src="https://avatars.githubusercontent.com/u/24356676?v=4?s=100" width="100px;" alt=""/><br /><sub><b>chaihahaha</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/commits?author=chaihahaha" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/huangradio"><img src="https://avatars.githubusercontent.com/u/63624395?v=4?s=100" width="100px;" alt=""/><br /><sub><b>HQY</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Ahuangradio" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/Sun-ZhenXing"><img src="https://avatars.githubusercontent.com/u/44517244?v=4?s=100" width="100px;" alt=""/><br /><sub><b>鸭梨</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3ASun-ZhenXing" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/oliverstefanov"><img src="https://avatars.githubusercontent.com/u/33491656?v=4?s=100" width="100px;" alt=""/><br /><sub><b>oliverstefanov</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Aoliverstefanov" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
