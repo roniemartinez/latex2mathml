@@ -25,6 +25,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "cesaryuan",
+      "name": "Cesaryuan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/35998162?v=4",
+      "profile": "https://github.com/cesaryuan",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
