@@ -88,6 +88,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "tonystank3000",
+      "name": "TonyStank",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6315974?v=4",
+      "profile": "https://github.com/tonystank3000",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
