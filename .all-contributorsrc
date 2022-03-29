@@ -16,6 +16,15 @@
         "code",
         "infra"
       ]
+    },
+    {
+      "login": "askender",
+      "name": "askender",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1472850?v=4",
+      "profile": "https://anwen.cc/",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
