@@ -101,6 +101,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://anwen.cc/"><img src="https://avatars.githubusercontent.com/u/1472850?v=4?s=100" width="100px;" alt=""/><br /><sub><b>askender</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/commits?author=askender" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/06180339"><img src="https://avatars.githubusercontent.com/u/25408501?v=4?s=100" width="100px;" alt=""/><br /><sub><b>06180339</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/commits?author=06180339" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/chaihahaha"><img src="https://avatars.githubusercontent.com/u/24356676?v=4?s=100" width="100px;" alt=""/><br /><sub><b>chaihahaha</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/commits?author=chaihahaha" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/huangradio"><img src="https://avatars.githubusercontent.com/u/63624395?v=4?s=100" width="100px;" alt=""/><br /><sub><b>HQY</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Ahuangradio" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
