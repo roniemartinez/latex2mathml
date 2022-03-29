@@ -97,7 +97,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://ron.sh"><img src="https://avatars.githubusercontent.com/u/2573537?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ronie Martinez</b></sub></a><br /><a href="#maintenance-roniemartinez" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://ron.sh"><img src="https://avatars.githubusercontent.com/u/2573537?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ronie Martinez</b></sub></a><br /><a href="#maintenance-roniemartinez" title="Maintenance">🚧</a> <a href="https://github.com/roniemartinez/latex2mathml/commits?author=roniemartinez" title="Code">💻</a> <a href="#infra-roniemartinez" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
   </tr>
 </table>
 

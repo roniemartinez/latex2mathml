@@ -4,6 +4,7 @@
   ],
   "imageSize": 100,
   "commit": false,
+  "commitConvention": "atom",
   "contributors": [
     {
       "login": "roniemartinez",
@@ -11,7 +12,9 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/2573537?v=4",
       "profile": "https://ron.sh",
       "contributions": [
-        "maintenance"
+        "maintenance",
+        "code",
+        "infra"
       ]
     }
   ],
@@ -20,5 +23,5 @@
   "projectOwner": "roniemartinez",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": false
 }
