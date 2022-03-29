@@ -99,6 +99,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://ron.sh"><img src="https://avatars.githubusercontent.com/u/2573537?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ronie Martinez</b></sub></a><br /><a href="#maintenance-roniemartinez" title="Maintenance">🚧</a> <a href="https://github.com/roniemartinez/latex2mathml/commits?author=roniemartinez" title="Code">💻</a> <a href="#infra-roniemartinez" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
     <td align="center"><a href="https://anwen.cc/"><img src="https://avatars.githubusercontent.com/u/1472850?v=4?s=100" width="100px;" alt=""/><br /><sub><b>askender</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/commits?author=askender" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://ubavic.rs"><img src="https://avatars.githubusercontent.com/u/53820106?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nikola Ubavić</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Aubavic" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
