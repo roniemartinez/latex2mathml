@@ -25,6 +25,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "amuramatsu",
+      "name": "MURAMATSU Atshshi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6500918?v=4",
+      "profile": "https://github.com/amuramatsu",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
