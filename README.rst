@@ -29,7 +29,7 @@
        </tr>
        <tr>
            <td>All Contributors</td>
-           <td><a href="#contributors-"><img src='https://img.shields.io/badge/all_contributors-1-orange.svg?style=for-the-badge' alt="All Contributors"></a></td>
+           <td><a href="#contributors-"><img src='https://img.shields.io/github/all-contributors/roniemartinez/latex2mathml?style=for-the-badge' alt="All Contributors"></a></td>
        </tr>
    </table>
 
