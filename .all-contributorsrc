@@ -4,7 +4,6 @@
   ],
   "imageSize": 100,
   "commit": false,
-  "commitConvention": "atom",
   "contributors": [
     {
       "login": "roniemartinez",
@@ -175,6 +174,15 @@
       "name": "leingang",
       "avatar_url": "https://avatars.githubusercontent.com/u/570942?v=4",
       "profile": "https://github.com/leingang",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "Nigel-Amers",
+      "name": "Nigel Amers",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14248498?v=4",
+      "profile": "https://github.com/Nigel-Amers",
       "contributions": [
         "bug"
       ]
