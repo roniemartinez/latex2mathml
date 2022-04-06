@@ -126,6 +126,7 @@ PR = r"\Pr"
 PROJLIM = r"\projlim"
 MOD = r"\mod"
 PMOD = r"\pmod"
+BMOD = r"\bmod"
 
 HDASHLINE = r"\hdashline"
 HLINE = r"\hline"
@@ -437,6 +438,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     SKEW: ("mrow", {}),
     MOD: ("mi", {}),
     PMOD: ("mi", {}),
+    BMOD: ("mo", {}),
 }
 
 
