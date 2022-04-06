@@ -3814,6 +3814,7 @@ from latex2mathml.converter import _convert, convert
             },
             id="middle",
         ),
+        pytest.param(r"9 \bmod2", MultiDict([("mn", "9"), ("mo", "mod"), ("mn", "2")]), id="bmod"),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
