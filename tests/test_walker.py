@@ -11,6 +11,7 @@ from latex2mathml.exceptions import (
     InvalidAlignmentError,
     InvalidStyleForGenfracError,
     InvalidWidthError,
+    LimitsMustFollowMathOperatorError,
     MissingEndError,
     MissingSuperScriptOrSubscriptError,
     NumeratorNotFoundError,
@@ -1180,12 +1181,13 @@ from latex2mathml.walker import Node, walk
             r"\int\limits_{0}^{\pi}",
             [
                 Node(
-                    token=r"\limits",
+                    token="_^",
                     children=(
                         Node(token=r"\int"),
                         Node(token="{}", children=(Node(token="0"),)),
                         Node(token="{}", children=(Node(token=r"\pi"),)),
                     ),
+                    modifier=r"\limits",
                 ),
             ],
             id="issue-76",
@@ -1693,8 +1695,10 @@ def test_walk(latex: str, expected: list) -> None:
         pytest.param(r"\begin{matrix*}[xxx]\end{matrix*}", InvalidAlignmentError, id="invalid-alignment"),
         pytest.param(r"\skew{}\hat b", InvalidWidthError, id="invalid-width"),
         pytest.param(r"\skew{X}\hat b", InvalidWidthError, id="invalid-width-not-number"),
+        pytest.param(r"\limits^{\pi}", LimitsMustFollowMathOperatorError, id="limits-must-follow-math-operator-blank"),
+        pytest.param(r"5\limits^{\pi}", LimitsMustFollowMathOperatorError, id="limits-must-follow-math-operator"),
     ],
 )
-def test_missing_right(latex: str, exception: Union[Tuple[Any, ...], Any]) -> None:
+def test_error(latex: str, exception: Union[Tuple[Any, ...], Any]) -> None:
     with pytest.raises(exception):
         walk(latex)

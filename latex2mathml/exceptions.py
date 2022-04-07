@@ -40,3 +40,7 @@ class InvalidAlignmentError(Exception):
 
 class InvalidWidthError(Exception):
     pass
+
+
+class LimitsMustFollowMathOperatorError(Exception):
+    pass

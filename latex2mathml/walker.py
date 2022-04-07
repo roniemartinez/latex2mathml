@@ -9,6 +9,7 @@ from latex2mathml.exceptions import (
     InvalidAlignmentError,
     InvalidStyleForGenfracError,
     InvalidWidthError,
+    LimitsMustFollowMathOperatorError,
     MissingEndError,
     MissingSuperScriptOrSubscriptError,
     NoAvailableTokensError,
@@ -24,6 +25,7 @@ class Node(NamedTuple):
     alignment: Optional[str] = None
     text: Optional[str] = None
     attributes: Optional[Dict[str, str]] = None
+    modifier: Optional[str] = None
 
 
 def walk(data: str) -> List[Node]:
@@ -60,30 +62,41 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
             try:
                 previous = group.pop()
             except IndexError:
-                previous = Node(token="")  # left operand can be empty if not present
+                previous = Node(token="")  # left operand can be empty if not
 
             if token == previous.token == commands.SUBSCRIPT:
                 raise DoubleSubscriptsError
             if token == previous.token == commands.SUPERSCRIPT:
                 raise DoubleSuperscriptsError
 
+            modifier = None
+            if previous.token == commands.LIMITS:
+                modifier = commands.LIMITS
+                try:
+                    previous = group.pop()
+                    if not previous.token.startswith("\\"):  # TODO: Complete list of operators
+                        raise LimitsMustFollowMathOperatorError
+                except IndexError:
+                    raise LimitsMustFollowMathOperatorError
+
             if token == commands.SUBSCRIPT and previous.token == commands.SUPERSCRIPT and previous.children is not None:
                 children = tuple(_walk(tokens, terminator=terminator, limit=1))
-                node = Node(token=commands.SUBSUP, children=(previous.children[0], *children, previous.children[1]))
+                node = Node(
+                    token=commands.SUBSUP,
+                    children=(previous.children[0], *children, previous.children[1]),
+                    modifier=previous.modifier,
+                )
             elif (
                 token == commands.SUPERSCRIPT and previous.token == commands.SUBSCRIPT and previous.children is not None
             ):
                 children = tuple(_walk(tokens, terminator=terminator, limit=1))
-                if previous.children[0].token == commands.LIMITS:
-                    node = Node(token=commands.LIMITS, children=(group.pop(), *previous.children[1:], *children))
-                else:
-                    node = Node(token=commands.SUBSUP, children=(*previous.children, *children))
+                node = Node(token=commands.SUBSUP, children=(*previous.children, *children), modifier=previous.modifier)
             else:
                 try:
                     children = tuple(_walk(tokens, terminator=terminator, limit=1))
                 except NoAvailableTokensError:
                     raise MissingSuperScriptOrSubscriptError
-                node = Node(token=token, children=(previous, *children))
+                node = Node(token=token, children=(previous, *children), modifier=modifier)
         elif token == commands.APOSTROPHE:
             try:
                 previous = group.pop()
@@ -281,7 +294,7 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
                 width = width_node.children[0].token
             if not width.isdigit():
                 raise InvalidWidthError
-            node = Node(token=token, children=(child,), attributes={"width": f"{0.0555*int(width):.3f}em"})
+            node = Node(token=token, children=(child,), attributes={"width": f"{0.0555 * int(width):.3f}em"})
         elif token.startswith(commands.BEGIN):
             node = _get_environment_node(token, tokens)
         else:
