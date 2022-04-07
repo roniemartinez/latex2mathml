@@ -62,7 +62,7 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
             try:
                 previous = group.pop()
             except IndexError:
-                previous = Node(token="")  # left operand can be empty if not
+                previous = Node(token="")  # left operand can be empty if not present
 
             if token == previous.token == commands.SUBSCRIPT:
                 raise DoubleSubscriptsError
