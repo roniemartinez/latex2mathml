@@ -963,6 +963,21 @@ from latex2mathml.converter import _convert, convert
             id="issue-76",
         ),
         pytest.param(
+            r"\int\limits^{\pi}_{0}",
+            {"munderover": MultiDict([("mo", "&#x0222B;"), ("mrow", {"mn": "0"}), ("mrow", {"mi": "&#x003C0;"})])},
+            id="issue-301-a",
+        ),
+        pytest.param(
+            r"\int\limits_{\pi}",
+            {"munder": MultiDict([("mo", "&#x0222B;"), ("mrow", {"mi": "&#x003C0;"})])},
+            id="issue-301-b",
+        ),
+        pytest.param(
+            r"\int\limits^{\pi}",
+            {"mover": MultiDict([("mo", "&#x0222B;"), ("mrow", {"mi": "&#x003C0;"})])},
+            id="issue-301-c",
+        ),
+        pytest.param(
             r"\substack{ \xi{2}=g{\left(x \right)}}",
             {
                 "mstyle": {

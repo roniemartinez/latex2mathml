@@ -211,6 +211,7 @@ def separate_by_mode(text: str) -> Iterator[Tuple[str, Mode]]:
 
 def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optional[str]]] = None) -> None:
     command = node.token
+    modifier = node.modifier
 
     if command == commands.SUBSTACK:
         parent = SubElement(parent, "mstyle", scriptlevel="1")
@@ -251,6 +252,12 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
     ):
         tag = "munder"
     elif command == commands.SUBSUP and node.children is not None and node.children[0].token == commands.GCD:
+        tag = "munderover"
+    elif command == commands.SUPERSCRIPT and modifier == commands.LIMITS:
+        tag = "mover"
+    elif command == commands.SUBSCRIPT and modifier == commands.LIMITS:
+        tag = "munder"
+    elif command == commands.SUBSUP and modifier == commands.LIMITS:
         tag = "munderover"
 
     element = SubElement(parent, tag, attributes)

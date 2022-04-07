@@ -142,6 +142,7 @@ Thanks goes to these wonderful people (\ `emoji key <https://allcontributors.org
        <td align="center"><a href="https://github.com/amuramatsu"><img src="https://avatars.githubusercontent.com/u/6500918?v=4?s=100" width="100px;" alt=""/><br /><sub><b>MURAMATSU Atshshi</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Aamuramatsu" title="Bug reports">🐛</a></td>
        <td align="center"><a href="https://github.com/leingang"><img src="https://avatars.githubusercontent.com/u/570942?v=4?s=100" width="100px;" alt=""/><br /><sub><b>leingang</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Aleingang" title="Bug reports">🐛</a></td>
        <td align="center"><a href="https://github.com/Nigel-Amers"><img src="https://avatars.githubusercontent.com/u/14248498?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nigel Amers</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3ANigel-Amers" title="Bug reports">🐛</a></td>
+       <td align="center"><a href="https://github.com/retsyo"><img src="https://avatars.githubusercontent.com/u/7960913?v=4?s=100" width="100px;" alt=""/><br /><sub><b>retsyo</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Aretsyo" title="Bug reports">🐛</a></td>
      </tr>
    </table>
 
