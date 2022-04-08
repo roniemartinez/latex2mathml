@@ -74,6 +74,8 @@ UNDERLEFTRIGHTARROW = r"\underleftrightarrow"
 VEC = r"\vec"
 WIDEHAT = r"\widehat"
 WIDETILDE = r"\widetilde"
+XLEFTARROW = r"\xleftarrow"
+XRIGHTARROW = r"\xrightarrow"
 
 HREF = r"\href"
 TEXT = r"\text"
@@ -445,6 +447,8 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     MOD: ("mi", {}),
     PMOD: ("mi", {}),
     BMOD: ("mo", {}),
+    XLEFTARROW: ("mover", {}),
+    XRIGHTARROW: ("mover", {}),
 }
 
 

@@ -3920,6 +3920,128 @@ from latex2mathml.converter import _convert, convert
             },
             id="underbrace-c",
         ),
+        pytest.param(
+            r"\xleftarrow x",
+            {
+                "mover": MultiDict(
+                    [
+                        ("mstyle", {"@scriptlevel": "0", "mo": "&#x2190;"}),
+                        (
+                            "mpadded",
+                            MultiDict(
+                                [
+                                    ("@width", "+0.833em"),
+                                    ("@lspace", "0.556em"),
+                                    ("@voffset", "-.2em"),
+                                    ("@height", "-.2em"),
+                                    ("mi", "x"),
+                                    ("mspace", {"@depth": ".25em"}),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="xleftarrow",
+        ),
+        pytest.param(
+            r"\xleftarrow[y] x",
+            {
+                "munderover": MultiDict(
+                    [
+                        ("mstyle", {"@scriptlevel": "0", "mo": "&#x2190;"}),
+                        (
+                            "mpadded",
+                            MultiDict(
+                                [
+                                    ("@width", "+0.833em"),
+                                    ("@lspace", "0.556em"),
+                                    ("@voffset", "-.2em"),
+                                    ("@height", "-.2em"),
+                                    ("mrow", {"mi": "y"}),
+                                    ("mspace", {"@depth": ".25em"}),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mpadded",
+                            MultiDict(
+                                [
+                                    ("@width", "+0.833em"),
+                                    ("@lspace", "0.556em"),
+                                    ("@voffset", "-.2em"),
+                                    ("@height", "-.2em"),
+                                    ("mi", "x"),
+                                    ("mspace", {"@depth": ".25em"}),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="xleftarrow-with-argument",
+        ),
+        pytest.param(
+            r"\xrightarrow x",
+            {
+                "mover": MultiDict(
+                    [
+                        ("mstyle", {"@scriptlevel": "0", "mo": "&#x2192;"}),
+                        (
+                            "mpadded",
+                            MultiDict(
+                                [
+                                    ("@width", "+0.833em"),
+                                    ("@lspace", "0.556em"),
+                                    ("@voffset", "-.2em"),
+                                    ("@height", "-.2em"),
+                                    ("mi", "x"),
+                                    ("mspace", {"@depth": ".25em"}),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="xrightarrow",
+        ),
+        pytest.param(
+            r"\xrightarrow[y] x",
+            {
+                "munderover": MultiDict(
+                    [
+                        ("mstyle", {"@scriptlevel": "0", "mo": "&#x2192;"}),
+                        (
+                            "mpadded",
+                            MultiDict(
+                                [
+                                    ("@width", "+0.833em"),
+                                    ("@lspace", "0.556em"),
+                                    ("@voffset", "-.2em"),
+                                    ("@height", "-.2em"),
+                                    ("mrow", {"mi": "y"}),
+                                    ("mspace", {"@depth": ".25em"}),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mpadded",
+                            MultiDict(
+                                [
+                                    ("@width", "+0.833em"),
+                                    ("@lspace", "0.556em"),
+                                    ("@voffset", "-.2em"),
+                                    ("@height", "-.2em"),
+                                    ("mi", "x"),
+                                    ("mspace", {"@depth": ".25em"}),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="xrightarrow-with-argument",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
