@@ -246,11 +246,11 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
 
     if command == commands.SUBSUP and node.children is not None and node.children[0].token == commands.GCD:
         tag = "munderover"
-    elif command == commands.SUPERSCRIPT and modifier == commands.LIMITS:
+    elif command == commands.SUPERSCRIPT and modifier in (commands.LIMITS, commands.OVERBRACE):
         tag = "mover"
-    elif command == commands.SUBSCRIPT and modifier == commands.LIMITS:
+    elif command == commands.SUBSCRIPT and modifier in (commands.LIMITS, commands.UNDERBRACE):
         tag = "munder"
-    elif command == commands.SUBSUP and modifier == commands.LIMITS:
+    elif command == commands.SUBSUP and modifier in (commands.LIMITS, commands.OVERBRACE, commands.UNDERBRACE):
         tag = "munderover"
 
     element = SubElement(parent, tag, attributes)

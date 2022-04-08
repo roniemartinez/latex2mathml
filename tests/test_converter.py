@@ -3890,6 +3890,36 @@ from latex2mathml.converter import _convert, convert
             id="middle",
         ),
         pytest.param(r"9 \bmod2", MultiDict([("mn", "9"), ("mo", "mod"), ("mn", "2")]), id="bmod"),
+        pytest.param(r"\overbrace3", {"mover": MultiDict([("mn", "3"), ("mo", "&#x23DE;")])}, id="overbrace-a"),
+        pytest.param(
+            r"\overbrace3^a",
+            {"mover": MultiDict([("mover", MultiDict([("mn", "3"), ("mo", "&#x23DE;")])), ("mi", "a")])},
+            id="overbrace-b",
+        ),
+        pytest.param(
+            r"\overbrace3^a_x",
+            {
+                "munderover": MultiDict(
+                    [("mover", MultiDict([("mn", "3"), ("mo", "&#x23DE;")])), ("mi", "x"), ("mi", "a")]
+                )
+            },
+            id="overbrace-c",
+        ),
+        pytest.param(r"\underbrace3", {"munder": MultiDict([("mn", "3"), ("mo", "&#x23DF;")])}, id="underbrace-a"),
+        pytest.param(
+            r"\underbrace3_a",
+            {"munder": MultiDict([("munder", MultiDict([("mn", "3"), ("mo", "&#x23DF;")])), ("mi", "a")])},
+            id="underbrace-b",
+        ),
+        pytest.param(
+            r"\underbrace3_a^x",
+            {
+                "munderover": MultiDict(
+                    [("munder", MultiDict([("mn", "3"), ("mo", "&#x23DF;")])), ("mi", "a"), ("mi", "x")]
+                )
+            },
+            id="underbrace-c",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
