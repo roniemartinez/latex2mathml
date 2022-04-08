@@ -58,12 +58,14 @@ DDDDOT = r"\ddddot"
 GRAVE = r"\grave"
 HAT = r"\hat"
 MATHRING = r"\mathring"
+OVERBRACE = r"\overbrace"
 OVERLEFTARROW = r"\overleftarrow"
 OVERLEFTRIGHTARROW = r"\overleftrightarrow"
 OVERLINE = r"\overline"
 OVERPAREN = r"\overparen"
 OVERRIGHTARROW = r"\overrightarrow"
 TILDE = r"\tilde"
+UNDERBRACE = r"\underbrace"
 UNDERLEFTARROW = r"\underleftarrow"
 UNDERLINE = r"\underline"
 UNDERPAREN = r"\underparen"
@@ -278,6 +280,7 @@ COMMANDS_WITH_ONE_PARAMETER = (
     MIT,
     MOD,
     OLDSTYLE,
+    OVERBRACE,
     OVERLEFTARROW,
     OVERLEFTRIGHTARROW,
     OVERLINE,
@@ -288,6 +291,7 @@ COMMANDS_WITH_ONE_PARAMETER = (
     SCR,
     TILDE,
     TT,
+    UNDERBRACE,
     UNDERLEFTARROW,
     UNDERLINE,
     UNDERPAREN,
@@ -370,6 +374,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     HAT: ("mover", {}),
     LIMITS: ("munderover", {}),
     MATHRING: ("mover", {}),
+    OVERBRACE: ("mover", {}),
     OVERLEFTARROW: ("mover", {}),
     OVERLEFTRIGHTARROW: ("mover", {}),
     OVERLINE: ("mover", {}),
@@ -377,6 +382,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     OVERRIGHTARROW: ("mover", {}),
     TILDE: ("mover", {}),
     OVERSET: ("mover", {}),
+    UNDERBRACE: ("munder", {}),
     UNDERLEFTARROW: ("munder", {}),
     UNDERLINE: ("munder", {}),
     UNDERPAREN: ("munder", {}),
@@ -454,12 +460,14 @@ DIACRITICS: Dict[str, Tuple[str, Dict[str, str]]] = {
     GRAVE: ("&#x00060;", {}),
     HAT: ("&#x0005E;", {"stretchy": "false"}),
     MATHRING: ("&#x002DA;", {}),
+    OVERBRACE: ("&#x23DE;", {}),
     OVERLEFTARROW: ("&#x02190;", {}),
     OVERLEFTRIGHTARROW: ("&#x02194;", {}),
     OVERLINE: ("&#x02015;", {"accent": "true"}),
     OVERPAREN: ("&#x023DC;", {}),
     OVERRIGHTARROW: ("&#x02192;", {}),
     TILDE: ("&#x0007E;", {"stretchy": "false"}),
+    UNDERBRACE: ("&#x23DF;", {}),
     UNDERLEFTARROW: ("&#x02190;", {}),
     UNDERLEFTRIGHTARROW: ("&#x02194;", {}),
     UNDERLINE: ("&#x02015;", {"accent": "true"}),

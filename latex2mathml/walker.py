@@ -96,6 +96,8 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
                     children = tuple(_walk(tokens, terminator=terminator, limit=1))
                 except NoAvailableTokensError:
                     raise MissingSuperScriptOrSubscriptError
+                if previous.token in (commands.OVERBRACE, commands.UNDERBRACE):
+                    modifier = previous.token
                 node = Node(token=token, children=(previous, *children), modifier=modifier)
         elif token == commands.APOSTROPHE:
             try:
