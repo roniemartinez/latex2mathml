@@ -123,6 +123,16 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
         elif token in commands.COMMANDS_WITH_ONE_PARAMETER or token.startswith(commands.MATH):
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
             node = Node(token=token, children=children)
+        elif token in (commands.XLEFTARROW, commands.XRIGHTARROW):
+            children = tuple(_walk(tokens, terminator=terminator, limit=1))
+            if children[0].token == commands.OPENING_BRACKET:
+                children = (
+                    Node(
+                        token=commands.BRACES, children=tuple(_walk(tokens, terminator=commands.CLOSING_BRACKET))[:-1]
+                    ),
+                    *tuple(_walk(tokens, terminator=terminator, limit=1)),
+                )
+            node = Node(token=token, children=children)
         elif token in (commands.HSKIP, commands.HSPACE, commands.KERN, commands.MKERN, commands.MSKIP, commands.MSPACE):
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
             if children[0].token == commands.BRACES and children[0].children is not None:

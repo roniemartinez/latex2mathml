@@ -1669,6 +1669,19 @@ from latex2mathml.walker import Node, walk
                     attributes={"width": "0.444em"},
                 ),
             ],
+            id="skew-hat",
+        ),
+        pytest.param(r"\xleftarrow x", [Node(token=r"\xleftarrow", children=(Node(token="x"),))], id="xleftarrow"),
+        pytest.param(
+            r"\xleftarrow[y] x",
+            [Node(token=r"\xleftarrow", children=(Node(token="{}", children=(Node(token="y"),)), Node(token="x")))],
+            id="xleftarrow-with-argument",
+        ),
+        pytest.param(r"\xrightarrow x", [Node(token=r"\xrightarrow", children=(Node(token="x"),))], id="xrightarrow"),
+        pytest.param(
+            r"\xrightarrow[y] x",
+            [Node(token=r"\xrightarrow", children=(Node(token="{}", children=(Node(token="y"),)), Node(token="x")))],
+            id="xrightarrow-with-argument",
         ),
     ],
 )

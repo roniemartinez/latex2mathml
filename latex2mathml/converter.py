@@ -252,6 +252,10 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
         tag = "munder"
     elif command == commands.SUBSUP and modifier in (commands.LIMITS, commands.OVERBRACE, commands.UNDERBRACE):
         tag = "munderover"
+    elif (
+        command in (commands.XLEFTARROW, commands.XRIGHTARROW) and node.children is not None and len(node.children) == 2
+    ):
+        tag = "munderover"
 
     element = SubElement(parent, tag, attributes)
 
@@ -262,6 +266,13 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
         SubElement(parent, "mspace", width="0.333em")
     elif command == commands.BMOD:
         element.text = "mod"
+    elif command in (commands.XLEFTARROW, commands.XRIGHTARROW):
+        style = SubElement(element, "mstyle", scriptlevel="0")
+        arrow = SubElement(style, "mo")
+        if command == commands.XLEFTARROW:
+            arrow.text = "&#x2190;"
+        elif command == commands.XRIGHTARROW:
+            arrow.text = "&#x2192;"
     elif node.text is not None:
         if command == commands.MIDDLE:
             element.text = "&#x{};".format(convert_symbol(node.text))
@@ -322,6 +333,17 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
                 ),
             )
             _convert_group(iter([new_node]), _parent, font)
+        elif command in (commands.XLEFTARROW, commands.XRIGHTARROW):
+            for child in node.children:
+                padded = SubElement(
+                    _parent,
+                    "mpadded",
+                    OrderedDict(
+                        [("width", "+0.833em"), ("lspace", "0.556em"), ("voffset", "-.2em"), ("height", "-.2em")]
+                    ),
+                )
+                _convert_group(iter([child]), padded, font)
+                SubElement(padded, "mspace", depth=".25em")
         else:
             _convert_group(iter(node.children), _parent, font)
 
