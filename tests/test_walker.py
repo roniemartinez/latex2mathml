@@ -1611,22 +1611,20 @@ from latex2mathml.walker import Node, walk
                     token=r"\sideset",
                     children=(
                         Node(
-                            token="_^",
+                            token="^",
                             children=(
                                 Node(
                                     token=r"\vphantom",
                                     children=(Node(token=r"\sum", attributes={"movablelimits": "false"}),),
                                 ),
-                                Node(token=""),
                                 Node(token="2"),
                             ),
                         ),
                         Node(
-                            token="_^",
+                            token="_",
                             children=(
                                 Node(token=r"\sum", attributes={"movablelimits": "false"}),
                                 Node(token="3"),
-                                Node(token=""),
                             ),
                         ),
                     ),
