@@ -918,7 +918,7 @@ from latex2mathml.converter import _convert, convert
             MultiDict(
                 [
                     (
-                        "munder",
+                        "msub",
                         MultiDict(
                             [
                                 ("mo", "lim"),
@@ -944,7 +944,7 @@ from latex2mathml.converter import _convert, convert
             MultiDict(
                 [
                     (
-                        "munder",
+                        "msub",
                         MultiDict(
                             [("mo", "inf"), ("mrow", MultiDict([("mi", "x"), ("mo", "&#x0003E;"), ("mi", "s")]))]
                         ),
@@ -1029,7 +1029,7 @@ from latex2mathml.converter import _convert, convert
         pytest.param(
             r"\sum_{\substack{1\le i\le n\\ i\ne j}}",
             {
-                "munder": MultiDict(
+                "msub": MultiDict(
                     [
                         ("mo", "&#x02211;"),
                         (
@@ -3454,6 +3454,66 @@ from latex2mathml.converter import _convert, convert
                 )
             },
             id="sideset",
+        ),
+        pytest.param(
+            r"\sideset{_1^2}{_3^4}{\sum}",
+            {
+                "mrow": MultiDict(
+                    [
+                        (
+                            "msubsup",
+                            MultiDict(
+                                [
+                                    (
+                                        "mpadded",
+                                        {
+                                            "@width": "0",
+                                            "mphantom": {"mrow": {"@movablelimits": "false", "mo": "&#x02211;"}},
+                                        },
+                                    ),
+                                    ("mn", "1"),
+                                    ("mn", "2"),
+                                ]
+                            ),
+                        ),
+                        ("mstyle", {"@scriptlevel": "0", "mspace": {"@width": "-0.167em"}}),
+                        (
+                            "msubsup",
+                            MultiDict(
+                                [("mrow", {"@movablelimits": "false", "mo": "&#x02211;"}), ("mn", "3"), ("mn", "4")]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="307-a",
+        ),
+        pytest.param(
+            r"\sideset{^{°}}{}{C}",
+            {
+                "mrow": MultiDict(
+                    [
+                        (
+                            "msup",
+                            MultiDict(
+                                [
+                                    (
+                                        "mpadded",
+                                        {
+                                            "@width": "0",
+                                            "mphantom": {"mrow": {"@movablelimits": "false", "mi": "C"}},
+                                        },
+                                    ),
+                                    ("mrow", {"mi": "°"}),
+                                ]
+                            ),
+                        ),
+                        ("mstyle", {"@scriptlevel": "0", "mspace": {"@width": "-0.167em"}}),
+                        ("mrow", {"mrow": {"@movablelimits": "false", "mi": "C"}}),
+                    ]
+                )
+            },
+            id="307-b",
         ),
         pytest.param(
             r"\tbinom{2}{3}",

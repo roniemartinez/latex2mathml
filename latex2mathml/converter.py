@@ -244,14 +244,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
     if column_lines:
         attributes["columnlines"] = column_lines
 
-    if (
-        command == commands.SUBSCRIPT
-        and node.children is not None
-        and len(node.children[0])
-        and node.children[0].token in (*commands.LIMIT, commands.SUMMATION)
-    ):
-        tag = "munder"
-    elif command == commands.SUBSUP and node.children is not None and node.children[0].token == commands.GCD:
+    if command == commands.SUBSUP and node.children is not None and node.children[0].token == commands.GCD:
         tag = "munderover"
     elif command == commands.SUPERSCRIPT and modifier == commands.LIMITS:
         tag = "mover"
