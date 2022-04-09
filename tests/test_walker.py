@@ -1683,6 +1683,20 @@ from latex2mathml.walker import Node, walk
             [Node(token=r"\xrightarrow", children=(Node(token="{}", children=(Node(token="y"),)), Node(token="x")))],
             id="xrightarrow-with-argument",
         ),
+        pytest.param(
+            r"\not \in \not\ni \not a \not\equiv \not\operatorname{R}\not",
+            [
+                Node(token="&#x02209;"),
+                Node(token="&#x0220C;"),
+                Node(token="\\not"),
+                Node(token="a"),
+                Node(token="&#x02262;"),
+                Node(token="\\not"),
+                Node(token="\\operatorname{R}"),
+                Node(token="\\not"),
+            ],
+            id="not",
+        ),
     ],
 )
 def test_walk(latex: str, expected: list) -> None:

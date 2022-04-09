@@ -226,6 +226,7 @@ TEX = r"\TeX"
 SIDESET = r"\sideset"
 
 SKEW = r"\skew"
+NOT = r"\not"
 
 
 def font_factory(default: Optional[str], replacement: Dict[str, Optional[str]]) -> DefaultDict[str, Optional[str]]:

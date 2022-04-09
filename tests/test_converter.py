@@ -1215,12 +1215,12 @@ from latex2mathml.converter import _convert, convert
             {"mover": MultiDict([("mrow", MultiDict([("mi", "A")])), ("mo", "&#x002D9;")])},
             id="issue-112-2",
         ),
-        pytest.param(r"\operatorname{sn}x", MultiDict([("mi", "sn"), ("mi", "x")]), id="issue-109-1"),
+        pytest.param(r"\operatorname{sn}x", MultiDict([("mo", "sn"), ("mi", "x")]), id="issue-109-1"),
         pytest.param(
             r"\operatorname{sn}(x+y)",
             MultiDict(
                 [
-                    ("mi", "sn"),
+                    ("mo", "sn"),
                     ("mo", {"@stretchy": "false", "$": "&#x00028;"}),
                     ("mi", "x"),
                     ("mo", "&#x0002B;"),
@@ -4089,6 +4089,20 @@ from latex2mathml.converter import _convert, convert
                 ]
             ),
             id="bigl-smallmatrix-bigr",
+        ),
+        pytest.param(
+            r"\not\in\not a\not\operatorname{R}\not",
+            MultiDict(
+                [
+                    ("mi", "&#x02209;"),
+                    ("mpadded", MultiDict([("@width", "0"), ("mtext", "&#x029F8;")])),
+                    ("mi", "a"),
+                    ("mpadded", MultiDict([("@width", "0"), ("mtext", "&#x029F8;")])),
+                    ("mo", "R"),
+                    ("mpadded", MultiDict([("@width", "0"), ("mtext", "&#x029F8;")])),
+                ]
+            ),
+            id="not",
         ),
     ],
 )
