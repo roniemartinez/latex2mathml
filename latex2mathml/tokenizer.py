@@ -8,81 +8,44 @@ UNITS = ("in", "mm", "cm", "pt", "em", "ex", "pc", "bp", "dd", "cc", "sp", "mu")
 
 PATTERN = re.compile(
     rf"""
-    %[^\n]+ |  # comment
-    [a-zA-Z] |  # letter
-    [_^]\d |  # number succeeding a underscore or caret
-    -?\d+(\.\d+)?(\s*({'|'.join(UNITS)})) |  # dimension
-    \d+(\.\d+)? |  # integer/decimal
-    \.\d+ |  # decimal can start with just a dot (.)
-    \. |  # dot
-    \\(
-        [\\\[\]{{}}\s!,:>;|_%#$&] |  # escaped characters
-        (begin|end|operatorname){{[a-zA-Z]+\*?}} |  # begin, end or operatorname
-        # FIXME: curly braces is tricky on these commands
-        # color, fbox, href, hbox, mbox, style, text, textbf, textit, textrm, textsf, texttt
-        (color|fbox|hbox|href|mbox|style|text|textbf|textit|textrm|textsf|texttt)\s*{{([^}}]*)}} |
-        math[a-z]+{{[a-zA-Z]}} |  # commands starting with math
-        [a-zA-Z]+  # other commands
-    )? |
-    \S  # non-space character
+    (%[^\n]+) |                                         # comment
+    (a-zA-Z) |                                          # letter
+    ([_^])(\d) |                                        # number succeeding an underscore or a caret
+    (-?\d+(?:\.\d+)?\s*(?:{'|'.join(UNITS)})) |         # dimension
+    (\d+(?:\.\d+)?) |                                   # integer/decimal
+    (\.\d*) |                                           # dot (.) or decimal can start with just a dot
+    (\\[\\\[\]{{}}\s!,:>;|_%#$&]) |                     # escaped characters
+    (\\(?:begin|end|operatorname){{[a-zA-Z]+\*?}}) |    # begin, end or operatorname
+    #  color, fbox, href, hbox, mbox, style, text, textbf, textit, textrm, textsf, texttt
+    (\\(?:color|fbox|hbox|href|mbox|style|text|textbf|textit|textrm|textsf|texttt))\s*{{([^}}]*)}} |
+    (\\[cdt]?frac)([.\d])([.\d])? |                     # fractions
+    (\\math[a-z]+)({{)([a-zA-Z])(}}) |                  # commands starting with math
+    (\\[a-zA-Z]+) |                                     # other commands
+    (\S)                                                # non-space character
     """,
     re.VERBOSE,
 )
 
 
-DIGITS = re.compile("^([.0-9])([.0-9])([.0-9]*)$")
+def tokenize(latex_string: str, skip_comments: bool = True) -> Iterator[str]:
+    """
+    Converts Latex string into tokens.
 
-
-def tokenize(data: str) -> Iterator[str]:
-    tokens = _tokenize(data)
-    for token in tokens:
-        yield token
-        if token in (commands.CFRAC, commands.DFRAC, commands.FRAC, commands.TFRAC):
-            numerator = next(tokens)
-            matches = DIGITS.match(numerator)
-            if matches:
-                numerator, denominator, extra = matches.groups()
-                yield numerator
-                yield denominator
-                if extra:
-                    yield extra
-            else:
-                yield numerator
-
-
-def _tokenize(data: str) -> Iterator[str]:
-    for match in PATTERN.finditer(data):
-        first_match = match.group(0)
-        if first_match.startswith(commands.MATH):
-            yield from _tokenize_math(first_match)
-        elif first_match == commands.TEXTSTYLE:
-            yield first_match  # prevent the next line (commands.TEXT)
-        elif first_match.startswith(
-            (commands.COLOR, commands.FBOX, commands.HREF, commands.HBOX, commands.MBOX, commands.STYLE, commands.TEXT)
-        ):
-            index = first_match.index(commands.OPENING_BRACE)
-            yield first_match[:index].strip()
-            yield match.group(8)
-        elif first_match.startswith("%"):
-            continue
-        elif first_match[0].isdigit() and first_match.endswith(UNITS):
-            yield first_match.replace(" ", "")
-        elif len(first_match) == 2 and first_match[0] in commands.SUBSUP:
-            yield from first_match
-        else:
-            yield first_match
-
-
-def _tokenize_math(match: str) -> Iterator[str]:
-    symbol = convert_symbol(match)
-    if symbol:
-        yield f"&#x{symbol};"
-        return
-    try:
-        index = match.index(commands.OPENING_BRACE)
-        yield match[:index]
-        yield match[index]
-        yield match[index + 1 : -1]
-        yield match[-1]
-    except ValueError:
-        yield match
+    :param latex_string: Latex string.
+    :param skip_comments: Flag to skip comments (default=True).
+    """
+    for match in PATTERN.finditer(latex_string):
+        tokens = tuple(filter(lambda x: x is not None, match.groups()))
+        if tokens[0].startswith(commands.MATH):
+            full_math = "".join(tokens)
+            symbol = convert_symbol(full_math)
+            if symbol:
+                yield f"&#x{symbol};"
+                continue
+        for captured in tokens:
+            if skip_comments and captured.startswith("%"):
+                break
+            if captured.endswith(UNITS):
+                yield captured.replace(" ", "")
+                continue
+            yield captured
