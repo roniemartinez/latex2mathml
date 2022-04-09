@@ -15,6 +15,7 @@ from latex2mathml.exceptions import (
     NoAvailableTokensError,
     NumeratorNotFoundError,
 )
+from latex2mathml.symbols_parser import convert_symbol
 from latex2mathml.tokenizer import tokenize
 
 
@@ -123,6 +124,21 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
         elif token in commands.COMMANDS_WITH_ONE_PARAMETER or token.startswith(commands.MATH):
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
             node = Node(token=token, children=children)
+        elif token == commands.NOT:
+            try:
+                next_node = tuple(_walk(tokens, terminator=terminator, limit=1))[0]
+                if next_node.token.startswith("\\"):
+                    negated_symbol = r"\n" + next_node.token[1:]
+                    symbol = convert_symbol(negated_symbol)
+                    if symbol:
+                        node = Node(token=f"&#x{symbol};")
+                        group.append(node)
+                        continue
+                node = Node(token=token)
+                group.extend((node, next_node))
+                continue
+            except NoAvailableTokensError:
+                node = Node(token=token)
         elif token in (commands.XLEFTARROW, commands.XRIGHTARROW):
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
             if children[0].token == commands.OPENING_BRACKET:

@@ -444,6 +444,10 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Option
         element = SubElement(parent, "mtext", attrib=attributes)
         element.text = "&#x000A0;"
         _set_font(element, "mtext", font)
+    elif token == commands.NOT:
+        mpadded = SubElement(parent, "mpadded", width="0")
+        element = SubElement(mpadded, "mtext")
+        element.text = "&#x029F8;"
     elif token in (
         commands.DETERMINANT,
         commands.GCD,
@@ -496,14 +500,15 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[Dict[str, Option
         _set_font(mi_t, mi_t.tag, font)
         _set_font(mi_e, mi_e.tag, font)
         _set_font(mi_x, mi_x.tag, font)
+    elif token.startswith(commands.OPERATORNAME):
+        element = SubElement(parent, "mo", attrib=attributes)
+        element.text = token[14:-1]
     elif token.startswith(commands.BACKSLASH):
         element = SubElement(parent, "mi", attrib=attributes)
         if symbol:
             element.text = "&#x{};".format(symbol)
         elif token in commands.FUNCTIONS:
             element.text = token[1:]
-        elif token.startswith(commands.OPERATORNAME):
-            element.text = token[14:-1]
         else:
             element.text = token
         _set_font(element, element.tag, font)
