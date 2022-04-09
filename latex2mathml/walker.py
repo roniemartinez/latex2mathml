@@ -154,6 +154,7 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
             node = next_node._replace(attributes=attributes)
         elif token in (
             *commands.BIG.keys(),
+            *commands.BIG_OPEN_CLOSE.keys(),
             commands.FBOX,
             commands.HBOX,
             commands.MBOX,
