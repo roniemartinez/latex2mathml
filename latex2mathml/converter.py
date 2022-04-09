@@ -213,7 +213,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
     command = node.token
     modifier = node.modifier
 
-    if command == commands.SUBSTACK:
+    if command in (commands.SUBSTACK, commands.SMALLMATRIX):
         parent = SubElement(parent, "mstyle", scriptlevel="1")
     elif command == commands.CASES:
         lbrace = SubElement(parent, "mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")]))

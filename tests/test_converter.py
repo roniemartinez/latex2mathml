@@ -4042,6 +4042,54 @@ from latex2mathml.converter import _convert, convert
             },
             id="xrightarrow-with-argument",
         ),
+        pytest.param(
+            r"\bigl(\begin{smallmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ \end{smallmatrix}\bigr)",
+            MultiDict(
+                [
+                    (
+                        "mo",
+                        {
+                            "@stretchy": "true",
+                            "@fence": "true",
+                            "@minsize": "1.2em",
+                            "@maxsize": "1.2em",
+                            "$": "(",
+                        },
+                    ),
+                    (
+                        "mstyle",
+                        {
+                            "@scriptlevel": "1",
+                            "mtable": MultiDict(
+                                [
+                                    ("@rowspacing", "0.1em"),
+                                    ("@columnspacing", "0.2778em"),
+                                    (
+                                        "mtr",
+                                        MultiDict([("mtd", {"mn": "1"}), ("mtd", {"mn": "2"}), ("mtd", {"mn": "3"})]),
+                                    ),
+                                    (
+                                        "mtr",
+                                        MultiDict([("mtd", {"mn": "4"}), ("mtd", {"mn": "5"}), ("mtd", {"mn": "6"})]),
+                                    ),
+                                ]
+                            ),
+                        },
+                    ),
+                    (
+                        "mo",
+                        {
+                            "@stretchy": "true",
+                            "@fence": "true",
+                            "@minsize": "1.2em",
+                            "@maxsize": "1.2em",
+                            "$": ")",
+                        },
+                    ),
+                ]
+            ),
+            id="bigl-smallmatrix-bigr",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:

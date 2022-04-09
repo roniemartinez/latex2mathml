@@ -138,6 +138,7 @@ HFIL = r"\hfil"
 
 CASES = r"\cases"
 DISPLAYLINES = r"\displaylines"
+SMALLMATRIX = r"\smallmatrix"
 SUBSTACK = r"\substack"
 MATRICES = (
     r"\matrix",
@@ -156,6 +157,7 @@ MATRICES = (
     SUBSTACK,
     CASES,
     DISPLAYLINES,
+    SMALLMATRIX,
 )
 
 BACKSLASH = "\\"
@@ -324,6 +326,12 @@ BIG: Dict[str, Tuple[str, dict]] = {
     r"\big": ("mo", OrderedDict([("minsize", "1.2em"), ("maxsize", "1.2em")])),
 }
 
+BIG_OPEN_CLOSE = {
+    command + postfix: (tag, OrderedDict([("stretchy", "true"), ("fence", "true"), *attrib.items()]))
+    for command, (tag, attrib) in BIG.items()
+    for postfix in "lmr"
+}
+
 MSTYLE_SIZES: Dict[str, Tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
     r"\Huge": ("mstyle", {"mathsize": "2.49em"}),
@@ -350,6 +358,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     # tables
     **{matrix: ("mtable", {}) for matrix in MATRICES},
     DISPLAYLINES: ("mtable", {"rowspacing": "0.5em", "columnspacing": "1em", "displaystyle": "true"}),
+    SMALLMATRIX: ("mtable", {"rowspacing": "0.1em", "columnspacing": "0.2778em"}),
     # subscripts/superscripts
     SUBSCRIPT: ("msub", {}),
     SUPERSCRIPT: ("msup", {}),
@@ -419,6 +428,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     FBOX: ("menclose", {"notation": "box"}),
     # operators
     **BIG,
+    **BIG_OPEN_CLOSE,
     **MSTYLE_SIZES,
     **{limit: ("mo", {}) for limit in LIMIT},
     LEFT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")])),
