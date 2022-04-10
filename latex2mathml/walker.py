@@ -131,7 +131,7 @@ def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List
                     negated_symbol = r"\n" + next_node.token[1:]
                     symbol = convert_symbol(negated_symbol)
                     if symbol:
-                        node = Node(token=f"&#x{symbol};")
+                        node = Node(token=negated_symbol)
                         group.append(node)
                         continue
                 node = Node(token=token)

@@ -4094,7 +4094,7 @@ from latex2mathml.converter import _convert, convert
             r"\not\in\not a\not\operatorname{R}\not",
             MultiDict(
                 [
-                    ("mi", "&#x02209;"),
+                    ("mo", "&#x02209;"),
                     ("mpadded", MultiDict([("@width", "0"), ("mtext", "&#x029F8;")])),
                     ("mi", "a"),
                     ("mpadded", MultiDict([("@width", "0"), ("mtext", "&#x029F8;")])),
