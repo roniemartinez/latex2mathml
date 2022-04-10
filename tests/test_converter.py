@@ -4110,15 +4110,19 @@ from latex2mathml.converter import _convert, convert
                 "mtable": MultiDict(
                     [
                         ("@displaystyle", "true"),
-                        ("@columnalign", "right left"),
                         ("@columnspacing", "0em"),
                         ("@rowspacing", "3pt"),
                         (
                             "mtr",
                             MultiDict(
                                 [
-                                    ("mtd", {"mi": "x"}),
-                                    ("mtd", MultiDict([("mi", ""), ("mo", "&#x0003D;"), ("mi", "y")])),
+                                    ("mtd", {"@columnalign": "right", "mi": "x"}),
+                                    (
+                                        "mtd",
+                                        MultiDict(
+                                            [("@columnalign", "left"), ("mi", ""), ("mo", "&#x0003D;"), ("mi", "y")]
+                                        ),
+                                    ),
                                 ]
                             ),
                         ),
@@ -4126,8 +4130,13 @@ from latex2mathml.converter import _convert, convert
                             "mtr",
                             MultiDict(
                                 [
-                                    ("mtd", ""),
-                                    ("mtd", MultiDict([("mi", ""), ("mo", "&#x0003D;"), ("mi", "z")])),
+                                    ("mtd", {"@columnalign": "right"}),
+                                    (
+                                        "mtd",
+                                        MultiDict(
+                                            [("@columnalign", "left"), ("mi", ""), ("mo", "&#x0003D;"), ("mi", "z")]
+                                        ),
+                                    ),
                                 ]
                             ),
                         ),
@@ -4135,6 +4144,47 @@ from latex2mathml.converter import _convert, convert
                 )
             },
             id="split",
+        ),
+        pytest.param(
+            r"\begin{align*}x &=y & w &=z  & a&=b \end{align*}",
+            {
+                "mtable": MultiDict(
+                    [
+                        ("@displaystyle", "true"),
+                        ("@rowspacing", "3pt"),
+                        ("@columnspacing", "0em 2em 0em 2em 0em 2em"),
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", {"@columnalign": "right", "mi": "x"}),
+                                    (
+                                        "mtd",
+                                        MultiDict(
+                                            [("@columnalign", "left"), ("mi", ""), ("mo", "&#x0003D;"), ("mi", "y")]
+                                        ),
+                                    ),
+                                    ("mtd", {"@columnalign": "right", "mi": "w"}),
+                                    (
+                                        "mtd",
+                                        MultiDict(
+                                            [("@columnalign", "left"), ("mi", ""), ("mo", "&#x0003D;"), ("mi", "z")]
+                                        ),
+                                    ),
+                                    ("mtd", {"@columnalign": "right", "mi": "a"}),
+                                    (
+                                        "mtd",
+                                        MultiDict(
+                                            [("@columnalign", "left"), ("mi", ""), ("mo", "&#x0003D;"), ("mi", "b")]
+                                        ),
+                                    ),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="align",
         ),
     ],
 )
