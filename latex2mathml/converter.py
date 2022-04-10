@@ -80,6 +80,8 @@ def _convert_matrix(nodes: Iterator[Node], parent: Element, command: str, alignm
     col_index = 0
     col_alignment = None
 
+    max_col_size = 0
+
     row_index = 0
     row_lines = []
 
@@ -100,12 +102,14 @@ def _convert_matrix(nodes: Iterator[Node], parent: Element, command: str, alignm
             hfil_indexes = []
             col_alignment, col_index = _get_column_alignment(alignment, col_alignment, col_index)
             cell = _make_matrix_cell(row, col_alignment)
-            if command == commands.SPLIT:
+            if command in (commands.SPLIT, commands.ALIGN) and col_index % 2 == 0:
                 SubElement(cell, "mi")
         elif node.token in (commands.DOUBLEBACKSLASH, commands.CARRIAGE_RETURN):
             _set_cell_alignment(cell, hfil_indexes)
             hfil_indexes = []
             row_index += 1
+            if col_index > max_col_size:
+                max_col_size = col_index
             col_index = 0
             col_alignment, col_index = _get_column_alignment(alignment, col_alignment, col_index)
             row = SubElement(parent, "mtr")
@@ -122,12 +126,20 @@ def _convert_matrix(nodes: Iterator[Node], parent: Element, command: str, alignm
             hfil_indexes.append(False)
             _convert_group(iter([node]), cell)
 
+    if col_index > max_col_size:
+        max_col_size = col_index
+
     if any(r == "solid" for r in row_lines):
         parent.set("rowlines", " ".join(row_lines))
 
     if row is not None and cell is not None and len(cell) == 0:
         # Remove last row if it does not contain anything
         parent.remove(row)
+
+    if max_col_size and command == commands.ALIGN:
+        spacing = ("0em", "2em")
+        multiplier = max_col_size // len(spacing)
+        parent.set("columnspacing", " ".join(spacing * multiplier))
 
 
 def _set_cell_alignment(cell: Element, hfil_indexes: List[bool]) -> None:
@@ -144,9 +156,9 @@ def _get_column_alignment(
     if alignment:
         try:
             column_alignment = COLUMN_ALIGNMENT_MAP.get(alignment[column_index])
-            column_index += 1
         except IndexError:
-            pass
+            column_alignment = COLUMN_ALIGNMENT_MAP.get(alignment[column_index % len(alignment)])
+        column_index += 1
     return column_alignment, column_index
 
 
@@ -307,6 +319,8 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
         if command in commands.MATRICES:
             if command == commands.CASES:
                 alignment = "l"
+            elif command in (commands.SPLIT, commands.ALIGN):
+                alignment = "rl"
             _convert_matrix(iter(node.children), _parent, command, alignment=alignment)
         elif command == commands.CFRAC:
             for child in node.children:

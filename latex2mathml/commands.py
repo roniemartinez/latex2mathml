@@ -141,6 +141,7 @@ DISPLAYLINES = r"\displaylines"
 SMALLMATRIX = r"\smallmatrix"
 SUBSTACK = r"\substack"
 SPLIT = r"\split"
+ALIGN = r"\align*"
 MATRICES = (
     r"\matrix",
     r"\matrix*",
@@ -160,6 +161,7 @@ MATRICES = (
     DISPLAYLINES,
     SMALLMATRIX,
     SPLIT,
+    ALIGN,
 )
 
 BACKSLASH = "\\"
@@ -364,7 +366,11 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
     SMALLMATRIX: ("mtable", {"rowspacing": "0.1em", "columnspacing": "0.2778em"}),
     SPLIT: (
         "mtable",
-        {"displaystyle": "true", "columnalign": "right left", "columnspacing": "0em", "rowspacing": "3pt"},
+        {"displaystyle": "true", "columnspacing": "0em", "rowspacing": "3pt"},
+    ),
+    ALIGN: (
+        "mtable",
+        {"displaystyle": "true", "rowspacing": "3pt"},
     ),
     # subscripts/superscripts
     SUBSCRIPT: ("msub", {}),
