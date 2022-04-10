@@ -73,7 +73,7 @@ def _convert(tree: Element) -> str:
     return unescape(tostring(tree, encoding="unicode"))
 
 
-def _convert_matrix(nodes: Iterator[Node], parent: Element, alignment: Optional[str] = None) -> None:
+def _convert_matrix(nodes: Iterator[Node], parent: Element, command: str, alignment: Optional[str] = None) -> None:
     row = None
     cell = None
 
@@ -100,6 +100,8 @@ def _convert_matrix(nodes: Iterator[Node], parent: Element, alignment: Optional[
             hfil_indexes = []
             col_alignment, col_index = _get_column_alignment(alignment, col_alignment, col_index)
             cell = _make_matrix_cell(row, col_alignment)
+            if command == commands.SPLIT:
+                SubElement(cell, "mi")
         elif node.token in (commands.DOUBLEBACKSLASH, commands.CARRIAGE_RETURN):
             _set_cell_alignment(cell, hfil_indexes)
             hfil_indexes = []
@@ -305,7 +307,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
         if command in commands.MATRICES:
             if command == commands.CASES:
                 alignment = "l"
-            _convert_matrix(iter(node.children), _parent, alignment=alignment)
+            _convert_matrix(iter(node.children), _parent, command, alignment=alignment)
         elif command == commands.CFRAC:
             for child in node.children:
                 p = SubElement(_parent, "mstyle", displaystyle="false", scriptlevel="0")
