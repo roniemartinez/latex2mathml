@@ -4104,6 +4104,38 @@ from latex2mathml.converter import _convert, convert
             ),
             id="not",
         ),
+        pytest.param(
+            r"\begin{split}  x &= y \\  &=z  \end{split}",
+            {
+                "mtable": MultiDict(
+                    [
+                        ("@displaystyle", "true"),
+                        ("@columnalign", "right left"),
+                        ("@columnspacing", "0em"),
+                        ("@rowspacing", "3pt"),
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", {"mi": "x"}),
+                                    ("mtd", MultiDict([("mi", ""), ("mo", "&#x0003D;"), ("mi", "y")])),
+                                ]
+                            ),
+                        ),
+                        (
+                            "mtr",
+                            MultiDict(
+                                [
+                                    ("mtd", ""),
+                                    ("mtd", MultiDict([("mi", ""), ("mo", "&#x0003D;"), ("mi", "z")])),
+                                ]
+                            ),
+                        ),
+                    ]
+                )
+            },
+            id="split",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
