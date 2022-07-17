@@ -65,11 +65,11 @@ Command-line
 .. code-block:: shell
 
    % latex2mathml -h
-   usage: latex2mathml [-h] [-V] [-b] [-t TEXT | -f FILE]
+   usage: latex2mathml [-h] [-V] [-b] [-t TEXT | -f FILE | -s]
 
    Pure Python library for LaTeX to MathML conversion
 
-   optional arguments:
+   options:
      -h, --help            show this help message and exit
      -V, --version         Show version
      -b, --block           Display block
@@ -77,6 +77,7 @@ Command-line
    required arguments:
      -t TEXT, --text TEXT  Text
      -f FILE, --file FILE  File
+     -s, --stdin           Stdin
 
 References
 ----------
