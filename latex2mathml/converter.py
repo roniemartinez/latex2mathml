@@ -547,6 +547,8 @@ def main() -> None:  # pragma: no cover
 
     import pkg_resources
 
+    import sys
+
     parser = argparse.ArgumentParser(description="Pure Python library for LaTeX to MathML conversion")
     parser.add_argument("-V", "--version", dest="version", action="store_true", required=False, help="Show version")
     parser.add_argument("-b", "--block", dest="block", action="store_true", required=False, help="Display block")
@@ -556,6 +558,7 @@ def main() -> None:  # pragma: no cover
     group = required.add_mutually_exclusive_group(required=False)
     group.add_argument("-t", "--text", dest="text", type=str, required=False, help="Text")
     group.add_argument("-f", "--file", dest="file", type=str, required=False, help="File")
+    group.add_argument("-s", "--stdin", dest="stdin", action='store_true', required=False, help="Stdin")
 
     arguments = parser.parse_args()
     display = "block" if arguments.block else "inline"
@@ -568,6 +571,8 @@ def main() -> None:  # pragma: no cover
     elif arguments.file:
         with open(arguments.file) as f:
             print(convert(f.read(), display=display))
+    elif arguments.stdin:
+        print(convert(sys.stdin.read(), display=display))
 
 
 if __name__ == "__main__":  # pragma: no cover
