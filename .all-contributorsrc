@@ -195,6 +195,16 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "miakramer",
+      "name": "Mia Kramer",
+      "avatar_url": "https://avatars.githubusercontent.com/u/16845265?v=4",
+      "profile": "https://github.com/miakramer",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -202,5 +212,6 @@
   "projectOwner": "roniemartinez",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": false
+  "skipCi": false,
+  "commitConvention": "none"
 }

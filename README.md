@@ -124,6 +124,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/Nigel-Amers"><img src="https://avatars.githubusercontent.com/u/14248498?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nigel Amers</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3ANigel-Amers" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/retsyo"><img src="https://avatars.githubusercontent.com/u/7960913?v=4?s=100" width="100px;" alt=""/><br /><sub><b>retsyo</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Aretsyo" title="Bug reports">🐛</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/miakramer"><img src="https://avatars.githubusercontent.com/u/16845265?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mia Kramer</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/commits?author=miakramer" title="Code">💻</a> <a href="https://github.com/roniemartinez/latex2mathml/commits?author=miakramer" title="Documentation">📖</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->

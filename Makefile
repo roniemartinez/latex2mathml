@@ -28,11 +28,6 @@ lint:
 test:
 	poetry run pytest
 
-.PHONY: setup
-setup:
-	# https://github.com/pypa/setuptools/issues/2993#issuecomment-1003765389
-	SETUPTOOLS_USE_DISTUTILS=stdlib poetry run dephell deps convert
-
 .PHONY: tag
 tag:
 	VERSION=`poetry version | grep -o -E "\d+\.\d+\.\d+(-\w+\.\d+)?"`; \
