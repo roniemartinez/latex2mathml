@@ -544,6 +544,7 @@ def _set_font(element: Element, key: str, font: Optional[Dict[str, Optional[str]
 
 def main() -> None:  # pragma: no cover
     import argparse
+    import sys
 
     import pkg_resources
 
@@ -556,6 +557,7 @@ def main() -> None:  # pragma: no cover
     group = required.add_mutually_exclusive_group(required=False)
     group.add_argument("-t", "--text", dest="text", type=str, required=False, help="Text")
     group.add_argument("-f", "--file", dest="file", type=str, required=False, help="File")
+    group.add_argument("-s", "--stdin", dest="stdin", action="store_true", required=False, help="Stdin")
 
     arguments = parser.parse_args()
     display = "block" if arguments.block else "inline"
@@ -568,6 +570,8 @@ def main() -> None:  # pragma: no cover
     elif arguments.file:
         with open(arguments.file) as f:
             print(convert(f.read(), display=display))
+    elif arguments.stdin:
+        print(convert(sys.stdin.read(), display=display))
 
 
 if __name__ == "__main__":  # pragma: no cover
