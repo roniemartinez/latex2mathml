@@ -7,7 +7,6 @@ install:
 install-actions:
 	pip3 install pip setuptools poetry
 	poetry config virtualenvs.create false
-	poetry config experimental.new-installer false
 	poetry install
 
 .PHONY: format
@@ -30,6 +29,6 @@ test:
 
 .PHONY: tag
 tag:
-	VERSION=`poetry version | grep -o -E "\d+\.\d+\.\d+(-\w+\.\d+)?"`; \
+	VERSION=`poetry version --short`; \
 	git tag -s -a $$VERSION -m "Release $$VERSION"; \
 	echo "Tagged $$VERSION";
