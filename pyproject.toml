@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "latex2mathml"
-version = "3.74.0"
+version = "3.74.1"
 repository = "https://github.com/roniemartinez/latex2mathml"
 description = "Pure Python library for LaTeX to MathML conversion"
 authors = ["Ronie Martinez <ronmarti18@gmail.com>"]
@@ -27,7 +27,7 @@ classifiers = [
 ]
 
 [tool.poetry.urls]
-"Donate" = "https://github.com/sponsors/roniemartinez"
+"Donate" = "https://www.buymeacoffee.com/roniemartinez"
 
 [tool.poetry.scripts]
 latex2mathml = "latex2mathml.converter:main"
@@ -71,12 +71,6 @@ extend-exclude = """
 disallow_untyped_defs = true
 ignore_missing_imports = true
 
-[[tool.mypy.overrides]]
-module = [
-    "pkg_resources",
-]
-ignore_missing_imports = true
-
 [tool.flake8]
 max-line-length = 120
 extend-ignore = ["E203"]
@@ -94,10 +88,6 @@ addopts = """\
     -x \
 """
 
-[tool.dephell.main]
-from = { format = "poetry", path = "pyproject.toml" }
-to = { format = "setuppy", path = "setup.py" }
-
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
