@@ -37,7 +37,7 @@ l2m = "latex2mathml.converter:main"
 python = "^3.7"
 
 [tool.poetry.dev-dependencies]
-autoflake = "^1.7.4"
+autoflake = "^1.7.5"
 black = "^22.10"
 isort = "^5.10.1"
 multidict = "^6.0.2"
