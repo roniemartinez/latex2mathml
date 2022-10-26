@@ -546,8 +546,6 @@ def main() -> None:  # pragma: no cover
     import argparse
     import sys
 
-    import pkg_resources
-
     parser = argparse.ArgumentParser(description="Pure Python library for LaTeX to MathML conversion")
     parser.add_argument("-V", "--version", dest="version", action="store_true", required=False, help="Show version")
     parser.add_argument("-b", "--block", dest="block", action="store_true", required=False, help="Display block")
@@ -563,7 +561,11 @@ def main() -> None:  # pragma: no cover
     display = "block" if arguments.block else "inline"
 
     if arguments.version:
-        version = pkg_resources.get_distribution("latex2mathml").version
+        try:
+            from importlib import metadata
+        except ImportError:
+            import importlib_metadata as metadata  # type: ignore
+        version = metadata.version("latex2mathml")
         print("latex2mathml", version)
     elif arguments.text:
         print(convert(arguments.text, display=display))
