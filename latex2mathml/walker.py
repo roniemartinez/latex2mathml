@@ -34,7 +34,7 @@ def walk(data: str) -> List[Node]:
     return _walk(tokens)
 
 
-def _walk(tokens: Iterator[str], terminator: str = None, limit: int = 0) -> List[Node]:
+def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 0) -> List[Node]:
     group: List[Node] = []
     token: str
     has_available_tokens = False
