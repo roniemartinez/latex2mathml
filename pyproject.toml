@@ -40,7 +40,7 @@ python = "^3.7"
 [tool.poetry.dev-dependencies]
 autoflake = "^1.7.8"
 black = "^22.12"
-isort = "^5.11.3"
+isort = "^5.11.4"
 multidict = "^6.0.3"
 mypy = "^0.991"
 pyproject-flake8 = "^5.0.4"
