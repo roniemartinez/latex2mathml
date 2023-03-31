@@ -205,6 +205,17 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "McSinyx",
+      "name": "Nguyễn Gia Phong",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13689192?v=4",
+      "profile": "http://cnx.gdn",
+      "contributions": [
+        "bug",
+        "code",
+        "test"
+      ]
     }
   ],
   "contributorsPerLine": 7,
