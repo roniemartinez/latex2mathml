@@ -230,6 +230,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
     if command in (commands.SUBSTACK, commands.SMALLMATRIX):
         parent = SubElement(parent, "mstyle", scriptlevel="1")
     elif command == commands.CASES:
+        parent = SubElement(parent, "mrow")
         lbrace = SubElement(parent, "mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")]))
         lbrace.text = "&#x{};".format(convert_symbol(commands.LBRACE))
     elif command in (commands.DBINOM, commands.DFRAC):
