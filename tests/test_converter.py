@@ -1,5 +1,3 @@
-import sys
-
 import pytest
 from multidict import MultiDict
 from xmljson import BadgerFish
@@ -4206,7 +4204,6 @@ def test_converter(latex: str, json: MultiDict) -> None:
     assert convert(latex, display="block") == _convert(math[0])
 
 
-@pytest.mark.skipif(sys.version_info < (3, 8), reason="xml.etree sorts attributes in 3.7 and below")
 def test_attributes() -> None:
     assert (
         convert("1")
