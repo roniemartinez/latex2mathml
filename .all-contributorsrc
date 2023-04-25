@@ -216,6 +216,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "cdelker",
+      "name": "Collin Delker",
+      "avatar_url": "https://avatars.githubusercontent.com/u/44102190?v=4",
+      "profile": "https://cdelker.github.io",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,

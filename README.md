@@ -128,6 +128,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/miakramer"><img src="https://avatars.githubusercontent.com/u/16845265?v=4?s=100" width="100px;" alt="Mia Kramer"/><br /><sub><b>Mia Kramer</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/commits?author=miakramer" title="Code">💻</a> <a href="https://github.com/roniemartinez/latex2mathml/commits?author=miakramer" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://cnx.gdn"><img src="https://avatars.githubusercontent.com/u/13689192?v=4?s=100" width="100px;" alt="Nguyễn Gia Phong"/><br /><sub><b>Nguyễn Gia Phong</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3AMcSinyx" title="Bug reports">🐛</a> <a href="https://github.com/roniemartinez/latex2mathml/commits?author=McSinyx" title="Code">💻</a> <a href="https://github.com/roniemartinez/latex2mathml/commits?author=McSinyx" title="Tests">⚠️</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://cdelker.github.io"><img src="https://avatars.githubusercontent.com/u/44102190?v=4?s=100" width="100px;" alt="Collin Delker"/><br /><sub><b>Collin Delker</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Acdelker" title="Bug reports">🐛</a></td>
     </tr>
   </tbody>
 </table>
