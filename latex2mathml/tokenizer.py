@@ -18,7 +18,7 @@ PATTERN = re.compile(
     (\\(?:begin|end|operatorname){{[a-zA-Z]+\*?}}) |    # begin, end or operatorname
     #  color, fbox, href, hbox, mbox, style, text, textbf, textit, textrm, textsf, texttt
     (\\(?:color|fbox|hbox|href|mbox|style|text|textbf|textit|textrm|textsf|texttt))\s*{{([^}}]*)}} |
-    (\\[cdt]?frac)([.\d])([.\d])? |                     # fractions
+    (\\[cdt]?frac)\s*([.\d])\s*([.\d])? |               # fractions
     (\\math[a-z]+)({{)([a-zA-Z])(}}) |                  # commands starting with math
     (\\[a-zA-Z]+) |                                     # other commands
     (\S)                                                # non-space character

@@ -515,6 +515,9 @@ from latex2mathml.tokenizer import tokenize
         pytest.param(r"\frac.2", [r"\frac", ".", "2"], id="issue-245-3"),
         pytest.param(r"\frac123", [r"\frac", "1", "2", "3"], id="issue-245-4"),
         pytest.param(r"\color{}ab", [r"\color", "", "a", "b"], id="empty-color"),
+        pytest.param(
+            r"\frac 1 2 3 + \frac 123", [r"\frac", "1", "2", "3", "+", r"\frac", "1", "2", "3"], id="issue-386"
+        ),
     ],
 )
 def test_tokenize(latex: str, expected: list) -> None:
