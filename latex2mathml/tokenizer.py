@@ -8,20 +8,21 @@ UNITS = ("in", "mm", "cm", "pt", "em", "ex", "pc", "bp", "dd", "cc", "sp", "mu")
 
 PATTERN = re.compile(
     rf"""
-    (%[^\n]+) |                                         # comment
-    (a-zA-Z) |                                          # letter
-    ([_^])(\d) |                                        # number succeeding an underscore or a caret
-    (-?\d+(?:\.\d+)?\s*(?:{'|'.join(UNITS)})) |         # dimension
-    (\d+(?:\.\d+)?) |                                   # integer/decimal
-    (\.\d*) |                                           # dot (.) or decimal can start with just a dot
-    (\\[\\\[\]{{}}\s!,:>;|_%#$&]) |                     # escaped characters
-    (\\(?:begin|end|operatorname){{[a-zA-Z]+\*?}}) |    # begin, end or operatorname
+    (%[^\n]+) |                                 # comment
+    (a-zA-Z) |                                  # letter
+    ([_^])(\d) |                                # number succeeding an underscore or a caret
+    (-?\d+(?:\.\d+)?\s*(?:{'|'.join(UNITS)})) | # dimension
+    (\d+(?:\.\d+)?) |                           # integer/decimal
+    (\.\d*) |                                   # dot (.) or decimal can start with just a dot
+    (\\[\\\[\]{{}}\s!,:>;|_%#$&]) |             # escaped characters
+    (\\(?:begin|end)\s*{{[a-zA-Z]+\*?}}) |      # begin or end
+    (\\operatorname\s*{{[a-zA-Z\s*]+\*?\s*}}) | # operatorname
     #  color, fbox, href, hbox, mbox, style, text, textbf, textit, textrm, textsf, texttt
     (\\(?:color|fbox|hbox|href|mbox|style|text|textbf|textit|textrm|textsf|texttt))\s*{{([^}}]*)}} |
-    (\\[cdt]?frac)\s*([.\d])\s*([.\d])? |               # fractions
-    (\\math[a-z]+)({{)([a-zA-Z])(}}) |                  # commands starting with math
-    (\\[a-zA-Z]+) |                                     # other commands
-    (\S)                                                # non-space character
+    (\\[cdt]?frac)\s*([.\d])\s*([.\d])? |       # fractions
+    (\\math[a-z]+)({{)([a-zA-Z])(}}) |          # commands starting with math
+    (\\[a-zA-Z]+) |                             # other commands
+    (\S)                                        # non-space character
     """,
     re.VERBOSE,
 )
@@ -47,5 +48,8 @@ def tokenize(latex_string: str, skip_comments: bool = True) -> Iterator[str]:
                 break
             if captured.endswith(UNITS):
                 yield captured.replace(" ", "")
+                continue
+            if captured.startswith((commands.BEGIN, commands.END, commands.OPERATORNAME)):
+                yield "".join(captured.split(" "))
                 continue
             yield captured
