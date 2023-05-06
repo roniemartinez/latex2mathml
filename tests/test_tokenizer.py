@@ -518,6 +518,8 @@ from latex2mathml.tokenizer import tokenize
         pytest.param(
             r"\frac 1 2 3 + \frac 123", [r"\frac", "1", "2", "3", "+", r"\frac", "1", "2", "3"], id="issue-386"
         ),
+        pytest.param(r"\begin {cases} \end {cases}", [r"\begin{cases}", r"\end{cases}"], id="issue-391"),
+        pytest.param(r"\operatorname { s n } x", [r"\operatorname{sn}", "x"], id="issue-391-operatorname"),
     ],
 )
 def test_tokenize(latex: str, expected: list) -> None:
