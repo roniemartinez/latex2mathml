@@ -1697,6 +1697,32 @@ from latex2mathml.walker import Node, walk
             ],
             id="not",
         ),
+        pytest.param(
+            "x_1'",
+            [
+                Node(
+                    token="_^",
+                    children=(Node(token="x"), Node(token="1"), Node(token="\\prime")),
+                ),
+            ],
+            id="issue-392-subscript",
+        ),
+        pytest.param(
+            "x'^2",
+            [
+                Node(
+                    token="^",
+                    children=(
+                        Node(token="x"),
+                        Node(
+                            token="{}",
+                            children=(Node(token="\\prime"), Node(token="2")),
+                        ),
+                    ),
+                )
+            ],
+            id="issue-392-superscript",
+        ),
     ],
 )
 def test_walk(latex: str, expected: list) -> None:
@@ -1722,6 +1748,7 @@ def test_walk(latex: str, expected: list) -> None:
         pytest.param(r"\skew{X}\hat b", InvalidWidthError, id="invalid-width-not-number"),
         pytest.param(r"\limits^{\pi}", LimitsMustFollowMathOperatorError, id="limits-must-follow-math-operator-blank"),
         pytest.param(r"5\limits^{\pi}", LimitsMustFollowMathOperatorError, id="limits-must-follow-math-operator"),
+        pytest.param(r"x^2'", DoubleSuperscriptsError, id="issue-392"),
     ],
 )
 def test_error(latex: str, exception: Union[Tuple[Any, ...], Any]) -> None:

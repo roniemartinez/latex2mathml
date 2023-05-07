@@ -67,7 +67,11 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
 
             if token == previous.token == commands.SUBSCRIPT:
                 raise DoubleSubscriptsError
-            if token == previous.token == commands.SUPERSCRIPT:
+            if (token == previous.token == commands.SUPERSCRIPT) and (
+                previous.children is not None
+                and len(previous.children) >= 2
+                and previous.children[1].token != commands.PRIME
+            ):
                 raise DoubleSuperscriptsError
 
             modifier = None
@@ -92,6 +96,22 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
             ):
                 children = tuple(_walk(tokens, terminator=terminator, limit=1))
                 node = Node(token=commands.SUBSUP, children=(*previous.children, *children), modifier=previous.modifier)
+            elif (
+                token == commands.SUPERSCRIPT
+                and previous.token == commands.SUPERSCRIPT
+                and previous.children is not None
+                and previous.children[1].token == commands.PRIME
+            ):
+                children = tuple(_walk(tokens, terminator=terminator, limit=1))
+
+                node = Node(
+                    token=commands.SUPERSCRIPT,
+                    children=(
+                        previous.children[0],
+                        Node(token=commands.BRACES, children=(previous.children[1], *children)),
+                    ),
+                    modifier=previous.modifier,
+                )
             else:
                 try:
                     children = tuple(_walk(tokens, terminator=terminator, limit=1))
@@ -110,9 +130,23 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
                 previous.token == commands.SUPERSCRIPT
                 and previous.children is not None
                 and len(previous.children) >= 2
+                and previous.children[1].token != commands.PRIME
+            ):
+                raise DoubleSuperscriptsError
+
+            if (
+                previous.token == commands.SUPERSCRIPT
+                and previous.children is not None
+                and len(previous.children) >= 2
                 and previous.children[1].token == commands.PRIME
             ):
                 node = Node(token=commands.SUPERSCRIPT, children=(previous.children[0], Node(token=commands.DPRIME)))
+            elif previous.token == commands.SUBSCRIPT and previous.children is not None:
+                node = Node(
+                    token=commands.SUBSUP,
+                    children=(*previous.children, Node(token=commands.PRIME)),
+                    modifier=previous.modifier,
+                )
             else:
                 node = Node(token=commands.SUPERSCRIPT, children=(previous, Node(token=commands.PRIME)))
         elif token in commands.COMMANDS_WITH_TWO_PARAMETERS:
