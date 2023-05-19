@@ -564,8 +564,9 @@ def main() -> None:  # pragma: no cover
     display = "block" if arguments.block else "inline"
 
     if arguments.version:
-        version = pkg_resources.get_distribution("latex2mathml").version
-        print("latex2mathml", version)
+        import latex2mathml
+
+        print("latex2mathml", latex2mathml.__version__)
     elif arguments.text:
         print(convert(arguments.text, display=display))
     elif arguments.file:
