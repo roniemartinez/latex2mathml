@@ -1,3 +1,3 @@
-import pkg_resources
+from importlib import metadata
 
-__version__ = pkg_resources.get_distribution("latex2mathml").version
+__version__ = metadata.version("latex2mathml")
