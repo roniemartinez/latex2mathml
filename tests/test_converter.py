@@ -1,5 +1,3 @@
-import sys
-
 import pytest
 from multidict import MultiDict
 from xmljson import BadgerFish
@@ -1125,50 +1123,55 @@ from latex2mathml.converter import _convert, convert
         ),
         pytest.param(
             r"\begin{cases} {x=1} \\ {y=-2}\end{cases}",
-            MultiDict(
-                [
-                    ("mo", {"@stretchy": "true", "@fence": "true", "@form": "prefix", "$": "&#x0007B;"}),
-                    (
-                        "mtable",
-                        MultiDict(
-                            [
-                                (
-                                    "mtr",
-                                    {
-                                        "mtd": MultiDict(
-                                            [
-                                                ("@columnalign", "left"),
-                                                ("mrow", MultiDict([("mi", "x"), ("mo", "&#x0003D;"), ("mn", "1")])),
-                                            ]
-                                        )
-                                    },
-                                ),
-                                (
-                                    "mtr",
-                                    {
-                                        "mtd": MultiDict(
-                                            [
-                                                ("@columnalign", "left"),
-                                                (
-                                                    "mrow",
-                                                    MultiDict(
-                                                        [
-                                                            ("mi", "y"),
-                                                            ("mo", "&#x0003D;"),
-                                                            ("mo", "&#x02212;"),
-                                                            ("mn", "2"),
-                                                        ]
+            {
+                "mrow": MultiDict(
+                    [
+                        ("mo", {"@stretchy": "true", "@fence": "true", "@form": "prefix", "$": "&#x0007B;"}),
+                        (
+                            "mtable",
+                            MultiDict(
+                                [
+                                    (
+                                        "mtr",
+                                        {
+                                            "mtd": MultiDict(
+                                                [
+                                                    ("@columnalign", "left"),
+                                                    (
+                                                        "mrow",
+                                                        MultiDict([("mi", "x"), ("mo", "&#x0003D;"), ("mn", "1")]),
                                                     ),
-                                                ),
-                                            ]
-                                        )
-                                    },
-                                ),
-                            ]
+                                                ]
+                                            )
+                                        },
+                                    ),
+                                    (
+                                        "mtr",
+                                        {
+                                            "mtd": MultiDict(
+                                                [
+                                                    ("@columnalign", "left"),
+                                                    (
+                                                        "mrow",
+                                                        MultiDict(
+                                                            [
+                                                                ("mi", "y"),
+                                                                ("mo", "&#x0003D;"),
+                                                                ("mo", "&#x02212;"),
+                                                                ("mn", "2"),
+                                                            ]
+                                                        ),
+                                                    ),
+                                                ]
+                                            )
+                                        },
+                                    ),
+                                ]
+                            ),
                         ),
-                    ),
-                ]
-            ),
+                    ]
+                )
+            },
             id="issue-106",
         ),
         pytest.param(r"\max f", MultiDict([("mo", "max"), ("mi", "f")]), id="issue-108-1"),
@@ -4201,7 +4204,6 @@ def test_converter(latex: str, json: MultiDict) -> None:
     assert convert(latex, display="block") == _convert(math[0])
 
 
-@pytest.mark.skipif(sys.version_info < (3, 8), reason="xml.etree sorts attributes in 3.7 and below")
 def test_attributes() -> None:
     assert (
         convert("1")

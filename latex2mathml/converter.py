@@ -230,6 +230,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
     if command in (commands.SUBSTACK, commands.SMALLMATRIX):
         parent = SubElement(parent, "mstyle", scriptlevel="1")
     elif command == commands.CASES:
+        parent = SubElement(parent, "mrow")
         lbrace = SubElement(parent, "mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")]))
         lbrace.text = "&#x{};".format(convert_symbol(commands.LBRACE))
     elif command in (commands.DBINOM, commands.DFRAC):
@@ -561,12 +562,9 @@ def main() -> None:  # pragma: no cover
     display = "block" if arguments.block else "inline"
 
     if arguments.version:
-        try:
-            from importlib import metadata
-        except ImportError:
-            import importlib_metadata as metadata  # type: ignore
-        version = metadata.version("latex2mathml")
-        print("latex2mathml", version)
+        import latex2mathml
+
+        print("latex2mathml", latex2mathml.__version__)
     elif arguments.text:
         print(convert(arguments.text, display=display))
     elif arguments.file:

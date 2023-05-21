@@ -139,7 +139,8 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/4476506?v=4",
       "profile": "http://denissalem.tuxfamily.org",
       "contributions": [
-        "bug"
+        "bug",
+        "code"
       ]
     },
     {
@@ -204,6 +205,35 @@
       "contributions": [
         "code",
         "doc"
+      ]
+    },
+    {
+      "login": "McSinyx",
+      "name": "Nguyễn Gia Phong",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13689192?v=4",
+      "profile": "http://cnx.gdn",
+      "contributions": [
+        "bug",
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "cdelker",
+      "name": "Collin Delker",
+      "avatar_url": "https://avatars.githubusercontent.com/u/44102190?v=4",
+      "profile": "https://cdelker.github.io",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "jiotv321",
+      "name": "jiotv321",
+      "avatar_url": "https://avatars.githubusercontent.com/u/118644533?v=4",
+      "profile": "https://github.com/jiotv321",
+      "contributions": [
+        "bug"
       ]
     }
   ],

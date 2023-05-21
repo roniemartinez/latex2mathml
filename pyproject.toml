@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "latex2mathml"
-version = "3.75.1"
+version = "3.76.0"
 repository = "https://github.com/roniemartinez/latex2mathml"
 description = "Pure Python library for LaTeX to MathML conversion"
 authors = ["Ronie Martinez <ronmarti18@gmail.com>"]
@@ -19,7 +19,6 @@ classifiers = [
     "Topic :: Text Processing :: Markup :: HTML",
     "Topic :: Text Processing :: Markup :: LaTeX",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -35,17 +34,17 @@ latex2mathml = "latex2mathml.converter:main"
 l2m = "latex2mathml.converter:main"
 
 [tool.poetry.dependencies]
-python = "^3.7"
-importlib-metadata = { version = "*", python = "<3.8" }
+python = "^3.8.1"
 
-[tool.poetry.dev-dependencies]
-autoflake = "^1.7.8"
-black = "^22.12"
-isort = "^5.11.2"
-multidict = "^6.0.3"
-mypy = "^0.991"
-pyproject-flake8 = "^5.0.4"
-pytest = "^7.2.0"
+[tool.poetry.group.dev.dependencies]
+autoflake = "^2.1.1"
+black = "^23.3"
+flake8 = "^6.0.0"
+isort = "^5.12.0"
+multidict = "^6.0.4"
+mypy = "^1.2"
+pyproject-flake8 = "^6.0.0.post1"
+pytest = "^7.3.1"
 pytest-clarity = "^1.0.1"
 pytest-cov = "^4.0.0"
 xmljson = "^0.2.0"
@@ -71,6 +70,12 @@ extend-exclude = """
 
 [tool.mypy]
 disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "pkg_resources",
+]
 ignore_missing_imports = true
 
 [tool.flake8]
