@@ -547,8 +547,6 @@ def main() -> None:  # pragma: no cover
     import argparse
     import sys
 
-    import pkg_resources
-
     parser = argparse.ArgumentParser(description="Pure Python library for LaTeX to MathML conversion")
     parser.add_argument("-V", "--version", dest="version", action="store_true", required=False, help="Show version")
     parser.add_argument("-b", "--block", dest="block", action="store_true", required=False, help="Display block")
