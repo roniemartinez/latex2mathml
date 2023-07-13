@@ -72,9 +72,6 @@ extend-exclude = """
 disallow_untyped_defs = true
 ignore_missing_imports = true
 
-[[tool.mypy.overrides]]
-ignore_missing_imports = true
-
 [tool.flake8]
 max-line-length = 120
 extend-ignore = ["E203"]
