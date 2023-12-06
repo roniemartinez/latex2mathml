@@ -1,4 +1,5 @@
 from xml.etree.cElementTree import Element
+
 import pytest
 from multidict import MultiDict
 from xmljson import BadgerFish
