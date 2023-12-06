@@ -1,9 +1,10 @@
+from xml.etree.cElementTree import Element
 import pytest
 from multidict import MultiDict
 from xmljson import BadgerFish
 
 # noinspection PyProtectedMember
-from latex2mathml.converter import _convert, convert
+from latex2mathml.converter import _convert, convert, convert_to_element
 
 
 @pytest.mark.parametrize(
@@ -4213,3 +4214,28 @@ def test_attributes() -> None:
         convert("1", display="block")
         == '<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mn>1</mn></mrow></math>'
     )
+
+
+def test_convert_to_element() -> None:
+    bf = BadgerFish()
+
+    element = convert_to_element("1")
+    assert bf.data(element) == {
+        'math': {
+            '@display': 'inline',
+            '@xmlns': 'http://www.w3.org/1998/Math/MathML',
+            'mrow': {'mn': {'$': 1}},
+        },
+    }, "should convert to element"
+
+    parent = Element('div')
+    convert_to_element("1", parent=parent)
+    assert bf.data(parent) == {
+        'div': {
+            'math': {
+                '@display': 'inline',
+                '@xmlns': 'http://www.w3.org/1998/Math/MathML',
+                'mrow': {'mn': {'$': 1}},
+            },
+        }
+    }, "should convert to element as child of parent"
