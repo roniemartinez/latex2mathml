@@ -62,17 +62,24 @@ class Mode(enum.Enum):
     MATH = enum.auto()
 
 
-def convert(latex: str, xmlns: str = "http://www.w3.org/1998/Math/MathML", display: str = "inline", parent: Optional[Element] = None) -> str:
+def convert(
+    latex: str,
+    xmlns: str = "http://www.w3.org/1998/Math/MathML",
+    display: str = "inline",
+    parent: Optional[Element] = None,
+) -> str:
     math = convert_to_element(latex, xmlns, display, parent)
     return _convert(math)
 
 
-def convert_to_element(latex: str, xmlns: str = "http://www.w3.org/1998/Math/MathML", display: str = "inline", parent: Optional[Element] = None) -> Element:
-    tag = 'math'
-    attrib = {
-        'xmlns': xmlns,
-        'display': display
-    }
+def convert_to_element(
+    latex: str,
+    xmlns: str = "http://www.w3.org/1998/Math/MathML",
+    display: str = "inline",
+    parent: Optional[Element] = None,
+) -> Element:
+    tag = "math"
+    attrib = {"xmlns": xmlns, "display": display}
     math = Element(tag, attrib) if parent is None else SubElement(parent, tag, attrib)
     row = SubElement(math, "mrow")
     _convert_group(iter(walk(latex)), row)

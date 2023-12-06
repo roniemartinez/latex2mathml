@@ -4222,21 +4222,21 @@ def test_convert_to_element() -> None:
 
     element = convert_to_element("1")
     assert bf.data(element) == {
-        'math': {
-            '@display': 'inline',
-            '@xmlns': 'http://www.w3.org/1998/Math/MathML',
-            'mrow': {'mn': {'$': 1}},
+        "math": {
+            "@display": "inline",
+            "@xmlns": "http://www.w3.org/1998/Math/MathML",
+            "mrow": {"mn": {"$": 1}},
         },
     }, "should convert to element"
 
-    parent = Element('div')
+    parent = Element("div")
     convert_to_element("1", parent=parent)
     assert bf.data(parent) == {
-        'div': {
-            'math': {
-                '@display': 'inline',
-                '@xmlns': 'http://www.w3.org/1998/Math/MathML',
-                'mrow': {'mn': {'$': 1}},
+        "div": {
+            "math": {
+                "@display": "inline",
+                "@xmlns": "http://www.w3.org/1998/Math/MathML",
+                "mrow": {"mn": {"$": 1}},
             },
         }
     }, "should convert to element as child of parent"
