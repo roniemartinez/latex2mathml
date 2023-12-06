@@ -131,6 +131,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://cdelker.github.io"><img src="https://avatars.githubusercontent.com/u/44102190?v=4?s=100" width="100px;" alt="Collin Delker"/><br /><sub><b>Collin Delker</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Acdelker" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/jiotv321"><img src="https://avatars.githubusercontent.com/u/118644533?v=4?s=100" width="100px;" alt="jiotv321"/><br /><sub><b>jiotv321</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Ajiotv321" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/felixonmars"><img src="https://avatars.githubusercontent.com/u/1006477?v=4?s=100" width="100px;" alt="Felix Yan"/><br /><sub><b>Felix Yan</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/commits?author=felixonmars" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://rob-blackbourn.github.io/blog/"><img src="https://avatars.githubusercontent.com/u/2880305?v=4?s=100" width="100px;" alt="Rob Blackbourn"/><br /><sub><b>Rob Blackbourn</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/commits?author=rob-blackbourn" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
