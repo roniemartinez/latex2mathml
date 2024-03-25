@@ -46,7 +46,7 @@ mypy = "^1.2"
 pyproject-flake8 = "^6.0.0.post1"
 pytest = ">=7.3.1,<9.0.0"
 pytest-clarity = "^1.0.1"
-pytest-cov = "^4.0.0"
+pytest-cov = ">=4,<6"
 xmljson = "^0.2.0"
 
 [tool.isort]
