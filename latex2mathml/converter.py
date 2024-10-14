@@ -55,6 +55,7 @@ OPERATORS = (
     r"\varsupsetneqq",
 )
 MATH_MODE_PATTERN = re.compile(r"\\\$|\$|\\?[^\\$]+")
+display_mode = ""
 
 
 class Mode(enum.Enum):
@@ -68,6 +69,8 @@ def convert(
     display: str = "inline",
     parent: Optional[Element] = None,
 ) -> str:
+    global display_mode 
+    display_mode = display
     math = convert_to_element(latex, xmlns, display, parent)
     return _convert(math)
 
@@ -276,7 +279,9 @@ def _convert_command(node: Node, parent: Element, font: Optional[Dict[str, Optio
     if column_lines:
         attributes["columnlines"] = column_lines
 
-    if command == commands.SUBSUP and node.children is not None and node.children[0].token == commands.GCD:
+    if display_mode == "block" and command == commands.SUBSUP:
+        tag = "munderover"
+    elif command == commands.SUBSUP and node.children is not None and node.children[0].token == commands.GCD:
         tag = "munderover"
     elif command == commands.SUPERSCRIPT and modifier in (commands.LIMITS, commands.OVERBRACE):
         tag = "mover"
