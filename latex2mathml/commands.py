@@ -1,4 +1,5 @@
 from collections import OrderedDict, defaultdict
+from typing import Optional
 
 OPENING_BRACE = "{"
 CLOSING_BRACE = "}"
@@ -232,12 +233,12 @@ SKEW = r"\skew"
 NOT = r"\not"
 
 
-def font_factory(default: str | None, replacement: dict[str, str | None]) -> defaultdict[str, str | None]:
+def font_factory(default: Optional[str], replacement: dict[str, Optional[str]]) -> defaultdict[str, str | None]:
     fonts = defaultdict(lambda: default, replacement)
     return fonts
 
 
-LOCAL_FONTS: dict[str, defaultdict[str, str | None]] = {
+LOCAL_FONTS: dict[str, defaultdict[str, Optional[str]]] = {
     BLACKBOARD_BOLD: font_factory("double-struck", {"fence": None}),
     BOLD_SYMBOL: font_factory("bold", {"mi": "bold-italic", "mtext": None}),
     MATHBB: font_factory("double-struck", {"fence": None}),
@@ -255,7 +256,7 @@ LOCAL_FONTS: dict[str, defaultdict[str, str | None]] = {
     TT: font_factory("monospace", {"fence": None}),
 }
 
-OLD_STYLE_FONTS: dict[str, defaultdict[str, str | None]] = {
+OLD_STYLE_FONTS: dict[str, defaultdict[str, Optional[str]]] = {
     r"\rm": font_factory(None, {"mi": "normal"}),
     r"\bf": font_factory(None, {"mi": "bold"}),
     r"\it": font_factory(None, {"mi": "italic"}),

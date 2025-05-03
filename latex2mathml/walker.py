@@ -1,4 +1,4 @@
-from typing import Any, Iterator, NamedTuple
+from typing import Any, Iterator, NamedTuple, Optional
 
 from latex2mathml import commands
 from latex2mathml.exceptions import (
@@ -21,12 +21,12 @@ from latex2mathml.tokenizer import tokenize
 
 class Node(NamedTuple):
     token: str
-    children: tuple[Any, ...] | None = None
-    delimiter: str | None = None
-    alignment: str | None = None
-    text: str | None = None
-    attributes: dict[str, str] | None = None
-    modifier: str | None = None
+    children: Optional[tuple[Any, ...]] = None
+    delimiter: Optional[str] = None
+    alignment: Optional[str] = None
+    text: Optional[str] = None
+    attributes: Optional[dict[str, str]] = None
+    modifier: Optional[str] = None
 
 
 def walk(data: str) -> list[Node]:
@@ -34,7 +34,7 @@ def walk(data: str) -> list[Node]:
     return _walk(tokens)
 
 
-def _walk(tokens: Iterator[str], terminator: str | None = None, limit: int = 0) -> list[Node]:
+def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 0) -> list[Node]:
     group: list[Node] = []
     token: str
     has_available_tokens = False

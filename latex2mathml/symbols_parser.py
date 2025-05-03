@@ -1,12 +1,13 @@
 import codecs
 import os
 import re
+from typing import Optional, Union
 
 SYMBOLS_FILE: str = os.path.join(os.path.dirname(os.path.realpath(__file__)), "unimathsymbols.txt")
-SYMBOLS: dict[str, str] | None = None
+SYMBOLS: Optional[dict[str, str]] = None
 
 
-def convert_symbol(symbol: str) -> str | None:
+def convert_symbol(symbol: str) -> Union[str, None]:
     global SYMBOLS
     if not SYMBOLS:
         SYMBOLS = parse_symbols()

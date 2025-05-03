@@ -1,5 +1,5 @@
 import string
-from typing import Any
+from typing import Any, Union
 
 import pytest
 
@@ -1751,6 +1751,6 @@ def test_walk(latex: str, expected: list) -> None:
         pytest.param(r"x^2'", DoubleSuperscriptsError, id="issue-392"),
     ],
 )
-def test_error(latex: str, exception: tuple[Any, ...] | Any) -> None:
+def test_error(latex: str, exception: Union[tuple[Any, ...], Any]) -> None:
     with pytest.raises(exception):
         walk(latex)

@@ -2,7 +2,7 @@ import copy
 import enum
 import re
 from collections import OrderedDict
-from typing import Iterable, Iterator
+from typing import Iterable, Iterator, Optional
 from xml.etree.cElementTree import Element, SubElement, tostring
 from xml.sax.saxutils import unescape
 
@@ -66,7 +66,7 @@ def convert(
     latex: str,
     xmlns: str = "http://www.w3.org/1998/Math/MathML",
     display: str = "inline",
-    parent: Element | None = None,
+    parent: Optional[Element] = None,
 ) -> str:
     math = convert_to_element(latex, xmlns, display, parent)
     return _convert(math)
@@ -76,7 +76,7 @@ def convert_to_element(
     latex: str,
     xmlns: str = "http://www.w3.org/1998/Math/MathML",
     display: str = "inline",
-    parent: Element | None = None,
+    parent: Optional[Element] = None,
 ) -> Element:
     tag = "math"
     attrib = {"xmlns": xmlns, "display": display}
@@ -90,7 +90,7 @@ def _convert(tree: Element) -> str:
     return unescape(tostring(tree, encoding="unicode"))
 
 
-def _convert_matrix(nodes: Iterator[Node], parent: Element, command: str, alignment: str | None = None) -> None:
+def _convert_matrix(nodes: Iterator[Node], parent: Element, command: str, alignment: Optional[str] = None) -> None:
     row = None
     cell = None
 
@@ -168,8 +168,8 @@ def _set_cell_alignment(cell: Element, hfil_indexes: list[bool]) -> None:
 
 
 def _get_column_alignment(
-    alignment: str | None, column_alignment: str | None, column_index: int
-) -> tuple[str | None, int]:
+    alignment: Optional[str], column_alignment: Optional[str], column_index: int
+) -> tuple[Optional[str], int]:
     if alignment:
         try:
             column_alignment = COLUMN_ALIGNMENT_MAP.get(alignment[column_index])
@@ -179,13 +179,13 @@ def _get_column_alignment(
     return column_alignment, column_index
 
 
-def _make_matrix_cell(row: Element, column_alignment: str | None) -> Element:
+def _make_matrix_cell(row: Element, column_alignment: Optional[str]) -> Element:
     if column_alignment:
         return SubElement(row, "mtd", columnalign=column_alignment)
     return SubElement(row, "mtd")
 
 
-def _convert_group(nodes: Iterable[Node], parent: Element, font: dict[str, str | None] | None = None) -> None:
+def _convert_group(nodes: Iterable[Node], parent: Element, font: Optional[dict[str, Optional[str]]] = None) -> None:
     _font = font
     for node in nodes:
         token = node.token
@@ -208,7 +208,7 @@ def _convert_group(nodes: Iterable[Node], parent: Element, font: dict[str, str |
             _convert_group(iter(node.children), _row, _font)
 
 
-def _get_alignment_and_column_lines(alignment: str | None = None) -> tuple[str | None, str | None]:
+def _get_alignment_and_column_lines(alignment: Optional[str] = None) -> tuple[Optional[str], Optional[str]]:
     if alignment is None:
         return None, None
     if "|" not in alignment:
@@ -240,7 +240,7 @@ def separate_by_mode(text: str) -> Iterator[tuple[str, Mode]]:
     # TODO: if stays in math mode, means not terminated properly, raise error
 
 
-def _convert_command(node: Node, parent: Element, font: dict[str, str | None] | None = None) -> None:
+def _convert_command(node: Node, parent: Element, font: Optional[dict[str, Optional[str]]] = None) -> None:
     command = node.token
     modifier = node.modifier
 
@@ -309,7 +309,7 @@ def _convert_command(node: Node, parent: Element, font: dict[str, str | None] | 
         if command == commands.MIDDLE:
             element.text = "&#x{};".format(convert_symbol(node.text))
         elif command == commands.HBOX:
-            mtext: Element | None = element
+            mtext: Optional[Element] = element
             for text, mode in separate_by_mode(node.text):
                 if mode == Mode.TEXT:
                     if mtext is None:
@@ -393,7 +393,7 @@ def _add_diacritic(command: str, parent: Element) -> None:
         element.text = text
 
 
-def _convert_and_append_command(command: str, parent: Element, attributes: dict[str, str] | None = None) -> None:
+def _convert_and_append_command(command: str, parent: Element, attributes: Optional[dict[str, str]] = None) -> None:
     code_point = convert_symbol(command)
     mo = SubElement(parent, "mo", attributes if attributes is not None else {})
     mo.text = "&#x{};".format(code_point) if code_point else command
@@ -443,7 +443,7 @@ def _append_postfix_element(node: Node, parent: Element) -> None:
         SubElement(parent, "mspace", width="-" + node.attributes["width"])
 
 
-def _convert_symbol(node: Node, parent: Element, font: dict[str, str | None] | None = None) -> None:
+def _convert_symbol(node: Node, parent: Element, font: Optional[dict[str, Optional[str]]] = None) -> None:
     token = node.token
     attributes = node.attributes or {}
     symbol = convert_symbol(token)
@@ -552,7 +552,7 @@ def _convert_symbol(node: Node, parent: Element, font: dict[str, str | None] | N
         _set_font(element, element.tag, font)
 
 
-def _set_font(element: Element, key: str, font: dict[str, str | None] | None) -> None:
+def _set_font(element: Element, key: str, font: Optional[dict[str, Optional[str]]]) -> None:
     if font is None:
         return
     _font = font[key]
