@@ -1,5 +1,5 @@
 from collections import OrderedDict, defaultdict
-from typing import DefaultDict, Dict, Optional, Tuple
+from typing import Optional
 
 OPENING_BRACE = "{"
 CLOSING_BRACE = "}"
@@ -233,12 +233,12 @@ SKEW = r"\skew"
 NOT = r"\not"
 
 
-def font_factory(default: Optional[str], replacement: Dict[str, Optional[str]]) -> DefaultDict[str, Optional[str]]:
+def font_factory(default: Optional[str], replacement: dict[str, Optional[str]]) -> defaultdict[str, Optional[str]]:
     fonts = defaultdict(lambda: default, replacement)
     return fonts
 
 
-LOCAL_FONTS: Dict[str, DefaultDict[str, Optional[str]]] = {
+LOCAL_FONTS: dict[str, defaultdict[str, Optional[str]]] = {
     BLACKBOARD_BOLD: font_factory("double-struck", {"fence": None}),
     BOLD_SYMBOL: font_factory("bold", {"mi": "bold-italic", "mtext": None}),
     MATHBB: font_factory("double-struck", {"fence": None}),
@@ -256,7 +256,7 @@ LOCAL_FONTS: Dict[str, DefaultDict[str, Optional[str]]] = {
     TT: font_factory("monospace", {"fence": None}),
 }
 
-OLD_STYLE_FONTS: Dict[str, DefaultDict[str, Optional[str]]] = {
+OLD_STYLE_FONTS: dict[str, defaultdict[str, Optional[str]]] = {
     r"\rm": font_factory(None, {"mi": "normal"}),
     r"\bf": font_factory(None, {"mi": "bold"}),
     r"\it": font_factory(None, {"mi": "italic"}),
@@ -323,7 +323,7 @@ COMMANDS_WITH_TWO_PARAMETERS = (
     UNDERSET,
 )
 
-BIG: Dict[str, Tuple[str, dict]] = {
+BIG: dict[str, tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
     r"\Bigg": ("mo", OrderedDict([("minsize", "2.470em"), ("maxsize", "2.470em")])),
     r"\bigg": ("mo", OrderedDict([("minsize", "2.047em"), ("maxsize", "2.047em")])),
@@ -337,7 +337,7 @@ BIG_OPEN_CLOSE = {
     for postfix in "lmr"
 }
 
-MSTYLE_SIZES: Dict[str, Tuple[str, dict]] = {
+MSTYLE_SIZES: dict[str, tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
     r"\Huge": ("mstyle", {"mathsize": "2.49em"}),
     r"\huge": ("mstyle", {"mathsize": "2.07em"}),
@@ -351,14 +351,14 @@ MSTYLE_SIZES: Dict[str, Tuple[str, dict]] = {
     r"\Tiny": ("mstyle", {"mathsize": "0.6em"}),
 }
 
-STYLES: Dict[str, Tuple[str, dict]] = {
+STYLES: dict[str, tuple[str, dict]] = {
     DISPLAYSTYLE: ("mstyle", {"displaystyle": "true", "scriptlevel": "0"}),
     TEXTSTYLE: ("mstyle", {"displaystyle": "false", "scriptlevel": "0"}),
     SCRIPTSTYLE: ("mstyle", {"displaystyle": "false", "scriptlevel": "1"}),
     SCRIPTSCRIPTSTYLE: ("mstyle", {"displaystyle": "false", "scriptlevel": "2"}),
 }
 
-CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
+CONVERSION_MAP: dict[str, tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
     # tables
     **{matrix: ("mtable", {}) for matrix in MATRICES},
@@ -475,7 +475,7 @@ CONVERSION_MAP: Dict[str, Tuple[str, dict]] = {
 }
 
 
-DIACRITICS: Dict[str, Tuple[str, Dict[str, str]]] = {
+DIACRITICS: dict[str, tuple[str, dict[str, str]]] = {
     ACUTE: ("&#x000B4;", {}),
     BAR: ("&#x000AF;", {"stretchy": "true"}),
     BREVE: ("&#x002D8;", {}),

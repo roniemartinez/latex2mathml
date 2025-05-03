@@ -1,11 +1,11 @@
-[tool.poetry]
+[project]
 name = "latex2mathml"
-version = "3.77.0"
-repository = "https://github.com/roniemartinez/latex2mathml"
+version = "3.78.0"
 description = "Pure Python library for LaTeX to MathML conversion"
-authors = ["Ronie Martinez <ronmarti18@gmail.com>"]
-license = "MIT"
-include = ["latex2mathml/unimathsymbols.txt"]
+authors = [
+    { name = "Ronie Martinez", email = "ronmarti18@gmail.com" }
+]
+license = { text = "MIT" }
 readme = "README.md"
 keywords = [
     "latex",
@@ -19,35 +19,39 @@ classifiers = [
     "Topic :: Text Processing :: Markup :: HTML",
     "Topic :: Text Processing :: Markup :: LaTeX",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
 ]
+requires-python = ">=3.9"
+dependencies = [
+]
 
-[tool.poetry.urls]
+[project.urls]
+repository = "https://github.com/roniemartinez/latex2mathml"
 "Donate" = "https://www.buymeacoffee.com/roniemartinez"
 
-[tool.poetry.scripts]
+[project.scripts]
 latex2mathml = "latex2mathml.converter:main"
 l2m = "latex2mathml.converter:main"
 
-[tool.poetry.dependencies]
-python = "^3.8.1"
+[tool.poetry]
+include = ["latex2mathml/unimathsymbols.txt"]
 
 [tool.poetry.group.dev.dependencies]
-autoflake = "^2.1.1"
-black = ">=23.3,<25.0"
-flake8 = "^6.0.0"
-isort = "^5.12.0"
-multidict = "^6.0.4"
-mypy = "^1.2"
-pyproject-flake8 = "^6.0.0.post1"
-pytest = ">=7.3.1,<9.0.0"
+autoflake = "^2.3.1"
+black = "^25.1.0"
+isort = "^6.0.1"
+multidict = "^6.4.3"
+mypy = "^1.15.0"
+pyproject-flake8 = "^7.0.0"
+pytest = "^8.3.5"
 pytest-clarity = "^1.0.1"
-pytest-cov = ">=4,<6"
-xmljson = "^0.2.0"
+pytest-cov = "^6.1.1"
+xmljson = "^0.2.1"
 
 [tool.isort]
 line_length = 120
@@ -90,5 +94,5 @@ addopts = """\
 """
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
