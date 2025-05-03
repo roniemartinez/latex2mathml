@@ -1,4 +1,4 @@
-from typing import Any, Dict, Iterator, List, NamedTuple, Optional, Tuple
+from typing import Any, Iterator, NamedTuple
 
 from latex2mathml import commands
 from latex2mathml.exceptions import (
@@ -21,21 +21,21 @@ from latex2mathml.tokenizer import tokenize
 
 class Node(NamedTuple):
     token: str
-    children: Optional[Tuple[Any, ...]] = None
-    delimiter: Optional[str] = None
-    alignment: Optional[str] = None
-    text: Optional[str] = None
-    attributes: Optional[Dict[str, str]] = None
-    modifier: Optional[str] = None
+    children: tuple[Any, ...] | None = None
+    delimiter: str | None = None
+    alignment: str | None = None
+    text: str | None = None
+    attributes: dict[str, str] | None = None
+    modifier: str | None = None
 
 
-def walk(data: str) -> List[Node]:
+def walk(data: str) -> list[Node]:
     tokens = tokenize(data)
     return _walk(tokens)
 
 
-def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 0) -> List[Node]:
-    group: List[Node] = []
+def _walk(tokens: Iterator[str], terminator: str | None = None, limit: int = 0) -> list[Node]:
+    group: list[Node] = []
     token: str
     has_available_tokens = False
     for token in tokens:
@@ -378,7 +378,7 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
     return group
 
 
-def _make_subsup(node: Node) -> Tuple[str, Tuple[Node, ...]]:
+def _make_subsup(node: Node) -> tuple[str, tuple[Node, ...]]:
     # TODO: raise error instead of assertion
     assert node.token == commands.BRACES
     try:

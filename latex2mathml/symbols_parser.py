@@ -1,21 +1,20 @@
 import codecs
 import os
 import re
-from typing import Dict, Optional, Union
 
 SYMBOLS_FILE: str = os.path.join(os.path.dirname(os.path.realpath(__file__)), "unimathsymbols.txt")
-SYMBOLS: Optional[Dict[str, str]] = None
+SYMBOLS: dict[str, str] | None = None
 
 
-def convert_symbol(symbol: str) -> Union[str, None]:
+def convert_symbol(symbol: str) -> str | None:
     global SYMBOLS
     if not SYMBOLS:
         SYMBOLS = parse_symbols()
     return SYMBOLS.get(symbol, None)
 
 
-def parse_symbols() -> Dict[str, str]:
-    _symbols: Dict[str, str] = {}
+def parse_symbols() -> dict[str, str]:
+    _symbols: dict[str, str] = {}
     with codecs.open(SYMBOLS_FILE, encoding="utf-8") as f:
         for line in f:
             if line.startswith("#"):
