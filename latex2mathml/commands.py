@@ -233,7 +233,7 @@ SKEW = r"\skew"
 NOT = r"\not"
 
 
-def font_factory(default: Optional[str], replacement: dict[str, Optional[str]]) -> defaultdict[str, str | None]:
+def font_factory(default: Optional[str], replacement: dict[str, Optional[str]]) -> defaultdict[str, Optional[str]]:
     fonts = defaultdict(lambda: default, replacement)
     return fonts
 
