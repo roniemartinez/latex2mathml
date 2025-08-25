@@ -91,6 +91,7 @@ END = r"\end"
 LIMITS = r"\limits"
 INTEGRAL = r"\int"
 SUMMATION = r"\sum"
+PRODUCT = r"\prod"
 LIMIT = (r"\lim", r"\sup", r"\inf", r"\max", r"\min")
 
 OPERATORNAME = r"\operatorname"
