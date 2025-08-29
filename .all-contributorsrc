@@ -255,6 +255,16 @@
       ]
     },
     {
+      "login": "delfanbaum",
+      "name": "Danny Elfanbaum",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6827567?v=4",
+      "profile": "http://bikesbooksandbullshit.com",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
       "login": "cuppajoeman",
       "name": "ccn",
       "avatar_url": "https://avatars.githubusercontent.com/u/19198104?v=4",
