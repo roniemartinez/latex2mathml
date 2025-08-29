@@ -134,6 +134,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://rob-blackbourn.github.io/blog/"><img src="https://avatars.githubusercontent.com/u/2880305?v=4?s=100" width="100px;" alt="Rob Blackbourn"/><br /><sub><b>Rob Blackbourn</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/commits?author=rob-blackbourn" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://bikesbooksandbullshit.com"><img src="https://avatars.githubusercontent.com/u/6827567?v=4?s=100" width="100px;" alt="Danny Elfanbaum"/><br /><sub><b>Danny Elfanbaum</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/commits?author=delfanbaum" title="Code">💻</a> <a href="https://github.com/roniemartinez/latex2mathml/commits?author=delfanbaum" title="Tests">⚠️</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="http://www.cuppajoeman.com"><img src="https://avatars.githubusercontent.com/u/19198104?v=4?s=100" width="100px;" alt="ccn"/><br /><sub><b>ccn</b></sub></a><br /><a href="https://github.com/roniemartinez/latex2mathml/issues?q=author%3Acuppajoeman" title="Bug reports">🐛</a></td>
+    </tr>
   </tbody>
 </table>
 

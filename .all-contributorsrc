@@ -263,6 +263,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "cuppajoeman",
+      "name": "ccn",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19198104?v=4",
+      "profile": "http://www.cuppajoeman.com",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,

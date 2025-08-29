@@ -34,7 +34,7 @@ jobs:
             pip-cache: ~\AppData\Local\pip\Cache
             poetry-cache: ~\AppData\Local\pypoetry\Cache
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
@@ -67,5 +67,5 @@ jobs:
         run: |
           make test
       - name: Code Coverage
-        uses: codecov/codecov-action@v5.4.3
+        uses: codecov/codecov-action@v5.5.0
         if: ${{ success() }}
