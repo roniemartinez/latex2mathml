@@ -82,7 +82,7 @@ def convert_to_element(
     attrib = {"xmlns": xmlns, "display": display}
     math = Element(tag, attrib) if parent is None else SubElement(parent, tag, attrib)
     row = SubElement(math, "mrow")
-    _convert_group(iter(walk(latex)), row)
+    _convert_group(iter(walk(latex, display)), row)
     return math
 
 

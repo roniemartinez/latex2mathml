@@ -1028,8 +1028,8 @@ from latex2mathml.converter import _convert, convert, convert_to_element
         ),
         pytest.param(
             r"\sum_{\substack{1\le i\le n\\ i\ne j}}",
-            {
-                "msub": MultiDict(
+            {  # in block mode, the substack should be under the summation character
+                "munder": MultiDict(
                     [
                         ("mo", "&#x02211;"),
                         (
@@ -4191,6 +4191,16 @@ from latex2mathml.converter import _convert, convert, convert_to_element
             },
             id="align",
         ),
+        pytest.param(
+            r"\sum_{0}^{\pi}",
+            {"munderover": MultiDict([("mo", "&#x02211;"), ("mrow", {"mn": "0"}), ("mrow", {"mi": "&#x003C0;"})])},
+            id="issue-498-sum",
+        ),
+        pytest.param(
+            r"\prod_{0}^{\pi}",
+            {"munderover": MultiDict([("mo", "&#x0220F;"), ("mrow", {"mn": "0"}), ("mrow", {"mi": "&#x003C0;"})])},
+            id="issue-498-prod",
+        ),
     ],
 )
 def test_converter(latex: str, json: MultiDict) -> None:
@@ -4204,6 +4214,79 @@ def test_converter(latex: str, json: MultiDict) -> None:
     bf = BadgerFish(dict_type=MultiDict)
     math = bf.etree(parent)
     assert convert(latex, display="block") == _convert(math[0])
+
+
+@pytest.mark.parametrize(
+    "latex, json",
+    [
+        pytest.param(
+            r"\sum_{0}^{\pi}",
+            {"msubsup": MultiDict([("mo", "&#x02211;"), ("mrow", {"mn": "0"}), ("mrow", {"mi": "&#x003C0;"})])},
+            id="issue-498-sum",
+        ),
+        pytest.param(
+            r"\prod_{0}^{\pi}",
+            {"msubsup": MultiDict([("mo", "&#x0220F;"), ("mrow", {"mn": "0"}), ("mrow", {"mi": "&#x003C0;"})])},
+            id="issue-498-prod",
+        ),
+        pytest.param(
+            r"\sum_{\substack{1\le i\le n\\ i\ne j}}",
+            {
+                "msub": MultiDict(
+                    [
+                        ("mo", "&#x02211;"),
+                        (
+                            "mrow",
+                            {
+                                "mstyle": {
+                                    "@scriptlevel": "1",
+                                    "mtable": MultiDict(
+                                        [
+                                            (
+                                                "mtr",
+                                                {
+                                                    "mtd": MultiDict(
+                                                        [
+                                                            ("mn", "1"),
+                                                            ("mo", "&#x02264;"),
+                                                            ("mi", "i"),
+                                                            ("mo", "&#x02264;"),
+                                                            ("mi", "n"),
+                                                        ]
+                                                    )
+                                                },
+                                            ),
+                                            (
+                                                "mtr",
+                                                {"mtd": MultiDict([("mi", "i"), ("mo", "&#x02260;"), ("mi", "j")])},
+                                            ),
+                                        ]
+                                    ),
+                                }
+                            },
+                        ),
+                    ]
+                )
+            },
+            id="issue-75-2-rows",
+        ),
+    ],
+)
+def test_converter_inline(latex: str, json: MultiDict) -> None:
+    """
+    Tests for cases where display="inline" should produce different results than
+    display="block"
+    """
+    parent = {
+        "math": {
+            "@xmlns": "http://www.w3.org/1998/Math/MathML",
+            "@display": "inline",
+            "mrow": json,
+        }
+    }
+    bf = BadgerFish(dict_type=MultiDict)
+    math = bf.etree(parent)
+    assert convert(latex) == _convert(math[0])
 
 
 def test_attributes() -> None:

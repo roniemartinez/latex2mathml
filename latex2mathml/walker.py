@@ -29,12 +29,13 @@ class Node(NamedTuple):
     modifier: Optional[str] = None
 
 
-def walk(data: str) -> list[Node]:
+def walk(data: str, display: str = "inline") -> list[Node]:
     tokens = tokenize(data)
-    return _walk(tokens)
+    block = True if display == "block" else False
+    return _walk(tokens, block=block)
 
 
-def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 0) -> list[Node]:
+def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 0, block: bool = False) -> list[Node]:
     group: list[Node] = []
     token: str
     has_available_tokens = False
@@ -83,6 +84,9 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
                         raise LimitsMustFollowMathOperatorError
                 except IndexError:
                     raise LimitsMustFollowMathOperatorError
+            elif block and previous.token in (commands.SUMMATION, commands.PRODUCT):
+                # block summation and product should result in limited sub/sup
+                modifier = commands.LIMITS
 
             if token == commands.SUBSCRIPT and previous.token == commands.SUPERSCRIPT and previous.children is not None:
                 children = tuple(_walk(tokens, terminator=terminator, limit=1))
