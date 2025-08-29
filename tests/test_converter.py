@@ -4298,6 +4298,22 @@ def test_attributes() -> None:
         convert("1", display="block")
         == '<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mn>1</mn></mrow></math>'
     )
+    assert (
+        convert("1", xmlns=None, display=None)
+        == '<math><mrow><mn>1</mn></mrow></math>'
+    )
+    assert (
+        convert("1", xmlns=None, alttext='this is alt text')
+        == '<math display="inline" alttext="this is alt text"><mrow><mn>1</mn></mrow></math>'
+    )
+    assert (
+        convert("1", xmlns=None, alt_latex=True)
+        == '<math display="inline" alttext="1"><mrow><mn>1</mn></mrow></math>'
+    )
+    assert (
+        convert("1", attributes={"id": "eq1"})
+        == '<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline" id="eq1"><mrow><mn>1</mn></mrow></math>'
+    )
 
 
 def test_convert_to_element() -> None:

@@ -2,7 +2,7 @@ import copy
 import enum
 import re
 from collections import OrderedDict
-from typing import Iterable, Iterator, Optional
+from typing import Dict, Iterable, Iterator, Optional
 from xml.etree.cElementTree import Element, SubElement, tostring
 from xml.sax.saxutils import unescape
 
@@ -64,22 +64,34 @@ class Mode(enum.Enum):
 
 def convert(
     latex: str,
-    xmlns: str = "http://www.w3.org/1998/Math/MathML",
-    display: str = "inline",
+    xmlns: Optional[str] = "http://www.w3.org/1998/Math/MathML",
+    display: Optional[str] = "inline",
+    alt_latex: bool = False,
+    alttext: Optional[str] = None,
+    attributes: Dict[str, str] = dict(),
     parent: Optional[Element] = None,
 ) -> str:
-    math = convert_to_element(latex, xmlns, display, parent)
+    math = convert_to_element(latex, xmlns, display, alt_latex, alttext, attributes, parent)
     return _convert(math)
 
 
 def convert_to_element(
     latex: str,
-    xmlns: str = "http://www.w3.org/1998/Math/MathML",
-    display: str = "inline",
+    xmlns: Optional[str] = "http://www.w3.org/1998/Math/MathML",
+    display: Optional[str] = "inline",
+    alt_latex: bool = False,
+    alttext: Optional[str] = None,
+    attributes: Dict[str, str] = dict(),
     parent: Optional[Element] = None,
 ) -> Element:
+    if alt_latex and alttext is not None:
+        raise ValueError('alttext and alt_latex should not be set simultaneously.')
+
     tag = "math"
-    attrib = {"xmlns": xmlns, "display": display}
+    alttext = latex if alt_latex else alttext
+    attrib = {"xmlns": xmlns, "display": display, "alttext": alttext}
+    attrib = {k: v for (k, v) in attrib.items() if v is not None}
+    attrib.update(attributes)
     math = Element(tag, attrib) if parent is None else SubElement(parent, tag, attrib)
     row = SubElement(math, "mrow")
     _convert_group(iter(walk(latex, display)), row)
