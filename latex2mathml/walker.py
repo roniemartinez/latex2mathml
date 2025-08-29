@@ -31,7 +31,7 @@ class Node(NamedTuple):
 
 def walk(data: str, display: str = "inline") -> list[Node]:
     tokens = tokenize(data)
-    block = True if display == "block" else False
+    block = display == "block"
     return _walk(tokens, block=block)
 
 
