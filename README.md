@@ -80,6 +80,10 @@ required arguments:
 - https://www.giss.nasa.gov/tools/latex/ltx-86.html
 - https://ftp.gwdg.de/pub/ctan/info/l2tabu/english/l2tabuen.pdf
 
+### Gotchas
+
+Note that when opening a `\begin{align*}` you must use `align*` there is no support for the regular `\begin{align}`
+
 ### MathML
 
 - http://www.xmlmind.com/tutorials/MathML/
