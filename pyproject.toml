@@ -44,7 +44,7 @@ include = ["latex2mathml/unimathsymbols.txt"]
 [tool.poetry.group.dev.dependencies]
 autoflake = "^2.3.1"
 black = "^25.9.0"
-isort = "^6.0.1"
+isort = "^6.1.0"
 multidict = "^6.6.4"
 mypy = "^1.18.2"
 pyproject-flake8 = "^7.0.0"
