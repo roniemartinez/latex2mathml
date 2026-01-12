@@ -20,6 +20,15 @@ from latex2mathml.converter import _convert, convert, convert_to_element
         pytest.param("+", {"mo": "&#x0002B;"}, id="single-operator"),
         pytest.param("3-2", MultiDict([("mn", "3"), ("mo", "&#x02212;"), ("mn", "2")]), id="numbers-and-operators"),
         pytest.param(
+            r"3 \times 2", MultiDict([("mn", "3"), ("mo", "&#x000D7;"), ("mn", "2")]), id="numbers-and-operators-times"
+        ),
+        pytest.param(
+            r"3 \cdot 2", MultiDict([("mn", "3"), ("mo", "&#x000B7;"), ("mn", "2")]), id="numbers-and-operators-cdot"
+        ),
+        pytest.param(
+            r"3 \div 2", MultiDict([("mn", "3"), ("mo", "&#x000F7;"), ("mn", "2")]), id="numbers-and-operators-div"
+        ),
+        pytest.param(
             "3x*2",
             MultiDict([("mn", "3"), ("mi", "x"), ("mo", "&#x0002A;"), ("mn", "2")]),
             id="numbers-identifiers-and-operators",
