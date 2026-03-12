@@ -10,7 +10,8 @@ updates:
     schedule:
       interval: "daily"
     commit-message:
-      prefix: "⬆️ "
+      prefix: "chore"
+      include: "scope"
 
   # Version updates for GitHub Actions
   - package-ecosystem: "github-actions"
@@ -18,4 +19,5 @@ updates:
     schedule:
       interval: "daily"
     commit-message:
-      prefix: "⬆️ "
+      prefix: "chore"
+      include: "scope"
