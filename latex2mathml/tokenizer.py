@@ -11,7 +11,7 @@ PATTERN = re.compile(
     (%[^\n]+) |                                 # comment
     (a-zA-Z) |                                  # letter
     ([_^])(\d) |                                # number succeeding an underscore or a caret
-    (-?\d+(?:\.\d+)?\s*(?:{'|'.join(UNITS)})) | # dimension
+    (-?\d+(?:\.\d+)?\s*(?:{"|".join(UNITS)})) | # dimension
     (\d+(?:\.\d+)?) |                           # integer/decimal
     (\.\d*) |                                   # dot (.) or decimal can start with just a dot
     (\\[\\\[\]{{}}\s!,:>;|_%#$&]) |             # escaped characters

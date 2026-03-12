@@ -19,14 +19,14 @@ classifiers = [
     "Topic :: Text Processing :: Markup :: HTML",
     "Topic :: Text Processing :: Markup :: LaTeX",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation :: CPython",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
 ]
 
@@ -38,50 +38,32 @@ repository = "https://github.com/roniemartinez/latex2mathml"
 latex2mathml = "latex2mathml.converter:main"
 l2m = "latex2mathml.converter:main"
 
-[tool.poetry]
-include = ["latex2mathml/unimathsymbols.txt"]
+[dependency-groups]
+dev = [
+    "multidict>=6.7.1",
+    "mypy>=1.19.1",
+    "pre-commit>=4.0.0",
+    "pytest>=8.4.2",
+    "pytest-clarity>=1.0.1",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.11.0",
+    "xmljson>=0.2.1",
+]
 
-[tool.poetry.group.dev.dependencies]
-autoflake = "^2.3.1"
-black = "^25.11.0"
-isort = "^6.1.0"
-multidict = "^6.7.1"
-mypy = "^1.19.1"
-pyproject-flake8 = "^7.0.0"
-pytest = "^8.4.2"
-pytest-clarity = "^1.0.1"
-pytest-cov = "^7.0.0"
-xmljson = "^0.2.1"
-
-[tool.isort]
-line_length = 120
-multi_line_output = 3
-force_grid_wrap = 0
-use_parentheses = true
-include_trailing_comma = true
-ensure_newline_before_comments = true
-atomic = true
-
-[tool.black]
+[tool.ruff]
 line-length = 120
-target-version = ['py39']
-include = '\.pyi?$'
-extend-exclude = """
-# A regex preceded with ^/ will apply only to files and directories
-# in the root of the project.
-^/setup.py
-"""
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E203"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["latex2mathml"]
 
 [tool.mypy]
 disallow_untyped_defs = true
 ignore_missing_imports = true
-
-[tool.flake8]
-max-line-length = 120
-extend-ignore = ["E203"]
-extend-exclude = """
-setup.py,
-"""
 
 [tool.pytest.ini_options]
 addopts = """\
@@ -94,5 +76,8 @@ addopts = """\
 """
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["latex2mathml"]

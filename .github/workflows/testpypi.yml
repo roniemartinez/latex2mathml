@@ -13,18 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.x'
-      - name: Install dependencies
-        run: |
-          pip3 install -U pip setuptools poetry
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
       - name: Build package
-        run: |
-          poetry config repositories.testpypi https://test.pypi.org/legacy/
-          poetry config http-basic.testpypi ${{ secrets.TEST_PYPI_USER }} ${{ secrets.TEST_PYPI_PASS }}
-          poetry build
+        run: uv build
       - name: Publish package
-        run: |
-          poetry publish -r testpypi
+        run: uv publish --publish-url https://test.pypi.org/legacy/
+        env:
+          UV_PUBLISH_USERNAME: ${{ secrets.TEST_PYPI_USER }}
+          UV_PUBLISH_PASSWORD: ${{ secrets.TEST_PYPI_PASS }}
