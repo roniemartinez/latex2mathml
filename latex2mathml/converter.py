@@ -349,11 +349,13 @@ def _convert_command(node: Node, parent: Element, font: Optional[dict[str, Optio
                 p = SubElement(_parent, "mstyle", displaystyle="false", scriptlevel="0")
                 _convert_group(iter([child]), p, font)
         elif command == commands.SIDESET:
-            Node(
-                r"\style",
-                children=(Node(r"\mspace", attributes={"width": "-0.167em"}),),
-                attributes={"scriptlevel": "0"},
-            ),
+            (
+                Node(
+                    r"\style",
+                    children=(Node(r"\mspace", attributes={"width": "-0.167em"}),),
+                    attributes={"scriptlevel": "0"},
+                ),
+            )
             left, right = node.children
             _convert_group(iter([left]), _parent, font)
             fill = SubElement(_parent, "mstyle", scriptlevel="0")
