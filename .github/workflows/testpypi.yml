@@ -11,6 +11,9 @@ on:
 jobs:
   testpypi:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v6.0.2
       - name: Install uv
@@ -19,6 +22,3 @@ jobs:
         run: uv build
       - name: Publish package
         run: uv publish --publish-url https://test.pypi.org/legacy/
-        env:
-          UV_PUBLISH_USERNAME: ${{ secrets.TEST_PYPI_USER }}
-          UV_PUBLISH_PASSWORD: ${{ secrets.TEST_PYPI_PASS }}
