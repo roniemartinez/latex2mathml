@@ -383,24 +383,24 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
 
 
 def _make_subsup(node: Node) -> tuple[str, tuple[Node, ...]]:
-    # TODO: raise error instead of assertion
-    assert node.token == commands.BRACES
-    try:
-        assert (
-            node.children is not None
-            and 2 <= len(node.children[0].children) <= 3
-            and node.children[0].token
-            in (
-                commands.SUBSUP,
-                commands.SUBSCRIPT,
-                commands.SUPERSCRIPT,
-            )
+    if node.token != commands.BRACES:
+        raise MissingSuperScriptOrSubscriptError
+    if (
+        node.children is not None
+        and len(node.children) > 0
+        and node.children[0].children is not None
+        and 2 <= len(node.children[0].children) <= 3
+        and node.children[0].token
+        in (
+            commands.SUBSUP,
+            commands.SUBSCRIPT,
+            commands.SUPERSCRIPT,
         )
+    ):
         token = node.children[0].token
         children = node.children[0].children[1:]
         return token, children
-    except IndexError:
-        return "", ()
+    return "", ()
 
 
 def _get_dimension(node: Node) -> str:
