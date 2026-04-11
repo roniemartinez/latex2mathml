@@ -406,6 +406,24 @@ def test_double_subscripts_raises() -> None:
         convert("f_a_b")
 
 
+@pytest.mark.parametrize(
+    "latex, expected_inner",
+    [
+        (
+            r"\hat{x}",
+            '<mover accent="true"><mrow><mi>x</mi></mrow><mo>&#x0005E;</mo></mover>',
+        ),
+        (
+            r"\hat{abc}",
+            '<mover accent="true"><mrow><mi>a</mi><mi>b</mi><mi>c</mi></mrow><mo>&#x0005E;</mo></mover>',
+        ),
+    ],
+)
+def test_issue_543_hat_is_accent(latex: str, expected_inner: str) -> None:
+    expected = f'<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>{expected_inner}</mrow></math>'
+    assert convert(latex, display="block") == expected
+
+
 def test_convert_to_element(snapshot: str) -> None:
     from xml.etree.ElementTree import tostring
 
