@@ -1,4 +1,3 @@
-import codecs
 import os
 import re
 
@@ -11,7 +10,7 @@ def convert_symbol(symbol: str) -> str | None:
 
 def parse_symbols() -> dict[str, str]:
     _symbols: dict[str, str] = {}
-    with codecs.open(SYMBOLS_FILE, encoding="utf-8") as f:
+    with open(SYMBOLS_FILE, encoding="utf-8") as f:
         for line in f:
             if line.startswith("#"):
                 continue
@@ -32,6 +31,7 @@ def parse_symbols() -> dict[str, str]:
             r"\bigcirc": _symbols[r"\lgwhtcircle"],
             r"\Box": _symbols[r"\square"],
             r"\circledS": "024C8",
+            r"\degree": "000B0",
             r"\diagdown": "02572",
             r"\diagup": "02571",
             r"\dots": "02026",
