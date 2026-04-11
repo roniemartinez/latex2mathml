@@ -11,6 +11,9 @@ on:
 jobs:
   pypi:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v6.0.2
       - name: Install uv
@@ -19,6 +22,3 @@ jobs:
         run: uv build
       - name: Publish package
         run: uv publish
-        env:
-          UV_PUBLISH_USERNAME: ${{ secrets.PYPI_USER }}
-          UV_PUBLISH_PASSWORD: ${{ secrets.PYPI_PASS }}
