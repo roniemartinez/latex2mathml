@@ -20,7 +20,7 @@ PATTERN = re.compile(
     #  color, fbox, href, hbox, mbox, style, text, textbf, textit, textrm, textsf, texttt
     (\\(?:color|fbox|hbox|href|mbox|style|text|textbf|textit|textrm|textsf|texttt))\s*{{([^}}]*)}} |
     (\\[cdt]?frac)\s*([.\d])\s*([.\d])? |       # fractions
-    (\\math[a-z]+)({{)([a-zA-Z])(}}) |          # commands starting with math
+    (\\math(?!ring)[a-z]+)({{)([a-zA-Z])(}}) |  # math font commands (excluding \mathring)
     (\\[a-zA-Z]+) |                             # other commands
     (\S)                                        # non-space character
     """,
@@ -37,7 +37,7 @@ def tokenize(latex_string: str, skip_comments: bool = True) -> Iterator[str]:
     """
     for match in PATTERN.finditer(latex_string):
         tokens = tuple(filter(lambda x: x is not None, match.groups()))
-        if tokens[0].startswith(commands.MATH):
+        if tokens[0].startswith(commands.MATH) and tokens[0] != commands.MATHRING:
             full_math = "".join(tokens)
             symbol = convert_symbol(full_math)
             if symbol:

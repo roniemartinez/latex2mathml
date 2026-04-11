@@ -273,7 +273,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[dict[str, Optio
     if command == commands.LEFT:
         parent = SubElement(parent, "mrow")
 
-    _append_prefix_element(node, parent)
+    _append_delimiter_element(node, parent, is_prefix=True)
 
     alignment, column_lines = _get_alignment_and_column_lines(node.alignment)
 
@@ -389,7 +389,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[dict[str, Optio
 
     _add_diacritic(command, element)
 
-    _append_postfix_element(node, parent)
+    _append_delimiter_element(node, parent, is_prefix=False)
 
 
 def _add_diacritic(command: str, parent: Element) -> None:
@@ -405,47 +405,31 @@ def _convert_and_append_command(command: str, parent: Element, attributes: Optio
     mo.text = "&#x{};".format(code_point) if code_point else command
 
 
-def _append_prefix_element(node: Node, parent: Element) -> None:
+def _append_delimiter_element(node: Node, parent: Element, is_prefix: bool) -> None:
+    delimiter_index = 0 if is_prefix else 1
     size = "2.047em"
     if parent.attrib.get("displaystyle") == "false" or node.token == commands.TBINOM:
         size = "1.2em"
     if node.token in (r"\pmatrix", commands.PMOD):
-        _convert_and_append_command(r"\lparen", parent)
+        _convert_and_append_command(r"\lparen" if is_prefix else r"\rparen", parent)
     elif node.token in (commands.BINOM, commands.DBINOM, commands.TBINOM):
-        _convert_and_append_command(r"\lparen", parent, {"minsize": size, "maxsize": size})
+        _convert_and_append_command(r"\lparen" if is_prefix else r"\rparen", parent, {"minsize": size, "maxsize": size})
     elif node.token == r"\bmatrix":
-        _convert_and_append_command(r"\lbrack", parent)
+        _convert_and_append_command(r"\lbrack" if is_prefix else r"\rbrack", parent)
     elif node.token == r"\Bmatrix":
-        _convert_and_append_command(r"\lbrace", parent)
+        _convert_and_append_command(r"\lbrace" if is_prefix else r"\rbrace", parent)
     elif node.token == r"\vmatrix":
         _convert_and_append_command(r"\vert", parent)
     elif node.token == r"\Vmatrix":
         _convert_and_append_command(r"\Vert", parent)
-    elif node.token in (commands.FRAC, commands.GENFRAC) and node.delimiter is not None and node.delimiter[0] != ".":
+    elif (
+        node.token in (commands.FRAC, commands.GENFRAC)
+        and node.delimiter is not None
+        and node.delimiter[delimiter_index] != "."
+    ):
         # TODO: use 1.2em if inline
-        _convert_and_append_command(node.delimiter[0], parent, {"minsize": size, "maxsize": size})
-
-
-def _append_postfix_element(node: Node, parent: Element) -> None:
-    size = "2.047em"
-    if parent.attrib.get("displaystyle") == "false" or node.token == commands.TBINOM:
-        size = "1.2em"
-    if node.token in (r"\pmatrix", commands.PMOD):
-        _convert_and_append_command(r"\rparen", parent)
-    elif node.token in (commands.BINOM, commands.DBINOM, commands.TBINOM):
-        _convert_and_append_command(r"\rparen", parent, {"minsize": size, "maxsize": size})
-    elif node.token == r"\bmatrix":
-        _convert_and_append_command(r"\rbrack", parent)
-    elif node.token == r"\Bmatrix":
-        _convert_and_append_command(r"\rbrace", parent)
-    elif node.token == r"\vmatrix":
-        _convert_and_append_command(r"\vert", parent)
-    elif node.token == r"\Vmatrix":
-        _convert_and_append_command(r"\Vert", parent)
-    elif node.token in (commands.FRAC, commands.GENFRAC) and node.delimiter is not None and node.delimiter[1] != ".":
-        # TODO: use 1.2em if inline
-        _convert_and_append_command(node.delimiter[1], parent, {"minsize": size, "maxsize": size})
-    elif node.token == commands.SKEW and node.attributes is not None:
+        _convert_and_append_command(node.delimiter[delimiter_index], parent, {"minsize": size, "maxsize": size})
+    elif not is_prefix and node.token == commands.SKEW and node.attributes is not None:
         SubElement(parent, "mspace", width="-" + node.attributes["width"])
 
 

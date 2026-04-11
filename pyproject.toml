@@ -40,14 +40,13 @@ l2m = "latex2mathml.converter:main"
 
 [dependency-groups]
 dev = [
-    "multidict>=6.7.1",
     "mypy>=1.19.1",
     "pre-commit>=4.5.1",
     "pytest>=9.0.2",
     "pytest-clarity>=1.0.1",
     "pytest-cov>=7.0.0",
     "ruff>=0.15.6",
-    "xmljson>=0.2.1",
+    "syrupy>=5.1.0",
 ]
 
 [tool.ruff]
