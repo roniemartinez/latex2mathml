@@ -71,7 +71,7 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
             if (token == previous.token == commands.SUPERSCRIPT) and (
                 previous.children is not None
                 and len(previous.children) >= 2
-                and previous.children[1].token != commands.PRIME
+                and previous.children[1].token not in commands.PRIME_UPGRADE
             ):
                 raise DoubleSuperscriptsError
 
@@ -130,21 +130,35 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
             except IndexError:
                 previous = Node(token="")  # left operand can be empty if not present
 
-            if (
+            previous_is_prime_super = (
                 previous.token == commands.SUPERSCRIPT
                 and previous.children is not None
                 and len(previous.children) >= 2
-                and previous.children[1].token != commands.PRIME
-            ):
-                raise DoubleSuperscriptsError
+                and (
+                    previous.children[1].token in commands.PRIME_UPGRADE
+                    or previous.children[1].token == commands.QPRIME
+                    or previous.children[1].token == commands.MULTIPRIMES
+                )
+            )
 
             if (
                 previous.token == commands.SUPERSCRIPT
                 and previous.children is not None
                 and len(previous.children) >= 2
-                and previous.children[1].token == commands.PRIME
+                and not previous_is_prime_super
             ):
-                node = Node(token=commands.SUPERSCRIPT, children=(previous.children[0], Node(token=commands.DPRIME)))
+                raise DoubleSuperscriptsError
+
+            if previous_is_prime_super and previous.children is not None:
+                prev_prime = previous.children[1]
+                if prev_prime.token in commands.PRIME_UPGRADE:
+                    new_prime = Node(token=commands.PRIME_UPGRADE[prev_prime.token])
+                elif prev_prime.token == commands.QPRIME:
+                    new_prime = Node(token=commands.MULTIPRIMES, text="&#x02032;" * 5)
+                else:
+                    existing = prev_prime.text or ""
+                    new_prime = Node(token=commands.MULTIPRIMES, text=existing + "&#x02032;")
+                node = Node(token=commands.SUPERSCRIPT, children=(previous.children[0], new_prime))
             elif previous.token == commands.SUBSCRIPT and previous.children is not None:
                 node = Node(
                     token=commands.SUBSUP,

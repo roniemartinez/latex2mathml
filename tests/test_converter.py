@@ -117,6 +117,10 @@ from latex2mathml.converter import convert, convert_to_element
         pytest.param(r"\Bigg[\bigg[\Big[\big[[", id="big"),
         pytest.param(r"x\rm {\text{var} = 1+\{b\}}\sf \Delta", id="global-fonts"),
         pytest.param("f'(x) = 2x, f''(x) = 2", id="prime"),
+        pytest.param("f'''(x)", id="issue-462-triple-prime"),
+        pytest.param("f''''(x)", id="issue-462-quadruple-prime"),
+        pytest.param("f'''''(x)", id="issue-462-quintuple-prime"),
+        pytest.param("f''''''''(x)", id="issue-462-octuple-prime"),
         pytest.param("'x", id="prime-no-base"),
         pytest.param(
             r"""|\,|\:|\>|\;|\\|\!|\quad|\qquad|\hspace1em|\hspace{10ex}|\enspace|\hskip1em|\kern-1.5pt|\mkern10mu|

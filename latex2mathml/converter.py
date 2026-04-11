@@ -472,6 +472,10 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[dict[str, Option
     token = node.token
     attributes = node.attributes or {}
     symbol = convert_symbol(token)
+    if token == commands.MULTIPRIMES:
+        element = SubElement(parent, "mi", attrib=attributes)
+        element.text = node.text or ""
+        return
     if re.match(r"\d+(.\d+)?", token):
         element = SubElement(parent, "mn", attrib=attributes)
         element.text = token
