@@ -1,6 +1,7 @@
 import pytest
 
 from latex2mathml.converter import convert, convert_to_element
+from latex2mathml.exceptions import DoubleSubscriptsError, DoubleSuperscriptsError
 
 
 @pytest.mark.parametrize(
@@ -386,6 +387,23 @@ def test_converter(snapshot: str, latex: str) -> None:
 )
 def test_converter_inline(snapshot: str, latex: str) -> None:
     assert convert(latex) == snapshot
+
+
+@pytest.mark.parametrize(
+    "latex",
+    [
+        "f^a^b",
+        "f''^2",
+    ],
+)
+def test_double_superscripts_raises(latex: str) -> None:
+    with pytest.raises(DoubleSuperscriptsError):
+        convert(latex)
+
+
+def test_double_subscripts_raises() -> None:
+    with pytest.raises(DoubleSubscriptsError):
+        convert("f_a_b")
 
 
 def test_convert_to_element(snapshot: str) -> None:
