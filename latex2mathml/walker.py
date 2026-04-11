@@ -18,6 +18,8 @@ from latex2mathml.exceptions import (
 from latex2mathml.symbols_parser import convert_symbol
 from latex2mathml.tokenizer import tokenize
 
+MULTIPRIMES = "multiprimes"
+
 
 class Node(NamedTuple):
     token: str
@@ -130,21 +132,27 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
             except IndexError:
                 previous = Node(token="")  # left operand can be empty if not present
 
-            if (
-                previous.token == commands.SUPERSCRIPT
-                and previous.children is not None
-                and len(previous.children) >= 2
-                and previous.children[1].token != commands.PRIME
-            ):
+            prev_is_super_with_children = (
+                previous.token == commands.SUPERSCRIPT and previous.children is not None and len(previous.children) >= 2
+            )
+            prev_prime = previous.children[1] if prev_is_super_with_children and previous.children else None
+            prev_is_prime_token = prev_prime is not None and (
+                prev_prime.token in commands.PRIME_UPGRADE
+                or prev_prime.token == commands.QPRIME
+                or prev_prime.token == MULTIPRIMES
+            )
+
+            if prev_is_super_with_children and not prev_is_prime_token:
                 raise DoubleSuperscriptsError
 
-            if (
-                previous.token == commands.SUPERSCRIPT
-                and previous.children is not None
-                and len(previous.children) >= 2
-                and previous.children[1].token == commands.PRIME
-            ):
-                node = Node(token=commands.SUPERSCRIPT, children=(previous.children[0], Node(token=commands.DPRIME)))
+            if prev_is_prime_token and previous.children is not None and prev_prime is not None:
+                if prev_prime.token in commands.PRIME_UPGRADE:
+                    new_prime = Node(token=commands.PRIME_UPGRADE[prev_prime.token])
+                elif prev_prime.token == commands.QPRIME:
+                    new_prime = Node(token=MULTIPRIMES, text="5")
+                else:
+                    new_prime = Node(token=MULTIPRIMES, text=str(int(prev_prime.text or "0") + 1))
+                node = Node(token=commands.SUPERSCRIPT, children=(previous.children[0], new_prime))
             elif previous.token == commands.SUBSCRIPT and previous.children is not None:
                 node = Node(
                     token=commands.SUBSUP,

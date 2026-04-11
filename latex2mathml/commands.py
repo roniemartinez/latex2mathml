@@ -19,6 +19,13 @@ SUPERSCRIPT = "^"
 APOSTROPHE = "'"
 PRIME = r"\prime"
 DPRIME = r"\dprime"
+TRPRIME = r"\trprime"
+QPRIME = r"\qprime"
+PRIME_UPGRADE = {
+    PRIME: DPRIME,
+    DPRIME: TRPRIME,
+    TRPRIME: QPRIME,
+}
 
 LEFT = r"\left"
 MIDDLE = r"\middle"

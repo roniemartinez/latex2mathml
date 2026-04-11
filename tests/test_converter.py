@@ -1,6 +1,7 @@
 import pytest
 
 from latex2mathml.converter import convert, convert_to_element
+from latex2mathml.exceptions import DoubleSubscriptsError, DoubleSuperscriptsError
 
 
 @pytest.mark.parametrize(
@@ -117,6 +118,10 @@ from latex2mathml.converter import convert, convert_to_element
         pytest.param(r"\Bigg[\bigg[\Big[\big[[", id="big"),
         pytest.param(r"x\rm {\text{var} = 1+\{b\}}\sf \Delta", id="global-fonts"),
         pytest.param("f'(x) = 2x, f''(x) = 2", id="prime"),
+        pytest.param("f'''(x)", id="issue-462-triple-prime"),
+        pytest.param("f''''(x)", id="issue-462-quadruple-prime"),
+        pytest.param("f'''''(x)", id="issue-462-quintuple-prime"),
+        pytest.param("f''''''''(x)", id="issue-462-octuple-prime"),
         pytest.param("'x", id="prime-no-base"),
         pytest.param(
             r"""|\,|\:|\>|\;|\\|\!|\quad|\qquad|\hspace1em|\hspace{10ex}|\enspace|\hskip1em|\kern-1.5pt|\mkern10mu|
@@ -382,6 +387,23 @@ def test_converter(snapshot: str, latex: str) -> None:
 )
 def test_converter_inline(snapshot: str, latex: str) -> None:
     assert convert(latex) == snapshot
+
+
+@pytest.mark.parametrize(
+    "latex",
+    [
+        "f^a^b",
+        "f''^2",
+    ],
+)
+def test_double_superscripts_raises(latex: str) -> None:
+    with pytest.raises(DoubleSuperscriptsError):
+        convert(latex)
+
+
+def test_double_subscripts_raises() -> None:
+    with pytest.raises(DoubleSubscriptsError):
+        convert("f_a_b")
 
 
 def test_convert_to_element(snapshot: str) -> None:

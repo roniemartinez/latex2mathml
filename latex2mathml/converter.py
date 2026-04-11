@@ -8,7 +8,7 @@ from xml.sax.saxutils import unescape
 
 from latex2mathml import commands
 from latex2mathml.symbols_parser import convert_symbol
-from latex2mathml.walker import Node, walk
+from latex2mathml.walker import MULTIPRIMES, Node, walk
 
 COLUMN_ALIGNMENT_MAP = {"r": "right", "l": "left", "c": "center"}
 OPERATORS = (
@@ -472,6 +472,11 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[dict[str, Option
     token = node.token
     attributes = node.attributes or {}
     symbol = convert_symbol(token)
+    if token == MULTIPRIMES:
+        count = int(node.text or "0")
+        element = SubElement(parent, "mi", attrib=attributes)
+        element.text = "&#x02032;" * count
+        return
     if re.match(r"\d+(.\d+)?", token):
         element = SubElement(parent, "mn", attrib=attributes)
         element.text = token
