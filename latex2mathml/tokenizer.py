@@ -8,21 +8,23 @@ UNITS = ("in", "mm", "cm", "pt", "em", "ex", "pc", "bp", "dd", "cc", "sp", "mu")
 
 PATTERN = re.compile(
     rf"""
-    (%[^\n]+) |                                 # comment
-    (a-zA-Z) |                                  # letter
-    ([_^])(\d) |                                # number succeeding an underscore or a caret
-    (-?\d+(?:\.\d+)?\s*(?:{"|".join(UNITS)})) | # dimension
-    (\d+(?:\.\d+)?) |                           # integer/decimal
-    (\.\d*) |                                   # dot (.) or decimal can start with just a dot
-    (\\[\\\[\]{{}}\s!,:>;|_%#$&]) |             # escaped characters
-    (\\(?:begin|end)\s*{{[a-zA-Z]+\*?}}) |      # begin or end
-    (\\operatorname\s*{{[a-zA-Z\s*]+\*?\s*}}) | # operatorname
-    #  color, fbox, href, hbox, mbox, style, text, textbf, textit, textrm, textsf, texttt
-    (\\(?:color|fbox|hbox|href|mbox|style|text|textbf|textit|textrm|textsf|texttt))\s*{{([^}}]*)}} |
-    (\\[cdt]?frac)\s*([.\d])\s*([.\d])? |       # fractions
-    (\\math(?!ring)[a-z]+)({{)([a-zA-Z])(}}) |  # math font commands (excluding \mathring)
-    (\\[a-zA-Z]+) |                             # other commands
-    (\S)                                        # non-space character
+    (?P<comment>%[^\n]+) |
+    (?P<letter>a-zA-Z) |
+    (?P<subsup_operator>[_^])(?P<subsup_digit>\d) |
+    (?P<dimension>-?\d+(?:\.\d+)?\s*(?:{"|".join(UNITS)})) |
+    (?P<number>\d+(?:\.\d+)?) |
+    (?P<dot_decimal>\.\d*) |
+    (?P<escaped>\\[\\\[\]{{}}\s!,:>;|_%#$&]) |
+    (?P<begin_end>\\(?:begin|end)\s*{{[a-zA-Z]+\*?}}) |
+    (?P<operatorname>\\operatorname(?:withlimits|\*)?\s*{{[a-zA-Z\s*]+\*?\s*}}) |
+    (?P<text_cmd>\\(?:cla(?:p|ss)|color(?!box)|emph|fbox|hbox|href|llap|mbox|rlap|style
+        |tag\*?|text(?:bf|color|it|md|normal|rm|sf|tt|up)?|underbar))\s*{{(?P<text_content>[^}}]*)}} |
+    (?P<frac_cmd>\\[cdt]?frac)\s*(?P<frac_arg1>[.\d])\s*(?P<frac_arg2>[.\d])? |
+    (?P<math_font>\\math(?!ring|bin|close|inner|op|open|ord|punct|rel|strut)
+        [a-z]+)(?P<math_open>{{)(?P<math_arg>[a-zA-Z])(?P<math_close>}}) |
+    (?P<verb>\\verb(?P<verb_delim>.)(?P<verb_content>.*?)(?P=verb_delim)) |
+    (?P<command>\\[a-zA-Z]+) |
+    (?P<char>\S)
     """,
     re.VERBOSE,
 )
@@ -37,7 +39,11 @@ def tokenize(latex_string: str, skip_comments: bool = True) -> Iterator[str]:
     """
     for match in PATTERN.finditer(latex_string):
         tokens = tuple(filter(lambda x: x is not None, match.groups()))
-        if tokens[0].startswith(commands.MATH) and tokens[0] != commands.MATHRING:
+        if tokens[0].startswith(commands.VERB):
+            yield commands.VERB
+            yield tokens[2]  # verb_content
+            continue
+        if tokens[0].startswith(commands.MATH) and tokens[0] not in commands.MATH_NON_FONT_COMMANDS:
             full_math = "".join(tokens)
             symbol = convert_symbol(full_math)
             if symbol:

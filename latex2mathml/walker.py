@@ -76,8 +76,8 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
                 raise DoubleSuperscriptsError
 
             modifier = None
-            if previous.token == commands.LIMITS:
-                modifier = commands.LIMITS
+            if previous.token in (commands.LIMITS, commands.NOLIMITS):
+                modifier = previous.token
                 try:
                     previous = group.pop()
                     if not previous.token.startswith("\\"):  # TODO: Complete list of operators
@@ -156,10 +156,12 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
         elif token in commands.COMMANDS_WITH_TWO_PARAMETERS:
             attributes = None
             children = tuple(_walk(tokens, terminator=terminator, limit=2))
-            if token in (commands.OVERSET, commands.UNDERSET):
+            if token in (commands.OVERSET, commands.STACKREL, commands.UNDERSET):
                 children = children[::-1]
             node = Node(token=token, children=children, attributes=attributes)
-        elif token in commands.COMMANDS_WITH_ONE_PARAMETER or token.startswith(commands.MATH):
+        elif token in commands.COMMANDS_WITH_ONE_PARAMETER or (
+            token.startswith(commands.MATH) and token not in (commands.MATHSTRUT, commands.MATHCHOICE)
+        ):
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
             node = Node(token=token, children=children)
         elif token == commands.NOT:
@@ -177,7 +179,7 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
                 continue
             except NoAvailableTokensError:
                 node = Node(token=token)
-        elif token in (commands.XLEFTARROW, commands.XRIGHTARROW):
+        elif token in commands.EXTENSIBLE_ARROWS:
             children = tuple(_walk(tokens, terminator=terminator, limit=1))
             if children[0].token == commands.OPENING_BRACKET:
                 children = (
@@ -192,6 +194,56 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
             if children[0].token == commands.BRACES and children[0].children is not None:
                 children = children[0].children
             node = Node(token=token, attributes={"width": children[0].token})
+        elif token in (commands.RAISE, commands.LOWER, commands.MOVELEFT, commands.MOVERIGHT):
+            dim_children = tuple(_walk(tokens, terminator=terminator, limit=1))
+            dim = dim_children[0].token if dim_children else "0"
+            if dim_children[0].token == commands.BRACES and dim_children[0].children:
+                dim = dim_children[0].children[0].token
+            children = tuple(_walk(tokens, terminator=terminator, limit=1))
+            if token == commands.RAISE:
+                attributes = {"voffset": dim, "height": f"+{dim}", "depth": f"-{dim}"}
+            elif token == commands.LOWER:
+                attributes = {"voffset": f"-{dim}", "height": f"-{dim}", "depth": f"+{dim}"}
+            elif token == commands.MOVELEFT:
+                attributes = {"lspace": f"-{dim}"}
+            else:
+                attributes = {"lspace": dim}
+            node = Node(token=token, children=children, attributes=attributes)
+        elif token == commands.RULE:
+            dims = []
+            for _ in range(2):
+                arg = tuple(_walk(tokens, terminator=terminator, limit=1))[0]
+                if arg.token == commands.BRACES and arg.children:
+                    dims.append(arg.children[0].token)
+                else:
+                    dims.append(arg.token)
+            node = Node(token=token, attributes={"width": dims[0], "height": dims[1]})
+        elif token == commands.SMASH:
+            children = tuple(_walk(tokens, terminator=terminator, limit=1))
+            attributes = {"height": "0px", "depth": "0px"}
+            if children[0].token == commands.OPENING_BRACKET:
+                opt = tuple(_walk(tokens, terminator=commands.CLOSING_BRACKET))[:-1]
+                if opt and opt[0].token == "b":
+                    attributes = {"depth": "0px"}
+                elif opt and opt[0].token == "t":
+                    attributes = {"height": "0px"}
+                children = tuple(_walk(tokens, terminator=terminator, limit=1))
+            node = Node(token=token, children=children, attributes=attributes)
+        elif token == commands.TEXTCOLOR:
+            color = next(tokens)
+            children = tuple(_walk(tokens, terminator=terminator, limit=1))
+            node = Node(token=commands.COLOR, children=children, attributes={"mathcolor": color})
+        elif token in (commands.COLORBOX, commands.FCOLORBOX):
+            arg_count = 3 if token == commands.FCOLORBOX else 2
+            args = []
+            for _ in range(arg_count):
+                arg_node = tuple(_walk(tokens, terminator=terminator, limit=1))[0]
+                args.append("".join(c.token for c in arg_node.children) if arg_node.children else "")
+            if token == commands.FCOLORBOX:
+                attributes = {"mathbackground": args[1], "border-color": args[0]}
+            else:
+                attributes = {"mathbackground": args[0]}
+            node = Node(token=token, text=args[-1], attributes=attributes)
         elif token == commands.COLOR:
             attributes = {"mathcolor": next(tokens)}
             children = tuple(_walk(tokens, terminator=terminator))
@@ -202,6 +254,24 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
             if sibling:
                 group.append(sibling)
             break
+        elif token in (commands.LEFTROOT, commands.UPROOT):
+            # Consume the numeric argument but discard — MathML has no root index positioning
+            tuple(_walk(tokens, terminator=terminator, limit=1))
+            continue
+        elif token == commands.MATHCHOICE:
+            choices = tuple(_walk(tokens, terminator=terminator, limit=4))
+            # In block (display) mode use arg 0, in inline (text) mode use arg 1
+            choice = choices[0] if block else choices[1]
+            if choice.children:
+                for child in choice.children:
+                    group.append(child)
+            else:
+                group.append(choice)
+            continue
+        elif token == commands.CLASS:
+            attributes = {"class": next(tokens)}
+            next_node = tuple(_walk(tokens, terminator=terminator, limit=1))[0]
+            node = next_node._replace(attributes=attributes)
         elif token == commands.STYLE:
             attributes = {"style": next(tokens)}
             next_node = tuple(_walk(tokens, terminator=terminator, limit=1))[0]
@@ -209,16 +279,26 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
         elif token in (
             *commands.BIG.keys(),
             *commands.BIG_OPEN_CLOSE.keys(),
+            commands.CLAP,
+            commands.EMPH,
             commands.FBOX,
             commands.HBOX,
+            commands.LLAP,
             commands.MBOX,
             commands.MIDDLE,
+            commands.RLAP,
+            commands.TAG,
+            commands.TAG_STAR,
             commands.TEXT,
             commands.TEXTBF,
             commands.TEXTIT,
+            commands.TEXTMD,
+            commands.TEXTNORMAL,
             commands.TEXTRM,
             commands.TEXTSF,
             commands.TEXTTT,
+            commands.TEXTUP,
+            commands.VERB,
         ):
             node = Node(token=token, text=next(tokens))
         elif token == commands.HREF:

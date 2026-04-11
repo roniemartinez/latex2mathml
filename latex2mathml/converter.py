@@ -196,7 +196,20 @@ def _convert_group(nodes: Iterable[Node], parent: Element, font: Optional[dict[s
         if token in (*commands.MSTYLE_SIZES, *commands.STYLES):
             node = Node(token=token, children=tuple(n for n in nodes))
             _convert_command(node, parent, _font)
-        elif token in commands.CONVERSION_MAP or token in (commands.MOD, commands.PMOD):
+        elif token == commands.UNICODE:
+            arg = node.children[0] if node.children else None
+            if arg and arg.children:
+                code = "".join(c.token for c in arg.children)
+            elif arg:
+                code = arg.token
+            else:
+                code = ""
+            element = SubElement(parent, "mi")
+            element.text = f"&#x{code.lstrip('x')};"
+        elif token == commands.RULE:
+            attrs = node.attributes or {}
+            SubElement(parent, "mspace", mathbackground="black", width=attrs["width"], height=attrs["height"])
+        elif token in commands.CONVERSION_MAP or token in (commands.MOD, commands.PMOD, commands.POD):
             _convert_command(node, parent, _font)
         elif token in commands.LOCAL_FONTS and node.children is not None:
             _convert_group(iter(node.children), parent, commands.LOCAL_FONTS[token])
@@ -262,7 +275,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[dict[str, Optio
         parent = SubElement(parent, "mpadded", width="0")
     elif command in (commands.TBINOM, commands.HBOX, commands.MBOX, commands.TFRAC):
         parent = SubElement(parent, "mstyle", displaystyle="false", scriptlevel="0")
-    elif command in (commands.MOD, commands.PMOD):
+    elif command in (commands.MOD, commands.PMOD, commands.POD):
         SubElement(parent, "mspace", width="1em")
 
     tag, attributes = copy.deepcopy(commands.CONVERSION_MAP[command])
@@ -288,9 +301,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[dict[str, Optio
         tag = "munder"
     elif command == commands.SUBSUP and modifier in (commands.LIMITS, commands.OVERBRACE, commands.UNDERBRACE):
         tag = "munderover"
-    elif (
-        command in (commands.XLEFTARROW, commands.XRIGHTARROW) and node.children is not None and len(node.children) == 2
-    ):
+    elif command in commands.EXTENSIBLE_ARROWS and node.children is not None and len(node.children) == 2:
         tag = "munderover"
 
     element = SubElement(parent, tag, attributes)
@@ -300,15 +311,20 @@ def _convert_command(node: Node, parent: Element, font: Optional[dict[str, Optio
     elif command in (commands.MOD, commands.PMOD):
         element.text = "mod"
         SubElement(parent, "mspace", width="0.333em")
+    elif command == commands.POD:
+        pass
     elif command == commands.BMOD:
         element.text = "mod"
-    elif command in (commands.XLEFTARROW, commands.XRIGHTARROW):
+    elif command in commands.EXTENSIBLE_ARROWS:
         style = SubElement(element, "mstyle", scriptlevel="0")
         arrow = SubElement(style, "mo")
-        if command == commands.XLEFTARROW:
-            arrow.text = "&#x2190;"
-        elif command == commands.XRIGHTARROW:
-            arrow.text = "&#x2192;"
+        arrow.text = commands.EXTENSIBLE_ARROWS[command]
+    elif command == commands.BRA:
+        SubElement(element, "mo", stretchy="false").text = "&#x27E8;"
+    elif command == commands.KET:
+        SubElement(element, "mo").text = "&#x2223;"
+    elif command == commands.BRAKET:
+        SubElement(element, "mo", stretchy="false").text = "&#x27E8;"
     elif node.text is not None:
         if command == commands.MIDDLE:
             element.text = "&#x{};".format(convert_symbol(node.text))
@@ -325,9 +341,21 @@ def _convert_command(node: Node, parent: Element, font: Optional[dict[str, Optio
                     _row = SubElement(parent, "mrow")
                     _convert_group(iter(walk(text)), _row)
         else:
-            if command == commands.FBOX:
+            if command in (
+                commands.FBOX,
+                commands.LLAP,
+                commands.RLAP,
+                commands.CLAP,
+                commands.COLORBOX,
+                commands.FCOLORBOX,
+            ):
                 element = SubElement(element, "mtext")
-            element.text = node.text.replace(" ", "&#x000A0;")
+            if command == commands.TAG:
+                element.text = f"({node.text})"
+            elif command == commands.TAG_STAR:
+                element.text = node.text
+            else:
+                element.text = node.text.replace(" ", "&#x000A0;")
             _set_font(element, "mtext", font)
     elif node.delimiter is not None and command not in (commands.FRAC, commands.GENFRAC):
         if node.delimiter != ".":
@@ -336,7 +364,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[dict[str, Optio
 
     if node.children is not None:
         _parent = element
-        if command in (commands.LEFT, commands.MOD, commands.PMOD):
+        if command in (commands.LEFT, commands.MOD, commands.PMOD, commands.POD):
             _parent = parent
         if command in commands.MATRICES:
             if command == commands.CASES:
@@ -373,7 +401,7 @@ def _convert_command(node: Node, parent: Element, font: Optional[dict[str, Optio
                 ),
             )
             _convert_group(iter([new_node]), _parent, font)
-        elif command in (commands.XLEFTARROW, commands.XRIGHTARROW):
+        elif command in commands.EXTENSIBLE_ARROWS:
             for child in node.children:
                 padded = SubElement(
                     _parent,
@@ -388,6 +416,13 @@ def _convert_command(node: Node, parent: Element, font: Optional[dict[str, Optio
             _convert_group(iter(node.children), _parent, font)
 
     _add_diacritic(command, element)
+
+    if command == commands.BRA:
+        SubElement(element, "mo").text = "&#x2223;"
+    elif command == commands.KET:
+        SubElement(element, "mo", stretchy="false").text = "&#x27E9;"
+    elif command == commands.BRAKET:
+        SubElement(element, "mo", stretchy="false").text = "&#x27E9;"
 
     _append_delimiter_element(node, parent, is_prefix=False)
 
@@ -410,7 +445,7 @@ def _append_delimiter_element(node: Node, parent: Element, is_prefix: bool) -> N
     size = "2.047em"
     if parent.attrib.get("displaystyle") == "false" or node.token == commands.TBINOM:
         size = "1.2em"
-    if node.token in (r"\pmatrix", commands.PMOD):
+    if node.token in (r"\pmatrix", commands.PMOD, commands.POD):
         _convert_and_append_command(r"\lparen" if is_prefix else r"\rparen", parent)
     elif node.token in (commands.BINOM, commands.DBINOM, commands.TBINOM):
         _convert_and_append_command(r"\lparen" if is_prefix else r"\rparen", parent, {"minsize": size, "maxsize": size})
@@ -473,25 +508,42 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[dict[str, Option
         element = SubElement(mpadded, "mtext")
         element.text = "&#x029F8;"
     elif token in (
+        commands.ARGMAX,
+        commands.ARGMIN,
         commands.DETERMINANT,
         commands.GCD,
         commands.INTOP,
         commands.INJLIM,
         commands.LIMINF,
         commands.LIMSUP,
+        commands.PLIM,
         commands.PR,
         commands.PROJLIM,
+        commands.VARINJLIM,
+        commands.VARLIMINF,
+        commands.VARLIMSUP,
+        commands.VARPROJLIM,
     ):
         element = SubElement(parent, "mo", attrib={"movablelimits": "true", **attributes})
         texts = {
+            commands.ARGMAX: "arg&#x02009;max",
+            commands.ARGMIN: "arg&#x02009;min",
             commands.INJLIM: "inj&#x02006;lim",
             commands.INTOP: "&#x0222B;",
             commands.LIMINF: "lim&#x02006;inf",
             commands.LIMSUP: "lim&#x02006;sup",
             commands.PROJLIM: "proj&#x02006;lim",
+            commands.VARINJLIM: "inj&#x02006;lim",
+            commands.VARLIMINF: "lim&#x02006;inf",
+            commands.VARLIMSUP: "lim&#x02006;sup",
+            commands.VARPROJLIM: "proj&#x02006;lim",
         }
         element.text = texts.get(token, token[1:])
         _set_font(element, element.tag, font)
+    elif token in (commands.MATHSTRUT, commands.STRUT):
+        mpadded = SubElement(parent, "mpadded", width="0px")
+        mphantom = SubElement(mpadded, "mphantom")
+        SubElement(mphantom, "mo", stretchy="false").text = "&#x00028;"
     elif token == commands.IDOTSINT:
         _parent = SubElement(parent, "mrow", attrib=attributes)
         for s in ("&#x0222B;", "&#x022EF;", "&#x0222B;"):
@@ -524,6 +576,12 @@ def _convert_symbol(node: Node, parent: Element, font: Optional[dict[str, Option
         _set_font(mi_t, mi_t.tag, font)
         _set_font(mi_e, mi_e.tag, font)
         _set_font(mi_x, mi_x.tag, font)
+    elif token.startswith(commands.OPERATORNAMEWITHLIMITS):
+        element = SubElement(parent, "mo", attrib={"movablelimits": "true", **attributes})
+        element.text = token[len(commands.OPERATORNAMEWITHLIMITS) + 1 : -1]
+    elif token.startswith(r"\operatorname*"):
+        element = SubElement(parent, "mo", attrib={"movablelimits": "true", **attributes})
+        element.text = token[15:-1]
     elif token.startswith(commands.OPERATORNAME):
         element = SubElement(parent, "mo", attrib=attributes)
         element.text = token[14:-1]
