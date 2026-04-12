@@ -660,7 +660,7 @@ CONVERSION_MAP: dict[str, tuple[str, dict]] = {
     SQRT: ("msqrt", {}),
     ROOT: ("mroot", {}),
     EMPH: ("mtext", {"mathvariant": "italic"}),
-    HREF: ("mtext", {}),
+    HREF: ("mrow", {}),
     TEXT: ("mtext", {}),
     TEXTBF: ("mtext", {"mathvariant": "bold"}),
     TEXTIT: ("mtext", {"mathvariant": "italic"}),
