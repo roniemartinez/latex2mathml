@@ -188,7 +188,7 @@ wheels = [
 
 [[package]]
 name = "latex2mathml"
-version = "3.80.0a1"
+version = "3.80.0"
 source = { editable = "." }
 
 [package.dev-dependencies]

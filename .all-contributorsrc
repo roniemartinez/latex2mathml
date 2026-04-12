@@ -280,6 +280,6 @@
   "repoType": "github",
   "repoHost": "https://github.com",
   "skipCi": false,
-  "commitConvention": "none",
+  "commitConvention": "angular",
   "commitType": "docs"
 }
