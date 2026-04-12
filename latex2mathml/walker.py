@@ -296,7 +296,7 @@ def _walk(tokens: Iterator[str], terminator: Optional[str] = None, limit: int = 
             commands.MIDDLE,
             commands.RLAP,
             commands.TAG,
-            commands.TAG_STAR,
+            commands.TAGSTAR,
             commands.TEXT,
             commands.TEXTBF,
             commands.TEXTIT,
