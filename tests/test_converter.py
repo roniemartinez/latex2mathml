@@ -1,6 +1,6 @@
 import pytest
 
-from latex2mathml.converter import convert, convert_to_element
+from latex2mathml.converter import Converter, convert, convert_to_element
 from latex2mathml.exceptions import DoubleSubscriptsError, DoubleSuperscriptsError
 
 
@@ -404,6 +404,39 @@ def test_double_superscripts_raises(latex: str) -> None:
 def test_double_subscripts_raises() -> None:
     with pytest.raises(DoubleSubscriptsError):
         convert("f_a_b")
+
+
+def test_declare_math_operator() -> None:
+    assert convert(r"\DeclareMathOperator{\Res}{Res} \Res_{z=0}", display="block") == convert(
+        r"\operatorname{Res}_{z=0}", display="block"
+    )
+
+
+def test_newcommand_no_args() -> None:
+    assert convert(r"\newcommand{\R}{\mathbb{R}} \R", display="block") == convert(r"\mathbb{R}", display="block")
+
+
+def test_newcommand_with_args() -> None:
+    assert convert(r"\newcommand{\norm}[1]{\left\|#1\right\|} \norm{x}", display="block") == convert(
+        r"\left\|x\right\|", display="block"
+    )
+
+
+def test_def_command() -> None:
+    assert convert(r"\def\R{\mathbb{R}} \R", display="block") == convert(r"\mathbb{R}", display="block")
+
+
+def test_reusable_macro() -> None:
+    c = Converter(display="block")
+    c.convert(r"\newcommand{\R}{\mathbb{R}}")
+    assert c.convert(r"\R") == convert(r"\mathbb{R}", display="block")
+
+
+def test_newenvironment() -> None:
+    assert convert(
+        r"\newenvironment{myenv}{\begin{bmatrix}}{\end{bmatrix}} \begin{myenv} 1 & 2 \\ 3 & 4 \end{myenv}",
+        display="block",
+    ) == convert(r"\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}", display="block")
 
 
 def test_convert_to_element(snapshot: str) -> None:

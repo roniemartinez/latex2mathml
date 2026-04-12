@@ -150,6 +150,10 @@ SUMMATION = r"\sum"
 PRODUCT = r"\prod"
 LIMIT = (r"\lim", r"\sup", r"\inf", r"\max", r"\min")
 
+NEWCOMMAND = r"\newcommand"
+NEWENVIRONMENT = r"\newenvironment"
+DEF = r"\def"
+DECLAREMATHOPERATOR = r"\DeclareMathOperator"
 OPERATORNAME = r"\operatorname"
 OPERATORNAMESTAR = r"\operatorname*"
 OPERATORNAMEWITHLIMITS = r"\operatornamewithlimits"

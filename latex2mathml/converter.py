@@ -87,7 +87,7 @@ class Converter:
         self.xmlns = xmlns
         self.display = display
         self.equation_counter = 0
-        self.macros: dict[str, str] = {}
+        self.macros: dict[str, tuple[list[str], int]] = {}
 
     def convert(self, latex: str, parent: Optional[Element] = None) -> str:
         return self._convert(self.convert_to_element(latex, parent))
@@ -97,7 +97,7 @@ class Converter:
         attrib = {"xmlns": self.xmlns, "display": self.display}
         math = Element(tag, attrib) if parent is None else SubElement(parent, tag, attrib)
         row = SubElement(math, "mrow")
-        self._convert_group(iter(walk(latex, self.display)), row)
+        self._convert_group(iter(walk(latex, self.display, macros=self.macros)), row)
         return math
 
     def reset(self) -> None:
