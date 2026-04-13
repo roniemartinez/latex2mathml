@@ -19,6 +19,7 @@ from latex2mathml.symbols_parser import convert_symbol
 from latex2mathml.tokenizer import tokenize
 
 MULTIPRIMES = "multiprimes"
+MAX_MACRO_DEPTH = 100
 
 
 class Node(NamedTuple):
@@ -43,6 +44,7 @@ def _walk(
     limit: int = 0,
     block: bool = False,
     macros: Optional[dict[str, tuple[list[str], int]]] = None,
+    depth: int = 0,
 ) -> list[Node]:
     _macros = {} if macros is None else macros
     group: list[Node] = []
@@ -481,8 +483,10 @@ def _walk(
             _parse_newenvironment(tokens, _macros)
             continue
         elif token in _macros:
+            if depth >= MAX_MACRO_DEPTH:
+                raise RecursionError(f"Maximum macro expansion depth ({MAX_MACRO_DEPTH}) exceeded")
             expanded_tokens = _expand_macro(token, tokens, _macros)
-            group.extend(_walk(iter(expanded_tokens), terminator=None, block=block, macros=_macros))
+            group.extend(_walk(iter(expanded_tokens), terminator=None, block=block, macros=_macros, depth=depth + 1))
             continue
         else:
             node = Node(token=token)
