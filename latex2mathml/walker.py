@@ -653,8 +653,16 @@ def _parse_newenvironment(tokens: Iterator[str], macros: dict[str, tuple[list[st
 
 def _parse_def(tokens: Iterator[str], macros: dict[str, tuple[list[str], int]]) -> None:
     name = next(tokens)
-    body = _consume_brace_arg(tokens)
-    macros[name] = (body, 0)
+    nargs = 0
+    for t in tokens:
+        if t == "#":
+            param = next(tokens, "")
+            if param.isdigit():
+                nargs = max(nargs, int(param))
+        elif t == "{":
+            break
+    body = _read_until_close_brace(tokens)
+    macros[name] = (body, nargs)
 
 
 def _parse_declare_math_operator(tokens: Iterator[str], macros: dict[str, tuple[list[str], int]]) -> None:
