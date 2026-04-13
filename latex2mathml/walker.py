@@ -554,13 +554,16 @@ def _get_environment_node(
         begin_body, _ = _macros[env_key]
         end_body, _ = _macros.get(f"\\end{{{environment}}}", ([], 0))
         terminator = rf"{commands.END}{{{environment}}}"
-        content_nodes = tuple(_walk(tokens, terminator=terminator, macros=_macros))
-        if len(content_nodes) and content_nodes[-1].token == terminator:
-            content_nodes = content_nodes[:-1]
-        content_tokens: list[str] = []
-        for node in content_nodes:
-            content_tokens.append(node.token)
-        expanded = [*begin_body, *content_tokens, *end_body]
+        raw_tokens: list[str] = []
+        found_end = False
+        for t in tokens:
+            if t == terminator:
+                found_end = True
+                break
+            raw_tokens.append(t)
+        if not found_end:
+            raise MissingEndError
+        expanded = [*begin_body, *raw_tokens, *end_body]
         result = _walk(iter(expanded), macros=_macros)
         if len(result) == 1:
             return result[0]
