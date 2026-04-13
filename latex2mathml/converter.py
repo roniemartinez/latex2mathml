@@ -298,7 +298,7 @@ class Converter:
                         mtext = None
                     else:
                         _row = SubElement(parent, "mrow")
-                        self._convert_group(iter(walk(text)), _row)
+                        self._convert_group(iter(walk(text, macros=self.macros)), _row)
             else:
                 if command in (
                     commands.FBOX,
