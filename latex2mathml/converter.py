@@ -1,9 +1,8 @@
 import copy
 import enum
 import re
-from collections import OrderedDict
 from typing import Iterable, Iterator, Optional
-from xml.etree.cElementTree import Element, SubElement, tostring
+from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.sax.saxutils import unescape
 
 from latex2mathml import commands
@@ -86,7 +85,6 @@ class Converter:
     def __init__(self, xmlns: str = "http://www.w3.org/1998/Math/MathML", display: str = "inline") -> None:
         self.xmlns = xmlns
         self.display = display
-        self.equation_counter = 0
         self.macros: dict[str, tuple[list[str], int]] = {}
 
     def convert(self, latex: str, parent: Optional[Element] = None) -> str:
@@ -101,7 +99,6 @@ class Converter:
         return math
 
     def reset(self) -> None:
-        self.equation_counter = 0
         self.macros = {}
 
     @staticmethod
@@ -129,28 +126,28 @@ class Converter:
                 row = SubElement(parent, "mtr")
 
             if cell is None:
-                col_alignment, col_index = _get_column_alignment(alignment, col_alignment, col_index)
-                cell = _make_matrix_cell(row, col_alignment)
+                col_alignment, col_index = self._get_column_alignment(alignment, col_alignment, col_index)
+                cell = self._make_matrix_cell(row, col_alignment)
 
             if node.token == commands.BRACES:
                 self._convert_group(iter([node]), cell)
             elif node.token == "&":
-                _set_cell_alignment(cell, hfil_indexes)
+                self._set_cell_alignment(cell, hfil_indexes)
                 hfil_indexes = []
-                col_alignment, col_index = _get_column_alignment(alignment, col_alignment, col_index)
-                cell = _make_matrix_cell(row, col_alignment)
+                col_alignment, col_index = self._get_column_alignment(alignment, col_alignment, col_index)
+                cell = self._make_matrix_cell(row, col_alignment)
                 if command in (commands.SPLIT, commands.ALIGN) and col_index % 2 == 0:
                     SubElement(cell, "mi")
             elif node.token in (commands.DOUBLEBACKSLASH, commands.CARRIAGERETURN):
-                _set_cell_alignment(cell, hfil_indexes)
+                self._set_cell_alignment(cell, hfil_indexes)
                 hfil_indexes = []
                 row_index += 1
                 if col_index > max_col_size:
                     max_col_size = col_index
                 col_index = 0
-                col_alignment, col_index = _get_column_alignment(alignment, col_alignment, col_index)
+                col_alignment, col_index = self._get_column_alignment(alignment, col_alignment, col_index)
                 row = SubElement(parent, "mtr")
-                cell = _make_matrix_cell(row, col_alignment)
+                cell = self._make_matrix_cell(row, col_alignment)
             elif node.token == commands.HLINE:
                 row_lines.append("solid")
             elif node.token == commands.HDASHLINE:
@@ -166,7 +163,7 @@ class Converter:
         if col_index > max_col_size:
             max_col_size = col_index
 
-        if any(r == "solid" for r in row_lines):
+        if any(r != "none" for r in row_lines):
             parent.set("rowlines", " ".join(row_lines))
 
         if row is not None and cell is not None and len(cell) == 0:
@@ -222,9 +219,7 @@ class Converter:
             parent = SubElement(parent, "mstyle", scriptlevel="1")
         elif command == commands.CASES:
             parent = SubElement(parent, "mrow")
-            lbrace = SubElement(
-                parent, "mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")])
-            )
+            lbrace = SubElement(parent, "mo", {"stretchy": "true", "fence": "true", "form": "prefix"})
             lbrace.text = "&#x{};".format(convert_symbol(commands.LBRACE))
         elif command in (commands.DBINOM, commands.DFRAC):
             parent = SubElement(parent, "mstyle", displaystyle="true", scriptlevel="0")
@@ -247,7 +242,7 @@ class Converter:
 
         self._append_delimiter_element(node, parent, is_prefix=True)
 
-        alignment, column_lines = _get_alignment_and_column_lines(node.alignment)
+        alignment, column_lines = self._get_alignment_and_column_lines(node.alignment)
 
         if column_lines:
             attributes["columnlines"] = column_lines
@@ -289,7 +284,7 @@ class Converter:
                 element.text = "&#x{};".format(convert_symbol(node.text))
             elif command == commands.HBOX:
                 mtext: Optional[Element] = element
-                for text, mode in _separate_by_mode(node.text):
+                for text, mode in self._separate_by_mode(node.text):
                     if mode == Mode.TEXT:
                         if mtext is None:
                             mtext = SubElement(parent, tag, attributes)
@@ -358,16 +353,16 @@ class Converter:
                     padded = SubElement(
                         _parent,
                         "mpadded",
-                        OrderedDict(
-                            [("width", "+0.833em"), ("lspace", "0.556em"), ("voffset", "-.2em"), ("height", "-.2em")]
-                        ),
+                        {"width": "+0.833em", "lspace": "0.556em", "voffset": "-.2em", "height": "-.2em"},
                     )
                     self._convert_group(iter([child]), padded, font)
                     SubElement(padded, "mspace", depth=".25em")
             else:
                 self._convert_group(iter(node.children), _parent, font)
 
-        _add_diacritic(command, element)
+        if command in commands.DIACRITICS:
+            text, diacritic_attrs = copy.deepcopy(commands.DIACRITICS[command])
+            SubElement(element, "mo", diacritic_attrs).text = text
 
         if command == commands.BRA:
             SubElement(element, "mo").text = "&#x2223;"
@@ -378,32 +373,33 @@ class Converter:
 
         self._append_delimiter_element(node, parent, is_prefix=False)
 
-    @staticmethod
-    def _append_delimiter_element(node: Node, parent: Element, is_prefix: bool) -> None:
+    def _append_delimiter_element(self, node: Node, parent: Element, is_prefix: bool) -> None:
         delimiter_index = 0 if is_prefix else 1
         size = "2.047em"
         if parent.attrib.get("displaystyle") == "false" or node.token == commands.TBINOM:
             size = "1.2em"
         if node.token in (r"\pmatrix", commands.PMOD, commands.POD):
-            _convert_and_append_command(r"\lparen" if is_prefix else r"\rparen", parent)
+            self._convert_and_append_command(r"\lparen" if is_prefix else r"\rparen", parent)
         elif node.token in (commands.BINOM, commands.DBINOM, commands.TBINOM):
-            _convert_and_append_command(
+            self._convert_and_append_command(
                 r"\lparen" if is_prefix else r"\rparen", parent, {"minsize": size, "maxsize": size}
             )
         elif node.token == r"\bmatrix":
-            _convert_and_append_command(r"\lbrack" if is_prefix else r"\rbrack", parent)
+            self._convert_and_append_command(r"\lbrack" if is_prefix else r"\rbrack", parent)
         elif node.token == r"\Bmatrix":
-            _convert_and_append_command(r"\lbrace" if is_prefix else r"\rbrace", parent)
+            self._convert_and_append_command(r"\lbrace" if is_prefix else r"\rbrace", parent)
         elif node.token == r"\vmatrix":
-            _convert_and_append_command(r"\vert", parent)
+            self._convert_and_append_command(r"\vert", parent)
         elif node.token == r"\Vmatrix":
-            _convert_and_append_command(r"\Vert", parent)
+            self._convert_and_append_command(r"\Vert", parent)
         elif (
             node.token in (commands.FRAC, commands.GENFRAC)
             and node.delimiter is not None
             and node.delimiter[delimiter_index] != "."
         ):
-            _convert_and_append_command(node.delimiter[delimiter_index], parent, {"minsize": size, "maxsize": size})
+            self._convert_and_append_command(
+                node.delimiter[delimiter_index], parent, {"minsize": size, "maxsize": size}
+            )
         elif not is_prefix and node.token == commands.SKEW and node.attributes is not None:
             SubElement(parent, "mspace", width="-" + node.attributes["width"])
 
@@ -515,7 +511,7 @@ class Converter:
             element.text = token[len(commands.OPERATORNAMESTAR) + 1 : -1]
         elif token.startswith(commands.OPERATORNAME):
             element = SubElement(parent, "mo", attrib=attributes)
-            element.text = token[14:-1]
+            element.text = token[len(commands.OPERATORNAME) + 1 : -1]
         elif token.startswith(commands.BACKSLASH):
             element = SubElement(parent, "mi", attrib=attributes)
             if symbol:
@@ -538,75 +534,70 @@ class Converter:
         if _font is not None:
             element.attrib["mathvariant"] = _font
 
+    @staticmethod
+    def _set_cell_alignment(cell: Element, hfil_indexes: list[bool]) -> None:
+        if cell is not None and any(hfil_indexes) and len(hfil_indexes) > 1:
+            if hfil_indexes[0] and not hfil_indexes[-1]:
+                cell.attrib["columnalign"] = "right"
+            elif not hfil_indexes[0] and hfil_indexes[-1]:
+                cell.attrib["columnalign"] = "left"
 
-def _set_cell_alignment(cell: Element, hfil_indexes: list[bool]) -> None:
-    if cell is not None and any(hfil_indexes) and len(hfil_indexes) > 1:
-        if hfil_indexes[0] and not hfil_indexes[-1]:
-            cell.attrib["columnalign"] = "right"
-        elif not hfil_indexes[0] and hfil_indexes[-1]:
-            cell.attrib["columnalign"] = "left"
+    @staticmethod
+    def _get_column_alignment(
+        alignment: Optional[str], column_alignment: Optional[str], column_index: int
+    ) -> tuple[Optional[str], int]:
+        if alignment:
+            try:
+                column_alignment = COLUMN_ALIGNMENT_MAP.get(alignment[column_index])
+            except IndexError:
+                column_alignment = COLUMN_ALIGNMENT_MAP.get(alignment[column_index % len(alignment)])
+            column_index += 1
+        return column_alignment, column_index
 
+    @staticmethod
+    def _make_matrix_cell(row: Element, column_alignment: Optional[str]) -> Element:
+        if column_alignment:
+            return SubElement(row, "mtd", columnalign=column_alignment)
+        return SubElement(row, "mtd")
 
-def _get_column_alignment(
-    alignment: Optional[str], column_alignment: Optional[str], column_index: int
-) -> tuple[Optional[str], int]:
-    if alignment:
-        try:
-            column_alignment = COLUMN_ALIGNMENT_MAP.get(alignment[column_index])
-        except IndexError:
-            column_alignment = COLUMN_ALIGNMENT_MAP.get(alignment[column_index % len(alignment)])
-        column_index += 1
-    return column_alignment, column_index
+    @staticmethod
+    def _get_alignment_and_column_lines(
+        alignment: Optional[str] = None,
+    ) -> tuple[Optional[str], Optional[str]]:
+        if alignment is None:
+            return None, None
+        if "|" not in alignment:
+            return alignment, None
+        _alignment = ""
+        column_lines: list[str] = []
+        for c in alignment:
+            if c == "|":
+                column_lines.append("solid")
+            else:
+                _alignment += c
+            if len(_alignment) - len(column_lines) == 2:
+                column_lines.append("none")
+        return _alignment, " ".join(column_lines)
 
-
-def _make_matrix_cell(row: Element, column_alignment: Optional[str]) -> Element:
-    if column_alignment:
-        return SubElement(row, "mtd", columnalign=column_alignment)
-    return SubElement(row, "mtd")
-
-
-def _get_alignment_and_column_lines(alignment: Optional[str] = None) -> tuple[Optional[str], Optional[str]]:
-    if alignment is None:
-        return None, None
-    if "|" not in alignment:
-        return alignment, None
-    _alignment = ""
-    column_lines = []
-    for c in alignment:
-        if c == "|":
-            column_lines.append("solid")
-        else:
-            _alignment += c
-        if len(_alignment) - len(column_lines) == 2:
-            column_lines.append("none")
-    return _alignment, " ".join(column_lines)
-
-
-def _separate_by_mode(text: str) -> Iterator[tuple[str, Mode]]:
-    string = ""
-    is_math_mode = False
-    for match in MATH_MODE_PATTERN.findall(text):
-        if match == "$":
+    @staticmethod
+    def _separate_by_mode(text: str) -> Iterator[tuple[str, Mode]]:
+        string = ""
+        is_math_mode = False
+        for match in MATH_MODE_PATTERN.findall(text):
+            if match == "$":
+                yield string, Mode.MATH if is_math_mode else Mode.TEXT
+                string = ""
+                is_math_mode = not is_math_mode
+            else:
+                string += match
+        if len(string):
             yield string, Mode.MATH if is_math_mode else Mode.TEXT
-            string = ""
-            is_math_mode = not is_math_mode
-        else:
-            string += match
-    if len(string):
-        yield string, Mode.MATH if is_math_mode else Mode.TEXT
 
-
-def _add_diacritic(command: str, parent: Element) -> None:
-    if command in commands.DIACRITICS:
-        text, attributes = copy.deepcopy(commands.DIACRITICS[command])
-        element = SubElement(parent, "mo", attributes)
-        element.text = text
-
-
-def _convert_and_append_command(command: str, parent: Element, attributes: Optional[dict[str, str]] = None) -> None:
-    code_point = convert_symbol(command)
-    mo = SubElement(parent, "mo", attributes if attributes is not None else {})
-    mo.text = "&#x{};".format(code_point) if code_point else command
+    @staticmethod
+    def _convert_and_append_command(command: str, parent: Element, attributes: Optional[dict[str, str]] = None) -> None:
+        code_point = convert_symbol(command)
+        mo = SubElement(parent, "mo", attributes if attributes is not None else {})
+        mo.text = "&#x{};".format(code_point) if code_point else command
 
 
 def convert(

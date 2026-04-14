@@ -1,4 +1,4 @@
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 from typing import Optional
 
 OPENING_BRACE = "{"
@@ -7,11 +7,7 @@ BRACES = "{}"
 
 OPENING_BRACKET = "["
 CLOSING_BRACKET = "]"
-BRACKETS = "[]"
 
-OPENING_PARENTHESIS = "("
-CLOSING_PARENTHESIS = ")"
-PARENTHESES = "()"
 
 SUBSUP = "_^"
 SUBSCRIPT = "_"
@@ -346,6 +342,7 @@ VPHANTOM = r"\vphantom"
 MATH_NON_FONT_COMMANDS = (
     MATHRING,
     MATHBIN,
+    MATHCHOICE,
     MATHCLOSE,
     MATHINNER,
     MATHOP,
@@ -510,14 +507,14 @@ COMMANDS_WITH_TWO_PARAMETERS = (
 
 BIG: dict[str, tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
-    r"\Bigg": ("mo", OrderedDict([("minsize", "2.470em"), ("maxsize", "2.470em")])),
-    r"\bigg": ("mo", OrderedDict([("minsize", "2.047em"), ("maxsize", "2.047em")])),
-    r"\Big": ("mo", OrderedDict([("minsize", "1.623em"), ("maxsize", "1.623em")])),
-    r"\big": ("mo", OrderedDict([("minsize", "1.2em"), ("maxsize", "1.2em")])),
+    r"\Bigg": ("mo", {"minsize": "2.470em", "maxsize": "2.470em"}),
+    r"\bigg": ("mo", {"minsize": "2.047em", "maxsize": "2.047em"}),
+    r"\Big": ("mo", {"minsize": "1.623em", "maxsize": "1.623em"}),
+    r"\big": ("mo", {"minsize": "1.2em", "maxsize": "1.2em"}),
 }
 
 BIG_OPEN_CLOSE = {
-    command + postfix: (tag, OrderedDict([("stretchy", "true"), ("fence", "true"), *attrib.items()]))
+    command + postfix: (tag, {"stretchy": "true", "fence": "true", **attrib})
     for command, (tag, attrib) in BIG.items()
     for postfix in "lmr"
 }
@@ -547,7 +544,19 @@ STYLES: dict[str, tuple[str, dict]] = {
 CONVERSION_MAP: dict[str, tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
     # tables
-    **{matrix: ("mtable", {}) for matrix in MATRICES},
+    **{
+        matrix: ("mtable", {})
+        for matrix in MATRICES
+        if matrix
+        not in (
+            DISPLAYLINES,
+            EQALIGN,
+            EQALIGNNO,
+            SMALLMATRIX,
+            SPLIT,
+            ALIGN,
+        )
+    },
     DISPLAYLINES: ("mtable", {"rowspacing": "0.5em", "columnspacing": "1em", "displaystyle": "true"}),
     EQALIGN: ("mtable", {"displaystyle": "true", "columnspacing": "0em"}),
     EQALIGNNO: ("mtable", {"displaystyle": "true", "columnspacing": "0em"}),
@@ -652,9 +661,9 @@ CONVERSION_MAP: dict[str, tuple[str, dict]] = {
     **BIG_OPEN_CLOSE,
     **MSTYLE_SIZES,
     **{limit: ("mo", {}) for limit in LIMIT},
-    LEFT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")])),
-    MIDDLE: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("lspace", "0.05em"), ("rspace", "0.05em")])),
-    RIGHT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "postfix")])),
+    LEFT: ("mo", {"stretchy": "true", "fence": "true", "form": "prefix"}),
+    MIDDLE: ("mo", {"stretchy": "true", "fence": "true", "lspace": "0.05em", "rspace": "0.05em"}),
+    RIGHT: ("mo", {"stretchy": "true", "fence": "true", "form": "postfix"}),
     # styles
     COLOR: ("mstyle", {}),
     COLORBOX: ("mpadded", {}),

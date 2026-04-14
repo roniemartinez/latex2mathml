@@ -67,7 +67,7 @@ def _walk(
             )  # make \right as a child of \left
             if len(children) == 0 or children[-1].token != commands.RIGHT:
                 raise ExtraLeftOrMissingRightError
-            node = Node(token=token, children=children if len(children) else None, delimiter=delimiter)
+            node = Node(token=token, children=children, delimiter=delimiter)
         elif token == commands.OPENING_BRACE:
             children = tuple(_walk(tokens, terminator=commands.CLOSING_BRACE, macros=_macros))
             if len(children) and children[-1].token == commands.CLOSING_BRACE:
@@ -173,13 +173,12 @@ def _walk(
             else:
                 node = Node(token=commands.SUPERSCRIPT, children=(previous, Node(token=commands.PRIME)))
         elif token in commands.COMMANDS_WITH_TWO_PARAMETERS:
-            attributes = None
             children = tuple(_walk(tokens, terminator=terminator, limit=2, macros=_macros))
             if token in (commands.OVERSET, commands.STACKREL, commands.UNDERSET):
                 children = children[::-1]
-            node = Node(token=token, children=children, attributes=attributes)
+            node = Node(token=token, children=children)
         elif token in commands.COMMANDS_WITH_ONE_PARAMETER or (
-            token.startswith(commands.MATH) and token not in (commands.MATHSTRUT, commands.MATHCHOICE)
+            token.startswith(commands.MATH) and token not in commands.MATH_NON_FONT_COMMANDS
         ):
             children = tuple(_walk(tokens, terminator=terminator, limit=1, macros=_macros))
             node = Node(token=token, children=children)
@@ -469,7 +468,7 @@ def _walk(
                 raise InvalidWidthError
             node = Node(token=token, children=(child,), attributes={"width": f"{0.0555 * int(width):.3f}em"})
         elif token.startswith(commands.BEGIN):
-            node = _get_environment_node(token, tokens, macros=_macros)
+            node = _get_environment_node(token, tokens, macros=_macros, block=block)
         elif token == commands.NEWCOMMAND:
             _parse_newcommand(tokens, _macros)
             continue
@@ -544,7 +543,10 @@ def _get_style(node: Node) -> str:
 
 
 def _get_environment_node(
-    token: str, tokens: Iterator[str], macros: Optional[dict[str, tuple[list[str], int]]] = None
+    token: str,
+    tokens: Iterator[str],
+    macros: Optional[dict[str, tuple[list[str], int]]] = None,
+    block: bool = False,
 ) -> Node:
     _macros = {} if macros is None else macros
     start_index = token.index("{") + 1
@@ -564,12 +566,12 @@ def _get_environment_node(
         if not found_end:
             raise MissingEndError
         expanded = [*begin_body, *raw_tokens, *end_body]
-        result = _walk(iter(expanded), macros=_macros)
+        result = _walk(iter(expanded), macros=_macros, block=block)
         if len(result) == 1:
             return result[0]
         return Node(token=commands.BRACES, children=tuple(result))
     terminator = rf"{commands.END}{{{environment}}}"
-    children = tuple(_walk(tokens, terminator=terminator, macros=macros))
+    children = tuple(_walk(tokens, terminator=terminator, macros=macros, block=block))
     if len(children) and children[-1].token != terminator:
         raise MissingEndError
     children = children[:-1]
@@ -588,10 +590,7 @@ def _get_environment_node(
     elif (
         len(children)
         and children[0].children is not None
-        and (
-            children[0].token == commands.BRACES
-            or (environment.endswith("*") and children[0].token == commands.BRACKETS)
-        )
+        and children[0].token == commands.BRACES
         and all(c.token in "lcr|" for c in children[0].children)
     ):
         alignment = "".join(c.token for c in children[0].children)
@@ -609,7 +608,7 @@ def _consume_brace_arg(tokens: Iterator[str]) -> list[str]:
 
 def _parse_newcommand(tokens: Iterator[str], macros: dict[str, tuple[list[str], int]]) -> None:
     name_tokens = _consume_brace_arg(tokens)
-    name = name_tokens[0] if name_tokens else ""
+    name = "".join(name_tokens)
     nargs = 0
     peek = next(tokens)
     if peek == "[":
@@ -620,8 +619,10 @@ def _parse_newcommand(tokens: Iterator[str], macros: dict[str, tuple[list[str], 
             nargs_str += t
         nargs = int(nargs_str)
         body = _consume_brace_arg(tokens)
-    else:
+    elif peek == "{":
         body = _read_until_close_brace(tokens)
+    else:
+        body = [peek]
     macros[name] = (body, nargs)
 
 
@@ -667,7 +668,7 @@ def _parse_def(tokens: Iterator[str], macros: dict[str, tuple[list[str], int]]) 
 
 def _parse_declare_math_operator(tokens: Iterator[str], macros: dict[str, tuple[list[str], int]]) -> None:
     name_tokens = _consume_brace_arg(tokens)
-    name = name_tokens[0] if name_tokens else ""
+    name = "".join(name_tokens)
     text_tokens = _consume_brace_arg(tokens)
     text = "".join(text_tokens)
     macros[name] = ([rf"\operatorname{{{text}}}"], 0)
