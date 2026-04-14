@@ -1,3 +1,4 @@
+from itertools import chain
 from typing import Any, Iterator, NamedTuple, Optional
 
 from latex2mathml import commands
@@ -485,8 +486,16 @@ def _walk(
             if depth >= MAX_MACRO_DEPTH:
                 raise RecursionError(f"Maximum macro expansion depth ({MAX_MACRO_DEPTH}) exceeded")
             expanded_tokens = _expand_macro(token, tokens, _macros)
-            group.extend(_walk(iter(expanded_tokens), terminator=None, block=block, macros=_macros, depth=depth + 1))
-            continue
+            if not expanded_tokens:
+                continue
+            chained = chain(iter(expanded_tokens), tokens)
+            remaining_limit = max(0, limit - len(group)) if limit else 0
+            group.extend(
+                _walk(
+                    chained, terminator=terminator, block=block, macros=_macros, depth=depth + 1, limit=remaining_limit
+                )
+            )
+            break
         else:
             node = Node(token=token)
 
