@@ -9,7 +9,7 @@ UNITS = ("in", "mm", "cm", "pt", "em", "ex", "pc", "bp", "dd", "cc", "sp", "mu")
 PATTERN = re.compile(
     rf"""
     (?P<comment>%[^\n]+) |
-    (?P<letter>a-zA-Z) |
+    (?P<letter>[a-zA-Z]) |
     (?P<subsup_operator>[_^])(?P<subsup_digit>\d) |
     (?P<dimension>-?\d+(?:\.\d+)?\s*(?:{"|".join(UNITS)})) |
     (?P<number>\d+(?:\.\d+)?) |
@@ -52,7 +52,7 @@ def tokenize(latex_string: str, skip_comments: bool = True) -> Iterator[str]:
         for captured in tokens:
             if skip_comments and captured.startswith("%"):
                 break
-            if captured.endswith(UNITS):
+            if captured.endswith(UNITS) and captured[0:1].isdigit():
                 yield captured.replace(" ", "")
                 continue
             if captured.startswith((commands.BEGIN, commands.END, commands.OPERATORNAME)):

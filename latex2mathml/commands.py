@@ -1,4 +1,4 @@
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 from typing import Optional
 
 OPENING_BRACE = "{"
@@ -7,11 +7,7 @@ BRACES = "{}"
 
 OPENING_BRACKET = "["
 CLOSING_BRACKET = "]"
-BRACKETS = "[]"
 
-OPENING_PARENTHESIS = "("
-CLOSING_PARENTHESIS = ")"
-PARENTHESES = "()"
 
 SUBSUP = "_^"
 SUBSCRIPT = "_"
@@ -102,9 +98,9 @@ XTWOHEADLEFTARROW = r"\xtwoheadleftarrow"
 XTWOHEADRIGHTARROW = r"\xtwoheadrightarrow"
 XHOOKLEFTARROW = r"\xhookleftarrow"
 XHOOKRIGHTARROW = r"\xhookrightarrow"
-XLEFTARROW_UPPER = r"\xLeftarrow"
-XRIGHTARROW_UPPER = r"\xRightarrow"
-XLEFTRIGHTARROW_UPPER = r"\xLeftrightarrow"
+XLEFTARROWUPPER = r"\xLeftarrow"
+XRIGHTARROWUPPER = r"\xRightarrow"
+XLEFTRIGHTARROWUPPER = r"\xLeftrightarrow"
 
 EXTENSIBLE_ARROWS: dict[str, str] = {
     XLEFTARROW: "&#x2190;",
@@ -123,9 +119,9 @@ EXTENSIBLE_ARROWS: dict[str, str] = {
     XTWOHEADRIGHTARROW: "&#x21A0;",
     XHOOKLEFTARROW: "&#x21A9;",
     XHOOKRIGHTARROW: "&#x21AA;",
-    XLEFTARROW_UPPER: "&#x21D0;",
-    XRIGHTARROW_UPPER: "&#x21D2;",
-    XLEFTRIGHTARROW_UPPER: "&#x21D4;",
+    XLEFTARROWUPPER: "&#x21D0;",
+    XRIGHTARROWUPPER: "&#x21D2;",
+    XLEFTRIGHTARROWUPPER: "&#x21D4;",
 }
 
 EMPH = r"\emph"
@@ -150,7 +146,12 @@ SUMMATION = r"\sum"
 PRODUCT = r"\prod"
 LIMIT = (r"\lim", r"\sup", r"\inf", r"\max", r"\min")
 
+NEWCOMMAND = r"\newcommand"
+NEWENVIRONMENT = r"\newenvironment"
+DEF = r"\def"
+DECLAREMATHOPERATOR = r"\DeclareMathOperator"
 OPERATORNAME = r"\operatorname"
+OPERATORNAMESTAR = r"\operatorname*"
 OPERATORNAMEWITHLIMITS = r"\operatornamewithlimits"
 
 LBRACE = r"\{"
@@ -245,14 +246,14 @@ MATRICES = (
 )
 
 BACKSLASH = "\\"
-CARRIAGE_RETURN = r"\cr"
+CARRIAGERETURN = r"\cr"
 
 COLON = r"\:"
 COMMA = r"\,"
 DOUBLEBACKSLASH = r"\\"
 ENSPACE = r"\enspace"
 EXCLAMATION = r"\!"
-GREATER_THAN = r"\>"
+GREATERTHAN = r"\>"
 HSKIP = r"\hskip"
 HSPACE = r"\hspace"
 KERN = r"\kern"
@@ -264,7 +265,7 @@ NEGMEDSPACE = r"\negmedspace"
 NEGTHICKSPACE = r"\negthickspace"
 NOBREAKSPACE = r"\nobreakspace"
 SPACE = r"\space"
-SPACE_UPPER = r"\Space"
+SPACEUPPER = r"\Space"
 THICKSPACE = r"\thickspace"
 THINSPACE = r"\thinspace"
 QQUAD = r"\qquad"
@@ -272,9 +273,9 @@ QUAD = r"\quad"
 SEMICOLON = r"\;"
 
 BM = r"\bm"
-BLACKBOARD_BOLD = r"\Bbb"
+BLACKBOARDBOLD = r"\Bbb"
 BOLD = r"\bold"
-BOLD_SYMBOL = r"\boldsymbol"
+BOLDSYMBOL = r"\boldsymbol"
 MIT = r"\mit"
 OLDSTYLE = r"\oldstyle"
 PMB = r"\pmb"
@@ -341,6 +342,7 @@ VPHANTOM = r"\vphantom"
 MATH_NON_FONT_COMMANDS = (
     MATHRING,
     MATHBIN,
+    MATHCHOICE,
     MATHCLOSE,
     MATHINNER,
     MATHOP,
@@ -369,7 +371,7 @@ SIDESET = r"\sideset"
 
 SKEW = r"\skew"
 TAG = r"\tag"
-TAG_STAR = r"\tag*"
+TAGSTAR = r"\tag*"
 UNICODE = r"\unicode"
 UPROOT = r"\uproot"
 VERB = r"\verb"
@@ -383,10 +385,10 @@ def font_factory(default: Optional[str], replacement: dict[str, Optional[str]]) 
 
 
 LOCAL_FONTS: dict[str, defaultdict[str, Optional[str]]] = {
-    BLACKBOARD_BOLD: font_factory("double-struck", {"fence": None}),
+    BLACKBOARDBOLD: font_factory("double-struck", {"fence": None}),
     BM: font_factory("bold-italic", {"fence": None}),
     BOLD: font_factory("bold", {"fence": None}),
-    BOLD_SYMBOL: font_factory("bold", {"mi": "bold-italic", "mtext": None}),
+    BOLDSYMBOL: font_factory("bold", {"mi": "bold-italic", "mtext": None}),
     MATHBB: font_factory("double-struck", {"fence": None}),
     MATHBF: font_factory("bold", {"fence": None}),
     MATHCAL: font_factory("script", {"fence": None}),
@@ -423,12 +425,12 @@ COMMANDS_WITH_ONE_PARAMETER = (
     ACUTE,
     BAR,
     BCANCEL,
-    BLACKBOARD_BOLD,
+    BLACKBOARDBOLD,
     BM,
     BOLD,
     BRA,
     BRAKET,
-    BOLD_SYMBOL,
+    BOLDSYMBOL,
     BOXED,
     CANCEL,
     BREVE,
@@ -505,14 +507,14 @@ COMMANDS_WITH_TWO_PARAMETERS = (
 
 BIG: dict[str, tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
-    r"\Bigg": ("mo", OrderedDict([("minsize", "2.470em"), ("maxsize", "2.470em")])),
-    r"\bigg": ("mo", OrderedDict([("minsize", "2.047em"), ("maxsize", "2.047em")])),
-    r"\Big": ("mo", OrderedDict([("minsize", "1.623em"), ("maxsize", "1.623em")])),
-    r"\big": ("mo", OrderedDict([("minsize", "1.2em"), ("maxsize", "1.2em")])),
+    r"\Bigg": ("mo", {"minsize": "2.470em", "maxsize": "2.470em"}),
+    r"\bigg": ("mo", {"minsize": "2.047em", "maxsize": "2.047em"}),
+    r"\Big": ("mo", {"minsize": "1.623em", "maxsize": "1.623em"}),
+    r"\big": ("mo", {"minsize": "1.2em", "maxsize": "1.2em"}),
 }
 
 BIG_OPEN_CLOSE = {
-    command + postfix: (tag, OrderedDict([("stretchy", "true"), ("fence", "true"), *attrib.items()]))
+    command + postfix: (tag, {"stretchy": "true", "fence": "true", **attrib})
     for command, (tag, attrib) in BIG.items()
     for postfix in "lmr"
 }
@@ -542,7 +544,19 @@ STYLES: dict[str, tuple[str, dict]] = {
 CONVERSION_MAP: dict[str, tuple[str, dict]] = {
     # command: (mathml_equivalent, attributes)
     # tables
-    **{matrix: ("mtable", {}) for matrix in MATRICES},
+    **{
+        matrix: ("mtable", {})
+        for matrix in MATRICES
+        if matrix
+        not in (
+            DISPLAYLINES,
+            EQALIGN,
+            EQALIGNNO,
+            SMALLMATRIX,
+            SPLIT,
+            ALIGN,
+        )
+    },
     DISPLAYLINES: ("mtable", {"rowspacing": "0.5em", "columnspacing": "1em", "displaystyle": "true"}),
     EQALIGN: ("mtable", {"displaystyle": "true", "columnspacing": "0em"}),
     EQALIGNNO: ("mtable", {"displaystyle": "true", "columnspacing": "0em"}),
@@ -610,7 +624,7 @@ CONVERSION_MAP: dict[str, tuple[str, dict]] = {
     DOUBLEBACKSLASH: ("mspace", {"linebreak": "newline"}),
     ENSPACE: ("mspace", {"width": "0.5em"}),
     EXCLAMATION: ("mspace", {"width": "negativethinmathspace"}),
-    GREATER_THAN: ("mspace", {"width": "0.222em"}),
+    GREATERTHAN: ("mspace", {"width": "0.222em"}),
     HSKIP: ("mspace", {}),
     HSPACE: ("mspace", {}),
     KERN: ("mspace", {}),
@@ -625,7 +639,7 @@ CONVERSION_MAP: dict[str, tuple[str, dict]] = {
     QQUAD: ("mspace", {"width": "2em"}),
     QUAD: ("mspace", {"width": "1em"}),
     SEMICOLON: ("mspace", {"width": "0.278em"}),
-    SPACE_UPPER: ("mspace", {"width": "0.5em"}),
+    SPACEUPPER: ("mspace", {"width": "0.5em"}),
     # overlap
     CLAP: ("mpadded", {"lspace": "-0.5width", "width": "0px"}),
     LLAP: ("mpadded", {"lspace": "-1width", "width": "0px"}),
@@ -647,9 +661,9 @@ CONVERSION_MAP: dict[str, tuple[str, dict]] = {
     **BIG_OPEN_CLOSE,
     **MSTYLE_SIZES,
     **{limit: ("mo", {}) for limit in LIMIT},
-    LEFT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "prefix")])),
-    MIDDLE: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("lspace", "0.05em"), ("rspace", "0.05em")])),
-    RIGHT: ("mo", OrderedDict([("stretchy", "true"), ("fence", "true"), ("form", "postfix")])),
+    LEFT: ("mo", {"stretchy": "true", "fence": "true", "form": "prefix"}),
+    MIDDLE: ("mo", {"stretchy": "true", "fence": "true", "lspace": "0.05em", "rspace": "0.05em"}),
+    RIGHT: ("mo", {"stretchy": "true", "fence": "true", "form": "postfix"}),
     # styles
     COLOR: ("mstyle", {}),
     COLORBOX: ("mpadded", {}),
@@ -670,7 +684,7 @@ CONVERSION_MAP: dict[str, tuple[str, dict]] = {
     TEXTSF: ("mtext", {"mathvariant": "sans-serif"}),
     TEXTTT: ("mtext", {"mathvariant": "monospace"}),
     TAG: ("mtext", {}),
-    TAG_STAR: ("mtext", {}),
+    TAGSTAR: ("mtext", {}),
     TEXTUP: ("mtext", {}),
     VERB: ("mtext", {"mathvariant": "monospace"}),
     HBOX: ("mtext", {}),

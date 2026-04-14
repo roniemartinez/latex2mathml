@@ -1,7 +1,7 @@
 import pytest
 
-from latex2mathml.converter import convert, convert_to_element
-from latex2mathml.exceptions import DoubleSubscriptsError, DoubleSuperscriptsError
+from latex2mathml.converter import Converter, convert, convert_to_element
+from latex2mathml.exceptions import DoubleSubscriptsError, DoubleSuperscriptsError, MissingEndError
 
 
 @pytest.mark.parametrize(
@@ -367,9 +367,16 @@ from latex2mathml.exceptions import DoubleSubscriptsError, DoubleSuperscriptsErr
         pytest.param(r"\shoveleft{x}", id="shoveleft"),
         pytest.param(r"\raise{3pt}{x}", id="raise"),
         pytest.param(r"\lower{3pt}{x}", id="lower"),
+        pytest.param(r"\moveleft{5pt}{x}", id="moveleft"),
+        pytest.param(r"\moveright{5pt}{x}", id="moveright"),
+        pytest.param(r"\smash[t]{x}", id="smash-top"),
         pytest.param(r"\mathchoice{D}{T}{S}{SS}", id="mathchoice-block"),
         pytest.param(r"\sqrt[\leftroot{2}\uproot{4} 3]{x}", id="leftroot-uproot"),
         pytest.param(r"\eqalign{a &= b \cr c &= d}", id="eqalign"),
+        pytest.param(
+            r"\newenvironment{wrapper}{a +}{+ c} \begin{wrapper} b \end{wrapper}",
+            id="newenvironment-multi-node",
+        ),
     ],
 )
 def test_converter(snapshot: str, latex: str) -> None:
@@ -383,6 +390,8 @@ def test_converter(snapshot: str, latex: str) -> None:
         pytest.param(r"\prod_{0}^{\pi}", id="issue-498-prod"),
         pytest.param(r"\sum_{\substack{1\le i\le n\\ i\ne j}}", id="issue-75-2-rows"),
         pytest.param(r"\mathchoice{D}{T}{S}{SS}", id="mathchoice-inline"),
+        pytest.param(r"\def\bold#1{\mathbf{#1}} \bold{x}", id="def-with-args"),
+        pytest.param(r"\newcommand{\foo}[1]{## #1} \foo{x}", id="newcommand-escaped-hash"),
     ],
 )
 def test_converter_inline(snapshot: str, latex: str) -> None:
@@ -390,20 +399,97 @@ def test_converter_inline(snapshot: str, latex: str) -> None:
 
 
 @pytest.mark.parametrize(
-    "latex",
+    ("latex", "exception"),
     [
-        "f^a^b",
-        "f''^2",
+        pytest.param("f^a^b", DoubleSuperscriptsError, id="double-superscript"),
+        pytest.param("f''^2", DoubleSuperscriptsError, id="double-superscript-prime"),
+        pytest.param("f_a_b", DoubleSubscriptsError, id="double-subscript"),
+        pytest.param(
+            r"\newenvironment{myenv}{\begin{bmatrix}}{\end{bmatrix}} \begin{myenv} 1 & 2",
+            MissingEndError,
+            id="newenvironment-missing-end",
+        ),
+        pytest.param(r"\def\A{\A} \A", RecursionError, id="macro-recursion-depth"),
     ],
 )
-def test_double_superscripts_raises(latex: str) -> None:
-    with pytest.raises(DoubleSuperscriptsError):
+def test_converter_raises(latex: str, exception: type[BaseException]) -> None:
+    with pytest.raises(exception):
         convert(latex)
 
 
-def test_double_subscripts_raises() -> None:
-    with pytest.raises(DoubleSubscriptsError):
-        convert("f_a_b")
+@pytest.mark.parametrize(
+    ("latex", "expected", "display"),
+    [
+        pytest.param(
+            r"\DeclareMathOperator{\Res}{Res} \Res_{z=0}",
+            r"\operatorname{Res}_{z=0}",
+            "block",
+            id="declare-math-operator",
+        ),
+        pytest.param(
+            r"\newcommand{\R}{\mathbb{R}} \R",
+            r"\mathbb{R}",
+            "block",
+            id="newcommand-no-args",
+        ),
+        pytest.param(
+            r"\newcommand{\norm}[1]{\left\|#1\right\|} \norm{x}",
+            r"\left\|x\right\|",
+            "block",
+            id="newcommand-with-args",
+        ),
+        pytest.param(
+            r"\newcommand{\greeting}[1][Hello]{#1} \greeting{world}",
+            r"world",
+            "inline",
+            id="newcommand-optional-default",
+        ),
+        pytest.param(
+            r"\newcommand{\myfrac}{\frac} \myfrac{a}{b}",
+            r"\frac{a}{b}",
+            "inline",
+            id="newcommand-expands-to-command",
+        ),
+        pytest.param(
+            r"\newcommand{\nothing}{} \nothing x",
+            r"x",
+            "inline",
+            id="newcommand-empty-body",
+        ),
+        pytest.param(
+            r"\def\R{\mathbb{R}} \R",
+            r"\mathbb{R}",
+            "block",
+            id="def-command",
+        ),
+        pytest.param(
+            r"\newenvironment{myenv}{\begin{bmatrix}}{\end{bmatrix}} \begin{myenv} 1 & 2 \\ 3 & 4 \end{myenv}",
+            r"\begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}",
+            "block",
+            id="newenvironment",
+        ),
+        pytest.param(
+            r"\newenvironment{paren}[1]{\left( #1 +}{\right)} \begin{paren}{x} y \end{paren}",
+            r"\left( x + y \right)",
+            "block",
+            id="newenvironment-with-args",
+        ),
+        pytest.param(
+            r"\newcommand\R{\mathbb{R}} \R",
+            r"\mathbb{R}",
+            "block",
+            id="newcommand-bare-name",
+        ),
+    ],
+)
+def test_macro(latex: str, expected: str, display: str) -> None:
+    assert convert(latex, display=display) == convert(expected, display=display)
+
+
+def test_reusable_macro() -> None:
+    c = Converter(display="block")
+    c.convert(r"\newcommand{\R}{\mathbb{R}}")
+    assert c.convert(r"\R") == convert(r"\mathbb{R}", display="block")
 
 
 def test_convert_to_element(snapshot: str) -> None:
