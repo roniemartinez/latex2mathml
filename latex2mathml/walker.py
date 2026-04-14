@@ -211,14 +211,10 @@ def _walk(
             node = Node(token=token, children=children)
         elif token in (commands.HSKIP, commands.HSPACE, commands.KERN, commands.MKERN, commands.MSKIP, commands.MSPACE):
             children = tuple(_walk(tokens, terminator=terminator, limit=1, macros=_macros))
-            if children[0].token == commands.BRACES and children[0].children is not None:
-                children = children[0].children
-            node = Node(token=token, attributes={"width": children[0].token})
+            node = Node(token=token, attributes={"width": _unwrap_token(children[0])})
         elif token in (commands.RAISE, commands.LOWER, commands.MOVELEFT, commands.MOVERIGHT):
             dim_children = tuple(_walk(tokens, terminator=terminator, limit=1, macros=_macros))
-            dim = dim_children[0].token if dim_children else "0"
-            if dim_children[0].token == commands.BRACES and dim_children[0].children:
-                dim = dim_children[0].children[0].token
+            dim = _unwrap_token(dim_children[0]) if dim_children else "0"
             children = tuple(_walk(tokens, terminator=terminator, limit=1, macros=_macros))
             if token == commands.RAISE:
                 attributes = {"voffset": dim, "height": f"+{dim}", "depth": f"-{dim}"}
@@ -233,10 +229,7 @@ def _walk(
             dims = []
             for _ in range(2):
                 arg = tuple(_walk(tokens, terminator=terminator, limit=1, macros=_macros))[0]
-                if arg.token == commands.BRACES and arg.children:
-                    dims.append(arg.children[0].token)
-                else:
-                    dims.append(arg.token)
+                dims.append(_unwrap_token(arg))
             node = Node(token=token, attributes={"width": dims[0], "height": dims[1]})
         elif token == commands.SMASH:
             children = tuple(_walk(tokens, terminator=terminator, limit=1, macros=_macros))
@@ -288,12 +281,9 @@ def _walk(
             else:
                 group.append(choice)
             continue
-        elif token == commands.CLASS:
-            attributes = {"class": next(tokens)}
-            next_node = tuple(_walk(tokens, terminator=terminator, limit=1, macros=_macros))[0]
-            node = next_node._replace(attributes=attributes)
-        elif token == commands.STYLE:
-            attributes = {"style": next(tokens)}
+        elif token in (commands.CLASS, commands.STYLE):
+            attr_name = "class" if token == commands.CLASS else "style"
+            attributes = {attr_name: next(tokens)}
             next_node = tuple(_walk(tokens, terminator=terminator, limit=1, macros=_macros))[0]
             node = next_node._replace(attributes=attributes)
         elif token in (
@@ -352,7 +342,7 @@ def _walk(
 
             if token in (commands.ABOVE, commands.ABOVEWITHDELIMS):
                 dimension_node = tuple(_walk(tokens, terminator=terminator, limit=1, macros=_macros))[0]
-                dimension = _get_dimension(dimension_node)
+                dimension = _unwrap_token(dimension_node)
                 attributes = {"linethickness": dimension}
             elif token in (commands.ATOP, commands.BRACE, commands.BRACK, commands.CHOOSE):
                 attributes = {"linethickness": "0"}
@@ -421,7 +411,7 @@ def _walk(
         elif token == commands.GENFRAC:
             delimiter = next(tokens).lstrip("\\") + next(tokens).lstrip("\\")
             dimension_node, style_node = tuple(_walk(tokens, terminator=terminator, limit=2, macros=_macros))
-            dimension = _get_dimension(dimension_node)
+            dimension = _unwrap_token(dimension_node)
             style = _get_style(style_node)
             attributes = {"linethickness": dimension}
             children = tuple(_walk(tokens, terminator=terminator, limit=2, macros=_macros))
@@ -529,7 +519,7 @@ def _make_subsup(node: Node) -> tuple[str, tuple[Node, ...]]:
     return "", ()
 
 
-def _get_dimension(node: Node) -> str:
+def _unwrap_token(node: Node) -> str:
     dimension = node.token
     if node.token == commands.BRACES and node.children is not None:
         dimension = node.children[0].token
@@ -537,9 +527,7 @@ def _get_dimension(node: Node) -> str:
 
 
 def _get_style(node: Node) -> str:
-    style = node.token
-    if node.token == commands.BRACES and node.children is not None:
-        style = node.children[0].token
+    style = _unwrap_token(node)
     if style == "0":
         return commands.DISPLAYSTYLE
     if style == "1":
@@ -562,8 +550,11 @@ def _get_environment_node(
     environment = token[start_index:-1]
     env_key = f"\\begin{{{environment}}}"
     if env_key in _macros:
-        begin_body, _ = _macros[env_key]
+        begin_body, nargs = _macros[env_key]
         end_body, _ = _macros.get(f"\\end{{{environment}}}", ([], 0))
+        args: list[list[str]] = []
+        for _ in range(nargs):
+            args.append(_consume_brace_arg(tokens))
         terminator = rf"{commands.END}{{{environment}}}"
         raw_tokens: list[str] = []
         found_end = False
@@ -574,7 +565,9 @@ def _get_environment_node(
             raw_tokens.append(t)
         if not found_end:
             raise MissingEndError
-        expanded = [*begin_body, *raw_tokens, *end_body]
+        begin_expanded = _substitute_params(begin_body, args)
+        end_expanded = _substitute_params(end_body, args)
+        expanded = [*begin_expanded, *raw_tokens, *end_expanded]
         result = _walk(iter(expanded), macros=_macros, block=block)
         if len(result) == 1:
             return result[0]
@@ -615,20 +608,28 @@ def _consume_brace_arg(tokens: Iterator[str]) -> list[str]:
     return [token]
 
 
+def _parse_optional_int(tokens: Iterator[str]) -> tuple[int, str]:
+    peek = next(tokens)
+    if peek != "[":
+        return 0, peek
+    nargs_str = ""
+    for t in tokens:
+        if t == "]":
+            break
+        nargs_str += t
+    return int(nargs_str), next(tokens)
+
+
 def _parse_newcommand(tokens: Iterator[str], macros: dict[str, tuple[list[str], int]]) -> None:
     name_tokens = _consume_brace_arg(tokens)
     name = "".join(name_tokens)
-    nargs = 0
-    peek = next(tokens)
+    nargs, peek = _parse_optional_int(tokens)
     if peek == "[":
-        nargs_str = ""
         for t in tokens:
             if t == "]":
                 break
-            nargs_str += t
-        nargs = int(nargs_str)
-        body = _consume_brace_arg(tokens)
-    elif peek == "{":
+        peek = next(tokens)
+    if peek == "{":
         body = _read_until_close_brace(tokens)
     else:
         body = [peek]
@@ -655,9 +656,13 @@ def _read_until_close_brace(tokens: Iterator[str]) -> list[str]:
 def _parse_newenvironment(tokens: Iterator[str], macros: dict[str, tuple[list[str], int]]) -> None:
     name_tokens = _consume_brace_arg(tokens)
     name = "".join(name_tokens)
-    begin_body = _consume_brace_arg(tokens)
+    nargs, peek = _parse_optional_int(tokens)
+    if peek == "{":
+        begin_body = _read_until_close_brace(tokens)
+    else:
+        begin_body = [peek]
     end_body = _consume_brace_arg(tokens)
-    macros[f"\\begin{{{name}}}"] = (begin_body, 0)
+    macros[f"\\begin{{{name}}}"] = (begin_body, nargs)
     macros[f"\\end{{{name}}}"] = (end_body, 0)
 
 
@@ -683,13 +688,9 @@ def _parse_declare_math_operator(tokens: Iterator[str], macros: dict[str, tuple[
     macros[name] = ([rf"\operatorname{{{text}}}"], 0)
 
 
-def _expand_macro(token: str, tokens: Iterator[str], macros: dict[str, tuple[list[str], int]]) -> list[str]:
-    body, nargs = macros[token]
-    if nargs == 0:
+def _substitute_params(body: list[str], args: list[list[str]]) -> list[str]:
+    if not args:
         return list(body)
-    args: list[list[str]] = []
-    for _ in range(nargs):
-        args.append(_consume_brace_arg(tokens))
     expanded: list[str] = []
     body_iter = iter(body)
     for tok in body_iter:
@@ -704,3 +705,13 @@ def _expand_macro(token: str, tokens: Iterator[str], macros: dict[str, tuple[lis
         else:
             expanded.append(tok)
     return expanded
+
+
+def _expand_macro(token: str, tokens: Iterator[str], macros: dict[str, tuple[list[str], int]]) -> list[str]:
+    body, nargs = macros[token]
+    if nargs == 0:
+        return list(body)
+    args: list[list[str]] = []
+    for _ in range(nargs):
+        args.append(_consume_brace_arg(tokens))
+    return _substitute_params(body, args)

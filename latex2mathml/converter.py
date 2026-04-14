@@ -64,10 +64,14 @@ NUMBER_PATTERN = re.compile(r"\d+(\.\d+)?")
 MOVABLE_LIMIT_TEXTS = {
     commands.ARGMAX: "arg&#x02009;max",
     commands.ARGMIN: "arg&#x02009;min",
+    commands.DETERMINANT: "det",
+    commands.GCD: "gcd",
     commands.INJLIM: "inj&#x02006;lim",
     commands.INTOP: "&#x0222B;",
     commands.LIMINF: "lim&#x02006;inf",
     commands.LIMSUP: "lim&#x02006;sup",
+    commands.PLIM: "plim",
+    commands.PR: "Pr",
     commands.PROJLIM: "proj&#x02006;lim",
     commands.VARINJLIM: "inj&#x02006;lim",
     commands.VARLIMINF: "lim&#x02006;inf",
@@ -447,25 +451,9 @@ class Converter:
             mpadded = SubElement(parent, "mpadded", width="0")
             element = SubElement(mpadded, "mtext")
             element.text = "&#x029F8;"
-        elif token in (
-            commands.ARGMAX,
-            commands.ARGMIN,
-            commands.DETERMINANT,
-            commands.GCD,
-            commands.INTOP,
-            commands.INJLIM,
-            commands.LIMINF,
-            commands.LIMSUP,
-            commands.PLIM,
-            commands.PR,
-            commands.PROJLIM,
-            commands.VARINJLIM,
-            commands.VARLIMINF,
-            commands.VARLIMSUP,
-            commands.VARPROJLIM,
-        ):
+        elif token in MOVABLE_LIMIT_TEXTS:
             element = SubElement(parent, "mo", attrib={"movablelimits": "true", **attributes})
-            element.text = MOVABLE_LIMIT_TEXTS.get(token, token[1:])
+            element.text = MOVABLE_LIMIT_TEXTS[token]
             self._set_font(element, element.tag, font)
         elif token in (commands.MATHSTRUT, commands.STRUT):
             mpadded = SubElement(parent, "mpadded", width="0px")
@@ -503,15 +491,13 @@ class Converter:
             self._set_font(mi_t, mi_t.tag, font)
             self._set_font(mi_e, mi_e.tag, font)
             self._set_font(mi_x, mi_x.tag, font)
-        elif token.startswith(commands.OPERATORNAMEWITHLIMITS):
-            element = SubElement(parent, "mo", attrib={"movablelimits": "true", **attributes})
-            element.text = token[len(commands.OPERATORNAMEWITHLIMITS) + 1 : -1]
-        elif token.startswith(commands.OPERATORNAMESTAR):
-            element = SubElement(parent, "mo", attrib={"movablelimits": "true", **attributes})
-            element.text = token[len(commands.OPERATORNAMESTAR) + 1 : -1]
         elif token.startswith(commands.OPERATORNAME):
-            element = SubElement(parent, "mo", attrib=attributes)
-            element.text = token[len(commands.OPERATORNAME) + 1 : -1]
+            for prefix in (commands.OPERATORNAMEWITHLIMITS, commands.OPERATORNAMESTAR, commands.OPERATORNAME):
+                if token.startswith(prefix):
+                    attrib = {"movablelimits": "true", **attributes} if prefix != commands.OPERATORNAME else attributes
+                    element = SubElement(parent, "mo", attrib=attrib)
+                    element.text = token[len(prefix) + 1 : -1]
+                    break
         elif token.startswith(commands.BACKSLASH):
             element = SubElement(parent, "mi", attrib=attributes)
             if symbol:
@@ -590,7 +576,7 @@ class Converter:
                 is_math_mode = not is_math_mode
             else:
                 string += match
-        if len(string):
+        if string:
             yield string, Mode.MATH if is_math_mode else Mode.TEXT
 
     @staticmethod
