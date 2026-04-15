@@ -19,6 +19,6 @@ test:
 
 .PHONY: tag
 tag:
-	VERSION=`uv run python -c "import importlib.metadata; print(importlib.metadata.version('latex2mathml'))"`; \
+	VERSION=`uv version --short`; \
 	git tag -s -a $$VERSION -m "Release $$VERSION"; \
 	echo "Tagged $$VERSION";
