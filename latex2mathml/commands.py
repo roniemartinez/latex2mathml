@@ -212,6 +212,8 @@ BMOD = r"\bmod"
 HDASHLINE = r"\hdashline"
 HLINE = r"\hline"
 HFIL = r"\hfil"
+NONUMBER = r"\nonumber"
+NOTAG = r"\notag"
 
 CASES = r"\cases"
 EQALIGN = r"\eqalign"
@@ -220,7 +222,8 @@ DISPLAYLINES = r"\displaylines"
 SMALLMATRIX = r"\smallmatrix"
 SUBSTACK = r"\substack"
 SPLIT = r"\split"
-ALIGN = r"\align*"
+ALIGN = r"\align"
+ALIGNSTAR = r"\align*"
 MATRICES = (
     r"\matrix",
     r"\matrix*",
@@ -243,6 +246,7 @@ MATRICES = (
     SMALLMATRIX,
     SPLIT,
     ALIGN,
+    ALIGNSTAR,
 )
 
 BACKSLASH = "\\"
@@ -555,6 +559,7 @@ CONVERSION_MAP: dict[str, tuple[str, dict]] = {
             SMALLMATRIX,
             SPLIT,
             ALIGN,
+            ALIGNSTAR,
         )
     },
     DISPLAYLINES: ("mtable", {"rowspacing": "0.5em", "columnspacing": "1em", "displaystyle": "true"}),
@@ -566,6 +571,10 @@ CONVERSION_MAP: dict[str, tuple[str, dict]] = {
         {"displaystyle": "true", "columnspacing": "0em", "rowspacing": "3pt"},
     ),
     ALIGN: (
+        "mtable",
+        {"displaystyle": "true", "rowspacing": "3pt"},
+    ),
+    ALIGNSTAR: (
         "mtable",
         {"displaystyle": "true", "rowspacing": "3pt"},
     ),
