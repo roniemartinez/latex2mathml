@@ -375,6 +375,7 @@ from latex2mathml.exceptions import DoubleSubscriptsError, DoubleSuperscriptsErr
         pytest.param(r"\eqalign{a &= b \cr c &= d}", id="eqalign"),
         pytest.param("\\begin{align} x &= 1 \\\\ y &= 2 \\end{align}", id="align"),
         pytest.param("\\begin{align} x &= 1 \\nonumber \\\\ y &= 2 \\end{align}", id="align-nonumber"),
+        pytest.param("\\begin{align} x &= 1 \\notag \\\\ y &= 2 \\end{align}", id="align-notag"),
         pytest.param(
             r"\newenvironment{wrapper}{a +}{+ c} \begin{wrapper} b \end{wrapper}",
             id="newenvironment-multi-node",

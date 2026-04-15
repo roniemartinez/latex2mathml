@@ -177,12 +177,6 @@ class Converter:
                 hfil_indexes.append(False)
                 self._convert_group(iter([node]), cell)
 
-        if numbered and row is not None and not skip_number:
-            self.equation_counter += 1
-            eqn_cell = SubElement(row, "mtd")
-            eqn_num = SubElement(eqn_cell, "mtext")
-            eqn_num.text = f"({self.equation_counter})"
-
         if col_index > max_col_size:
             max_col_size = col_index
 
@@ -191,6 +185,13 @@ class Converter:
 
         if row is not None and cell is not None and len(cell) == 0:
             parent.remove(row)
+            row = None
+
+        if numbered and row is not None and not skip_number:
+            self.equation_counter += 1
+            eqn_cell = SubElement(row, "mtd")
+            eqn_num = SubElement(eqn_cell, "mtext")
+            eqn_num.text = f"({self.equation_counter})"
 
         if max_col_size and command in (commands.ALIGN, commands.ALIGNSTAR):
             spacing = ("0em", "2em")
