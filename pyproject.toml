@@ -1,6 +1,6 @@
 [project]
 name = "latex2mathml"
-version = "3.81.0a1"
+version = "3.81.0a2"
 description = "Pure Python library for LaTeX to MathML conversion"
 authors = [
     { name = "Ronie Martinez", email = "ronmarti18@gmail.com" }
