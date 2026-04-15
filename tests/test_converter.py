@@ -373,6 +373,8 @@ from latex2mathml.exceptions import DoubleSubscriptsError, DoubleSuperscriptsErr
         pytest.param(r"\mathchoice{D}{T}{S}{SS}", id="mathchoice-block"),
         pytest.param(r"\sqrt[\leftroot{2}\uproot{4} 3]{x}", id="leftroot-uproot"),
         pytest.param(r"\eqalign{a &= b \cr c &= d}", id="eqalign"),
+        pytest.param("\\begin{align} x &= 1 \\\\ y &= 2 \\end{align}", id="align"),
+        pytest.param("\\begin{align} x &= 1 \\nonumber \\\\ y &= 2 \\end{align}", id="align-nonumber"),
         pytest.param(
             r"\newenvironment{wrapper}{a +}{+ c} \begin{wrapper} b \end{wrapper}",
             id="newenvironment-multi-node",
@@ -484,6 +486,21 @@ def test_converter_raises(latex: str, exception: type[BaseException]) -> None:
 )
 def test_macro(latex: str, expected: str, display: str) -> None:
     assert convert(latex, display=display) == convert(expected, display=display)
+
+
+def test_align_vs_align_star() -> None:
+    numbered = convert(r"\begin{align} x &= 1 \end{align}", display="block")
+    unnumbered = convert(r"\begin{align*} x &= 1 \end{align*}", display="block")
+    assert "(1)" in numbered
+    assert "(1)" not in unnumbered
+
+
+def test_equation_counter_persists() -> None:
+    c = Converter(display="block")
+    r1 = c.convert(r"\begin{align} a &= 1 \end{align}")
+    r2 = c.convert(r"\begin{align} b &= 2 \end{align}")
+    assert "(1)" in r1
+    assert "(2)" in r2
 
 
 def test_reusable_macro() -> None:

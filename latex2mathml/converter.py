@@ -89,6 +89,7 @@ class Converter:
     def __init__(self, xmlns: str = "http://www.w3.org/1998/Math/MathML", display: str = "inline") -> None:
         self.xmlns = xmlns
         self.display = display
+        self.equation_counter = 0
         self.macros: dict[str, tuple[list[str], int]] = {}
 
     def convert(self, latex: str, parent: Optional[Element] = None) -> str:
@@ -103,6 +104,7 @@ class Converter:
         return math
 
     def reset(self) -> None:
+        self.equation_counter = 0
         self.macros = {}
 
     @staticmethod
@@ -125,6 +127,9 @@ class Converter:
 
         hfil_indexes: list[bool] = []
 
+        numbered = command == commands.ALIGN
+        skip_number = False
+
         for node in nodes:
             if row is None:
                 row = SubElement(parent, "mtr")
@@ -140,11 +145,17 @@ class Converter:
                 hfil_indexes = []
                 col_alignment, col_index = self._get_column_alignment(alignment, col_alignment, col_index)
                 cell = self._make_matrix_cell(row, col_alignment)
-                if command in (commands.SPLIT, commands.ALIGN) and col_index % 2 == 0:
+                if command in (commands.SPLIT, commands.ALIGN, commands.ALIGNSTAR) and col_index % 2 == 0:
                     SubElement(cell, "mi")
             elif node.token in (commands.DOUBLEBACKSLASH, commands.CARRIAGERETURN):
                 self._set_cell_alignment(cell, hfil_indexes)
                 hfil_indexes = []
+                if numbered and not skip_number:
+                    self.equation_counter += 1
+                    eqn_cell = SubElement(row, "mtd")
+                    eqn_num = SubElement(eqn_cell, "mtext")
+                    eqn_num.text = f"({self.equation_counter})"
+                skip_number = False
                 row_index += 1
                 if col_index > max_col_size:
                     max_col_size = col_index
@@ -152,6 +163,8 @@ class Converter:
                 col_alignment, col_index = self._get_column_alignment(alignment, col_alignment, col_index)
                 row = SubElement(parent, "mtr")
                 cell = self._make_matrix_cell(row, col_alignment)
+            elif node.token in (commands.NONUMBER, commands.NOTAG):
+                skip_number = True
             elif node.token == commands.HLINE:
                 row_lines.append("solid")
             elif node.token == commands.HDASHLINE:
@@ -164,6 +177,12 @@ class Converter:
                 hfil_indexes.append(False)
                 self._convert_group(iter([node]), cell)
 
+        if numbered and row is not None and not skip_number:
+            self.equation_counter += 1
+            eqn_cell = SubElement(row, "mtd")
+            eqn_num = SubElement(eqn_cell, "mtext")
+            eqn_num.text = f"({self.equation_counter})"
+
         if col_index > max_col_size:
             max_col_size = col_index
 
@@ -173,7 +192,7 @@ class Converter:
         if row is not None and cell is not None and len(cell) == 0:
             parent.remove(row)
 
-        if max_col_size and command == commands.ALIGN:
+        if max_col_size and command in (commands.ALIGN, commands.ALIGNSTAR):
             spacing = ("0em", "2em")
             multiplier = max_col_size // len(spacing)
             parent.set("columnspacing", " ".join(spacing * multiplier))
@@ -327,7 +346,7 @@ class Converter:
             if command in commands.MATRICES:
                 if command == commands.CASES:
                     alignment = "l"
-                elif command in (commands.SPLIT, commands.ALIGN):
+                elif command in (commands.SPLIT, commands.ALIGN, commands.ALIGNSTAR):
                     alignment = "rl"
                 self._convert_matrix(iter(node.children), _parent, command, alignment=alignment)
             elif command == commands.CFRAC:
